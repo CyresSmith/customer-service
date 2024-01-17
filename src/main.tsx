@@ -1,11 +1,14 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { RouterProvider } from 'react-router-dom';
-import router from 'router';
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
+import { ThemeProvider } from 'styled-components';
+import App from 'App';
+import theme from 'utils/theme';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  <BrowserRouter basename='customer-service'>
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  </BrowserRouter>
 );

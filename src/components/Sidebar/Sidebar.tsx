@@ -1,5 +1,11 @@
+import { Container } from "./Sidebar.styled";
+
 const Sidebar = () => {
-  return <div>Sidebar</div>;
+  return(
+    <Container>
+      Sidebar
+    </Container>
+  );
 };
 
 export default Sidebar;
