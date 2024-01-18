@@ -5,10 +5,10 @@ import { IoMdClose } from "react-icons/io";
 const IconButton = ({handleClick, $position, $top, $right, icon}: IButton) => {
     return (
         <Btn onClick={handleClick} $position={$position} $top={$top} $right={$right}>
-            {/* <StyledIcon as={
+            <StyledIcon as={
                 icon === 'close' ? IoMdClose :
                 null
-            }/> */}
+            }/>
         </Btn>
     )
 };

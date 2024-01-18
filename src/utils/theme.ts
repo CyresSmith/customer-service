@@ -9,9 +9,11 @@ const theme = {
     componentsBg: '#171821',
     primary: '#43FFD2',
     secondary: '#7D2253',
+    button: '#95bdb7',
     accent: '#A9DFD8',
     danger: '#FF3A44',
     success: '#31985A',
+    backdrop: 'rgba(23, 24, 33, 0.5)'
   },
 
   fonts: {

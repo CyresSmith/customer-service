@@ -9,10 +9,10 @@ const AuthNav = ({toggleModal}: Props) => {
     return (
         <List>
             <ListItem>
-                <Button handleClick={toggleModal} children="Вхід"/>
+                <Button $bgColor="button" $type="text" handleClick={toggleModal} children="Вхід"/>
             </ListItem>
             <ListItem>
-                <Button handleClick={toggleModal} children="Реєстрація"/>
+                <Button $bgColor="button" $type="text" handleClick={toggleModal} children="Реєстрація"/>
             </ListItem>
         </List>
     )

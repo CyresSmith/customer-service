@@ -5,7 +5,7 @@ import TopBar from '../TopBar';
 import Modal from 'components/Modal/Modal';
 
 const MainLayout = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const toggleModal = (): void => {
         setIsOpen(o => !o);

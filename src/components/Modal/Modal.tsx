@@ -1,19 +1,24 @@
 import React from "react";
 import { Backdrop, ModalContainer } from "./Modal.styled";
-import IconButton from "components/Ui/Buttons/IconButton/IconButton";
+import Button from "components/Ui/Buttons/Button/Button";
+import { IoMdClose } from "react-icons/io";
+import { useClickOutside, useEscapeKey } from "hooks";
 
 export interface IModal {
     children?: React.ReactNode,
     open?: boolean,
-    toggleModal?: () => void,
+    toggleModal: () => void,
 }
 
 const Modal = ({children, toggleModal, open}: IModal) => {
+    const modalRef = useClickOutside(toggleModal);
+
+    useEscapeKey(toggleModal);
 
     return (
         <Backdrop>
-            <ModalContainer open={open}>
-                <IconButton $position="absolute" $top="15px" $right="15px" handleClick={toggleModal} />
+            <ModalContainer ref={modalRef} open={open}>
+                <Button Icon={IoMdClose} $position="absolute" $top="5px" $right="5px" handleClick={toggleModal} />
                 {children}
             </ModalContainer>
         </Backdrop>

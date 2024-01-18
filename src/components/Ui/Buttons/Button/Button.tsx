@@ -1,20 +1,23 @@
-import { Btn } from "./Button.styled";
+import React from "react";
+import { Btn, StyledIcon } from "./Button.styled";
 
 export interface IButton {
-    bgColor?: string,
+    $bgColor?: string,
     color?: string,
-    children?: string,
+    children?: React.ReactNode,
     handleClick?: () => void,
-    icon?: string;
+    Icon?: React.ElementType,
     $position?: string,
     $top?: string,
     $right?: string,
+    $type?: string
 }
 
-const Button = ({bgColor, children, handleClick}: IButton) => {
+const Button = ({$bgColor, children, handleClick, $position, $top, $right, Icon, $type}: IButton) => {
     return (
-        <Btn onClick={handleClick} bgColor={bgColor}>
-            {children}
+        <Btn onClick={handleClick} $type={$type} $bgColor={$bgColor} $position={$position} $top={$top} $right={$right}>
+            {Icon && <StyledIcon as={Icon} />}
+            {children ? children : null}
         </Btn>
     )
 };
