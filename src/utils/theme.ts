@@ -2,11 +2,14 @@ const theme = {
   colors: {
     white: '#fff',
     black: '#000',
-    text: '#fff',
-    background: '#000',
+    mainText: '#fff',
+    linkText: '#87888C',
+    descText: '#87888C',
+    mainBg: '#30313A',
+    componentsBg: '#171821',
     primary: '#43FFD2',
     secondary: '#7D2253',
-    accent: '#D978AC',
+    accent: '#A9DFD8',
     danger: '#FF3A44',
     success: '#31985A',
   },
@@ -72,6 +75,7 @@ const theme = {
   },
 
   radii: {
+    xs: '6px',
     s: '10px',
     m: '16px',
     l: '26px',
@@ -79,7 +83,7 @@ const theme = {
   },
 
   transition: {
-    primary: 'all 300ms cubic-bezier(0.47,0.01,0.61,0.99)',
+    primary: 'all 250ms linear',
   },
 };
 
@@ -87,5 +91,5 @@ export default theme;
 
 document.body.style.fontFamily = theme.fonts.body;
 document.body.style.fontSize = theme.fontSizes.m;
-document.body.style.color = theme.colors.text;
-document.body.style.backgroundColor = theme.colors.background;
+document.body.style.color = theme.colors.mainText;
+document.body.style.backgroundColor = theme.colors.mainBg;
