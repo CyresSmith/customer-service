@@ -11,7 +11,7 @@ export const Btn = styled.button<IButton>`
     color: ${props => props.color ? props.theme.colors[props.color] : props.theme.colors.componentBg};
     background-color: ${props => props.$bgColor ? props.theme.colors[props.$bgColor] : 'transparent'};
     border-radius: ${props => props.$type === 'text' ? props.theme.radii.s : props.theme.radii.round};
-    padding: ${props => props.$type === 'text' ? props.theme.space[3] : props.theme.space[2]} ${props => props.$type === 'text' ? props.theme.space[4] : props.theme.space[2]};
+    padding: ${props => props.$type === 'text' ? props.theme.space[2] : props.theme.space[2]} ${props => props.$type === 'text' ? props.theme.space[4] : props.theme.space[2]};
     font-size: ${({ theme }) => theme.fontSizes.l};
     font-weight: ${({ theme }) => theme.fontWeights.bold};
     transition: ${({ theme }) => theme.transition.primary};

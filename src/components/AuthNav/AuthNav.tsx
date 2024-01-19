@@ -2,17 +2,17 @@ import Button from "components/Ui/Buttons/Button/Button";
 import { List, ListItem } from "./AuthNav.styled";
 
 interface Props {
-    toggleModal: () => void,
+    openModal: (arg: string) => void,
 }
 
-const AuthNav = ({toggleModal}: Props) => {
+const AuthNav = ({openModal}: Props) => {
     return (
         <List>
             <ListItem>
-                <Button $bgColor="button" $type="text" handleClick={toggleModal} children="Вхід"/>
+                <Button name='login' type="button" $bgColor="button" $type="text" openModal={openModal} children="Вхід"/>
             </ListItem>
             <ListItem>
-                <Button $bgColor="button" $type="text" handleClick={toggleModal} children="Реєстрація"/>
+                <Button name='register' type="button" $bgColor="button" $type="text" openModal={openModal} children="Реєстрація"/>
             </ListItem>
         </List>
     )

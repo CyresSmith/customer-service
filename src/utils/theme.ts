@@ -17,8 +17,8 @@ const theme = {
   },
 
   fonts: {
-    body: '"Comfortaa", cursive',
-    heading: '"Comfortaa", cursive',
+    body: '"Sofia Sans", sans-serif;',
+    heading: '"Sofia Sans", sans-serif;',
   },
 
   fontSizes: {
@@ -38,9 +38,9 @@ const theme = {
   },
 
   fontWeights: {
-    light: 300,
-    regular: 400,
-    bold: 700,
+    light: 400,
+    regular: 600,
+    bold: 800,
   },
 
   lineHeights: {
@@ -91,7 +91,7 @@ const theme = {
 
 export default theme;
 
-document.body.style.fontFamily = theme.fonts.body;
+// document.body.style.fontFamily = theme.fonts.body;
 document.body.style.fontSize = theme.fontSizes.m;
 document.body.style.color = theme.colors.mainText;
 document.body.style.backgroundColor = theme.colors.mainBg;

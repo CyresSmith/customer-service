@@ -1,4 +1,4 @@
-import { FormInput, FormInputLabel, FormInputWrapper } from "./CustomForm.styled";
+import { FormInput, FormInputLabel, FormInputsListItem } from "./CustomForm.styled";
 import { ChangeEvent } from "react";
 
 type Props = {
@@ -9,16 +9,36 @@ type Props = {
 };
 
 const CustomFormInput = ({name, type, value, handleChange}: Props) => {
+    const translateName = (name: string): string | undefined => {
+        switch (name) {
+            case 'name':
+                return 'ім"я';
+                break;
+            case 'email':
+                return 'email';
+                break;
+            case 'password':
+                return 'Пароль';
+                break;
+            case 'confirm':
+                return 'Підтвердіть пароль';
+                break;
+            default:
+                break;
+        }
+    }
+
     return (
-        <FormInputWrapper>
-            <FormInputLabel></FormInputLabel>
+        <FormInputsListItem>
+            <FormInputLabel>{translateName(name)}</FormInputLabel>
             <FormInput
                 type={type}
                 name={name}
                 value={value}
-                onChange={handleChange} 
+                onChange={handleChange}
+                autoComplete="off"
             />
-        </FormInputWrapper>
+        </FormInputsListItem>
     )
 };
 

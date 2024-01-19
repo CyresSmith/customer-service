@@ -2,14 +2,14 @@ import AuthNav from "components/AuthNav";
 import { BarWrapper } from "./TopBar.styled";
 
 export interface IProps {
-    toggleModal: () => void,
+    openModal: (arg: string) => void,
 }
 
-const TopBar = ({toggleModal}: IProps) => {
+const TopBar = ({openModal}: IProps) => {
     return(
         <BarWrapper>
             <div>LOGO</div>
-            <AuthNav toggleModal={toggleModal}/>
+            <AuthNav openModal={openModal}/>
         </BarWrapper>
     )
 };
