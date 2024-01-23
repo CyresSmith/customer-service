@@ -1,6 +1,5 @@
 import instance from "./instance";
 import { State } from "hooks/useForm";
-import { Navigate } from "react-router-dom";
 import { Tokens, User } from "store/users/types";
 
 const setTokens = (tokens: Tokens | null): void => {
@@ -41,10 +40,9 @@ const current = async (): Promise<User> => {
 };
 
 const logout = async (): Promise<boolean> => {
-    const response = await instance.get('/users/logout');
+    const response = await instance.get('/auth/logout');
     if (response.status === 200) {
         setTokens(null);
-        <Navigate to='/' replace={true} />
         return true;
     } else {
         return false;

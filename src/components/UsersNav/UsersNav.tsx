@@ -4,7 +4,7 @@ import { UsersEmail, NavWrapper, UsersOptions, UsersAvatarWrapper, UsersAvatar, 
 import Button from "components/Ui/Buttons/Button/Button";
 import { CiMenuKebab } from "react-icons/ci";
 import Dropdown from "components/Ui/Dropdown";
-import UsersNavList from "./UsersNavLIst";
+import UsersNavList from "./UsersNavList";
 
 const UsersNav = () => {
     const [dropOpen, setDropOpen] = useState<boolean>(false);
@@ -26,7 +26,7 @@ const UsersNav = () => {
                 </UsersAvatarWrapper>
                 <UsersEmail>{user?.email}</UsersEmail>
                 <Button name='dropdown' handleClick={openDropdown} Icon={CiMenuKebab} type="button" />
-                {dropOpen && <Dropdown children={<UsersNavList />} $isOpen={dropOpen} closeDropdown={closeDropdown} />}
+                {dropOpen && <Dropdown children={<UsersNavList handleClose={closeDropdown} />} $isOpen={dropOpen} closeDropdown={closeDropdown} />}
             </UsersOptions>
         </NavWrapper>
     )

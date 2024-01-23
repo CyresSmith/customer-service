@@ -1,5 +1,5 @@
 import {Container, OutletWrapper} from './MainLayout.styled';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { Suspense, useEffect, useState } from 'react';
 import TopBar from '../TopBar';
 import Modal from 'components/Modal/Modal';
@@ -29,13 +29,13 @@ const initialRegState: State = {
     confirm: ''
 };
 
-const initialLoginState: State = {
+const initialLoginState: Pick<State, 'phone' | 'email' | 'password'> = {
     phone: '',
     email: '',
     password: ''
 };
 
-const initialVerifyState: State = {
+const initialVerifyState: Pick<State, 'code'> = {
     code: ''
 };
 
@@ -43,25 +43,28 @@ const MainLayout = () => {
     const [isOpen, setIsOpen] = useState<string | null>(null);
     const status = useAppSelector((state) => state.users.verify);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const openModal = (name: string): void => {
         setIsOpen(name);
     };
 
     const closeModal = (): void => {
-        setIsOpen(null)
-    }
+        setIsOpen(null);
+    };
 
-    const handleSubmit = (state: State) => {
+    const handleSubmit = (state: State): void => {
         if (isOpen === 'register') {
             dispatch(usersOperations.register(state));
             closeModal();
         } else if (isOpen === 'login') {
             dispatch(usersOperations.login(state));
             closeModal();
+            navigate('/workspace', {replace: true});
         } else {
             dispatch(usersOperations.verify(state))
             closeModal();
+            navigate('/workspace', {replace: true});
         }
     };
 

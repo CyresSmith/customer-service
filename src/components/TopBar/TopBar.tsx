@@ -14,7 +14,8 @@ const TopBar = ({openModal}: Props) => {
     return(
         <TopBarWrapper>
             <Logo to='/'>LOGO</Logo>
-            {isLoggedIn && !isLoading ? <UsersNav/> : !isLoggedIn && !isLoading ? <AuthNav openModal={openModal}/> : null}
+            {isLoggedIn && !isLoading && <UsersNav/>}
+            {!isLoggedIn && !isLoading && <AuthNav openModal={openModal}/>}
         </TopBarWrapper>
     )
 };

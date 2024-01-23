@@ -10,7 +10,7 @@ export const DropWrapper = styled.div<Pick <Props, '$isOpen'>>`
     padding: ${({ theme }) => theme.space[3]};
     border: ${({ theme }) => theme.borders.normal} ${({ theme }) => theme.colors.componentsBg};
     border-radius: ${({ theme }) => theme.radii.xs};
-    height: ${props => props.$isOpen ? '100px' : '0px'};
+    height: ${props => props.$isOpen ? '115px' : '0'};
     transition: ${({ theme }) => theme.transition.primary};
     overflow: hidden;
 `

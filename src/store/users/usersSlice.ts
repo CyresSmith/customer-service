@@ -83,7 +83,10 @@ const usersSlice = createSlice({
             })
             .addCase(usersOperations.logout.fulfilled, (state, {payload}) => {
                 if (payload) {
-                    state = initialState;
+                    state.error = null;
+                    state.user = null;
+                    state.isLoading = false;
+                    state.isLoggedIn = false;
                 }
             })
             .addCase(usersOperations.logout.rejected, (state, {payload}) => {

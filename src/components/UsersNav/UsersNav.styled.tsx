@@ -52,7 +52,6 @@ export const NavList = styled.ul`
     display: flex;
     flex-direction: column;
     gap: ${({ theme }) => theme.space[3]};
-    padding: ${({ theme }) => theme.space[3]};
 `
 
 export const NavListItem = styled.li`
