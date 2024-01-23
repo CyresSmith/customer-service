@@ -1,11 +1,11 @@
-import UsersLayout from "components/UsersLayout";
+import UsersLayout from 'components/Layout/UsersLayout';
 
 const Workspace = () => {
-    return (
-        <>
-            <UsersLayout />
-        </>
-    )
+  return (
+    <>
+      <UsersLayout />
+    </>
+  );
 };
 
 export default Workspace;

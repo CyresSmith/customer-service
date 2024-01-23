@@ -2,7 +2,7 @@ import Button from 'components/Ui/Buttons/Button/Button';
 import Dropdown from 'components/Ui/Dropdown';
 import { useAppSelector } from 'hooks';
 import { useState } from 'react';
-import { CiMenuKebab } from 'react-icons/ci';
+import { HiDotsVertical } from 'react-icons/hi';
 import {
   NavWrapper,
   UsersAvatar,
@@ -39,7 +39,7 @@ const UsersNav = () => {
         <Button
           name="dropdown"
           handleClick={openDropdown}
-          Icon={CiMenuKebab}
+          Icon={HiDotsVertical}
           type="button"
         />
         {dropOpen && (

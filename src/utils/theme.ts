@@ -13,8 +13,10 @@ const theme = {
       dark: '#111114',
     },
     accent: {
-      // main: '#D2DE32',
+      light: '#ffc23b',
       main: '#FFB000',
+      dark: '#d49302',
+      // main: '#D2DE32',
       // main: '#EF5B0C',
       // main: '#7DCE13',
       // main: '#28B5B5',

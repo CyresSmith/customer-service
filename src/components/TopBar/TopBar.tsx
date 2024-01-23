@@ -1,5 +1,5 @@
-import AuthNav from 'components/AuthNav';
-import UsersNav from 'components/UsersNav';
+import AuthNav from 'components/TopBar/AuthNav';
+import UsersNav from 'components/TopBar/UsersNav';
 import { useAppSelector } from 'hooks';
 import { Logo, TopBarWrapper } from './TopBar.styled';
 

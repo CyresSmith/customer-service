@@ -19,7 +19,9 @@ export const UsersOptions = styled.div`
 `;
 
 export const UsersEmail = styled.p`
-  color: ${theme.colors.primary.light};
+  color: ${theme.colors.secondary.light};
+  font-size: ${theme.fontSizes.l};
+  font-weight: ${theme.fontWeights.light};
 `;
 
 export const UsersAvatarWrapper = styled.div`
@@ -28,9 +30,9 @@ export const UsersAvatarWrapper = styled.div`
   justify-content: center;
   color: ${theme.colors.bg.main};
   position: relative;
-  height: 40px;
-  width: 40px;
-  background-color: ${theme.colors.primary.main};
+  height: 35px;
+  width: 35px;
+  background-color: ${theme.colors.secondary.main};
   border-radius: ${theme.radii.round};
 `;
 
@@ -54,34 +56,32 @@ export const NavList = styled.ul`
   gap: ${theme.space[3]};
 `;
 
-export const NavListItem = styled.li``;
-
 export const NavListItemLink = styled(NavLink)`
   display: flex;
   align-items: center;
   gap: ${theme.space[3]};
-  color: ${theme.colors.primary.light};
+  color: ${theme.colors.secondary.light};
   transition: ${theme.transition.primary};
 
   &:hover {
-    color: ${theme.colors.accent.main};
+    color: ${theme.colors.primary.light};
   }
   &:focus-visible {
-    color: ${theme.colors.accent.main};
-  }
+    color: ${theme.colors.primary.light};
+  }accent
 `;
 
 export const StyledIcon = styled.svg`
   width: 25px;
   height: 25px;
-  fill: ${theme.colors.primary.light};
+  fill: ${theme.colors.secondary.light};
   transition: inherit;
 
   ${NavListItemLink}:hover & {
-    fill: ${theme.colors.accent.main};
+    fill: ${theme.colors.accent.light};
   }
 
   ${NavListItemLink}:focus-visible & {
-    fill: ${theme.colors.accent.main};
+    fill: ${theme.colors.accent.light};
   }
 `;

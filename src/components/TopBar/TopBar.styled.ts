@@ -7,9 +7,9 @@ export const TopBarWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  min-height: 60px;
+  min-height: 72px;
   background-color: ${theme.colors.bg.dark};
-  padding: ${theme.space[3]} ${theme.space[4]};
+  padding: ${theme.space[4]} ${theme.space[5]};
   border-radius: ${theme.radii.m};
   box-shadow: ${theme.shadow.m};
 `;

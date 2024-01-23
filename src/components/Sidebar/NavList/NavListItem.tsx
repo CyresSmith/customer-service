@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItem, ListItemLink, StyledIcon } from './NavList.styled';
+import { ListItemLink, StyledIcon } from './NavList.styled';
 
 type Props = {
   name: string;
@@ -8,12 +8,12 @@ type Props = {
 
 const NavListItem = ({ name, Icon }: Props) => {
   return (
-    <ListItem>
+    <li>
       <ListItemLink to="#">
         {Icon && <StyledIcon as={Icon} />}
         <span>{name}</span>
       </ListItemLink>
-    </ListItem>
+    </li>
   );
 };
 
