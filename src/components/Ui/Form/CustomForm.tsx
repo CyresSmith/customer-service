@@ -33,7 +33,12 @@ const CustomForm = ({inputs, onSubmit, initialState, formType}: Props) => {
                     />
                 )}
             </FormInputsList>
-            <Button $bgColor='button' $type='text' type='submit' children={formType === 'register' ? 'Зареєструватись' : 'Увійти'} />
+            <Button
+                $bgColor='button'
+                $type='text'
+                type='submit'
+                children={formType === 'register' ? 'Зареєструватись' : formType === 'login' ? 'Увійти' : 'Підтвердити'}
+            />
         </Form>
     )
 };

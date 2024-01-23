@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 export const List = styled.ul`
     color: ${({ theme }) => theme.colors.linkText};
-    font-size: ${({ theme }) => theme.fontSizes.xxl};
+    font-size: ${({ theme }) => theme.fontSizes.xl};
     display: flex;
     flex-direction: column;
     gap: ${({ theme }) => theme.space[2]};

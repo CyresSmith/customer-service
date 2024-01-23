@@ -1,11 +1,13 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 
 export type State = {
-    name?: string,
+    firstName?: string,
+    lastName?: string,
     email?: string,
     password?: string,
     phone?: string,
-    confirm?: string
+    confirm?: string,
+    code?: string
 }
 
 type Props = {

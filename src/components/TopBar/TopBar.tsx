@@ -1,16 +1,21 @@
 import AuthNav from "components/AuthNav";
-import { BarWrapper } from "./TopBar.styled";
+import { TopBarWrapper, Logo } from "./TopBar.styled";
+import { useAppSelector } from "hooks";
+import UsersNav from "components/UsersNav";
 
-export interface IProps {
-    openModal: (arg: string) => void,
+type Props = {
+    openModal?: (arg: string) => void,
 }
 
-const TopBar = ({openModal}: IProps) => {
+const TopBar = ({openModal}: Props) => {
+    const isLoggedIn = useAppSelector((state) => state.users.isLoggedIn);
+    const isLoading = useAppSelector((state) => state.users.isLoading);
+
     return(
-        <BarWrapper>
-            <div>LOGO</div>
-            <AuthNav openModal={openModal}/>
-        </BarWrapper>
+        <TopBarWrapper>
+            <Logo to='/'>LOGO</Logo>
+            {isLoggedIn && !isLoading ? <UsersNav/> : !isLoggedIn && !isLoading ? <AuthNav openModal={openModal}/> : null}
+        </TopBarWrapper>
     )
 };
 

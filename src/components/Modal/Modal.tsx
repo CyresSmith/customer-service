@@ -6,7 +6,8 @@ import { useClickOutside, useEscapeKey } from "hooks";
 
 export type Modal = {
     children?: React.ReactNode,
-    open?: boolean,
+    open?: string | null,
+    $isOpen?: boolean,
     closeModal: () => void,
     $w?: string,
     $h?: string
@@ -30,8 +31,8 @@ const Modal = ({children, closeModal, open, $w, $h}: Modal) => {
     useEscapeKey(close);
 
     return (
-        <Backdrop open={isOpen}>
-            <ModalContainer $w={$w} $h={$h} ref={modalRef} open={isOpen}>
+        <Backdrop $isOpen={isOpen}>
+            <ModalContainer $w={$w} $h={$h} ref={modalRef} $isOpen={isOpen}>
                 <Button type="button" Icon={IoMdClose} $position="absolute" $top="5px" $right="5px" handleClick={close} />
                 {children}
             </ModalContainer>

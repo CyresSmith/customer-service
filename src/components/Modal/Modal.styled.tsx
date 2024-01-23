@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Modal } from './Modal';
 
-type Style = Pick<Modal, 'open' | '$w' | '$h'>;
+type Style = Pick<Modal, '$isOpen' | '$w' | '$h'>;
 
 export const Backdrop = styled.div<Style>`
     position: fixed;
@@ -14,7 +14,7 @@ export const Backdrop = styled.div<Style>`
     align-items: center;
     justify-content: center;
     background-color: ${({ theme }) => theme.colors.backdrop};
-    opacity: ${props => props.open ? 1 : 0};
+    opacity: ${props => props.$isOpen ? 1 : 0};
     transition: ${({ theme }) => theme.transition.primary};
 `
 
@@ -23,11 +23,11 @@ export const ModalContainer = styled.div<Style>`
     position: relative;
     width: ${props => props.$w ? props.$w : 'fit-content'};
     height: ${props => props.$h ? props.$h : 'fit-content'};
-    padding: ${({ theme }) => theme.space[5]};
+    padding: ${({ theme }) => theme.space[6]} ${({ theme }) => theme.space[5]};
     background-color: ${({ theme }) => theme.colors.mainBg};
     border-radius: ${({ theme }) => theme.radii.s};
-    opacity: ${props => props.open ? 1 : 0};
-    transform: ${props => props.open ? 'translate(0, 0)' : 'translate(100%, 0)'};
+    opacity: ${props => props.$isOpen ? 1 : 0};
+    transform: ${props => props.$isOpen ? 'translate(0, 0)' : 'translate(100%, 0)'};
     transition: ${({ theme }) => theme.transition.primary};
     box-shadow: 1px 3px 13px 2px rgba(0,0,0,0.37);
     -webkit-box-shadow: 1px 3px 13px 2px rgba(0,0,0,0.37);

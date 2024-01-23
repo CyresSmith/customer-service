@@ -1,13 +1,11 @@
-import {Container, MainSection, OutletWrapper} from './UsersLayout.styled';
+import {MainSection, OutletWrapper} from './UsersLayout.styled';
 import { Outlet } from 'react-router-dom';
 import { Suspense } from 'react';
-import TopBar from '../TopBar';
 import Sidebar from '../Sidebar';
 
 const UsersLayout = () => {
     return(
-        <Container>
-            <TopBar />
+        // <Container>
             <MainSection>
                 <Sidebar />
                 <OutletWrapper>
@@ -16,7 +14,7 @@ const UsersLayout = () => {
                     </Suspense>
                 </OutletWrapper>
             </MainSection>
-        </Container>
+        // </Container>
     )
 };
 

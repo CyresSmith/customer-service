@@ -13,7 +13,7 @@ const items = [
 const NavList = () => {
     return (
         <List>
-            {items.map(({name, icon}) => <NavListItem name={name} Icon={icon} />)}
+            {items.map(({name, icon}, i) => <NavListItem key={i} name={name} Icon={icon} />)}
         </List>
     )
 };

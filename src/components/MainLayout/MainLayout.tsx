@@ -1,29 +1,48 @@
 import {Container, OutletWrapper} from './MainLayout.styled';
 import { Outlet } from 'react-router-dom';
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import TopBar from '../TopBar';
 import Modal from 'components/Modal/Modal';
 import CustomForm from 'components/Ui/Form/CustomForm';
 import { State } from 'hooks/useForm';
+import { useAppDispatch, useAppSelector } from 'hooks';
+import usersOperations from 'store/users/usersOperations';
 
 const registerInputs = [
-    {name: 'name', type: 'text'},
+    {name: 'firstName', type: 'text'},
+    {name: 'lastName', type: 'text'},
+    {name: 'phone', type: 'text'},
     {name: 'email', type: 'email'},
     {name: 'password', type: 'password'},
     {name: 'confirm', type: 'password'},
 ];
 
-const loginInputs = registerInputs.filter(i => i.name !== 'confirm');
+const loginInputs = registerInputs.filter(i => i.name !== 'confirm' && i.name !== 'firstName' && i.name !== 'lastName');
+const verifyingInputs = [{name: 'code', type: 'text'}];
 
-const initialFormState = {
-    name: '',
+const initialRegState: State = {
+    firstName: '',
+    lastName: '',
+    phone: '',
     email: '',
     password: '',
     confirm: ''
-}
+};
+
+const initialLoginState: State = {
+    phone: '',
+    email: '',
+    password: ''
+};
+
+const initialVerifyState: State = {
+    code: ''
+};
 
 const MainLayout = () => {
     const [isOpen, setIsOpen] = useState<string | null>(null);
+    const status = useAppSelector((state) => state.users.verify);
+    const dispatch = useAppDispatch();
 
     const openModal = (name: string): void => {
         setIsOpen(name);
@@ -34,8 +53,23 @@ const MainLayout = () => {
     }
 
     const handleSubmit = (state: State) => {
-        console.log(state);
+        if (isOpen === 'register') {
+            dispatch(usersOperations.register(state));
+            closeModal();
+        } else if (isOpen === 'login') {
+            dispatch(usersOperations.login(state));
+            closeModal();
+        } else {
+            dispatch(usersOperations.verify(state))
+            closeModal();
+        }
     };
+
+    useEffect(() => {
+        if (status === false) {
+            setIsOpen('verify');
+        }
+    }, [status])
 
     return(
         <Container>
@@ -51,10 +85,12 @@ const MainLayout = () => {
                     children={<CustomForm
                                 formType={isOpen}
                                 onSubmit={handleSubmit}
-                                initialState={initialFormState}
-                                inputs={isOpen === 'register' ? registerInputs : loginInputs}
+                                initialState={isOpen === 'register' ? initialRegState : isOpen === 'login' ? initialLoginState : initialVerifyState}
+                                inputs={isOpen === 'register' ? registerInputs : isOpen === 'login' ? loginInputs : verifyingInputs}
                             />}
-                    open={isOpen} closeModal={closeModal}/>}
+                    open={isOpen} closeModal={closeModal}
+                />
+            }
         </Container>
     )
 };

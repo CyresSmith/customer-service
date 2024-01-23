@@ -1,8 +1,8 @@
 import Button from "components/Ui/Buttons/Button/Button";
 import { List, ListItem } from "./AuthNav.styled";
 
-interface Props {
-    openModal: (arg: string) => void,
+type Props = {
+    openModal?: (arg: string) => void,
 }
 
 const AuthNav = ({openModal}: Props) => {
