@@ -11,7 +11,7 @@ export const DropWrapper = styled.div<Pick <Props, '$isOpen'>>`
     border: ${({ theme }) => theme.borders.normal} ${({ theme }) => theme.colors.componentsBg};
     border-radius: ${({ theme }) => theme.radii.xs};
     height: ${props => props.$isOpen ? '115px' : '0'};
-    transition: ${({ theme }) => theme.transition.primary};
+    transition: ${({ theme }) => theme.transition.modal};
     overflow: hidden;
 `
 

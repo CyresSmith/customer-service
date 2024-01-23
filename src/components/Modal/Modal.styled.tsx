@@ -28,7 +28,7 @@ export const ModalContainer = styled.div<Style>`
     border-radius: ${({ theme }) => theme.radii.s};
     opacity: ${props => props.$isOpen ? 1 : 0};
     transform: ${props => props.$isOpen ? 'translate(0, 0)' : 'translate(100%, 0)'};
-    transition: ${({ theme }) => theme.transition.primary};
+    transition: ${({ theme }) => theme.transition.modal};
     box-shadow: 1px 3px 13px 2px rgba(0,0,0,0.37);
     -webkit-box-shadow: 1px 3px 13px 2px rgba(0,0,0,0.37);
     -moz-box-shadow: 1px 3px 13px 2px rgba(0,0,0,0.37);

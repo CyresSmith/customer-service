@@ -26,8 +26,6 @@ export const Dropdown = ({closeDropdown, $isOpen, children}: Props): React.React
         $isOpen ? setOpen(true) : setOpen(false);
     }, [$isOpen])
 
-
-
     return (
         <DropWrapper $isOpen={open} ref={dropRef}>
             {children}
