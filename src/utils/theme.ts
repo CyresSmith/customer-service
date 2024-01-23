@@ -4,39 +4,35 @@ const theme = {
     black: '#000',
     text: {
       light: '#fff',
-      main: '#87888C',
-      dark: '#171821',
+      main: '#30313A',
+      dark: '#111114',
     },
     bg: {
-      light: '#95bdb7',
+      light: '#5e6073',
       main: '#30313A',
-      dark: '#171821',
+      dark: '#111114',
     },
     accent: {
-      light: '#43FFD2',
       // main: '#D2DE32',
-      // main: '#FFB000',
+      main: '#FFB000',
       // main: '#EF5B0C',
       // main: '#7DCE13',
       // main: '#28B5B5',
       // main: '#FB743E',
-      // main: '#FB743E',
       // main: '#D2E603',
-      main: '#D2E603',
-      dark: '#171821',
     },
     primary: {
-      light: '#43FFD2',
-      main: '#30313A',
-      dark: '#171821',
+      light: '#8fe3d9',
+      main: '#5a8c86',
+      dark: '#213331',
     },
     secondary: {
-      light: '#A9DFD8',
-      main: '#30313A',
-      dark: '#171821',
+      light: '#b1b3ba',
+      main: '#87888C',
+      dark: '#494a4d',
     },
-    danger: '#FF3A44',
-    success: '#31985A',
+    danger: '#B31312',
+    success: '#38E54D',
     backdrop: 'rgba(23, 24, 33, 0.5)',
   },
 
@@ -126,5 +122,5 @@ export default theme;
 
 // document.body.style.fontFamily = theme.fonts.body;
 document.body.style.fontSize = theme.fontSizes.m;
-document.body.style.color = theme.colors.mainText;
-document.body.style.backgroundColor = theme.colors.mainBg;
+document.body.style.color = theme.colors.text.light;
+document.body.style.backgroundColor = theme.colors.bg.main;

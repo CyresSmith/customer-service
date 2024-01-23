@@ -8,7 +8,7 @@ export const TopBarWrapper = styled.div`
   justify-content: space-between;
   width: 100%;
   min-height: 60px;
-  background-color: ${theme.colors.bg.main};
+  background-color: ${theme.colors.bg.dark};
   padding: ${theme.space[3]} ${theme.space[4]};
   border-radius: ${theme.radii.m};
   box-shadow: ${theme.shadow.m};

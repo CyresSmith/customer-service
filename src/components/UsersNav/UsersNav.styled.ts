@@ -19,7 +19,7 @@ export const UsersOptions = styled.div`
 `;
 
 export const UsersEmail = styled.p`
-  color: ${theme.colors.primary.main};
+  color: ${theme.colors.primary.light};
 `;
 
 export const UsersAvatarWrapper = styled.div`
@@ -30,7 +30,7 @@ export const UsersAvatarWrapper = styled.div`
   position: relative;
   height: 40px;
   width: 40px;
-  background-color: ${theme.colors.accent.main};
+  background-color: ${theme.colors.primary.main};
   border-radius: ${theme.radii.round};
 `;
 
@@ -60,7 +60,7 @@ export const NavListItemLink = styled(NavLink)`
   display: flex;
   align-items: center;
   gap: ${theme.space[3]};
-  color: ${theme.colors.white};
+  color: ${theme.colors.primary.light};
   transition: ${theme.transition.primary};
 
   &:hover {
@@ -75,12 +75,13 @@ export const NavListItemBtn = styled.button`
   display: flex;
   align-items: center;
   gap: ${theme.space[3]};
-  color: ${theme.colors.white};
+  color: ${theme.colors.primary.light};
   transition: ${theme.transition.primary};
 
   &:hover {
     color: ${theme.colors.accent.main};
   }
+
   &:focus-visible {
     color: ${theme.colors.accent.main};
   }
@@ -89,7 +90,7 @@ export const NavListItemBtn = styled.button`
 export const StyledIcon = styled.svg`
   width: 25px;
   height: 25px;
-  fill: ${theme.colors.white};
+  fill: ${theme.colors.primary.light};
   transition: inherit;
 
   ${NavListItemBtn}:hover & {

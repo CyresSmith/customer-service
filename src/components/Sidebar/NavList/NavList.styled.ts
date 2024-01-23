@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const List = styled.ul`
-  color: ${theme.colors.text.main};
+  color: ${theme.colors.primary.light};
   font-size: ${theme.fontSizes.xl};
   display: flex;
   flex-direction: column;
@@ -22,8 +22,8 @@ export const ListItemLink = styled(NavLink)`
 
   &:hover,
   :focus {
-    background-color: ${theme.colors.accent.main};
-    color: ${theme.colors.bg.main};
+    background-color: ${theme.colors.primary.light};
+    color: ${theme.colors.bg.dark};
   }
 `;
 
@@ -31,6 +31,7 @@ export const StyledIcon = styled.svg`
   width: 25px;
   height: 25px;
   transition: ${theme.transition.primary};
+  fill: ${theme.colors.accent.main};
 
   ${ListItemLink}:hover & {
     fill: ${theme.colors.bg.main};

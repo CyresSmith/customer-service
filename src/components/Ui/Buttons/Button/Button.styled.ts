@@ -12,7 +12,7 @@ export const Btn = styled.button<IButton>`
   color: ${props =>
     props.color
       ? props.theme.colors.text[props.color]
-      : props.theme.colors.bg.main};
+      : props.theme.colors.primary.light};
   background-color: ${props =>
     props.$bgColor ? props.theme.colors.bg[props.$bgColor] : 'transparent'};
   border-radius: ${props =>
@@ -28,21 +28,21 @@ export const Btn = styled.button<IButton>`
   &:hover,
   :focus {
     background-color: ${props =>
-      props.$type === 'text' ? props.theme.colors.accent : 'transparent'};
-    color: ${theme.colors.bg.main};
+      props.$type === 'text' ? props.theme.colors.primary.main : 'transparent'};
+    color: ${theme.colors.primary.light};
   }
 `;
 
 export const StyledIcon = styled.svg`
   width: 25px;
   height: 25px;
-  fill: ${theme.colors.bg.light};
+  fill: ${theme.colors.accent.main};
   transition: ${theme.transition.primary};
 
   ${Btn}:hover & {
-    fill: ${theme.colors.accent.main};
+    fill: ${theme.colors.white};
   }
   ${Btn}:focus & {
-    fill: ${theme.colors.accent.main};
+    fill: ${theme.colors.white};
   }
 `;
