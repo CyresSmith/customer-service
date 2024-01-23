@@ -28,8 +28,10 @@ export const Btn = styled.button<IButton>`
   &:hover,
   :focus {
     background-color: ${props =>
-      props.$type === 'text' ? props.theme.colors.primary.main : 'transparent'};
-    color: ${theme.colors.primary.light};
+      props.$type === 'text'
+        ? props.theme.colors.primary.light
+        : 'transparent'};
+    color: ${theme.colors.primary.dark};
   }
 `;
 

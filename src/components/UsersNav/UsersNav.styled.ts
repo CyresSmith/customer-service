@@ -71,35 +71,11 @@ export const NavListItemLink = styled(NavLink)`
   }
 `;
 
-export const NavListItemBtn = styled.button`
-  display: flex;
-  align-items: center;
-  gap: ${theme.space[3]};
-  color: ${theme.colors.primary.light};
-  transition: ${theme.transition.primary};
-
-  &:hover {
-    color: ${theme.colors.accent.main};
-  }
-
-  &:focus-visible {
-    color: ${theme.colors.accent.main};
-  }
-`;
-
 export const StyledIcon = styled.svg`
   width: 25px;
   height: 25px;
   fill: ${theme.colors.primary.light};
   transition: inherit;
-
-  ${NavListItemBtn}:hover & {
-    fill: ${theme.colors.accent.main};
-  }
-
-  ${NavListItemBtn}:focus-visible & {
-    fill: ${theme.colors.accent.main};
-  }
 
   ${NavListItemLink}:hover & {
     fill: ${theme.colors.accent.main};
