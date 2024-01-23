@@ -1,5 +1,12 @@
+import { Container } from "./Sidebar.styled";
+import NavList from "components/NavList";
+
 const Sidebar = () => {
-  return <div>Sidebar</div>;
+  return(
+    <Container>
+      <NavList />
+    </Container>
+  );
 };
 
 export default Sidebar;
