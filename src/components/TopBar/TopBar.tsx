@@ -1,23 +1,23 @@
-import AuthNav from "components/AuthNav";
-import { TopBarWrapper, Logo } from "./TopBar.styled";
-import { useAppSelector } from "hooks";
-import UsersNav from "components/UsersNav";
+import AuthNav from 'components/TopBar/AuthNav';
+import UsersNav from 'components/TopBar/UsersNav';
+import { useAppSelector } from 'hooks';
+import { Logo, TopBarWrapper } from './TopBar.styled';
 
 type Props = {
-    openModal?: (arg: string) => void,
-}
+  openModal?: (arg: string) => void;
+};
 
-const TopBar = ({openModal}: Props) => {
-    const isLoggedIn = useAppSelector((state) => state.users.isLoggedIn);
-    const isLoading = useAppSelector((state) => state.users.isLoading);
+const TopBar = ({ openModal }: Props) => {
+  const isLoggedIn = useAppSelector(state => state.users.isLoggedIn);
+  const isLoading = useAppSelector(state => state.users.isLoading);
 
-    return(
-        <TopBarWrapper>
-            <Logo to='/'>LOGO</Logo>
-            {isLoggedIn && !isLoading && <UsersNav/>}
-            {!isLoggedIn && !isLoading && <AuthNav openModal={openModal}/>}
-        </TopBarWrapper>
-    )
+  return (
+    <TopBarWrapper>
+      <Logo to="/">LOGO</Logo>
+      {isLoggedIn && !isLoading && <UsersNav />}
+      {!isLoggedIn && !isLoading && <AuthNav openModal={openModal} />}
+    </TopBarWrapper>
+  );
 };
 
 export default TopBar;

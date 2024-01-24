@@ -1,8 +1,8 @@
-import { Container } from "./Sidebar.styled";
-import NavList from "components/NavList";
+import NavList from './NavList';
+import { Container } from './Sidebar.styled';
 
 const Sidebar = () => {
-  return(
+  return (
     <Container>
       <NavList />
     </Container>
