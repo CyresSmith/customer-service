@@ -5,6 +5,8 @@ import { useActions } from 'hooks';
 import { useAuth } from 'hooks/useAuth';
 import { lazy, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { Bounce, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 import { useCurrentQuery } from 'services/auth.api';
 
 const HomePage = lazy(() => import('../src/pages/Home'));
@@ -29,7 +31,9 @@ function App() {
     }
 
     if (isSuccess) {
-      if (data && data?.user) setCurrentUser(data);
+      if (data && data?.user) {
+        setCurrentUser(data);
+      }
       setLoading(false);
     }
 
@@ -52,7 +56,13 @@ function App() {
 
   return (
     <>
-      {/* <ToastContainer position="top-center" /> */}
+      <ToastContainer
+        position="bottom-right"
+        stacked
+        transition={Bounce}
+        theme={'colored'}
+        newestOnTop
+      />
       <Routes>
         <Route path="/" element={<MainLayout />}>
           {/* <Route index element={<PublicRoute children={<HomePage />} />} /> */}

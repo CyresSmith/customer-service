@@ -3,6 +3,7 @@ import { useActions } from 'hooks';
 import { State } from 'hooks/useForm';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useLogInMutation } from 'services/auth.api';
 
 type Props = {
@@ -28,7 +29,11 @@ const LoginForm = ({ closeModal }: Props) => {
   const handleSubmit = async (state: State): Promise<void> => {
     const data = await login(state).unwrap();
 
-    if (data) loginAction(data);
+    if (data) {
+      loginAction(data);
+
+      toast.success(`Вітаю, ${data.user?.firstName}`);
+    }
   };
 
   useEffect(() => {
