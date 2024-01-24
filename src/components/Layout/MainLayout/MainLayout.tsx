@@ -1,50 +1,14 @@
-import CustomForm from 'components/Ui/Form/CustomForm';
 import Modal from 'components/Ui/Modal/Modal';
-import { useAppDispatch } from 'hooks';
-import { State } from 'hooks/useForm';
+
+import LoginForm from 'components/LoginForm';
+import RegisterForm from 'components/RegisterForm';
 import { Suspense, useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
-import usersOperations from 'store/users/usersOperations';
+import { Outlet } from 'react-router-dom';
 import TopBar from '../../TopBar';
 import { Container, OutletWrapper } from './MainLayout.styled';
 
-const registerInputs = [
-  { name: 'firstName', type: 'text' },
-  { name: 'lastName', type: 'text' },
-  { name: 'phone', type: 'text' },
-  { name: 'email', type: 'email' },
-  { name: 'password', type: 'password' },
-  { name: 'confirm', type: 'password' },
-];
-
-const loginInputs = registerInputs.filter(
-  i => i.name !== 'confirm' && i.name !== 'firstName' && i.name !== 'lastName'
-);
-const verifyingInputs = [{ name: 'code', type: 'text' }];
-
-const initialRegState: State = {
-  firstName: '',
-  lastName: '',
-  phone: '',
-  email: '',
-  password: '',
-  confirm: '',
-};
-
-const initialLoginState: Pick<State, 'phone' | 'email' | 'password'> = {
-  phone: '',
-  email: '',
-  password: '',
-};
-
-const initialVerifyState: Pick<State, 'code'> = {
-  code: '',
-};
-
 const MainLayout = () => {
   const [isOpen, setIsOpen] = useState<string | null>(null);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const openModal = (name: string): void => {
     setIsOpen(name);
@@ -52,17 +16,6 @@ const MainLayout = () => {
 
   const closeModal = (): void => {
     setIsOpen(null);
-  };
-
-  const handleSubmit = (state: State): void => {
-    if (isOpen === 'register') {
-      dispatch(usersOperations.register(state));
-      closeModal();
-    } else {
-      dispatch(usersOperations.login(state));
-      closeModal();
-      navigate('/workspace', { replace: true });
-    }
   };
 
   return (
@@ -77,24 +30,11 @@ const MainLayout = () => {
         <Modal
           $w="20%"
           children={
-            <CustomForm
-              formType={isOpen}
-              onSubmit={handleSubmit}
-              initialState={
-                isOpen === 'register'
-                  ? initialRegState
-                  : isOpen === 'login'
-                  ? initialLoginState
-                  : initialVerifyState
-              }
-              inputs={
-                isOpen === 'register'
-                  ? registerInputs
-                  : isOpen === 'login'
-                  ? loginInputs
-                  : verifyingInputs
-              }
-            />
+            isOpen === 'register' ? (
+              <RegisterForm closeModal={closeModal} />
+            ) : (
+              <LoginForm closeModal={closeModal} />
+            )
           }
           open={isOpen}
           closeModal={closeModal}

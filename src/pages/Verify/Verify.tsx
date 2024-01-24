@@ -1,7 +1,7 @@
 import { Container } from 'components/HomeContent/HomeContent.styled';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useVerifyQuery } from 'store/users/authApi';
+import { useVerifyQuery } from 'services/auth.api';
 
 const Verify = () => {
   const { code } = useParams();

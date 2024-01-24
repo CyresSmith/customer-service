@@ -1,23 +1,52 @@
 // import { lazy } from "react";
 import MainLayout from 'components/Layout/MainLayout';
 import PrivateRoute from 'helpers/PrivateRoute';
-import { useAppDispatch } from 'hooks';
+import { useActions } from 'hooks';
+import { useAuth } from 'hooks/useAuth';
 import { lazy, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import usersOperations from 'store/users/usersOperations';
+import { useCurrentQuery } from 'services/auth.api';
 
 const HomePage = lazy(() => import('../src/pages/Home'));
 const WorkPage = lazy(() => import('../src/pages/Workspace'));
 const VerifyPage = lazy(() => import('../src/pages/Verify'));
-
 const ErrorPage = lazy(() => import('../src/pages/ErrorPage'));
 
 function App() {
-  const dispatch = useAppDispatch();
+  const { accessToken, user } = useAuth();
+  const { setCurrentUser, logOut, setLoading } = useActions();
+
+  const { data, isError, isLoading, isSuccess, error } = useCurrentQuery(
+    accessToken,
+    {
+      skip: Boolean(user || !accessToken),
+    }
+  );
 
   useEffect(() => {
-    dispatch(usersOperations.current());
-  }, [dispatch]);
+    if (isLoading) {
+      setLoading(isLoading);
+    }
+
+    if (isSuccess) {
+      if (data && data?.user) setCurrentUser(data);
+    }
+
+    if (isError) {
+      console.log(error);
+
+      logOut();
+    }
+  }, [
+    data,
+    error,
+    isError,
+    isLoading,
+    isSuccess,
+    logOut,
+    setCurrentUser,
+    setLoading,
+  ]);
 
   return (
     <>

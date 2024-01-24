@@ -1,3 +1,9 @@
-import userActions from './users/usersOperations';
+import loadingSlice from './loading/loading.slice';
+import userSlice from './user/user.slice';
 
-export const rootActions = { ...userActions };
+const rootActions = {
+  ...userSlice.actions,
+  ...loadingSlice.actions,
+};
+
+export default rootActions;

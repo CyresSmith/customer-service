@@ -10,24 +10,32 @@ import {
   persistStore,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { authApi } from './users/authApi';
-import usersReducer from './users/usersSlice';
+import { authApi } from '../services/auth.api';
+import loadingSlice from './loading/loading.slice';
+import userSlice from './user/user.slice';
 
 const persistUserConfig = {
-  key: 'c-service',
+  key: 'service',
   storage,
-  whitelist: ['user.token, user.refreshToken'],
+  whitelist: ['accessToken', 'refreshToken'],
 };
 
 const rootReducer = combineReducers({
-  user: usersReducer,
+  loading: loadingSlice.reducer,
+  user: userSlice.reducer,
   [authApi.reducerPath]: authApi.reducer,
 });
 
-const persistedUserReducer = persistReducer(persistUserConfig, rootReducer);
+const persistedUserReducer = persistReducer(
+  persistUserConfig,
+  userSlice.reducer
+);
 
 export const store = configureStore({
-  reducer: persistedUserReducer,
+  reducer: {
+    user: persistedUserReducer,
+    [authApi.reducerPath]: authApi.reducer,
+  },
   middleware: gDM =>
     gDM({
       serializableCheck: {

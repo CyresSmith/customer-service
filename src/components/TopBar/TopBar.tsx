@@ -9,13 +9,13 @@ type Props = {
 };
 
 const TopBar = ({ openModal }: Props) => {
-  const { isLoggedIn, isLoading } = useAuth();
+  const { isLoggedIn } = useAuth();
 
   return (
     <TopBarWrapper>
       <Logo to="/">LOGO</Logo>
-      {isLoggedIn && !isLoading && <UsersNav />}
-      {!isLoggedIn && !isLoading && <AuthNav openModal={openModal} />}
+      {isLoggedIn && <UsersNav />}
+      {!isLoggedIn && <AuthNav openModal={openModal} />}
     </TopBarWrapper>
   );
 };
