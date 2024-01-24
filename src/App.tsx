@@ -1,14 +1,15 @@
 // import { lazy } from "react";
+import MainLayout from 'components/MainLayout/MainLayout';
 import PrivateRoute from 'helpers/PrivateRoute';
 import { useAppDispatch } from 'hooks';
 import { lazy, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import usersOperations from 'store/users/usersOperations';
-import MainLayout from './components/MainLayout';
 
 const HomePage = lazy(() => import('../src/pages/Home'));
 const WorkPage = lazy(() => import('../src/pages/Workspace'));
 const VerifyPage = lazy(() => import('../src/pages/Verify'));
+
 const ErrorPage = lazy(() => import('../src/pages/ErrorPage'));
 
 function App() {

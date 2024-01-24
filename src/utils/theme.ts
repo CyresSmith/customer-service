@@ -2,18 +2,40 @@ const theme = {
   colors: {
     white: '#fff',
     black: '#000',
-    mainText: '#fff',
-    linkText: '#87888C',
-    descText: '#87888C',
-    mainBg: '#30313A',
-    componentsBg: '#171821',
-    primary: '#43FFD2',
-    secondary: '#7D2253',
-    button: '#95bdb7',
-    accent: '#A9DFD8',
-    danger: '#FF3A44',
-    success: '#31985A',
-    backdrop: 'rgba(23, 24, 33, 0.5)'
+    text: {
+      light: '#fff',
+      main: '#30313A',
+      dark: '#111114',
+    },
+    bg: {
+      light: '#5e6073',
+      main: '#30313A',
+      dark: '#111114',
+    },
+    accent: {
+      light: '#ffc23b',
+      main: '#FFB000',
+      dark: '#d49302',
+      // main: '#D2DE32',
+      // main: '#EF5B0C',
+      // main: '#7DCE13',
+      // main: '#28B5B5',
+      // main: '#FB743E',
+      // main: '#D2E603',
+    },
+    primary: {
+      light: '#8fe3d9',
+      main: '#5a8c86',
+      dark: '#213331',
+    },
+    secondary: {
+      light: '#b1b3ba',
+      main: '#87888C',
+      dark: '#494a4d',
+    },
+    danger: '#B31312',
+    success: '#38E54D',
+    backdrop: 'rgba(23, 24, 33, 0.5)',
   },
 
   fonts: {
@@ -88,11 +110,19 @@ const theme = {
     primary: 'all 250ms ease-in-out',
     modal: 'all 250ms linear',
   },
+
+  shadow: {
+    s: ``,
+    m: `1px 3px 13px 2px rgba(0, 0, 0, 0.37);
+        -webkit-box-shadow: 1px 3px 13px 2px rgba(0, 0, 0, 0.37);
+        -moz-box-shadow: 1px 3px 13px 2px rgba(0, 0, 0, 0.37);`,
+    l: ``,
+  },
 };
 
 export default theme;
 
 // document.body.style.fontFamily = theme.fonts.body;
 document.body.style.fontSize = theme.fontSizes.m;
-document.body.style.color = theme.colors.mainText;
-document.body.style.backgroundColor = theme.colors.mainBg;
+document.body.style.color = theme.colors.text.light;
+document.body.style.backgroundColor = theme.colors.bg.main;

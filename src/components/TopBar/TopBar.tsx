@@ -1,7 +1,8 @@
-import AuthNav from 'components/AuthNav';
-import UsersNav from 'components/UsersNav';
 import { useAuth } from 'hooks/useAuth';
+
+import AuthNav from './AuthNav';
 import { Logo, TopBarWrapper } from './TopBar.styled';
+import UsersNav from './UsersNav';
 
 type Props = {
   openModal?: (arg: string) => void;
