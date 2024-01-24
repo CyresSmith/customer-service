@@ -1,6 +1,6 @@
 import Button from 'components/Ui/Buttons/Button/Button';
 import Dropdown from 'components/Ui/Dropdown';
-import { useAppSelector } from 'hooks';
+import { useAuth } from 'hooks/useAuth';
 import { useState } from 'react';
 import { HiDotsVertical } from 'react-icons/hi';
 import {
@@ -15,7 +15,7 @@ import UsersNavList from './UsersNavList';
 
 const UsersNav = () => {
   const [dropOpen, setDropOpen] = useState<boolean>(false);
-  const user = useAppSelector(state => state.users.user);
+  const { user } = useAuth();
 
   const openDropdown = (): void => {
     setDropOpen(true);

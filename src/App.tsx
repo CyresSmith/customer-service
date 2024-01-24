@@ -1,5 +1,5 @@
 // import { lazy } from "react";
-import MainLayout from 'components/MainLayout/MainLayout';
+import MainLayout from 'components/Layout/MainLayout';
 import PrivateRoute from 'helpers/PrivateRoute';
 import { useAppDispatch } from 'hooks';
 import { lazy, useEffect } from 'react';

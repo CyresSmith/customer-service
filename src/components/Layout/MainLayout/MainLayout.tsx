@@ -1,8 +1,8 @@
-import Modal from 'components/Ui/Modal/Modal';
 import CustomForm from 'components/Ui/Form/CustomForm';
-import { useAppDispatch, useAppSelector } from 'hooks';
+import Modal from 'components/Ui/Modal/Modal';
+import { useAppDispatch } from 'hooks';
 import { State } from 'hooks/useForm';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import usersOperations from 'store/users/usersOperations';
 import TopBar from '../../TopBar';
@@ -43,7 +43,6 @@ const initialVerifyState: Pick<State, 'code'> = {
 
 const MainLayout = () => {
   const [isOpen, setIsOpen] = useState<string | null>(null);
-  const status = useAppSelector(state => state.users.verify);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -59,22 +58,12 @@ const MainLayout = () => {
     if (isOpen === 'register') {
       dispatch(usersOperations.register(state));
       closeModal();
-    } else if (isOpen === 'login') {
-      dispatch(usersOperations.login(state));
-      closeModal();
-      navigate('/workspace', { replace: true });
     } else {
-      dispatch(usersOperations.verify(state));
+      dispatch(usersOperations.login(state));
       closeModal();
       navigate('/workspace', { replace: true });
     }
   };
-
-  useEffect(() => {
-    if (status === false) {
-      setIsOpen('verify');
-    }
-  }, [status]);
 
   return (
     <Container>
