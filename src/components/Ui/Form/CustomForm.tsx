@@ -36,6 +36,7 @@ const CustomForm = ({ inputs, onSubmit, initialState, buttonLabel }: Props) => {
           />
         ))}
       </FormInputsList>
+
       <Button
         $bgColor="button"
         $type="text"

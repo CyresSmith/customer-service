@@ -31,7 +31,6 @@ const LoginForm = ({ closeModal }: Props) => {
 
     if (data) {
       loginAction(data);
-
       toast.success(`Вітаю, ${data.user?.firstName}`);
     }
   };
@@ -47,7 +46,8 @@ const LoginForm = ({ closeModal }: Props) => {
     }
 
     if (isError) {
-      console.log(error);
+      console.log('error: ', error);
+      toast.error(`${error instanceof Array ? error[0] : error}`);
     }
   }, [closeModal, error, isError, isLoading, isSuccess, navigate]);
 

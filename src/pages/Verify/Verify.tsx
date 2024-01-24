@@ -1,11 +1,15 @@
 import { Container } from 'components/HomeContent/HomeContent.styled';
+import { useActions } from 'hooks';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useVerifyQuery } from 'services/auth.api';
+import { Message } from './Verify.styled';
 
 const Verify = () => {
   const { code } = useParams();
   const navigate = useNavigate();
+  const { logIn, setLoading } = useActions();
 
   const [message, setMessage] = useState('');
 
@@ -13,29 +17,38 @@ const Verify = () => {
 
   useEffect(() => {
     if (isLoading) {
-      setMessage('Loading...');
+      setLoading(true);
     }
 
     if (isSuccess) {
-      console.log('data: ', data);
+      if (data) {
+        setLoading(false);
+        setMessage('User successfully verified!');
+        logIn(data);
 
-      setMessage('User successfully verified!');
+        toast.success(`Вітаю, ${data.user?.firstName}`);
 
-      //   navigate('/');
+        const redirectTimeout = setTimeout(() => {
+          navigate('/', { replace: true });
+        }, 3000);
+
+        return () => clearTimeout(redirectTimeout);
+      }
     }
 
     if (isError) {
-      console.log(error);
-      setMessage('Verification error');
-    }
-  }, [data, error, isError, isLoading, isSuccess, navigate]);
+      setLoading(false);
+      setMessage(typeof error === 'string' ? error : 'Verification error!');
 
-  return (
-    <Container>
-      <a href=""></a>
-      {message.length && <h1>{message}</h1>}
-    </Container>
-  );
+      const redirectTimeout = setTimeout(() => {
+        navigate('/', { replace: true });
+      }, 3000);
+
+      return () => clearTimeout(redirectTimeout);
+    }
+  }, [data, error, isError, isLoading, isSuccess, logIn, navigate, setLoading]);
+
+  return <Container>{message && <Message>{message}</Message>}</Container>;
 };
 
 export default Verify;

@@ -21,6 +21,11 @@ export type UserState = {
   refreshToken: string | null;
 };
 
+export type RegisterResponse = {
+  user: User;
+  message: string;
+};
+
 export type AuthState = Omit<UserState, 'isLoggedIn'>;
 
 export type TokenState = Pick<UserState, 'accessToken' | 'refreshToken'>;

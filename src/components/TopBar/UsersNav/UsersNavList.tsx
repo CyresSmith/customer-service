@@ -1,9 +1,10 @@
-import { useActions } from 'hooks';
+import { useActions, useAuth } from 'hooks';
 import { useEffect } from 'react';
 import { AiOutlineUser } from 'react-icons/ai';
 import { MdWorkOutline } from 'react-icons/md';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useLogOutMutation } from 'services/auth.api';
 import { NavList, NavListItemLink, StyledIcon } from './UsersNav.styled';
 
@@ -20,6 +21,7 @@ const menuItems = [
 const UsersNavList = ({ handleClose }: Props) => {
   const navigate = useNavigate();
   const { logOut } = useActions();
+  const { user } = useAuth();
 
   const [apiLogout, { isError, isLoading, isSuccess, error }] =
     useLogOutMutation();
@@ -35,13 +37,14 @@ const UsersNavList = ({ handleClose }: Props) => {
 
     if (isSuccess) {
       logOut();
+      toast.info(`До зустрічі, ${user?.firstName}!`);
       navigate('/', { replace: true });
     }
 
     if (isError) {
       console.log(error);
     }
-  }, [error, isError, isLoading, isSuccess, logOut, navigate]);
+  }, [error, isError, isLoading, isSuccess, logOut, navigate, user?.firstName]);
 
   return (
     <NavList>

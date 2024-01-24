@@ -1,7 +1,7 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { State } from 'hooks/useForm';
 import { axiosBaseQuery } from 'services/instance';
-import { AuthState, User } from '../store/user/user.types';
+import { AuthState, RegisterResponse } from '../store/user/user.types';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
@@ -11,7 +11,7 @@ export const authApi = createApi({
   tagTypes: ['authApi'],
 
   endpoints: builder => ({
-    register: builder.mutation<User, Omit<State, 'confirm'>>({
+    register: builder.mutation<RegisterResponse, Omit<State, 'confirm'>>({
       query: data => ({
         url: '/users/register',
         method: 'POST',
@@ -20,7 +20,7 @@ export const authApi = createApi({
       invalidatesTags: ['authApi'],
     }),
 
-    verify: builder.query({
+    verify: builder.query<AuthState, unknown>({
       query: (token: string) => ({
         url: `/users/verify/${token}`,
         method: 'GET',
