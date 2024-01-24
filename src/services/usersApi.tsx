@@ -22,8 +22,8 @@ const register = async (
   }
 };
 
-const verify = async (code: State): Promise<User> => {
-  const { data } = await instance.post('/users/verify', code);
+const verify = async (code: string): Promise<User> => {
+  const { data } = await instance.post('/users/verify', { code });
   const { user, accessToken, refreshToken } = data;
   setTokens({ accessToken, refreshToken });
   return user;
