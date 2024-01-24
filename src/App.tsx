@@ -25,17 +25,19 @@ function App() {
 
   useEffect(() => {
     if (isLoading) {
-      setLoading(isLoading);
+      setLoading(true);
     }
 
     if (isSuccess) {
       if (data && data?.user) setCurrentUser(data);
+      setLoading(false);
     }
 
     if (isError) {
       console.log(error);
 
       logOut();
+      setLoading(false);
     }
   }, [
     data,

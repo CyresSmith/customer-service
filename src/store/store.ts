@@ -20,22 +20,19 @@ const persistUserConfig = {
   whitelist: ['accessToken', 'refreshToken'],
 };
 
-const rootReducer = combineReducers({
-  loading: loadingSlice.reducer,
-  user: userSlice.reducer,
-  [authApi.reducerPath]: authApi.reducer,
-});
-
 const persistedUserReducer = persistReducer(
   persistUserConfig,
   userSlice.reducer
 );
 
+const rootReducer = combineReducers({
+  loading: loadingSlice.reducer,
+  user: persistedUserReducer,
+  [authApi.reducerPath]: authApi.reducer,
+});
+
 export const store = configureStore({
-  reducer: {
-    user: persistedUserReducer,
-    [authApi.reducerPath]: authApi.reducer,
-  },
+  reducer: rootReducer,
   middleware: gDM =>
     gDM({
       serializableCheck: {
@@ -44,8 +41,5 @@ export const store = configureStore({
     }).concat(authApi.middleware),
 });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-
-export const persistor = persistStore(store);
 export type TypeRootState = ReturnType<typeof rootReducer>;
+export const persistor = persistStore(store);
