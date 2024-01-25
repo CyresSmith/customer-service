@@ -1,128 +1,144 @@
 import theme from 'utils/theme';
 import { IButton } from './button.types';
 
-const buttonStyle = ({ $colors, size, $round }: IButton) => {
+const buttonStyle = ({ $colors, size, $round, $variant }: IButton) => {
   const color = (): string => {
     switch ($colors) {
       case 'light':
-        return theme.colors.primary.dark;
+        return $variant === 'solid'
+          ? theme.colors.primary.dark
+          : theme.colors.secondary.light;
 
       case 'dark':
-        return theme.colors.primary.light;
+        return $variant === 'solid'
+          ? theme.colors.primary.light
+          : theme.colors.bg.dark;
 
       case 'main':
-        return theme.colors.bg.main;
+        return $variant === 'solid'
+          ? theme.colors.primary.dark
+          : theme.colors.primary.main;
 
       case 'accent':
-        return theme.colors.secondary.main;
+        return $variant === 'solid'
+          ? theme.colors.secondary.dark
+          : theme.colors.accent.light;
 
       default:
         return theme.colors.primary.dark;
-    }
-  };
-
-  const backgroundColor = (): string => {
-    switch ($colors) {
-      case 'light':
-        return theme.colors.secondary.light;
-
-      case 'dark':
-        return theme.colors.secondary.dark;
-
-      case 'main':
-        return theme.colors.secondary.light;
-
-      case 'accent':
-        return theme.colors.accent.light;
-
-      default:
-        return theme.colors.secondary.light;
-    }
-  };
-
-  const padding = (): string => {
-    switch (size) {
-      case 's':
-        return $round ? theme.space[2] : `${theme.space[1]} ${theme.space[2]}`;
-
-      case 'm':
-        return $round ? theme.space[3] : `${theme.space[2]} ${theme.space[3]}`;
-
-      case 'l':
-        return $round ? theme.space[4] : `${theme.space[2]} ${theme.space[4]}`;
-
-      default:
-        return $round ? theme.space[3] : `${theme.space[2]} ${theme.space[3]}`;
-    }
-  };
-
-  const fontSize = (): string => {
-    switch (size) {
-      case 's':
-        return theme.fontSizes.m;
-
-      case 'm':
-        return theme.fontSizes.l;
-
-      case 'l':
-        return theme.fontSizes.xxl;
-
-      default:
-        return theme.fontSizes.l;
     }
   };
 
   const hoverColor = (): string => {
     switch ($colors) {
       case 'light':
-        return theme.colors.secondary.main;
+        return $variant === 'solid'
+          ? theme.colors.bg.dark
+          : theme.colors.primary.light;
 
       case 'dark':
-        return theme.colors.secondary.main;
+        return $variant === 'solid'
+          ? theme.colors.accent.light
+          : theme.colors.accent.dark;
 
       case 'main':
-        return theme.colors.bg.dark;
+        return $variant === 'solid'
+          ? theme.colors.accent.light
+          : theme.colors.accent.light;
 
       case 'accent':
-        return theme.colors.accent.main;
+        return $variant === 'solid'
+          ? theme.colors.bg.dark
+          : theme.colors.accent.main;
 
       default:
         return theme.colors.secondary.main;
     }
   };
 
+  const backgroundColor = (): string => {
+    const setColor = () => {
+      switch ($colors) {
+        case 'light':
+          return theme.colors.secondary.light;
+
+        case 'dark':
+          return theme.colors.bg.dark;
+
+        case 'main':
+          return theme.colors.primary.main;
+
+        case 'accent':
+          return theme.colors.accent.light;
+
+        default:
+          return theme.colors.secondary.light;
+      }
+    };
+
+    return $variant === 'text' ? 'transparent' : setColor();
+  };
+
   const hoverBackgroundColor = (): string => {
-    switch ($colors) {
-      case 'light':
-        return theme.colors.secondary.main;
+    const setColor = () => {
+      switch ($colors) {
+        case 'light':
+          return theme.colors.primary.light;
 
-      case 'dark':
-        return theme.colors.secondary.main;
+        case 'dark':
+          return theme.colors.bg.dark;
 
-      case 'main':
-        return theme.colors.primary.light;
+        case 'main':
+          return theme.colors.primary.main;
 
-      case 'accent':
-        return theme.colors.accent.main;
+        case 'accent':
+          return theme.colors.accent.main;
+
+        default:
+          return theme.colors.secondary.main;
+      }
+    };
+
+    return $variant === 'text' ? 'transparent' : setColor();
+  };
+
+  const padding = (): string => {
+    switch (size) {
+      case 's':
+        return $round || $variant === 'text'
+          ? theme.space[0]
+          : `${theme.space[1]} ${theme.space[2]}`;
+
+      case 'm':
+        return $round || $variant === 'text'
+          ? theme.space[1]
+          : `${theme.space[2]} ${theme.space[3]}`;
+
+      case 'l':
+        return $round || $variant === 'text'
+          ? theme.space[2]
+          : `${theme.space[2]} ${theme.space[4]}`;
 
       default:
-        return theme.colors.secondary.main;
+        return $round || $variant === 'text'
+          ? theme.space[3]
+          : `${theme.space[2]} ${theme.space[3]}`;
     }
   };
 
   const iconSize = (): string => {
     switch (size) {
       case 's':
-        return '17px';
+        return $variant === 'text' ? '21px' : '17px';
 
       case 'm':
-        return '19px';
+        return $variant === 'text' ? '23px' : '19px';
 
       case 'l':
-        return '24px';
+        return $variant === 'text' ? '24px' : '24px';
 
       default:
-        return '19px';
+        return $variant === 'text' ? '25px' : '19px';
     }
   };
 
@@ -139,6 +155,22 @@ const buttonStyle = ({ $colors, size, $round }: IButton) => {
 
       default:
         return theme.space[2];
+    }
+  };
+
+  const fontSize = (): string => {
+    switch (size) {
+      case 's':
+        return theme.fontSizes.m;
+
+      case 'm':
+        return theme.fontSizes.l;
+
+      case 'l':
+        return theme.fontSizes.xxl;
+
+      default:
+        return theme.fontSizes.l;
     }
   };
 
