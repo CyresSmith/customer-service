@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { IButton } from 'types';
 import theme from 'utils/theme';
-import buttonStyle from '../buttonStyle';
+import buttonStyle from './dinamicButtonStyles';
 
 export const Btn = styled.button<IButton>`
   ${p => {
