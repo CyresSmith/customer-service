@@ -35,13 +35,11 @@ const UsersNav = () => {
             <UsersNoAvatar>{user?.firstName?.split('')[0]}</UsersNoAvatar>
           )}
         </UsersAvatarWrapper>
+
         <UsersEmail>{user?.email}</UsersEmail>
-        <Button
-          name="dropdown"
-          handleClick={openDropdown}
-          Icon={HiDotsVertical}
-          type="button"
-        />
+
+        <Button onClick={openDropdown} Icon={HiDotsVertical} size="s" $round />
+
         {dropOpen && (
           <Dropdown
             children={<UsersNavList handleClose={closeDropdown} />}

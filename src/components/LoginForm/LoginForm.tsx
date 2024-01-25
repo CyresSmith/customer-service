@@ -53,6 +53,7 @@ const LoginForm = ({ closeModal }: Props) => {
 
   return (
     <CustomForm
+      isLoading={isLoading}
       buttonLabel="Увійти"
       onSubmit={handleSubmit}
       initialState={initialLoginState}

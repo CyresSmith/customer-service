@@ -4,6 +4,8 @@ import Button from '../Buttons/Button/Button';
 import { Form, FormInputsList } from './CustomForm.styled';
 import CustomFormInput from './CustomFormInput';
 
+import { HiLogin } from 'react-icons/hi';
+
 type FormInput = {
   name: string;
   type: string;
@@ -15,9 +17,16 @@ type Props = {
   inputs: FormInput[];
   onSubmit: (state: State) => void;
   initialState: State;
+  isLoading?: boolean;
 };
 
-const CustomForm = ({ inputs, onSubmit, initialState, buttonLabel }: Props) => {
+const CustomForm = ({
+  isLoading,
+  inputs,
+  onSubmit,
+  initialState,
+  buttonLabel,
+}: Props) => {
   const { handleChange, handleSubmit, state } = useForm({
     initialState,
     onSubmit,
@@ -38,10 +47,11 @@ const CustomForm = ({ inputs, onSubmit, initialState, buttonLabel }: Props) => {
       </FormInputsList>
 
       <Button
-        $bgColor="button"
-        $type="text"
+        isLoading={isLoading}
+        disabled={isLoading}
         type="submit"
         children={buttonLabel}
+        Icon={HiLogin}
       />
     </Form>
   );

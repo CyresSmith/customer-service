@@ -1,55 +1,36 @@
-import React from 'react';
-import { Btn, StyledIcon } from './Button.styled';
-
-export interface IButton {
-  $bgColor?: string;
-  color?: string;
-  children?: React.ReactNode;
-  handleClick?: () => void;
-  openModal?: (arg: string) => void;
-  Icon?: React.ElementType;
-  $position?: string;
-  $top?: string;
-  $right?: string;
-  $type?: string;
-  type: string;
-  name?: string;
-}
+import { BiLoaderCircle } from 'react-icons/bi';
+import { IButton } from 'types';
+import { Btn, Loader } from './Button.styled';
 
 const Button = ({
-  $bgColor,
+  id = '',
+  isLoading = false,
+  disabled = false,
   children,
-  handleClick,
-  $position,
-  $top,
-  $right,
+  onClick,
   Icon,
-  $type,
-  openModal,
-  type,
-  name,
+  type = 'button',
+  size = 'm',
+  $variant = 'main',
+  $round = false,
 }: IButton) => {
-  const onClick = (): void | null => {
-    return openModal && name
-      ? openModal(name)
-      : handleClick
-      ? handleClick()
-      : null;
-  };
-
   return (
     <Btn
-      name={name}
-      type={type}
+      id={id}
+      disabled={disabled}
       onClick={onClick}
-      $type={$type}
-      $bgColor={$bgColor}
-      $position={$position}
-      $top={$top}
-      $right={$right}
+      type={type}
+      size={size}
+      $variant={$variant}
+      $round={$round}
     >
-      {Icon && <StyledIcon as={Icon} />}
-      {children ? children : null}
+      {isLoading && Icon && (
+        <Loader>
+          <BiLoaderCircle />
+        </Loader>
+      )}
+      {!isLoading && Icon && <Icon />}
+      {children && <span>{children}</span>}
     </Btn>
   );
 };
