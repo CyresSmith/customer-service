@@ -1,9 +1,9 @@
 import { IButton, IIConButton } from 'types';
 import theme from 'utils/theme';
 
-const buttonStyle = ({ $variant, size, $round }: IButton | IIConButton) => {
+const buttonStyle = ({ $colors, size, $round }: IButton | IIConButton) => {
   const color = (): string => {
-    switch ($variant) {
+    switch ($colors) {
       case 'light':
         return theme.colors.primary.dark;
 
@@ -11,7 +11,7 @@ const buttonStyle = ({ $variant, size, $round }: IButton | IIConButton) => {
         return theme.colors.primary.light;
 
       case 'main':
-        return theme.colors.bg.dark;
+        return theme.colors.bg.main;
 
       case 'accent':
         return theme.colors.secondary.main;
@@ -22,7 +22,7 @@ const buttonStyle = ({ $variant, size, $round }: IButton | IIConButton) => {
   };
 
   const backgroundColor = (): string => {
-    switch ($variant) {
+    switch ($colors) {
       case 'light':
         return theme.colors.secondary.light;
 
@@ -72,8 +72,27 @@ const buttonStyle = ({ $variant, size, $round }: IButton | IIConButton) => {
     }
   };
 
+  const hoverColor = (): string => {
+    switch ($colors) {
+      case 'light':
+        return theme.colors.secondary.main;
+
+      case 'dark':
+        return theme.colors.secondary.main;
+
+      case 'main':
+        return theme.colors.bg.dark;
+
+      case 'accent':
+        return theme.colors.accent.main;
+
+      default:
+        return theme.colors.secondary.main;
+    }
+  };
+
   const hoverBackgroundColor = (): string => {
-    switch ($variant) {
+    switch ($colors) {
       case 'light':
         return theme.colors.secondary.main;
 
@@ -128,6 +147,7 @@ const buttonStyle = ({ $variant, size, $round }: IButton | IIConButton) => {
     backgroundColor,
     padding,
     fontSize,
+    hoverColor,
     hoverBackgroundColor,
     iconSize,
     iconMargin,

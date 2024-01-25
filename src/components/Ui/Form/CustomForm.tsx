@@ -48,7 +48,7 @@ const CustomForm = ({
 
       <Button
         isLoading={isLoading}
-        disabled={isLoading}
+        disabled={false}
         type="submit"
         children={buttonLabel}
         Icon={HiLogin}

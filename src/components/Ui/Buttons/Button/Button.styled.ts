@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { IButton } from 'types';
 import theme from 'utils/theme';
-import buttonStyle from './dinamicButtonStyles';
+import { IButton } from './button.types';
+import buttonStyle from './dynamicButtonStyles';
 
 export const Btn = styled.button<IButton>`
   ${p => {
@@ -9,6 +9,7 @@ export const Btn = styled.button<IButton>`
       color,
       backgroundColor,
       fontSize,
+      hoverColor,
       hoverBackgroundColor,
       iconSize,
       padding,
@@ -19,12 +20,19 @@ export const Btn = styled.button<IButton>`
       background-color: ${backgroundColor()};
       font-size: ${fontSize()};
       padding: ${padding()};
-      &:hover,
-      :focus {
+
+      &:hover:not(:disabled),
+      :focus:not(:disabled) {
+          color: ${hoverColor()};
           background-color: ${hoverBackgroundColor()};
           transform: scale(1.005);
-      }   
-      svg {          
+
+          svg {
+          fill: ${hoverColor()};
+        }
+      }
+
+      svg {
           width: ${iconSize()};
           height: ${iconSize()};
           fill: ${color()};
@@ -52,11 +60,8 @@ export const Btn = styled.button<IButton>`
   }
 `;
 
-export const Loader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: spin 1s linear 0s infinite;
+export const Loader = styled.svg`
+  animation: spin 1.5s linear 0s infinite;
   transform-origin: center center;
 
   @keyframes spin {

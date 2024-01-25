@@ -9,10 +9,7 @@ export interface IButton {
   Icon?: React.ElementType | undefined;
   type?: 'submit' | 'button';
   size?: 's' | 'm' | 'l' | undefined;
-  $variant?: 'light' | 'main' | 'dark' | 'accent' | 'text' | undefined;
+  $colors?: 'light' | 'main' | 'dark' | 'accent' | 'text' | undefined;
+  $variant?: 'solid' | 'text' | undefined;
   $round?: boolean;
-}
-
-export interface IIConButton extends Omit<IButton, 'children' | 'Icon'> {
-  Icon: React.ElementType | undefined;
 }
