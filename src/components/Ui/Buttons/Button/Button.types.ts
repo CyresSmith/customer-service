@@ -9,7 +9,7 @@ export interface IButton {
   Icon?: React.ElementType | undefined;
   type?: 'submit' | 'button';
   size?: 's' | 'm' | 'l' | undefined;
-  $colors?: 'light' | 'main' | 'dark' | 'accent' | 'text' | undefined;
+  $colors?: 'light' | 'main' | 'dark' | 'accent' | undefined;
   $variant?: 'solid' | 'text' | undefined;
   $round?: boolean;
 }

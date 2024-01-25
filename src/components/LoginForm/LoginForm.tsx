@@ -22,15 +22,16 @@ const initialLoginState: Pick<State, 'email' | 'password'> = {
 
 const LoginForm = ({ closeModal }: Props) => {
   const navigate = useNavigate();
-  const { logIn: loginAction } = useActions();
+  const { logIn } = useActions();
 
-  const [login, { isLoading, isSuccess, isError, error }] = useLogInMutation();
+  const [loginMutation, { isLoading, isSuccess, isError, error }] =
+    useLogInMutation();
 
   const handleSubmit = async (state: State): Promise<void> => {
-    const data = await login(state).unwrap();
+    const data = await loginMutation(state).unwrap();
 
     if (data) {
-      loginAction(data);
+      logIn(data);
       toast.success(`Вітаю, ${data.user?.firstName}`);
     }
   };

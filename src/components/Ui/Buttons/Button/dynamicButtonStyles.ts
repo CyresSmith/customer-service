@@ -1,7 +1,7 @@
-import { IButton, IIConButton } from 'types';
 import theme from 'utils/theme';
+import { IButton } from './button.types';
 
-const buttonStyle = ({ $colors, size, $round }: IButton | IIConButton) => {
+const buttonStyle = ({ $colors, size, $round }: IButton) => {
   const color = (): string => {
     switch ($colors) {
       case 'light':
