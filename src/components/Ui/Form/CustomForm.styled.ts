@@ -4,7 +4,7 @@ import theme from 'utils/theme';
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: ${theme.space[5]};
+  gap: ${theme.space[6]};
   justify-content: center;
 `;
 

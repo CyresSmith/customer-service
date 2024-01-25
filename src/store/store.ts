@@ -1,39 +1,45 @@
-import { configureStore } from '@reduxjs/toolkit';
-import usersReducer from './users/usersSlice';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
-  persistReducer,
-  persistStore,
   FLUSH,
-  REHYDRATE,
   PAUSE,
   PERSIST,
   PURGE,
   REGISTER,
+  REHYDRATE,
+  persistReducer,
+  persistStore,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { authApi } from '../services/auth.api';
+import loadingSlice from './loading/loading.slice';
+import userSlice from './user/user.slice';
 
 const persistUserConfig = {
-    key: 'users',
-    storage,
-    whitelist: ['token, refreshToken']
+  key: 'service',
+  storage,
+  whitelist: ['accessToken', 'refreshToken'],
 };
 
-const persistedUserReducer = persistReducer(persistUserConfig, usersReducer);
+const persistedUserReducer = persistReducer(
+  persistUserConfig,
+  userSlice.reducer
+);
+
+const rootReducer = combineReducers({
+  loading: loadingSlice.reducer,
+  user: persistedUserReducer,
+  [authApi.reducerPath]: authApi.reducer,
+});
 
 export const store = configureStore({
-    reducer: {
-        users: persistedUserReducer,
-        // nfts: nftReducer
-    },
-    middleware: getDefaultMiddleware =>
-    getDefaultMiddleware({
+  reducer: rootReducer,
+  middleware: gDM =>
+    gDM({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).concat(authApi.middleware),
 });
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
-
+export type TypeRootState = ReturnType<typeof rootReducer>;
 export const persistor = persistStore(store);

@@ -52,6 +52,25 @@ a {
   color: inherit;
 }
 
+button {
+  outline: none;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  outline: none;
+  border: none;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -69,19 +88,9 @@ a {
   background: #fff;
 }
 
-button {
-  outline: none;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
-  padding: 0;
-  margin: 0;
-}
-
-input, textarea, select {
-  font-family: inherit;
-  outline: none;
-  border: none;
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000000s ease-in-out 0s;
 }

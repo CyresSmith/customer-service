@@ -1,35 +1,34 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from 'react';
 
 export type State = {
-    firstName?: string,
-    lastName?: string,
-    email?: string,
-    password?: string,
-    phone?: string,
-    confirm?: string,
-    code?: string
-}
-
-type Props = {
-    initialState: State,
-    onSubmit: (arg: State) => void
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  phone?: string;
+  confirm?: string;
 };
 
-export const useForm = ({initialState, onSubmit}: Props) => {
-    const [state, setState] = useState<State>(initialState);
+type Props = {
+  initialState: State;
+  onSubmit: (arg: State) => void;
+};
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-        const {name, value} = event.target;
+export const useForm = ({ initialState, onSubmit }: Props) => {
+  const [state, setState] = useState<State>(initialState);
 
-        setState(prevState => ({...prevState, [name]: value}))
-    };
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = event.target;
 
-    const handleSubmit = (event: FormEvent): void => {
-        event.preventDefault();
+    setState(prevState => ({ ...prevState, [name]: value }));
+  };
 
-        onSubmit(state);
-        setState(initialState);
-    };
+  const handleSubmit = (event: FormEvent): void => {
+    event.preventDefault();
 
-    return {state, setState, handleChange, handleSubmit};
+    onSubmit(state);
+    setState(initialState);
+  };
+
+  return { state, setState, handleChange, handleSubmit };
 };

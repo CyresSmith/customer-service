@@ -1,58 +1,86 @@
-import axios from 'axios';
-import usersApi from './usersApi';
+import axios, { AxiosRequestConfig } from 'axios';
+import handleError from 'helpers/errorHandler';
+import rootActions from 'store/rootActions';
+import { store } from 'store/store';
 
-const URL = 'http://localhost:8989/api';
+export const URL = 'http://localhost:8989/api';
 
 const instance = axios.create({
-    baseURL: URL,
+  baseURL: URL,
 });
 
+export const axiosBaseQuery =
+  () =>
+  async ({ url = '', method, data, params }: AxiosRequestConfig) => {
+    try {
+      const response = await instance({
+        url,
+        method,
+        data,
+        params,
+      });
+      return response;
+    } catch (e) {
+      return {
+        error: handleError(e),
+      };
+    }
+  };
+
 instance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  config => {
+    const accessToken = store.getState()?.user?.accessToken;
+
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  error => {
+    return Promise.reject(error);
+  }
 );
 
 instance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-      const originalRequest = error.config;
+  response => response,
+  async error => {
+    const originalRequest = error.config;
 
-      if (error.response.status === 401 && !originalRequest._retry) {
+    if (error?.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-        try {
-          const token = localStorage.getItem('refreshToken');
-          
-          if (token) {
-            const {data} = await axios.get(URL + '/auth/refresh', {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            });
+      try {
+        const token = store.getState()?.user?.refreshToken;
 
-            const { accessToken, refreshToken } = data;
+        if (token) {
+          const response = await axios.get(URL + '/auth/refresh', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
-            if (accessToken && refreshToken) {
-              usersApi.setTokens({accessToken, refreshToken});
-              return instance(originalRequest);
-            }
-          } else {
-            usersApi.setTokens(null);
-            return Promise.reject(error);
+          if (
+            response &&
+            response?.data?.accessToken &&
+            response?.data?.refreshToken
+          ) {
+            store.dispatch(rootActions.refresh(response?.data));
+
+            instance.defaults.headers.common.Authorization = `Bearer ${response?.data?.accessToken}`;
+
+            return instance(originalRequest);
           }
-        } catch (error) {
-          usersApi.setTokens(null);
+        } else {
+          rootActions.logOut();
           return Promise.reject(error);
         }
+      } catch (error) {
+        rootActions.logOut();
+        return Promise.reject(error);
       }
+    }
 
-      return Promise.reject(error);
+    return Promise.reject(error);
   }
 );
 

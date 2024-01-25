@@ -33,3 +33,9 @@ export const ModalContainer = styled.div<Style>`
   transition: ${theme.transition.modal};
   box-shadow: ${theme.shadow.m};
 `;
+
+export const ButtonBox = styled.div`
+  position: absolute;
+  top: ${theme.space[3]};
+  right: ${theme.space[3]};
+`;

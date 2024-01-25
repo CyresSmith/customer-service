@@ -1,9 +1,11 @@
-import { useAppDispatch } from 'hooks';
+import { useActions, useAuth } from 'hooks';
+import { useEffect } from 'react';
 import { AiOutlineUser } from 'react-icons/ai';
 import { MdWorkOutline } from 'react-icons/md';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { NavLink, useNavigate } from 'react-router-dom';
-import usersOperations from 'store/users/usersOperations';
+import { toast } from 'react-toastify';
+import { useLogOutMutation } from 'services/auth.api';
 import { NavList, NavListItemLink, StyledIcon } from './UsersNav.styled';
 
 type Props = {
@@ -18,12 +20,31 @@ const menuItems = [
 
 const UsersNavList = ({ handleClose }: Props) => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  const { logOut } = useActions();
+  const { user } = useAuth();
+
+  const [apiLogout, { isError, isLoading, isSuccess, error }] =
+    useLogOutMutation();
 
   const handleLogout = (): void => {
-    dispatch(usersOperations.logout());
-    navigate('/', { replace: true });
+    apiLogout({});
   };
+
+  useEffect(() => {
+    if (isLoading) {
+      console.log('isLoading');
+    }
+
+    if (isSuccess) {
+      logOut();
+      toast.info(`До зустрічі, ${user?.firstName}!`);
+      navigate('/', { replace: true });
+    }
+
+    if (isError) {
+      console.log(error);
+    }
+  }, [error, isError, isLoading, isSuccess, logOut, navigate, user?.firstName]);
 
   return (
     <NavList>
