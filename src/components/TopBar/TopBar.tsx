@@ -1,8 +1,7 @@
-import { useAuth } from 'hooks/useAuth';
-
 import LoginForm from 'components/LoginForm';
 import RegisterForm from 'components/RegisterForm';
 import Modal from 'components/Ui/Modal/Modal';
+import { useAuth } from 'hooks/useAuth';
 import { useState } from 'react';
 import AuthNav from './AuthNav';
 import { Logo, TopBarWrapper } from './TopBar.styled';

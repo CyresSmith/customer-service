@@ -16,6 +16,7 @@ const AuthNav = ({ setIsOpen }: Props) => {
           Icon={HiLogin}
           onClick={() => setIsOpen('login')}
           children="Вхід"
+          $colors="light"
         />
       </ListItem>
       <ListItem>
@@ -23,6 +24,7 @@ const AuthNav = ({ setIsOpen }: Props) => {
           Icon={HiOutlineUserAdd}
           onClick={() => setIsOpen('register')}
           children="Реєстрація"
+          $colors="light"
         />
       </ListItem>
     </List>

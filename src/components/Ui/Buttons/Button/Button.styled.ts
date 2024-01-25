@@ -16,8 +16,9 @@ export const Btn = styled.button<IButton>`
       iconMargin,
     } = buttonStyle(p);
 
-    return `color ${color()};
-      background-color: ${backgroundColor()};
+    return `
+      color: ${color()};
+      background-color: ${backgroundColor()};      
       font-size: ${fontSize()};
       padding: ${padding()};
 
@@ -38,13 +39,13 @@ export const Btn = styled.button<IButton>`
           fill: ${color()};
           transition: ${theme.transition.primary};
       }
+
       span {
         margin-left: ${iconMargin()};
       }
     `;
   }}
 
-  opacity: ${({ disabled }) => (disabled ? 0.8 : 1)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -57,6 +58,15 @@ export const Btn = styled.button<IButton>`
   svg {
     transition: ${theme.transition.primary};
     opacity: ${({ disabled }) => (disabled ? 0.8 : 1)};
+  }
+
+  span {
+    color: inherit;
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: default;
   }
 `;
 

@@ -38,7 +38,13 @@ const UsersNav = () => {
 
         <UsersEmail>{user?.email}</UsersEmail>
 
-        <Button onClick={openDropdown} Icon={HiDotsVertical} size="s" $round />
+        <Button
+          onClick={openDropdown}
+          Icon={HiDotsVertical}
+          $round
+          $variant="text"
+          $colors="accent"
+        />
 
         {dropOpen && (
           <Dropdown
