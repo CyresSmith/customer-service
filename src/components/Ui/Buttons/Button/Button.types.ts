@@ -12,4 +12,5 @@ export interface IButton {
   $colors?: 'light' | 'main' | 'dark' | 'accent' | undefined;
   $variant?: 'solid' | 'text' | undefined;
   $round?: boolean;
+  $isIcon?: boolean;
 }

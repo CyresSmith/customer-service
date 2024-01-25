@@ -1,9 +1,14 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
 import {
   FormInput,
+  FormInputBox,
   FormInputLabel,
   FormInputsListItem,
+  HideButton,
+  HideIcon,
 } from './CustomForm.styled';
+
+import { HiEye, HiEyeOff } from 'react-icons/hi';
 
 type Props = {
   name: string;
@@ -41,16 +46,27 @@ const CustomFormInput = ({ name, type, value, handleChange }: Props) => {
     }
   };
 
+  const [hidden, setHidden] = useState(true);
+
   return (
     <FormInputsListItem>
       <FormInputLabel>{translateName(name)}</FormInputLabel>
-      <FormInput
-        type={type}
-        name={name}
-        value={value}
-        onChange={handleChange}
-        autoComplete="off"
-      />
+
+      <FormInputBox>
+        <FormInput
+          type={type !== 'password' ? type : hidden ? type : 'text'}
+          name={name}
+          value={value}
+          onChange={handleChange}
+          autoComplete="off"
+        />
+
+        {type === 'password' && (
+          <HideButton type="button" onClick={() => setHidden(p => !p)}>
+            <HideIcon as={hidden ? HiEyeOff : HiEye} hidden={hidden} />
+          </HideButton>
+        )}
+      </FormInputBox>
     </FormInputsListItem>
   );
 };

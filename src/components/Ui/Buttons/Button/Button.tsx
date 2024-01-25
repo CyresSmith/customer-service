@@ -14,6 +14,7 @@ const Button = ({
   $colors = 'main',
   $variant = 'solid',
   $round = false,
+  $isIcon = false,
 }: IButton) => {
   return (
     <Btn
@@ -28,7 +29,7 @@ const Button = ({
     >
       {isLoading && Icon && <Loader as={BiLoaderCircle} />}
       {!isLoading && Icon && <Icon />}
-      {!$round && children && <span>{children}</span>}
+      {!$round && !$isIcon && children && <span>{children}</span>}
     </Btn>
   );
 };

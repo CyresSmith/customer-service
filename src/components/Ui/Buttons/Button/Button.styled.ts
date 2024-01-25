@@ -46,7 +46,7 @@ export const Btn = styled.button<IButton>`
     `;
   }}
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: ${({ $round }) =>

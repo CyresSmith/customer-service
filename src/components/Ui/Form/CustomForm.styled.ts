@@ -27,6 +27,27 @@ export const FormInputLabel = styled.label`
   }
 `;
 
+export const FormInputBox = styled.div`
+  position: relative;
+`;
+
+export const HideButton = styled.button`
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: ${theme.space[3]};
+  top: 50%;
+  transform: translateY(-50%);
+`;
+
+export const HideIcon = styled.svg<{ hidden: boolean }>`
+  width: 20px;
+  height: 20px;
+  transition: ${theme.transition.primary};
+  fill: ${({ hidden }) =>
+    hidden ? theme.colors.secondary.main : theme.colors.secondary.dark};
+`;
+
 export const FormInput = styled.input`
   color: ${theme.colors.bg.dark};
   padding: ${theme.space[2]} ${theme.space[3]};
@@ -35,8 +56,9 @@ export const FormInput = styled.input`
   border: ${theme.borders.normal} ${theme.colors.bg.main};
   transition: ${theme.transition.primary};
   font-size: ${theme.fontSizes.l};
+  width: 100%;
 
   &:focus {
-    border-color: ${theme.colors.accent};
+    border-color: ${theme.colors.accent.light};
   }
 `;
