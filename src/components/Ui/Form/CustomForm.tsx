@@ -28,10 +28,21 @@ const CustomForm = ({
   buttonLabel,
   SubmitButtonIcon,
 }: Props) => {
-  const { handleChange, handleSubmit, state } = useForm({
+  const { handleChange, handleSubmit, state, invalidFields } = useForm({
     initialState,
     onSubmit,
   });
+
+  const errorMessage = (name: string): string | undefined => {
+    const error = invalidFields.find(f => Object.keys(f)[0] === name)
+    if (error) {
+      return Object.values(error)[0];
+    }
+  }
+
+  const disabledBtn: boolean = isLoading || invalidFields?.length > 0 || Object.values(state).some(i => i === '') ?
+    true :
+    false;
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -43,13 +54,14 @@ const CustomForm = ({
             name={name}
             value={state[name as keyof State]}
             handleChange={handleChange}
+            isValid={errorMessage(name)}
           />
         ))}
       </FormInputsList>
 
       <Button
         isLoading={isLoading}
-        disabled={isLoading}
+        disabled={disabledBtn}
         type="submit"
         children={buttonLabel}
         Icon={SubmitButtonIcon}

@@ -1,6 +1,6 @@
 import { BiLoaderCircle } from 'react-icons/bi';
 import { Btn, Loader } from './Button.styled';
-import { IButton } from './button.types';
+import { IButton } from './Button.types';
 
 const Button = ({
   id = '',

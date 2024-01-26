@@ -3,6 +3,7 @@ import theme from 'utils/theme';
 
 export const Form = styled.form`
   display: flex;
+  width: 25vw;
   flex-direction: column;
   gap: ${theme.space[6]};
   justify-content: center;
@@ -59,6 +60,10 @@ export const FormInput = styled.input`
   width: 100%;
 
   &:focus {
-    border-color: ${theme.colors.accent.light};
+    border-color: ${theme.colors.primary.light};
   }
+`;
+
+export const ValidationError = styled.span`
+  color: ${({ theme }) => theme.colors.danger};
 `;

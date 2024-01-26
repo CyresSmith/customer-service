@@ -7,6 +7,7 @@ import { useRegisterMutation } from 'services/auth.api';
 
 type Props = {
   closeModal: () => void;
+
 };
 
 const registerInputs = [

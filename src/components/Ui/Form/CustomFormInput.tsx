@@ -6,41 +6,42 @@ import {
   FormInputsListItem,
   HideButton,
   HideIcon,
+  ValidationError,
 } from './CustomForm.styled';
 
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 
 type Props = {
   name: string;
-  value: string | number | undefined;
+  value: string | undefined;
   type: string;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  isValid?: string;
 };
 
-const CustomFormInput = ({ name, type, value, handleChange }: Props) => {
+const CustomFormInput = ({
+  name,
+  type,
+  value,
+  handleChange,
+  isValid,
+}: Props) => {
   const translateName = (name: string): string | undefined => {
     switch (name) {
       case 'firstName':
         return "ім'я";
-        break;
       case 'lastName':
         return 'прізвище';
-        break;
       case 'phone':
         return 'номер телефону';
-        break;
       case 'email':
         return 'email';
-        break;
       case 'password':
         return 'пароль';
-        break;
       case 'confirm':
         return 'підтвердіть пароль';
-        break;
       case 'code':
         return 'код підтвердження';
-        break;
       default:
         break;
     }
@@ -51,7 +52,6 @@ const CustomFormInput = ({ name, type, value, handleChange }: Props) => {
   return (
     <FormInputsListItem>
       <FormInputLabel>{translateName(name)}</FormInputLabel>
-
       <FormInputBox>
         <FormInput
           type={type !== 'password' ? type : hidden ? type : 'text'}
@@ -67,6 +67,7 @@ const CustomFormInput = ({ name, type, value, handleChange }: Props) => {
           </HideButton>
         )}
       </FormInputBox>
+      {isValid && <ValidationError>{isValid}</ValidationError>}
     </FormInputsListItem>
   );
 };
