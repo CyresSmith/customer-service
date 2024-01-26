@@ -1,5 +1,5 @@
 import { useClickOutside, useEscapeKey } from "hooks";
-import { DropWrapper } from "./Dropdown.styled";
+import { DropWrapper, DropdownContent } from "./Dropdown.styled";
 import React, { useEffect, useState } from "react";
 
 export type Props = {
@@ -16,7 +16,7 @@ export const Dropdown = ({closeDropdown, $isOpen, children}: Props): React.React
         setOpen(false);
         setTimeout(() => {
             closeDropdown();
-        }, 250)
+        }, 500)
     }
 
     const dropRef = useClickOutside(handleClose);
@@ -27,8 +27,10 @@ export const Dropdown = ({closeDropdown, $isOpen, children}: Props): React.React
     }, [$isOpen])
 
     return (
-        <DropWrapper $isOpen={open} ref={dropRef}>
-            {children}
+        <DropWrapper ref={dropRef} $isOpen={open}>
+            <DropdownContent>
+                {children}
+            </DropdownContent>
         </DropWrapper>
     )
 };

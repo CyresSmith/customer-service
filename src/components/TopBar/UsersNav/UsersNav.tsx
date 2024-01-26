@@ -89,6 +89,7 @@ const UsersNav = () => {
           $round
           $variant="text"
           $colors="accent"
+          disabled={false}
         />
 
         {dropOpen && (
@@ -106,6 +107,31 @@ const UsersNav = () => {
               >
                 Вихід
               </Button>
+              <Menu items={menuItems} />
+
+              <Button
+                isLoading={isLoading}
+                disabled={isLoading}
+                onClick={handleLogout}
+                Icon={HiLogout}
+                $colors="light"
+                size="s"
+              >
+                Вихід
+              </Button>
+              <Menu items={menuItems} />
+
+              <Button
+                isLoading={isLoading}
+                disabled={isLoading}
+                onClick={handleLogout}
+                Icon={HiLogout}
+                $colors="light"
+                size="s"
+              >
+                Вихід
+              </Button>
+              
             </>
           </Dropdown>
         )}

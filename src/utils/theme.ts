@@ -108,7 +108,7 @@ const theme = {
 
   transition: {
     primary: 'all 250ms ease-in-out',
-    modal: 'all 250ms linear',
+    modal: 'all 500ms linear',
   },
 
   shadow: {
