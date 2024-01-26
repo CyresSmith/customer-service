@@ -10,10 +10,14 @@ export const DropWrapper = styled.div<Pick<Props, '$isOpen'>>`
   background-color: ${theme.colors.bg.main};
   padding: ${theme.space[3]};
   border: ${theme.borders.normal} ${theme.colors.bg.main};
-  border-radius: ${theme.radii.xs};
-  height: ${props => (props.$isOpen ? '115px' : '0')};
+  border-radius: ${theme.radii.m};
+  max-height: ${props => (props.$isOpen ? '100vh' : '0')};
   transition: ${theme.transition.modal};
+  transition-duration: 1s;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.space[4]};
 `;
 
 export const DropListItem = styled.li``;

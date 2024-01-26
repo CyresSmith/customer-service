@@ -1,4 +1,4 @@
-import { Container } from 'components/HomeContent/HomeContent.styled';
+import { Container } from 'components/Home/HomeContent/HomeContent.styled';
 import { useActions } from 'hooks';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';

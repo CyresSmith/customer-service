@@ -1,7 +1,7 @@
 import theme from 'utils/theme';
 import { IButton } from './Button.types';
 
-const buttonStyle = ({ $colors, size, $round, $variant }: IButton) => {
+const buttonStyle = ({ $colors, size, $round, $variant, $isIcon }: IButton) => {
   const color = (): string => {
     switch ($colors) {
       case 'light':
@@ -105,40 +105,32 @@ const buttonStyle = ({ $colors, size, $round, $variant }: IButton) => {
   const padding = (): string => {
     switch (size) {
       case 's':
-        return $round || $variant === 'text'
-          ? theme.space[0]
-          : `${theme.space[1]} ${theme.space[2]}`;
+        return $round ? theme.space[0] : `${theme.space[1]} ${theme.space[2]}`;
 
       case 'm':
-        return $round || $variant === 'text'
-          ? theme.space[1]
-          : `${theme.space[2]} ${theme.space[3]}`;
+        return $round ? theme.space[1] : `${theme.space[2]} ${theme.space[3]}`;
 
       case 'l':
-        return $round || $variant === 'text'
-          ? theme.space[2]
-          : `${theme.space[2]} ${theme.space[4]}`;
+        return $round ? theme.space[2] : `${theme.space[2]} ${theme.space[4]}`;
 
       default:
-        return $round || $variant === 'text'
-          ? theme.space[3]
-          : `${theme.space[2]} ${theme.space[3]}`;
+        return $round ? theme.space[3] : `${theme.space[2]} ${theme.space[3]}`;
     }
   };
 
   const iconSize = (): string => {
     switch (size) {
       case 's':
-        return $variant === 'text' ? '21px' : '17px';
+        return $isIcon ? '21px' : '17px';
 
       case 'm':
-        return $variant === 'text' ? '23px' : '19px';
+        return $isIcon ? '23px' : '19px';
 
       case 'l':
-        return $variant === 'text' ? '24px' : '24px';
+        return $isIcon ? '24px' : '24px';
 
       default:
-        return $variant === 'text' ? '25px' : '19px';
+        return $isIcon ? '23px' : '19px';
     }
   };
 
