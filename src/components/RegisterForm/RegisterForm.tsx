@@ -1,6 +1,7 @@
 import CustomForm from 'components/Ui/Form/CustomForm';
 import { State } from 'hooks/useForm';
 import { useEffect } from 'react';
+import { HiOutlineUserAdd } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { useRegisterMutation } from 'services/auth.api';
 
@@ -58,6 +59,8 @@ const RegisterForm = ({ closeModal }: Props) => {
 
   return (
     <CustomForm
+      SubmitButtonIcon={HiOutlineUserAdd}
+      isLoading={isLoading}
       buttonLabel="Реєстрація"
       onSubmit={handleSubmit}
       initialState={initialRegState}

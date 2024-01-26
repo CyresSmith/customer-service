@@ -37,7 +37,13 @@ const Modal = ({ children, closeModal, open, $w, $h }: Modal) => {
     <Backdrop $isOpen={isOpen}>
       <ModalContainer $w={$w} $h={$h} ref={modalRef} $isOpen={isOpen}>
         <ButtonBox>
-          <Button Icon={IoMdClose} onClick={close} size="s" $round />
+          <Button
+            Icon={IoMdClose}
+            onClick={close}
+            $round
+            $colors="accent"
+            $variant="text"
+          />
         </ButtonBox>
         {children}
       </ModalContainer>

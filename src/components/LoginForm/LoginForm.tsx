@@ -2,6 +2,7 @@ import CustomForm from 'components/Ui/Form/CustomForm';
 import { useActions } from 'hooks';
 import { State } from 'hooks/useForm';
 import { useEffect } from 'react';
+import { HiLogin } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useLogInMutation } from 'services/auth.api';
@@ -54,6 +55,7 @@ const LoginForm = ({ closeModal }: Props) => {
 
   return (
     <CustomForm
+      SubmitButtonIcon={HiLogin}
       isLoading={isLoading}
       buttonLabel="Увійти"
       onSubmit={handleSubmit}
