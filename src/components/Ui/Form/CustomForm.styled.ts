@@ -3,6 +3,7 @@ import theme from 'utils/theme';
 
 export const Form = styled.form`
   display: flex;
+  width: 25vw;
   flex-direction: column;
   gap: ${theme.space[6]};
   justify-content: center;

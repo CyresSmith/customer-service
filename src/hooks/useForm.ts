@@ -40,7 +40,6 @@ export const useForm = ({ initialState, onSubmit }: Props) => {
 
     onSubmit(state);
     setState(initialState);
-    console.log(invalidFields);
   };
 
   return { state, setState, handleChange, handleSubmit, invalidFields };

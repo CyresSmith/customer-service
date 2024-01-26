@@ -25,7 +25,6 @@ const TopBar = () => {
 
       {isOpen && (
         <Modal
-          $w="20%"
           children={
             isOpen === 'register' ? (
               <RegisterForm closeModal={closeModal} />

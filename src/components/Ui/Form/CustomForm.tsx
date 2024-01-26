@@ -40,6 +40,10 @@ const CustomForm = ({
     }
   }
 
+  const disabledBtn: boolean = isLoading || invalidFields?.length > 0 || Object.values(state).some(i => i === '') ?
+    true :
+    false;
+
   return (
     <Form onSubmit={handleSubmit}>
       <FormInputsList>
@@ -57,7 +61,7 @@ const CustomForm = ({
 
       <Button
         isLoading={isLoading}
-        disabled={isLoading}
+        disabled={disabledBtn}
         type="submit"
         children={buttonLabel}
         Icon={SubmitButtonIcon}
