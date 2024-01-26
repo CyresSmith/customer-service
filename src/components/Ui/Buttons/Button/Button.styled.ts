@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import theme from 'utils/theme';
-import { IButton } from './button.types';
+import { IButton } from './Button.types';
 import buttonStyle from './dynamicButtonStyles';
 
 export const Btn = styled.button<IButton>`

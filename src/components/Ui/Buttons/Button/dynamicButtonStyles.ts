@@ -1,5 +1,5 @@
 import theme from 'utils/theme';
-import { IButton } from './button.types';
+import { IButton } from './Button.types';
 
 const buttonStyle = ({ $colors, size, $round, $variant }: IButton) => {
   const color = (): string => {
