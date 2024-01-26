@@ -69,7 +69,7 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="/verify/:code" element={<VerifyPage />} />
           <Route
-            path="/workspace"
+            path="/company/:companyId"
             element={<PrivateRoute children={<WorkPage />} />}
           />
           {/* <Route path="tests" element={<PrivatRoute><TestSPage /></PrivatRoute>} />

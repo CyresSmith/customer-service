@@ -44,7 +44,7 @@ const LoginForm = ({ closeModal }: Props) => {
 
     if (isSuccess) {
       closeModal();
-      navigate('/workspace', { replace: true });
+      navigate('/', { replace: true });
     }
 
     if (isError) {
