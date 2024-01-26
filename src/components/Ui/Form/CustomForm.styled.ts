@@ -12,11 +12,12 @@ export const Form = styled.form`
 export const FormInputsList = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: ${theme.space[3]};
+  gap: ${theme.space[5]};
   justify-content: center;
 `;
 
 export const FormInputsListItem = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: ${theme.space[1]};
@@ -28,20 +29,23 @@ export const FormInputLabel = styled.label`
   }
 `;
 
-export const FormInput = styled.input`
+export const FormInput = styled.input<{$invalid?: string}>`
   color: ${theme.colors.bg.dark};
   padding: ${theme.space[2]} ${theme.space[3]};
   border-radius: ${theme.radii.s};
   background-color: ${theme.colors.secondary.light};
-  border: ${theme.borders.normal} ${theme.colors.bg.main};
+  border: ${theme.borders.normal} ${props => props.$invalid ? theme.colors.danger : theme.colors.bg.main};
   transition: ${theme.transition.primary};
   font-size: ${theme.fontSizes.l};
 
   &:focus {
-    border-color: ${theme.colors.primary.light};
+    border-color: ${props => props.$invalid ? theme.colors.danger : theme.colors.primary.light};
   }
 `;
 
 export const ValidationError = styled.span`
+  position: absolute;
+  bottom: -35%;
+  right: 0;
   color: ${({ theme }) => theme.colors.danger};
 `

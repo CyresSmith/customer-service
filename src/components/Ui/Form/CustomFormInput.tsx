@@ -44,7 +44,8 @@ const CustomFormInput = ({ name, type, value, handleChange, isValid }: Props) =>
         name={name}
         value={value}
         onChange={handleChange}
-        autoComplete="off"
+        // autoComplete="off"
+        $invalid={isValid}
       />
       {isValid && <ValidationError>{isValid}</ValidationError>}
     </FormInputsListItem>

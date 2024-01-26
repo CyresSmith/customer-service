@@ -33,7 +33,7 @@ const theme = {
       main: '#87888C',
       dark: '#494a4d',
     },
-    danger: '#B31312',
+    danger: '#f72423',
     success: '#38E54D',
     backdrop: 'rgba(23, 24, 33, 0.5)',
   },
