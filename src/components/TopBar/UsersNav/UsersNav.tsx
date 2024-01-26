@@ -19,16 +19,6 @@ import {
 } from './UsersNav.styled';
 
 const menuItems: MenuItem[] = [
-  // {
-  //   id: 1,
-  //   label: 'Компанії',
-  //   to: '/',
-  //   children: companies.map(({ id, name }) => ({
-  //     id,
-  //     label: name,
-  //     to: `/company/${id}`,
-  //   })),
-  // },
   {
     id: 2,
     label: 'Профіль',
