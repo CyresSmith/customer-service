@@ -1,4 +1,5 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
+import validateInputs from 'helpers/validators';
 
 export type State = {
   firstName?: string;
@@ -16,9 +17,20 @@ type Props = {
 
 export const useForm = ({ initialState, onSubmit }: Props) => {
   const [state, setState] = useState<State>(initialState);
+  const [invalidFields, setInvalidFields] = useState<object[]>([]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
+
+    const isValid = validateInputs(name, value);
+
+    if (!isValid.ok) {
+      if (!invalidFields.find(i => Object.keys(i)[0] === name)) {
+        setInvalidFields(s => [...s, {[name]: isValid.message}]);
+      }
+    } else {
+      setInvalidFields(s => s.filter(ss => Object.keys(ss)[0] !== name));
+    }
 
     setState(prevState => ({ ...prevState, [name]: value }));
   };
@@ -28,7 +40,8 @@ export const useForm = ({ initialState, onSubmit }: Props) => {
 
     onSubmit(state);
     setState(initialState);
+    console.log(invalidFields);
   };
 
-  return { state, setState, handleChange, handleSubmit };
+  return { state, setState, handleChange, handleSubmit, invalidFields };
 };

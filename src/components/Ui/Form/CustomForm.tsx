@@ -25,12 +25,19 @@ const CustomForm = ({
   inputs,
   onSubmit,
   initialState,
-  buttonLabel,
+  buttonLabel
 }: Props) => {
-  const { handleChange, handleSubmit, state } = useForm({
+  const { handleChange, handleSubmit, state, invalidFields } = useForm({
     initialState,
     onSubmit,
   });
+
+  const errorMessage = (name: string): string | undefined => {
+    const error = invalidFields.find(f => Object.keys(f)[0] === name)
+    if (error) {
+      return Object.values(error)[0];
+    }
+  }
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -42,6 +49,7 @@ const CustomForm = ({
             name={name}
             value={state[name as keyof State]}
             handleChange={handleChange}
+            isValid={errorMessage(name)}
           />
         ))}
       </FormInputsList>

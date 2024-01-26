@@ -6,6 +6,7 @@ import { useRegisterMutation } from 'services/auth.api';
 
 type Props = {
   closeModal: () => void;
+
 };
 
 const registerInputs = [
@@ -30,7 +31,7 @@ const RegisterForm = ({ closeModal }: Props) => {
   const [register, { isLoading, isSuccess, isError, error }] =
     useRegisterMutation();
 
-  const handleSubmit = async (state: State): void => {
+  const handleSubmit = async (state: State): Promise<void> => {
     const data = await register(state).unwrap();
 
     if (data && data.user?.firstName) {
