@@ -9,7 +9,7 @@ export type User = {
 };
 
 export type Company = {
-  id: number;
+  id: number | string;
   name: string;
 };
 

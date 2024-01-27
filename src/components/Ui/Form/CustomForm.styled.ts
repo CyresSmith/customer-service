@@ -3,7 +3,7 @@ import theme from 'utils/theme';
 
 export const Form = styled.form`
   display: flex;
-  width: 25vw;
+  width: 100%;
   flex-direction: column;
   gap: ${theme.space[6]};
   justify-content: center;
@@ -50,18 +50,20 @@ export const HideIcon = styled.svg<{ hidden: boolean }>`
     hidden ? theme.colors.secondary.main : theme.colors.secondary.dark};
 `;
 
-export const FormInput = styled.input<{$invalid?: string}>`
+export const FormInput = styled.input<{ $invalid?: string }>`
   color: ${theme.colors.bg.dark};
   padding: ${theme.space[2]} ${theme.space[3]};
   border-radius: ${theme.radii.s};
   background-color: ${theme.colors.secondary.light};
-  border: ${theme.borders.normal} ${props => props.$invalid ? theme.colors.danger : theme.colors.bg.main};
+  border: ${theme.borders.normal}
+    ${props => (props.$invalid ? theme.colors.danger : theme.colors.bg.main)};
   transition: ${theme.transition.primary};
   font-size: ${theme.fontSizes.l};
   width: 100%;
 
   &:focus {
-    border-color: ${props => props.$invalid ? theme.colors.danger : theme.colors.primary.light};
+    border-color: ${props =>
+      props.$invalid ? theme.colors.danger : theme.colors.primary.light};
   }
 `;
 

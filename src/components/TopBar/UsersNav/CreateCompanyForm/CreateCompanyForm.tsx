@@ -17,22 +17,14 @@ const CreateCompanyForm = ({ closeModal }: Props) => {
   const [activities, setActivities] = useState<Activity[] | []>([]);
   const [companyData, setCompanyData] = useState<CreateCompanyDto>({
     name: '',
+    city: '',
     address: '',
-    phones: [],
-    workingHours: {
-      monday: { from: 9, to: 18 },
-      tuesday: { from: 9, to: 18 },
-      thursday: { from: 9, to: 18 },
-      wednesday: { from: 9, to: 18 },
-      friday: { from: 9, to: 18 },
-      saturday: { from: 0, to: 0 },
-      sunday: { from: 0, to: 0 },
-    },
-    desc: '',
+    index: '',
+    phone: '',
     category: '',
     activities: [],
-    branches: '',
-    employeesCount: '',
+    branches: 'one',
+    employeesCount: '2-5',
   });
 
   const nextStep = (type: NextStep) => {

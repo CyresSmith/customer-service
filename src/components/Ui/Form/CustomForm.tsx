@@ -34,15 +34,18 @@ const CustomForm = ({
   });
 
   const errorMessage = (name: string): string | undefined => {
-    const error = invalidFields.find(f => Object.keys(f)[0] === name)
+    const error = invalidFields.find(f => Object.keys(f)[0] === name);
     if (error) {
       return Object.values(error)[0];
     }
-  }
+  };
 
-  const disabledBtn: boolean = isLoading || invalidFields?.length > 0 || Object.values(state).some(i => i === '') ?
-    true :
-    false;
+  const disabledBtn: boolean =
+    isLoading ||
+    invalidFields?.length > 0 ||
+    Object.values(state).some(i => i === '')
+      ? true
+      : false;
 
   return (
     <Form onSubmit={handleSubmit}>

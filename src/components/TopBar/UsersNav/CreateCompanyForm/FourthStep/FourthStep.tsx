@@ -1,6 +1,10 @@
 import Button from 'components/Ui/Buttons/Button';
+import { Form, FormInputsList } from 'components/Ui/Form/CustomForm.styled';
+import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import areAllFieldsFilled from 'helpers/areAllFieldsFilled';
 import handleError from 'helpers/errorHandler';
+import { useActions } from 'hooks';
+import { State, useForm } from 'hooks/useForm';
 import { useEffect } from 'react';
 import { IoMdAddCircle } from 'react-icons/io';
 import { toast } from 'react-toastify';
@@ -13,24 +17,64 @@ interface Props extends stepProps {
   closeModal: () => void;
 }
 
-const FourthStep = ({ companyData, prevPage, closeModal }: Props) => {
+const inputs = [
+  { name: 'name', type: 'text' },
+  { name: 'city', type: 'text' },
+  { name: 'address', type: 'address' },
+  { name: 'index', type: 'text' },
+  { name: 'phone', type: 'phone' },
+];
+
+const initialState = {
+  name: '',
+  city: '',
+  address: '',
+  index: '',
+  phone: '',
+};
+
+const FourthStep = ({
+  companyData,
+  setCompanyData,
+  prevPage,
+  closeModal,
+}: Props) => {
   const [createCompany, { isLoading, isSuccess, isError, error }] =
     useCreateCompanyMutation();
 
-  const handleCompanyCreate = async () => {
-    const data = await createCompany(companyData).unwrap();
+  const { addNemCompany } = useActions();
 
+  const onSubmit = async () => {
+    const data = await createCompany({
+      ...companyData,
+      phones: [companyData.phone],
+    }).unwrap();
     if (data && data.name) {
+      addNemCompany(data);
+
       toast.success(`Вітаю, Компанію "${data.name}" створено!`);
     }
   };
 
-  useEffect(() => {
-    if (isLoading) {
-      console.log('isLoading');
-    }
+  const { handleChange, handleSubmit, state, invalidFields, reset } = useForm({
+    initialState,
+    onSubmit,
+  });
 
+  const errorMessage = (name: string): string | undefined => {
+    const error = invalidFields.find(f => Object.keys(f)[0] === name);
+    if (error) {
+      return Object.values(error)[0];
+    }
+  };
+
+  useEffect(() => {
+    setCompanyData(p => ({ ...p, ...state }));
+  }, [setCompanyData, state]);
+
+  useEffect(() => {
     if (isSuccess) {
+      reset();
       closeModal();
     }
 
@@ -38,34 +82,43 @@ const FourthStep = ({ companyData, prevPage, closeModal }: Props) => {
       console.log(error);
       toast.error(handleError(error));
     }
-  }, [closeModal, error, isError, isLoading, isSuccess]);
+  }, [closeModal, error, isError, isSuccess, reset]);
 
   return (
-    <div>
+    <>
       <Title>Основна інформація</Title>
 
-      <p>Основна інформація</p>
+      <Form onSubmit={handleSubmit}>
+        <FormInputsList>
+          {inputs.map(({ name, type }, i) => (
+            <CustomFormInput
+              key={i}
+              type={type}
+              name={name}
+              value={state[name as keyof State]}
+              handleChange={handleChange}
+              isValid={errorMessage(name)}
+            />
+          ))}
+        </FormInputsList>
 
-      <ButtonBox>
-        <BackButton
-          disabled={isLoading}
-          isLoading={isLoading}
-          onClick={prevPage}
-        />
+        <ButtonBox>
+          <BackButton disabled={isLoading} onClick={prevPage} />
 
-        <Button
-          id="next"
-          $iconPosition="l"
-          Icon={IoMdAddCircle}
-          $colors="accent"
-          disabled={isLoading || !areAllFieldsFilled(companyData)}
-          isLoading={isLoading}
-          onClick={handleCompanyCreate}
-        >
-          Створити компанію
-        </Button>
-      </ButtonBox>
-    </div>
+          <Button
+            id="next"
+            type="submit"
+            $iconPosition="l"
+            Icon={IoMdAddCircle}
+            $colors="accent"
+            disabled={isLoading || !areAllFieldsFilled(companyData)}
+            isLoading={isLoading}
+          >
+            Створити компанію
+          </Button>
+        </ButtonBox>
+      </Form>
+    </>
   );
 };
 

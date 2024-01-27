@@ -42,6 +42,15 @@ const CustomFormInput = ({
         return 'підтвердіть пароль';
       case 'code':
         return 'код підтвердження';
+
+      case 'name':
+        return 'Назва';
+      case 'city':
+        return 'Місто';
+      case 'address':
+        return 'Адреса';
+      case 'index':
+        return 'Індекс';
       default:
         break;
     }

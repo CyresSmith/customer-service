@@ -20,7 +20,9 @@ export type Company = {
   id: string;
   name: string;
   phones: string[];
+  city: string;
   address: string;
+  index: string;
   workingHours: IWorkingHours;
   desc: string;
   avatar: string;
@@ -31,17 +33,31 @@ export type Company = {
   branches: Branches;
 };
 
+export interface CreateCompany
+  extends Pick<
+    Company,
+    | 'name'
+    | 'city'
+    | 'index'
+    | 'address'
+    | 'category'
+    | 'activities'
+    | 'phones'
+    | 'employeesCount'
+    | 'branches'
+  > {}
+
 export interface CreateCompanyDto
   extends Pick<
     Company,
     | 'name'
-    | 'phones'
+    | 'city'
+    | 'index'
     | 'address'
-    | 'workingHours'
-    | 'desc'
     | 'category'
     | 'activities'
+    | 'employeesCount'
+    | 'branches'
   > {
-  employeesCount: '' | EmployeesCount;
-  branches: '' | Branches;
+  phone: string;
 }

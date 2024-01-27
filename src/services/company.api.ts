@@ -1,8 +1,7 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from 'services/instance';
-import { CreateCompanyDto } from 'services/types/company.types';
 import { CompanyCategory } from './types/category.types';
-import { Company } from './types/company.types';
+import { Company, CreateCompany } from './types/company.types';
 
 export const companyApi = createApi({
   reducerPath: 'companyApi',
@@ -19,9 +18,9 @@ export const companyApi = createApi({
       }),
     }),
 
-    createCompany: builder.mutation<Company, CreateCompanyDto>({
+    createCompany: builder.mutation<Company, CreateCompany>({
       query: data => ({
-        url: '/company',
+        url: '/company/register',
         method: 'POST',
         data,
       }),
