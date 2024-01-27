@@ -1,27 +1,26 @@
 import Button from 'components/Ui/Buttons/Button/Button';
 import { useClickOutside, useEscapeKey } from 'hooks';
-import React, { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { IoMdClose } from 'react-icons/io';
 import { Backdrop, ButtonBox, ModalContainer } from './Modal.styled';
 
 export type Modal = {
-  children?: React.ReactNode;
-  open?: string | null;
+  children?: ReactNode;
   $isOpen?: boolean;
-  closeModal: () => void;
   $w?: string;
   $h?: string;
+  closeModal: () => void;
 };
 
 const modalRoot = document.querySelector('#modal-root');
 
-const Modal = ({ children, closeModal, open, $w, $h }: Modal) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+const Modal = ({ children, closeModal, $w, $h, $isOpen }: Modal) => {
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    open ? setIsOpen(true) : setIsOpen(false);
-  }, [open]);
+    setIsOpen(p => !p);
+  }, [$isOpen]);
 
   const close = (): void => {
     setIsOpen(false);

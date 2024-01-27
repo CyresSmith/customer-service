@@ -4,7 +4,7 @@ import { Props } from './Dropdown';
 
 export const DropWrapper = styled.div<Pick<Props, '$isOpen'>>`
   position: absolute;
-  top: 100%;
+  top: calc(100% + ${theme.space[3]});
   right: 0;
   background-color: ${theme.colors.bg.main};
   padding: ${theme.space[3]};
@@ -20,4 +20,4 @@ export const DropdownContent = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.space[3]};
   overflow: hidden;
-`
+`;

@@ -1,5 +1,5 @@
-import LoginForm from 'components/LoginForm';
-import RegisterForm from 'components/RegisterForm';
+import LoginForm from 'components/TopBar/LoginForm';
+import RegisterForm from 'components/TopBar/RegisterForm';
 import Modal from 'components/Ui/Modal/Modal';
 import { useAuth } from 'hooks/useAuth';
 import { useState } from 'react';
@@ -32,7 +32,7 @@ const TopBar = () => {
               <LoginForm closeModal={closeModal} />
             )
           }
-          open={isOpen}
+          $isOpen={isOpen !== null}
           closeModal={closeModal}
         />
       )}

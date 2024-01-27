@@ -1,7 +1,15 @@
 import theme from 'utils/theme';
-import { IButton } from './Button.types';
+import { IButtonStyle } from './Button.styled';
 
-const buttonStyle = ({ $colors, size, $round, $variant, $isIcon }: IButton) => {
+const buttonStyle = ({
+  $colors,
+  size,
+  $round,
+  $variant,
+  $isIcon,
+  $isIconThere,
+  $iconPosition,
+}: IButtonStyle) => {
   const color = (): string => {
     switch ($colors) {
       case 'light':
@@ -21,7 +29,7 @@ const buttonStyle = ({ $colors, size, $round, $variant, $isIcon }: IButton) => {
 
       case 'accent':
         return $variant === 'solid'
-          ? theme.colors.secondary.dark
+          ? theme.colors.bg.dark
           : theme.colors.accent.light;
 
       default:
@@ -135,19 +143,27 @@ const buttonStyle = ({ $colors, size, $round, $variant, $isIcon }: IButton) => {
   };
 
   const iconMargin = (): string => {
-    switch (size) {
-      case 's':
-        return theme.space[1];
+    const setMargin = () => {
+      switch (size) {
+        case 's':
+          return theme.space[1];
 
-      case 'm':
-        return theme.space[2];
+        case 'm':
+          return theme.space[2];
 
-      case 'l':
-        return theme.space[3];
+        case 'l':
+          return theme.space[3];
 
-      default:
-        return theme.space[2];
-    }
+        default:
+          return theme.space[2];
+      }
+    };
+
+    return $isIconThere
+      ? $iconPosition === 'l'
+        ? `margin-left: ${setMargin()};`
+        : `margin-right: ${setMargin()};`
+      : 'margin: 0';
   };
 
   const fontSize = (): string => {

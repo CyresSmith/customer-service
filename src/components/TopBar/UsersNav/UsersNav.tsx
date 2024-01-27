@@ -2,13 +2,16 @@ import Button from 'components/Ui/Buttons/Button/Button';
 import Dropdown from 'components/Ui/Dropdown';
 import Menu from 'components/Ui/Menu';
 import { MenuItem } from 'components/Ui/Menu/Item/Item';
+import Modal from 'components/Ui/Modal/Modal';
 import { useActions } from 'hooks';
 import { useAuth } from 'hooks/useAuth';
 import { useEffect, useState } from 'react';
-import { HiDotsVertical, HiLogout } from 'react-icons/hi';
+import { HiLogout, HiMenu } from 'react-icons/hi';
+import { IoMdAddCircle } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useLogOutMutation } from 'services/auth.api';
+import CreateCompanyForm from './CreateCompanyForm';
 import {
   NavWrapper,
   UsersAvatar,
@@ -31,27 +34,31 @@ const UsersNav = () => {
   const { logOut } = useActions();
   const navigate = useNavigate();
   const [dropOpen, setDropOpen] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [apiLogout, { isError, isLoading, isSuccess, error }] =
     useLogOutMutation();
+
+  const setMenuItems = () => {
+    return companies.length > 0
+      ? [
+          ...menuItems,
+          {
+            id: 'companies',
+            label: 'Компанії',
+            to: '',
+            children: companies.map(({ id, name }) => ({
+              id,
+              label: name,
+              to: `/company/${id}`,
+            })),
+          },
+        ]
+      : menuItems;
+  };
 
   const handleLogout = (): void => {
     apiLogout({});
   };
-
-  useEffect(() => {
-    if (!companies.length) return;
-
-    menuItems.push({
-      id: 'companies',
-      label: 'Компанії',
-      to: '',
-      children: companies.map(({ id, name }) => ({
-        id,
-        label: name,
-        to: `/company/${id}`,
-      })),
-    });
-  }, [companies]);
 
   useEffect(() => {
     if (isLoading) {
@@ -59,6 +66,7 @@ const UsersNav = () => {
     }
 
     if (isSuccess) {
+      console.log('isSuccess');
       logOut();
       setDropOpen(false);
       toast.info(`До зустрічі, ${user?.firstName}!`);
@@ -73,6 +81,13 @@ const UsersNav = () => {
   return (
     <NavWrapper>
       <UsersOptions>
+        <Button
+          onClick={() => setModalOpen(true)}
+          Icon={IoMdAddCircle}
+          $colors="light"
+          children="Нова компанія"
+        />
+
         <UsersAvatarWrapper>
           {user?.avatar ? (
             <UsersAvatar src={user?.avatar} />
@@ -81,21 +96,22 @@ const UsersNav = () => {
           )}
         </UsersAvatarWrapper>
 
-        <UsersEmail>{user?.email}</UsersEmail>
+        <UsersEmail>
+          {user?.firstName ? user?.firstName : user?.email}
+        </UsersEmail>
 
         <Button
           onClick={() => setDropOpen(true)}
-          Icon={HiDotsVertical}
-          $round
+          Icon={HiMenu}
           $variant="text"
           $colors="accent"
-          disabled={false}
+          $round
         />
 
         {dropOpen && (
           <Dropdown $isOpen={dropOpen} closeDropdown={() => setDropOpen(false)}>
             <>
-              <Menu items={menuItems} />
+              <Menu items={setMenuItems()} />
 
               <Button
                 isLoading={isLoading}
@@ -107,35 +123,16 @@ const UsersNav = () => {
               >
                 Вихід
               </Button>
-              <Menu items={menuItems} />
-
-              <Button
-                isLoading={isLoading}
-                disabled={isLoading}
-                onClick={handleLogout}
-                Icon={HiLogout}
-                $colors="light"
-                size="s"
-              >
-                Вихід
-              </Button>
-              <Menu items={menuItems} />
-
-              <Button
-                isLoading={isLoading}
-                disabled={isLoading}
-                onClick={handleLogout}
-                Icon={HiLogout}
-                $colors="light"
-                size="s"
-              >
-                Вихід
-              </Button>
-              
             </>
           </Dropdown>
         )}
       </UsersOptions>
+
+      {modalOpen && (
+        <Modal $isOpen={modalOpen} closeModal={() => setModalOpen(false)}>
+          <CreateCompanyForm closeModal={() => setModalOpen(false)} />
+        </Modal>
+      )}
     </NavWrapper>
   );
 };
