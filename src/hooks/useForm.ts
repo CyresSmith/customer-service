@@ -1,5 +1,5 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
 import validateInputs from 'helpers/validators';
+import { ChangeEvent, FormEvent, useState } from 'react';
 
 export type State = {
   firstName?: string;
@@ -26,7 +26,7 @@ export const useForm = ({ initialState, onSubmit }: Props) => {
 
     if (!isValid.ok) {
       if (!invalidFields.find(i => Object.keys(i)[0] === name)) {
-        setInvalidFields(s => [...s, {[name]: isValid.message}]);
+        setInvalidFields(s => [...s, { [name]: isValid.message }]);
       }
     } else {
       setInvalidFields(s => s.filter(ss => Object.keys(ss)[0] !== name));
@@ -39,8 +39,9 @@ export const useForm = ({ initialState, onSubmit }: Props) => {
     event.preventDefault();
 
     onSubmit(state);
-    setState(initialState);
   };
 
-  return { state, setState, handleChange, handleSubmit, invalidFields };
+  const reset = () => setState(initialState);
+
+  return { state, setState, handleChange, handleSubmit, invalidFields, reset };
 };

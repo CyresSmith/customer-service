@@ -3,13 +3,15 @@ import { ReactNode } from 'react';
 export interface IButton {
   id?: string;
   isLoading?: boolean;
-  disabled: boolean;
+  disabled?: boolean;
   children?: ReactNode | undefined;
   onClick?: () => void;
   Icon?: React.ElementType | undefined;
+  $iconPosition?: 'l' | 'r' | undefined;
   type?: 'submit' | 'button';
   size?: 's' | 'm' | 'l' | undefined;
   $colors?: 'light' | 'main' | 'dark' | 'accent' | undefined;
   $variant?: 'solid' | 'text' | undefined;
   $round?: boolean;
+  $isIcon?: boolean;
 }

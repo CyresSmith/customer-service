@@ -9,11 +9,13 @@ const Button = ({
   children,
   onClick,
   Icon,
+  $iconPosition = 'l',
   type = 'button',
   size = 'm',
   $colors = 'main',
   $variant = 'solid',
   $round = false,
+  $isIcon = false,
 }: IButton) => {
   return (
     <Btn
@@ -25,10 +27,18 @@ const Button = ({
       $colors={$colors}
       $variant={$variant}
       $round={$round}
+      $isIconThere={Boolean(Icon)}
+      $iconPosition={$iconPosition}
     >
-      {isLoading && Icon && <Loader as={BiLoaderCircle} />}
-      {!isLoading && Icon && <Icon />}
-      {!$round && children && <span>{children}</span>}
+      {$iconPosition === 'l' &&
+        Icon &&
+        (isLoading ? <Loader as={BiLoaderCircle} /> : <Icon />)}
+
+      {!$round && !$isIcon && children && <span>{children}</span>}
+
+      {$iconPosition === 'r' &&
+        Icon &&
+        (isLoading ? <Loader as={BiLoaderCircle} /> : <Icon />)}
     </Btn>
   );
 };

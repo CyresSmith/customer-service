@@ -4,10 +4,10 @@ import { useEffect } from 'react';
 import { HiOutlineUserAdd } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { useRegisterMutation } from 'services/auth.api';
+import { FormBox } from '../TopBar.styled';
 
 type Props = {
   closeModal: () => void;
-
 };
 
 const registerInputs = [
@@ -58,14 +58,16 @@ const RegisterForm = ({ closeModal }: Props) => {
   }, [closeModal, error, isError, isLoading, isSuccess]);
 
   return (
-    <CustomForm
-      SubmitButtonIcon={HiOutlineUserAdd}
-      isLoading={isLoading}
-      buttonLabel="Реєстрація"
-      onSubmit={handleSubmit}
-      initialState={initialRegState}
-      inputs={registerInputs}
-    />
+    <FormBox>
+      <CustomForm
+        SubmitButtonIcon={HiOutlineUserAdd}
+        isLoading={isLoading}
+        buttonLabel="Реєстрація"
+        onSubmit={handleSubmit}
+        initialState={initialRegState}
+        inputs={registerInputs}
+      />
+    </FormBox>
   );
 };
 

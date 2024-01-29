@@ -3,7 +3,11 @@ import theme from 'utils/theme';
 import { IButton } from './Button.types';
 import buttonStyle from './dynamicButtonStyles';
 
-export const Btn = styled.button<IButton>`
+export interface IButtonStyle extends IButton {
+  $isIconThere: boolean;
+}
+
+export const Btn = styled.button<IButtonStyle>`
   ${p => {
     const {
       color,
@@ -26,7 +30,6 @@ export const Btn = styled.button<IButton>`
       :focus:not(:disabled) {
           color: ${hoverColor()};
           background-color: ${hoverBackgroundColor()};
-          transform: scale(1.005);
 
           svg {
           fill: ${hoverColor()};
@@ -41,12 +44,12 @@ export const Btn = styled.button<IButton>`
       }
 
       span {
-        margin-left: ${iconMargin()};
+        ${iconMargin()};
       }
     `;
   }}
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: ${({ $round }) =>

@@ -32,7 +32,7 @@ export const UsersAvatarWrapper = styled.div`
   position: relative;
   height: 35px;
   width: 35px;
-  background-color: ${theme.colors.secondary.main};
+  background-color: ${theme.colors.secondary.light};
   border-radius: ${theme.radii.round};
 `;
 
