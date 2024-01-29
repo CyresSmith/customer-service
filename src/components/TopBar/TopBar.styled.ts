@@ -18,3 +18,7 @@ export const Logo = styled(NavLink)`
   font-size: ${theme.fontSizes.xxl};
   font-weight: ${theme.fontWeights.bold};
 `;
+
+export const FormBox = styled.div`
+  width: 20vw;
+`;

@@ -8,7 +8,7 @@ import { useAuth } from 'hooks/useAuth';
 import { useEffect, useState } from 'react';
 import { HiLogout, HiMenu } from 'react-icons/hi';
 import { IoMdAddCircle } from 'react-icons/io';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useLogOutMutation } from 'services/auth.api';
 import CreateCompanyForm from './CreateCompanyForm';
@@ -33,6 +33,7 @@ const UsersNav = () => {
   const { user, companies } = useAuth();
   const { logOut } = useActions();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [dropOpen, setDropOpen] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [apiLogout, { isError, isLoading, isSuccess, error }] =
@@ -81,12 +82,14 @@ const UsersNav = () => {
   return (
     <NavWrapper>
       <UsersOptions>
-        <Button
-          onClick={() => setModalOpen(true)}
-          Icon={IoMdAddCircle}
-          $colors="light"
-          children="Нова компанія"
-        />
+        {pathname === '/' && (
+          <Button
+            onClick={() => setModalOpen(true)}
+            Icon={IoMdAddCircle}
+            $colors="light"
+            children="Нова компанія"
+          />
+        )}
 
         <UsersAvatarWrapper>
           {user?.avatar ? (
@@ -111,7 +114,10 @@ const UsersNav = () => {
         {dropOpen && (
           <Dropdown $isOpen={dropOpen} closeDropdown={() => setDropOpen(false)}>
             <>
-              <Menu items={setMenuItems()} />
+              <Menu
+                items={setMenuItems()}
+                onItemClick={() => setDropOpen(false)}
+              />
 
               <Button
                 isLoading={isLoading}

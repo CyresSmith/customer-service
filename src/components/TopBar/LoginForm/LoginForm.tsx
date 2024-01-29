@@ -6,6 +6,7 @@ import { HiLogin } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useLogInMutation } from 'services/auth.api';
+import { FormBox } from '../TopBar.styled';
 
 type Props = {
   closeModal: () => void;
@@ -54,14 +55,16 @@ const LoginForm = ({ closeModal }: Props) => {
   }, [closeModal, error, isError, isLoading, isSuccess, navigate]);
 
   return (
-    <CustomForm
-      SubmitButtonIcon={HiLogin}
-      isLoading={isLoading}
-      buttonLabel="Увійти"
-      onSubmit={handleSubmit}
-      initialState={initialLoginState}
-      inputs={loginInputs}
-    />
+    <FormBox>
+      <CustomForm
+        SubmitButtonIcon={HiLogin}
+        isLoading={isLoading}
+        buttonLabel="Увійти"
+        onSubmit={handleSubmit}
+        initialState={initialLoginState}
+        inputs={loginInputs}
+      />
+    </FormBox>
   );
 };
 

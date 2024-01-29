@@ -3,6 +3,7 @@ import { MenuList } from './Menu.styled';
 
 type Props = {
   items: MenuItem[];
+  onItemClick?: () => void;
 };
 
 // ====================== пример объекта меню
@@ -55,11 +56,11 @@ type Props = {
 //   },
 // ];
 
-const Menu = ({ items }: Props) => {
+const Menu = ({ items, onItemClick }: Props) => {
   return (
     <MenuList>
       {items.map(item => (
-        <Item key={item.id} {...item} />
+        <Item key={item.id} {...item} onItemClick={onItemClick} />
       ))}
     </MenuList>
   );
