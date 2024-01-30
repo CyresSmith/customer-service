@@ -114,10 +114,7 @@ const UsersNav = () => {
         {dropOpen && (
           <Dropdown $isOpen={dropOpen} closeDropdown={() => setDropOpen(false)}>
             <>
-              <Menu
-                items={setMenuItems()}
-                onItemClick={() => setDropOpen(false)}
-              />
+              <Menu items={setMenuItems()} />
 
               <Button
                 isLoading={isLoading}

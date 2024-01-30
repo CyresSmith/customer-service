@@ -12,6 +12,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 import { companyApi } from 'services/company.api';
 import { authApi } from '../services/auth.api';
+import companySlice from './company/company.slice';
 import loadingSlice from './loading/loading.slice';
 import userSlice from './user/user.slice';
 
@@ -28,6 +29,7 @@ const persistedUserReducer = persistReducer(
 
 const rootReducer = combineReducers({
   loading: loadingSlice.reducer,
+  company: companySlice.reducer,
   user: persistedUserReducer,
   [authApi.reducerPath]: authApi.reducer,
   [companyApi.reducerPath]: companyApi.reducer,

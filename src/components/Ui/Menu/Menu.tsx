@@ -1,8 +1,11 @@
 import Item, { MenuItem } from './Item/Item';
 import { MenuList } from './Menu.styled';
 
+export type MenuSize = 'm' | 'l';
+
 type Props = {
   items: MenuItem[];
+  size?: MenuSize;
   onItemClick?: () => void;
 };
 
@@ -56,11 +59,11 @@ type Props = {
 //   },
 // ];
 
-const Menu = ({ items, onItemClick }: Props) => {
+const Menu = ({ items, onItemClick, size = 'm' }: Props) => {
   return (
-    <MenuList>
+    <MenuList $menuSize={size}>
       {items.map(item => (
-        <Item key={item.id} {...item} onItemClick={onItemClick} />
+        <Item key={item.id} {...item} onItemClick={onItemClick} size={size} />
       ))}
     </MenuList>
   );

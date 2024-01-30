@@ -1,7 +1,7 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from 'services/instance';
+import { Company, CreateCompany } from '../store/company/company.types';
 import { CompanyCategory } from './types/category.types';
-import { Company, CreateCompany } from './types/company.types';
 
 export const companyApi = createApi({
   reducerPath: 'companyApi',
@@ -27,9 +27,16 @@ export const companyApi = createApi({
       invalidatesTags: ['companyApi'],
     }),
 
-    getCompanyById: builder.query<Company, number>({
+    getCompanyById: builder.query<Company, string>({
       query: id => ({
         url: `/company/${id}`,
+        method: 'GET',
+      }),
+    }),
+
+    getCompanyProfile: builder.query<Company, string>({
+      query: id => ({
+        url: `/company/profile/${id}`,
         method: 'GET',
       }),
     }),
@@ -40,4 +47,5 @@ export const {
   useGetCompanyCategoriesQuery,
   useCreateCompanyMutation,
   useGetCompanyByIdQuery,
+  useGetCompanyProfileQuery,
 } = companyApi;
