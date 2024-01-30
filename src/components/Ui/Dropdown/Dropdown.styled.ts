@@ -13,6 +13,7 @@ export const DropWrapper = styled.div<Pick<Props, '$isOpen'>>`
   display: flex;
   max-height: ${props => (props.$isOpen ? '100vh' : '0')};
   transition: ${theme.transition.modal};
+  box-shadow: ${theme.shadow.m}
 `;
 
 export const DropdownContent = styled.div`

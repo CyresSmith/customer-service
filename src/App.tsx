@@ -12,6 +12,7 @@ import { useCurrentQuery } from 'services/auth.api';
 const HomePage = lazy(() => import('../src/pages/Home'));
 const WorkPage = lazy(() => import('../src/pages/Workspace'));
 const VerifyPage = lazy(() => import('../src/pages/Verify'));
+const ProfilePage = lazy(() => import('../src/pages/Profile'));
 const ErrorPage = lazy(() => import('../src/pages/ErrorPage'));
 
 function App() {
@@ -71,6 +72,10 @@ function App() {
           <Route
             path="/company/:companyId"
             element={<PrivateRoute children={<WorkPage />} />}
+          />
+          <Route
+            path="/my-profile"
+            element={<PrivateRoute children={<ProfilePage />} />}
           />
           {/* <Route path="tests" element={<PrivatRoute><TestSPage /></PrivatRoute>} />
               <Route path='mytests' element={<PrivatRoute><MyTestsPage /></PrivatRoute>}>

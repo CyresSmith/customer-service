@@ -65,6 +65,11 @@ export const FormInput = styled.input`
   }
 `;
 
+export const ButtonBox = styled.div<{$buttonWidth: string | undefined}>`
+  width: ${props => props.$buttonWidth};
+  margin: 0 auto;
+`
+
 export const ValidationError = styled.span`
   position: absolute;
   bottom: -35%;

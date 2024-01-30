@@ -25,7 +25,7 @@ const menuItems: MenuItem[] = [
   {
     id: 2,
     label: 'Профіль',
-    to: '/',
+    to: '/my-profile',
   },
 ];
 
