@@ -24,12 +24,20 @@ export const useForm = ({ initialState, onSubmit }: Props) => {
 
     const isValid = validateInputs(name, value);
 
-    if (!isValid.ok) {
+    if (!isValid.ok && value !== '') {
       if (!invalidFields.find(i => Object.keys(i)[0] === name)) {
         setInvalidFields(s => [...s, { [name]: isValid.message }]);
       }
     } else {
       setInvalidFields(s => s.filter(ss => Object.keys(ss)[0] !== name));
+    }
+
+    if (name === 'confirm') {
+      if (value !== '' && value !== state?.password) {
+        setInvalidFields(s => [...s, { [name]: 'Passwords must match' }]);
+      } else {
+        setInvalidFields(s => s.filter(ss => Object.keys(ss)[0] !== name));
+      }
     }
 
     setState(prevState => ({ ...prevState, [name]: value }));
