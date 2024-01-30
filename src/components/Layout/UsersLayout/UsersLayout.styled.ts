@@ -20,7 +20,7 @@ export const MainSection = styled.section`
 
 export const OutletWrapper = styled.div`
   background-color: ${theme.colors.bg.dark};
-  padding: ${theme.space[3]} ${theme.space[4]};
+  padding: ${theme.space[4]};
   border-radius: ${theme.radii.m};
   box-shadow: ${theme.shadow.m};
 `;

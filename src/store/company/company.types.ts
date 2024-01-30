@@ -27,29 +27,23 @@ export type Company = {
   desc: string;
   avatar: string;
   images: string[];
-  category: string;
   activities: string[];
-  employeesCount: EmployeesCount;
-  branches: Branches;
+  employees: [];
 };
 
 export interface CreateCompany
   extends Pick<
     Company,
-    | 'name'
-    | 'city'
-    | 'index'
-    | 'address'
-    | 'category'
-    | 'activities'
-    | 'phones'
-    | 'employeesCount'
-    | 'branches'
-  > {}
+    'name' | 'city' | 'index' | 'address' | 'activities' | 'phones'
+  > {
+  employeesCount: EmployeesCount;
+  branches: Branches;
+  category: string;
+}
 
 export interface CreateCompanyDto
   extends Pick<
-    Company,
+    CreateCompany,
     | 'name'
     | 'city'
     | 'index'

@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { CreateCompanyDto } from 'services/types/company.types';
+import { CreateCompanyDto } from 'store/company/company.types';
 
 export type Selected = {
   selected: boolean;
