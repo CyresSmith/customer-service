@@ -30,5 +30,5 @@ export const Logo = styled(NavLink)`
 `;
 
 export const FormBox = styled.div`
-  width: 20vw;
+  width: 25vw;
 `;

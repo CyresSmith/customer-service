@@ -2,7 +2,7 @@ import { State } from 'hooks/useForm';
 import { IconType } from 'react-icons';
 import { useForm } from '../../../hooks';
 import Button from '../Buttons/Button/Button';
-import { Form, FormInputsList } from './CustomForm.styled';
+import { ButtonBox, Form, FormInputsList } from './CustomForm.styled';
 import CustomFormInput from './CustomFormInput';
 
 type FormInput = {
@@ -14,6 +14,7 @@ type FormInput = {
 type Props = {
   SubmitButtonIcon?: IconType | undefined;
   buttonLabel: string;
+  buttonWidth?: string;
   inputs: FormInput[];
   onSubmit: (state: State) => void;
   initialState: State;
@@ -21,6 +22,7 @@ type Props = {
 };
 
 const CustomForm = ({
+  buttonWidth,
   isLoading,
   inputs,
   onSubmit,
@@ -28,6 +30,7 @@ const CustomForm = ({
   buttonLabel,
   SubmitButtonIcon,
 }: Props) => {
+
   const { handleChange, handleSubmit, state, invalidFields } = useForm({
     initialState,
     onSubmit,
@@ -43,7 +46,7 @@ const CustomForm = ({
   const disabledBtn: boolean =
     isLoading ||
     invalidFields?.length > 0 ||
-    Object.values(state).some(i => i === '')
+      JSON.stringify(state) === JSON.stringify(initialState)
       ? true
       : false;
 
@@ -62,14 +65,27 @@ const CustomForm = ({
         ))}
       </FormInputsList>
 
-      <Button
-        isLoading={isLoading}
-        disabled={disabledBtn}
-        type="submit"
-        children={buttonLabel}
-        Icon={SubmitButtonIcon}
-        $colors="light"
-      />
+      {
+        buttonWidth ?
+          <ButtonBox $buttonWidth={buttonWidth}>
+            <Button
+              isLoading={isLoading}
+              disabled={disabledBtn}
+              type="submit"
+              children={buttonLabel}
+              Icon={SubmitButtonIcon}
+              $colors="light"
+            />
+          </ButtonBox> :
+          <Button
+            isLoading={isLoading}
+            disabled={disabledBtn}
+            type="submit"
+            children={buttonLabel}
+            Icon={SubmitButtonIcon}
+            $colors="light"
+          />
+      }
     </Form>
   );
 };

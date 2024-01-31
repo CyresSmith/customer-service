@@ -50,22 +50,25 @@ export const HideIcon = styled.svg<{ hidden: boolean }>`
     hidden ? theme.colors.secondary.main : theme.colors.secondary.dark};
 `;
 
-export const FormInput = styled.input<{ $invalid?: string }>`
+export const FormInput = styled.input`
   color: ${theme.colors.bg.dark};
   padding: ${theme.space[2]} ${theme.space[3]};
   border-radius: ${theme.radii.s};
   background-color: ${theme.colors.secondary.light};
-  border: ${theme.borders.normal}
-    ${props => (props.$invalid ? theme.colors.danger : theme.colors.bg.main)};
+  border: ${theme.borders.normal} ${theme.colors.bg.dark};
   transition: ${theme.transition.primary};
   font-size: ${theme.fontSizes.l};
   width: 100%;
 
   &:focus {
-    border-color: ${props =>
-      props.$invalid ? theme.colors.danger : theme.colors.primary.light};
+    border-color: ${theme.colors.accent.main};
   }
 `;
+
+export const ButtonBox = styled.div<{$buttonWidth: string | undefined}>`
+  width: ${props => props.$buttonWidth};
+  margin: 0 auto;
+`
 
 export const ValidationError = styled.span`
   position: absolute;
@@ -73,3 +76,13 @@ export const ValidationError = styled.span`
   right: 0;
   color: ${({ theme }) => theme.colors.danger};
 `;
+
+export const DoneIcon = styled.svg<{ $complate?: boolean }>`
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  fill: ${props => props.$complate ? theme.colors.success : theme.colors.danger};
+`

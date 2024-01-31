@@ -1,4 +1,3 @@
-// import { lazy } from "react";
 import MainLayout from 'components/Layout/MainLayout';
 import PrivateRoute from 'helpers/PrivateRoute';
 import { useActions } from 'hooks';
@@ -9,7 +8,9 @@ import { Bounce, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useCurrentQuery } from 'services/auth.api';
 
+
 const HomePage = lazy(() => import('pages/Home'));
+const ProfilePage = lazy(() => import('../src/pages/Profile'));
 const CompanyProfile = lazy(() => import('pages/CompanyProfile'));
 const Clients = lazy(() => import('pages/Clients'));
 const WorkSchedule = lazy(() => import('pages/WorkSchedule'));
@@ -20,9 +21,9 @@ const Workspace = lazy(() => import('components/Layout/UsersLayout'));
 
 function App() {
   const { accessToken, user } = useAuth();
-  const { setCurrentUser, logOut, setLoading } = useActions();
+  const { setCurrentUser } = useActions();
 
-  const { data, isError, isLoading, isSuccess, error } = useCurrentQuery(
+  const { data, isSuccess } = useCurrentQuery(
     accessToken,
     {
       skip: Boolean(user || !accessToken),
@@ -30,33 +31,12 @@ function App() {
   );
 
   useEffect(() => {
-    if (isLoading) {
-      setLoading(true);
-    }
-
     if (isSuccess) {
       if (data && data?.user) {
         setCurrentUser(data);
       }
-      setLoading(false);
     }
-
-    if (isError) {
-      console.log(error);
-
-      logOut();
-      setLoading(false);
-    }
-  }, [
-    data,
-    error,
-    isError,
-    isLoading,
-    isSuccess,
-    logOut,
-    setCurrentUser,
-    setLoading,
-  ]);
+  }, [data, isSuccess, setCurrentUser]);
 
   return (
     <>
@@ -73,9 +53,12 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="/verify/:code" element={<VerifyPage />} />
           <Route
+            path="/my-profile"
+            element={<PrivateRoute children={<ProfilePage />} />}
+          />
+          <Route
             path="/company/:companyId"
-            element={<PrivateRoute children={<Workspace />} />}
-          >
+            element={<PrivateRoute children={<Workspace />}/>}>
             <Route
               path="record-log"
               element={<PrivateRoute children={<RecordLog />} />}
