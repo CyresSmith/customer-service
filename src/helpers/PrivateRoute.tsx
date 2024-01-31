@@ -1,3 +1,4 @@
+import { useLoading } from 'hooks';
 import { useAuth } from 'hooks/useAuth';
 import { ReactElement } from 'react';
 import { Navigate } from 'react-router-dom';
@@ -7,13 +8,12 @@ type Props = {
 };
 
 const PrivateRoute = ({ children }: Props): React.ReactElement => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, accessToken } = useAuth();
+  const { isGlobalLoading } = useLoading();
 
-  const redirect: boolean | null = !isLoggedIn
+  const redirect: boolean = !isLoggedIn && !isGlobalLoading && !accessToken
     ? true
-    : isLoggedIn
-    ? false
-    : null;
+    : false;
 
   return redirect ? <Navigate to="/" replace={true} /> : children;
 };

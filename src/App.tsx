@@ -1,4 +1,3 @@
-// import { lazy } from "react";
 import MainLayout from 'components/Layout/MainLayout';
 import PrivateRoute from 'helpers/PrivateRoute';
 import { useActions } from 'hooks';
@@ -21,9 +20,9 @@ const ErrorPage = lazy(() => import('../src/pages/ErrorPage'));
 
 function App() {
   const { accessToken, user } = useAuth();
-  const { setCurrentUser, logOut, setLoading } = useActions();
+  const { setCurrentUser } = useActions();
 
-  const { data, isError, isLoading, isSuccess, error } = useCurrentQuery(
+  const { data, isSuccess } = useCurrentQuery(
     accessToken,
     {
       skip: Boolean(user || !accessToken),
@@ -31,33 +30,12 @@ function App() {
   );
 
   useEffect(() => {
-    if (isLoading) {
-      setLoading(true);
-    }
-
     if (isSuccess) {
       if (data && data?.user) {
         setCurrentUser(data);
       }
-      setLoading(false);
     }
-
-    if (isError) {
-      console.log(error);
-
-      logOut();
-      setLoading(false);
-    }
-  }, [
-    data,
-    error,
-    isError,
-    isLoading,
-    isSuccess,
-    logOut,
-    setCurrentUser,
-    setLoading,
-  ]);
+  }, [data, isSuccess, setCurrentUser]);
 
   return (
     <>

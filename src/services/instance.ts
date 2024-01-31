@@ -13,6 +13,8 @@ export const axiosBaseQuery =
   () =>
   async ({ url = '', method, data, params }: AxiosRequestConfig) => {
     try {
+      store.dispatch(rootActions.setLoading(true));
+
       const response = await instance({
         url,
         method,
@@ -24,6 +26,8 @@ export const axiosBaseQuery =
       return {
         error: handleError(e),
       };
+    } finally {
+      store.dispatch(rootActions.setLoading(false));
     }
   };
 
@@ -68,14 +72,14 @@ instance.interceptors.response.use(
 
             instance.defaults.headers.common.Authorization = `Bearer ${response?.data?.accessToken}`;
 
-            return instance(originalRequest);
+            // return instance(originalRequest); ----------- Двічі спрацьовує originalRequest після оновлення токену.
           }
         } else {
-          rootActions.logOut();
+          store.dispatch(rootActions.logOut());
           return Promise.reject(error);
         }
       } catch (error) {
-        rootActions.logOut();
+        store.dispatch(rootActions.logOut());
         return Promise.reject(error);
       }
     }
