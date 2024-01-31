@@ -1,6 +1,6 @@
 import translateActivityName from 'helpers/translateActivityName';
 import { useCompany } from 'hooks/useCompany';
-import { HiBriefcase, HiOfficeBuilding } from 'react-icons/hi';
+import { HiBriefcase, HiCalendar, HiOfficeBuilding } from 'react-icons/hi';
 import { HiPhone } from 'react-icons/hi2';
 import CompanyLogo from './CompanyLogo';
 import {
@@ -14,9 +14,11 @@ import {
   TitleBox,
   Wrapper,
 } from './CompanyProfile.styled';
+import Schedule from './Schedule';
 
 const CompanyProfile = () => {
-  const { name, avatar, address, phones, activities, id } = useCompany();
+  const { name, avatar, address, phones, activities, id, workingHours } =
+    useCompany();
 
   return (
     <>
@@ -65,6 +67,17 @@ const CompanyProfile = () => {
                   <p>{translateActivityName(name)}</p>
                 </li>
               ))}
+            </InfoList>
+          </InfoBlock>
+
+          <InfoBlock>
+            <TitleBox>
+              <StyledIcon as={HiCalendar} />
+              <Title>Графік роботи:</Title>
+            </TitleBox>
+
+            <InfoList as="div">
+              <Schedule schedule={workingHours} />
             </InfoList>
           </InfoBlock>
         </Info>
