@@ -14,17 +14,14 @@ import {
   TitleBox,
   Wrapper,
 } from './CompanyProfile.styled';
-type Props = {
-  companyId: string;
-};
 
-const CompanyProfile = ({ companyId }: Props) => {
-  const { name, avatar, address, phones, activities } = useCompany();
+const CompanyProfile = () => {
+  const { name, avatar, address, phones, activities, id } = useCompany();
 
   return (
     <>
       <Wrapper>
-        <CompanyLogo name={name} avatar={avatar} companyId={companyId} />
+        <CompanyLogo name={name} avatar={avatar} companyId={id} />
 
         <Info>
           <InfoBlock>

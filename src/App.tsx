@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import { useCurrentQuery } from 'services/auth.api';
 
 const HomePage = lazy(() => import('pages/Home'));
-const CompanyProfilePage = lazy(() => import('pages/CompanyProfilePage'));
+const CompanyProfile = lazy(() => import('pages/CompanyProfile'));
 const Clients = lazy(() => import('pages/Clients'));
 const WorkSchedule = lazy(() => import('pages/WorkSchedule'));
 const RecordLog = lazy(() => import('pages/RecordLog'));
@@ -93,7 +93,7 @@ function App() {
 
             <Route
               path="profile"
-              element={<PrivateRoute children={<CompanyProfilePage />} />}
+              element={<PrivateRoute children={<CompanyProfile />} />}
             />
           </Route>
           {/* <Route path="tests" element={<PrivatRoute><TestSPage /></PrivatRoute>} />

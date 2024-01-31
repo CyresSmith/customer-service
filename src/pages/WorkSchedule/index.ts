@@ -1,1 +1,1 @@
-export { default } from './WorkSchedule';
+export { default } from './WorkSchedulePage';
