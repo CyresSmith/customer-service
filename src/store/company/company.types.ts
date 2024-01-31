@@ -14,7 +14,18 @@ export interface IWorkingHours {
 }
 
 export type Branches = 'one' | 'more';
+
 export type EmployeesCount = '2-5' | '6-9' | '10+';
+
+type Activity = {
+  id: string;
+  name: string;
+};
+
+type Employee = {
+  id: string;
+  name: string;
+};
 
 export type Company = {
   id: string;
@@ -27,18 +38,16 @@ export type Company = {
   desc: string;
   avatar: string;
   images: string[];
-  activities: string[];
-  employees: [];
+  activities: Activity[];
+  employees: Employee[];
 };
 
 export interface CreateCompany
-  extends Pick<
-    Company,
-    'name' | 'city' | 'index' | 'address' | 'activities' | 'phones'
-  > {
+  extends Pick<Company, 'name' | 'city' | 'index' | 'address' | 'phones'> {
   employeesCount: EmployeesCount;
   branches: Branches;
   category: string;
+  activities: string[];
 }
 
 export interface CreateCompanyDto
@@ -54,4 +63,9 @@ export interface CreateCompanyDto
     | 'branches'
   > {
   phone: string;
+}
+
+export interface UpdateAvatar {
+  id: string;
+  data: FormData;
 }

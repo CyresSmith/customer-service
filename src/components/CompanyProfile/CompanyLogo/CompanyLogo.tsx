@@ -1,7 +1,13 @@
 import Button from 'components/Ui/Buttons/Button';
+import Loader from 'components/Ui/Loader';
 import VisuallyHidden from 'components/Ui/VisuallyHidden';
+import handleError from 'helpers/errorHandler';
+import { useActions } from 'hooks';
 import useFileUpload from 'hooks/useFileUpload';
+import { useEffect, useMemo } from 'react';
 import { HiCamera, HiCloudUpload, HiX } from 'react-icons/hi';
+import { toast } from 'react-toastify';
+import { useUploadCompanyAvatarMutation } from 'services/company.api';
 import {
   Backdrop,
   ButtonsBox,
@@ -11,11 +17,12 @@ import {
 } from './CompanyLogo.styled';
 
 type Props = {
+  companyId: string;
   avatar: string;
   name: string;
 };
 
-const CompanyLogo = ({ avatar, name, uploadImage }: Props) => {
+const CompanyLogo = ({ companyId, avatar, name }: Props) => {
   const {
     inputRef,
     handleClick,
@@ -26,7 +33,40 @@ const CompanyLogo = ({ avatar, name, uploadImage }: Props) => {
     previewImage,
     reset,
   } = useFileUpload();
-  console.log('🚀 ~ CompanyLogo ~ currentFile:', currentFile);
+
+  const { setCompanyLogo } = useActions();
+
+  const data = useMemo(() => new FormData(), []);
+
+  const [uploadImage, { isSuccess, isError, isLoading, error }] =
+    useUploadCompanyAvatarMutation();
+
+  const handleUpload = async () => {
+    if (companyId && data.has('avatar')) {
+      const { url } = await uploadImage({ id: companyId, data }).unwrap();
+
+      if (url) {
+        setCompanyLogo({ avatar: url });
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!currentFile) return;
+
+    data.append('avatar', currentFile);
+  }, [currentFile, data]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      reset();
+      toast.success('Зображення успішно оновлено');
+    }
+
+    if (isError) {
+      toast.error(handleError(error));
+    }
+  }, [error, isError, isSuccess, reset]);
 
   return (
     <div>
@@ -35,35 +75,41 @@ const CompanyLogo = ({ avatar, name, uploadImage }: Props) => {
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
-        {avatar || previewImage ? (
-          <img
-            src={previewImage ? previewImage : avatar}
-            alt={`${name} logo`}
-          />
+        {isLoading ? (
+          <Loader />
         ) : (
-          <HiCamera id="camera" />
+          <>
+            {avatar || previewImage ? (
+              <img
+                src={previewImage ? previewImage : avatar}
+                alt={`${name} logo`}
+              />
+            ) : (
+              <HiCamera id="camera" />
+            )}
+
+            <InfoBox id="upload">
+              <Backdrop />
+              <Info>Натисніть або перетягніть сюди файл</Info>
+            </InfoBox>
+
+            <VisuallyHidden>
+              <input
+                type="file"
+                accept=".png,.jpg,.jpeg"
+                size={5 * 1024 * 1024}
+                ref={inputRef}
+                onChange={handleSelect}
+              />
+            </VisuallyHidden>
+          </>
         )}
-
-        <InfoBox id="upload">
-          <Backdrop />
-          <Info>Натисніть тут або перетягніть сюди файл</Info>
-        </InfoBox>
-
-        <VisuallyHidden>
-          <input
-            type="file"
-            accept=".png,.jpg,.jpeg"
-            size={5 * 1024 * 1024}
-            ref={inputRef}
-            onChange={handleSelect}
-          />
-        </VisuallyHidden>
       </LogoBox>
 
       {currentFile && (
         <ButtonsBox>
           <Button
-            onClick={uploadImage}
+            onClick={handleUpload}
             $colors="light"
             $variant="text"
             Icon={HiCloudUpload}

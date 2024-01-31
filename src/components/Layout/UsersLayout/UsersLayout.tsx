@@ -1,11 +1,32 @@
-import { Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useActions } from 'hooks';
+import { Suspense, useEffect } from 'react';
+import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
+import { useGetCompanyByIdQuery } from 'services/company.api';
 import Sidebar from '../../Sidebar';
 import { MainSection, OutletWrapper } from './UsersLayout.styled';
 
 const UsersLayout = () => {
+  const match = useMatch('/company/:id');
+  const navigate = useNavigate();
+  const { companyId } = useParams();
+  const { setCompany } = useActions();
+
+  const { isSuccess, isError, isLoading, error, data } = useGetCompanyByIdQuery(
+    companyId,
+    { skip: !companyId }
+  );
+
+  useEffect(() => {
+    if (!match) return;
+
+    navigate('record-log', { replace: true });
+  }, [companyId, match, navigate]);
+
+  useEffect(() => {
+    if (isSuccess && data) setCompany(data);
+  }, [data, isSuccess, setCompany]);
+
   return (
-    // <Container>
     <MainSection>
       <Sidebar />
       <OutletWrapper>
@@ -14,7 +35,6 @@ const UsersLayout = () => {
         </Suspense>
       </OutletWrapper>
     </MainSection>
-    // </Container>
   );
 };
 
