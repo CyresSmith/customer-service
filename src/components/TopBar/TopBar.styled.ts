@@ -17,6 +17,16 @@ export const TopBarWrapper = styled.div`
 export const Logo = styled(NavLink)`
   font-size: ${theme.fontSizes.xxl};
   font-weight: ${theme.fontWeights.bold};
+  display: flex;
+  align-items: center;
+  gap: ${theme.space[4]};
+
+  > img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: ${theme.radii.round};
+  }
 `;
 
 export const FormBox = styled.div`

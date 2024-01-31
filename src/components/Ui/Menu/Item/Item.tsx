@@ -1,55 +1,88 @@
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { ChildrenBox, ItemBox, ItemChevron, ItemLink } from './Item.styled';
-
+import { Dispatch, SetStateAction } from 'react';
+import { IconType } from 'react-icons';
 import { HiChevronDown } from 'react-icons/hi';
+import { NavLink } from 'react-router-dom';
+import { MenuSize } from '../Menu';
+import {
+  ChildrenBox,
+  ItemBox,
+  ItemChevron,
+  ItemLink,
+  Label,
+  StyledIcon,
+} from './Item.styled';
 
-interface MenuLink {
+export interface MenuLink {
   id: string | number;
   label: string;
   to: string;
-  onItemClick?: () => void;
+  Icon?: IconType;
 }
 
 export interface MenuItem extends MenuLink {
   children?: MenuItem[] | [];
+  size?: MenuSize;
+  openItem: string | null;
+  setOpenItem: Dispatch<SetStateAction<string | null>>;
+  onItemClick?: () => void;
 }
 
-const Item = ({ label, to, children, onItemClick }: MenuItem) => {
-  const [isOpen, setIsOpen] = useState(false);
-
+const Item = ({
+  label,
+  to,
+  children,
+  size = 'm',
+  Icon,
+  onItemClick,
+  openItem,
+  setOpenItem,
+}: MenuItem) => {
   const handleItemClick = () => {
     if (onItemClick && !children) onItemClick();
 
-    if (!children) return;
+    if (children && children.length > 0) {
+      return setOpenItem(p => (p ? null : label));
+    }
 
-    setIsOpen(p => !p);
+    if (openItem) {
+      setOpenItem(null);
+    }
   };
+
+  const isOpen = () => Boolean(openItem);
 
   return (
     <>
-      <ItemBox $isOpen={isOpen}>
+      <ItemBox $isOpen={isOpen()} $menuSize={size}>
         <ItemLink
           to={to}
           as={children && children.length > 0 ? 'button' : NavLink}
           onClick={handleItemClick}
         >
-          <span>
-            {label}
-            {children && children.length > 0 && `: ${children?.length}`}
-          </span>
+          {Icon && <StyledIcon $menuSize={size} $isOpen={isOpen()} as={Icon} />}
+
+          <Label $isIcon={Boolean(Icon)}>{label}</Label>
 
           {children && children.length > 0 && (
-            <ItemChevron as={HiChevronDown} $isOpen={isOpen} />
+            <ItemChevron
+              $menuSize={size}
+              as={HiChevronDown}
+              $isOpen={isOpen()}
+            />
           )}
         </ItemLink>
       </ItemBox>
 
       {children && children.length > 0 && (
-        <ChildrenBox $isOpen={isOpen}>
+        <ChildrenBox $menuSize={size} $isOpen={isOpen()}>
           <ul>
             {children.map(item => (
-              <Item key={item.id} {...item} onItemClick={onItemClick} />
+              <Item
+                key={item.id}
+                {...item}
+                size={size}
+                onItemClick={onItemClick}
+              />
             ))}
           </ul>
         </ChildrenBox>

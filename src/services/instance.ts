@@ -71,11 +71,11 @@ instance.interceptors.response.use(
             return instance(originalRequest);
           }
         } else {
-          rootActions.logOut();
+          store.dispatch(rootActions.logOut());
           return Promise.reject(error);
         }
       } catch (error) {
-        rootActions.logOut();
+        store.dispatch(rootActions.logOut());
         return Promise.reject(error);
       }
     }

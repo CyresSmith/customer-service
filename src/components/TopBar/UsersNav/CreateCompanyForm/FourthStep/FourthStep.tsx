@@ -45,9 +45,11 @@ const FourthStep = ({
   const { addNemCompany } = useActions();
 
   const onSubmit = async () => {
+    console.log('🚀 ~ companyData:', companyData);
     const data = await createCompany({
       ...companyData,
       phones: [companyData.phone],
+      address: `${companyData.city}, ${companyData.address}, ${companyData.index}`,
     }).unwrap();
     if (data && data.name) {
       addNemCompany(data);

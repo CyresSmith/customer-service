@@ -1,4 +1,4 @@
-import { Branches, EmployeesCount } from 'services/types/company.types';
+import { Branches, EmployeesCount } from 'store/company/company.types';
 import BackButton from '../Buttons/BackButton';
 import NextButton from '../Buttons/NextButton';
 import { ButtonBox, Title } from '../CreateCompanyForm.styled';
@@ -79,13 +79,7 @@ const ThirdStep = ({
 
       <ButtonBox>
         <BackButton onClick={handleBackClick} />
-
-        <NextButton
-          disabled={
-            companyData.branches === '' || companyData.employeesCount === ''
-          }
-          onClick={nextPage}
-        />
+        <NextButton onClick={nextPage} />
       </ButtonBox>
     </>
   );

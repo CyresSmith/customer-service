@@ -1,7 +1,11 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from 'services/instance';
+import {
+  Company,
+  CreateCompany,
+  UpdateAvatar,
+} from '../store/company/company.types';
 import { CompanyCategory } from './types/category.types';
-import { Company, CreateCompany } from './types/company.types';
 
 export const companyApi = createApi({
   reducerPath: 'companyApi',
@@ -27,11 +31,27 @@ export const companyApi = createApi({
       invalidatesTags: ['companyApi'],
     }),
 
-    getCompanyById: builder.query<Company, number>({
+    getCompanyById: builder.query<Company, string>({
       query: id => ({
         url: `/company/${id}`,
         method: 'GET',
       }),
+    }),
+
+    getCompanyProfile: builder.query<Company, string>({
+      query: id => ({
+        url: `/company/${id}/profile`,
+        method: 'GET',
+      }),
+    }),
+
+    uploadCompanyAvatar: builder.mutation<{ url: string }, UpdateAvatar>({
+      query: ({ id, data }) => ({
+        url: `/company/${id}/profile/avatar`,
+        method: 'POST',
+        data,
+      }),
+      invalidatesTags: ['companyApi'],
     }),
   }),
 });
@@ -40,4 +60,6 @@ export const {
   useGetCompanyCategoriesQuery,
   useCreateCompanyMutation,
   useGetCompanyByIdQuery,
+  useGetCompanyProfileQuery,
+  useUploadCompanyAvatarMutation,
 } = companyApi;

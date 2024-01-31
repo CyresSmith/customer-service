@@ -52,10 +52,11 @@ const theme = {
     xxl: '20px',
 
     heading: {
-      s: '40px',
-      m: '60px',
+      xs: '30px',
+      s: '35px',
+      m: '65px',
       l: '100px',
-      xl: '200px',
+      xl: '165px',
     },
   },
 
