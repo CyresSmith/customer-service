@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import { useCurrentQuery } from 'services/auth.api';
 
 const HomePage = lazy(() => import('../src/pages/Home'));
-const Workspace = lazy(() => import('../src/pages/Workspace'));
+const Workspace = lazy(() => import('components/Layout/UsersLayout'));
 const VerifyPage = lazy(() => import('../src/pages/Verify'));
 const ProfilePage = lazy(() => import('../src/pages/Profile'));
 const ErrorPage = lazy(() => import('../src/pages/ErrorPage'));

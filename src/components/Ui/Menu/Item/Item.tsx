@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { IconType } from 'react-icons';
 import { HiChevronDown } from 'react-icons/hi';
 import { NavLink } from 'react-router-dom';
@@ -12,17 +12,19 @@ import {
   StyledIcon,
 } from './Item.styled';
 
-interface MenuLink {
+export interface MenuLink {
   id: string | number;
   label: string;
   to: string;
   Icon?: IconType;
-  onItemClick?: () => void;
 }
 
 export interface MenuItem extends MenuLink {
   children?: MenuItem[] | [];
   size?: MenuSize;
+  openItem: string | null;
+  setOpenItem: Dispatch<SetStateAction<string | null>>;
+  onItemClick?: () => void;
 }
 
 const Item = ({
@@ -32,37 +34,47 @@ const Item = ({
   size = 'm',
   Icon,
   onItemClick,
+  openItem,
+  setOpenItem,
 }: MenuItem) => {
-  const [isOpen, setIsOpen] = useState(false);
-
   const handleItemClick = () => {
     if (onItemClick && !children) onItemClick();
 
-    if (children) {
-      setIsOpen(p => !p);
+    if (children && children.length > 0) {
+      return setOpenItem(p => (p ? null : label));
+    }
+
+    if (openItem) {
+      setOpenItem(null);
     }
   };
 
+  const isOpen = () => Boolean(openItem);
+
   return (
     <>
-      <ItemBox $isOpen={isOpen} $menuSize={size}>
+      <ItemBox $isOpen={isOpen()} $menuSize={size}>
         <ItemLink
           to={to}
           as={children && children.length > 0 ? 'button' : NavLink}
           onClick={handleItemClick}
         >
-          {Icon && <StyledIcon $menuSize={size} $isOpen={isOpen} as={Icon} />}
+          {Icon && <StyledIcon $menuSize={size} $isOpen={isOpen()} as={Icon} />}
 
           <Label $isIcon={Boolean(Icon)}>{label}</Label>
 
           {children && children.length > 0 && (
-            <ItemChevron $menuSize={size} as={HiChevronDown} $isOpen={isOpen} />
+            <ItemChevron
+              $menuSize={size}
+              as={HiChevronDown}
+              $isOpen={isOpen()}
+            />
           )}
         </ItemLink>
       </ItemBox>
 
       {children && children.length > 0 && (
-        <ChildrenBox $menuSize={size} $isOpen={isOpen}>
+        <ChildrenBox $menuSize={size} $isOpen={isOpen()}>
           <ul>
             {children.map(item => (
               <Item

@@ -1,7 +1,7 @@
 import Button from 'components/Ui/Buttons/Button/Button';
 import Dropdown from 'components/Ui/Dropdown';
 import Menu from 'components/Ui/Menu';
-import { MenuItem } from 'components/Ui/Menu/Item/Item';
+import { MenuLink } from 'components/Ui/Menu/Item/Item';
 import Modal from 'components/Ui/Modal/Modal';
 import { useActions } from 'hooks';
 import { useAuth } from 'hooks/useAuth';
@@ -21,7 +21,7 @@ import {
   UsersOptions,
 } from './UsersNav.styled';
 
-const menuItems: MenuItem[] = [
+const menuItems: MenuLink[] = [
   {
     id: 2,
     label: 'Профіль',
@@ -31,7 +31,7 @@ const menuItems: MenuItem[] = [
 
 const UsersNav = () => {
   const { user, companies } = useAuth();
-  const { logOut } = useActions();
+  const { logOut, resetCompanyState } = useActions();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [dropOpen, setDropOpen] = useState<boolean>(false);
@@ -69,6 +69,7 @@ const UsersNav = () => {
     if (isSuccess) {
       console.log('isSuccess');
       logOut();
+      resetCompanyState();
       setDropOpen(false);
       toast.info(`До зустрічі, ${user?.firstName}!`);
       navigate('/', { replace: true });
@@ -77,7 +78,16 @@ const UsersNav = () => {
     if (isError) {
       console.log(error);
     }
-  }, [error, isError, isLoading, isSuccess, logOut, navigate, user?.firstName]);
+  }, [
+    error,
+    isError,
+    isLoading,
+    isSuccess,
+    logOut,
+    navigate,
+    resetCompanyState,
+    user?.firstName,
+  ]);
 
   return (
     <NavWrapper>
