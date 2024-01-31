@@ -22,8 +22,11 @@ export const Backdrop = styled.div<Style>`
 export const ModalContainer = styled.div<Style>`
   z-index: 100;
   position: relative;
-  width: ${props => (props.$w ? props.$w : 'fit-content')};
-  height: ${props => (props.$h ? props.$h : 'fit-content')};
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  width: ${props => props.$w ? props.$w : 'auto'};
+  height: ${props => props.$h ? props.$h : 'auto'};
   padding: ${theme.space[6]} ${theme.space[5]};
   background-color: ${theme.colors.bg.main};
   border-radius: ${theme.radii.s};

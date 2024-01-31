@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 import {
+  DoneIcon,
   FormInput,
   FormInputBox,
   FormInputLabel,
@@ -10,6 +11,8 @@ import {
 } from './CustomForm.styled';
 
 import { HiEye, HiEyeOff } from 'react-icons/hi';
+import { MdOutlineDone } from "react-icons/md";
+import { IoMdClose } from 'react-icons/io';
 
 type Props = {
   name: string;
@@ -42,7 +45,6 @@ const CustomFormInput = ({
         return 'підтвердіть пароль';
       case 'code':
         return 'код підтвердження';
-
       case 'name':
         return 'Назва';
       case 'city':
@@ -67,8 +69,6 @@ const CustomFormInput = ({
           name={name}
           value={value}
           onChange={handleChange}
-          // autoComplete="off"
-          $invalid={isValid}
         />
 
         {type === 'password' && (
@@ -76,6 +76,7 @@ const CustomFormInput = ({
             <HideIcon as={hidden ? HiEyeOff : HiEye} hidden={hidden} />
           </HideButton>
         )}
+        {value !== '' && <DoneIcon $complate={isValid ? false : true} as={isValid ? IoMdClose : MdOutlineDone } />}
       </FormInputBox>
       {isValid && <ValidationError>{isValid}</ValidationError>}
     </FormInputsListItem>
