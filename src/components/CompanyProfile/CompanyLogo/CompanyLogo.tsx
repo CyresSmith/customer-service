@@ -2,7 +2,6 @@ import Button from 'components/Ui/Buttons/Button';
 import Loader from 'components/Ui/Loader';
 import VisuallyHidden from 'components/Ui/VisuallyHidden';
 import handleError from 'helpers/errorHandler';
-import { useActions } from 'hooks';
 import useFileUpload from 'hooks/useFileUpload';
 import { useEffect, useMemo } from 'react';
 import { HiCamera, HiCloudUpload, HiX } from 'react-icons/hi';
@@ -15,14 +14,21 @@ import {
   InfoBox,
   LogoBox,
 } from './CompanyLogo.styled';
+import { useActions } from 'hooks';
 
 type Props = {
   companyId: string;
   avatar: string;
   name: string;
+  refetchCompanyData: () => void;
 };
 
-const CompanyLogo = ({ companyId, avatar, name }: Props) => {
+const CompanyLogo = ({
+  companyId,
+  avatar,
+  name,
+  refetchCompanyData,
+}: Props) => {
   const {
     inputRef,
     handleClick,
@@ -47,6 +53,7 @@ const CompanyLogo = ({ companyId, avatar, name }: Props) => {
 
       if (url) {
         setCompanyLogo({ avatar: url });
+        refetchCompanyData();
       }
     }
   };

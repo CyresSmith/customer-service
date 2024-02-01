@@ -40,7 +40,7 @@ const UsersNav = () => {
     useLogOutMutation();
 
   const setMenuItems = () => {
-    return companies.length > 0
+    return companies?.length > 0
       ? [
           ...menuItems,
           {
@@ -50,7 +50,7 @@ const UsersNav = () => {
             children: companies.map(({ id, name }) => ({
               id,
               label: name,
-              to: `/company/${id}`,
+              to: `/${id}`,
             })),
           },
         ]
@@ -124,7 +124,10 @@ const UsersNav = () => {
         {dropOpen && (
           <Dropdown $isOpen={dropOpen} closeDropdown={() => setDropOpen(false)}>
             <>
-              <Menu items={setMenuItems()} />
+              <Menu
+                items={setMenuItems()}
+                onItemClick={() => setDropOpen(false)}
+              />
 
               <Button
                 isLoading={isLoading}
