@@ -4,6 +4,7 @@ import { FormBox } from "./UpdateForm.styled";
 
 type Props = {
     userData: State;
+    onSubmit: (arg: State) => void;
 };
 
 const updateInputs = [
@@ -13,17 +14,14 @@ const updateInputs = [
   { name: 'email', type: 'email' },
 ];
 
-const UpdateDataForm = ({ userData }: Props) => {
-    const handleSubmit = () => {
-
-    }
+const UpdateDataForm = ({ userData, onSubmit }: Props) => {
 
     return (
         <FormBox>
             <CustomForm
                 inputs={updateInputs}
                 initialState={userData}
-                onSubmit={handleSubmit}
+                onSubmit={onSubmit}
                 buttonLabel="Зберегти зміни"
                 buttonWidth="fit-content"
             />

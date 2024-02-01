@@ -1,7 +1,7 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { State } from 'hooks/useForm';
 import { axiosBaseQuery } from 'services/instance';
-import { AuthState, RegisterResponse } from '../store/user/user.types';
+import { AuthState, RegisterResponse, UpdateUser, User } from '../store/user/user.types';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
@@ -43,6 +43,15 @@ export const authApi = createApi({
       }),
     }),
 
+    updateUser: builder.mutation<UpdateUser, Partial<User>>({
+      query: data => ({
+        url: `/users/update/${data?.id}`,
+        method: 'POST',
+        data,
+      }),
+      invalidatesTags: ['authApi'],
+    }),
+
     logOut: builder.mutation({
       query: () => ({
         url: '/auth/logout',
@@ -59,4 +68,5 @@ export const {
   useLogInMutation,
   useCurrentQuery,
   useLogOutMutation,
+  useUpdateUserMutation
 } = authApi;

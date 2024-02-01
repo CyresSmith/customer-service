@@ -29,3 +29,8 @@ export type RegisterResponse = {
 export type AuthState = Omit<UserState, 'isLoggedIn'>;
 
 export type TokenState = Pick<UserState, 'accessToken' | 'refreshToken'>;
+
+export type UpdateUser = {
+  data: Partial<User>;
+  id: string;
+}

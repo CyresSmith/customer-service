@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { AuthState, Company, TokenState, UserState } from './user.types';
+import { AuthState, Company, TokenState, User, UserState } from './user.types';
 
 const initialState: UserState = {
   user: null,
@@ -28,6 +28,9 @@ const userSlice = createSlice({
     addNemCompany(state, { payload }: PayloadAction<Company>) {
       return { ...state, companies: [...state.companies, payload] };
     },
+    updateUser(state, { payload }: PayloadAction<Partial<User>>) {
+      console.log(payload);
+    }
   },
 });
 

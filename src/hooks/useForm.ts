@@ -8,6 +8,7 @@ export type State = {
   password?: string;
   phone?: string;
   confirm?: string;
+  avatar?: string;
 };
 
 type Props = {
