@@ -1,7 +1,8 @@
 import translateActivityName from 'helpers/translateActivityName';
 import { useCompany } from 'hooks/useCompany';
-import { HiBriefcase, HiOfficeBuilding } from 'react-icons/hi';
+import { HiBriefcase, HiCalendar, HiOfficeBuilding } from 'react-icons/hi';
 import { HiPhone } from 'react-icons/hi2';
+import { useOutletContext } from 'react-router-dom';
 import CompanyLogo from './CompanyLogo';
 import {
   Address,
@@ -14,14 +15,25 @@ import {
   TitleBox,
   Wrapper,
 } from './CompanyProfile.styled';
+import Schedule from './Schedule';
 
 const CompanyProfile = () => {
-  const { name, avatar, address, phones, activities, id } = useCompany();
+  const { name, avatar, address, phones, activities, id, workingHours } =
+    useCompany();
+
+  const { refetchCompanyData } = useOutletContext<{
+    refetchCompanyData: () => void;
+  }>();
 
   return (
     <>
       <Wrapper>
-        <CompanyLogo name={name} avatar={avatar} companyId={id} />
+        <CompanyLogo
+          name={name}
+          avatar={avatar}
+          companyId={id}
+          refetchCompanyData={refetchCompanyData}
+        />
 
         <Info>
           <InfoBlock>
@@ -66,6 +78,25 @@ const CompanyProfile = () => {
                 </li>
               ))}
             </InfoList>
+          </InfoBlock>
+
+          <InfoBlock>
+            <TitleBox>
+              <StyledIcon as={HiCalendar} />
+              <Title>Графік роботи:</Title>
+            </TitleBox>
+
+            {
+              <InfoList as="div">
+                {workingHours ? (
+                  <Schedule schedule={workingHours} />
+                ) : (
+                  <div>
+                    <p>Рабочій графік не встановлено!</p>
+                  </div>
+                )}
+              </InfoList>
+            }
           </InfoBlock>
         </Info>
       </Wrapper>

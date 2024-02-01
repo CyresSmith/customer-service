@@ -6,15 +6,14 @@ import Sidebar from '../../Sidebar';
 import { MainSection, OutletWrapper } from './UsersLayout.styled';
 
 const UsersLayout = () => {
-  const match = useMatch('/company/:id');
+  const match = useMatch('/:companyId');
   const navigate = useNavigate();
   const { companyId } = useParams();
   const { setCompany } = useActions();
 
-  const { isSuccess, isError, isLoading, error, data } = useGetCompanyByIdQuery(
-    companyId,
-    { skip: !companyId }
-  );
+  const { isSuccess, data, refetch } = useGetCompanyByIdQuery(companyId, {
+    skip: !companyId,
+  });
 
   useEffect(() => {
     if (!match) return;
@@ -31,7 +30,7 @@ const UsersLayout = () => {
       <Sidebar />
       <OutletWrapper>
         <Suspense fallback={null}>
-          <Outlet />
+          <Outlet context={{ refetchCompanyData: () => refetch() }} />
         </Suspense>
       </OutletWrapper>
     </MainSection>

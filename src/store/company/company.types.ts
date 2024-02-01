@@ -34,7 +34,7 @@ export type Company = {
   city: string;
   address: string;
   index: string;
-  workingHours: IWorkingHours;
+  workingHours: IWorkingHours | null;
   desc: string;
   avatar: string;
   images: string[];

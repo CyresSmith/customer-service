@@ -7,6 +7,7 @@ import { useActions } from 'hooks';
 import { State, useForm } from 'hooks/useForm';
 import { useEffect } from 'react';
 import { IoMdAddCircle } from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useCreateCompanyMutation } from 'services/company.api';
 import BackButton from '../Buttons/BackButton';
@@ -43,17 +44,18 @@ const FourthStep = ({
     useCreateCompanyMutation();
 
   const { addNemCompany } = useActions();
+  const navigate = useNavigate();
 
   const onSubmit = async () => {
-    console.log('🚀 ~ companyData:', companyData);
     const data = await createCompany({
       ...companyData,
       phones: [companyData.phone],
       address: `${companyData.city}, ${companyData.address}, ${companyData.index}`,
     }).unwrap();
+
     if (data && data.name) {
       addNemCompany(data);
-
+      navigate(`${data.id}/profile`);
       toast.success(`Вітаю, Компанію "${data.name}" створено!`);
     }
   };

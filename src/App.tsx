@@ -8,7 +8,6 @@ import { Bounce, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useCurrentQuery } from 'services/auth.api';
 
-
 const HomePage = lazy(() => import('pages/Home'));
 const ProfilePage = lazy(() => import('../src/pages/Profile'));
 const CompanyProfile = lazy(() => import('pages/CompanyProfile'));
@@ -23,12 +22,9 @@ function App() {
   const { accessToken, user } = useAuth();
   const { setCurrentUser } = useActions();
 
-  const { data, isSuccess } = useCurrentQuery(
-    accessToken,
-    {
-      skip: Boolean(user || !accessToken),
-    }
-  );
+  const { data, isSuccess } = useCurrentQuery(accessToken, {
+    skip: Boolean(user || !accessToken),
+  });
 
   useEffect(() => {
     if (isSuccess) {
@@ -57,8 +53,9 @@ function App() {
             element={<PrivateRoute children={<ProfilePage />} />}
           />
           <Route
-            path="/company/:companyId"
-            element={<PrivateRoute children={<Workspace />}/>}>
+            path="/:companyId"
+            element={<PrivateRoute children={<Workspace />} />}
+          >
             <Route
               path="record-log"
               element={<PrivateRoute children={<RecordLog />} />}

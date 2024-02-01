@@ -26,7 +26,13 @@ const userSlice = createSlice({
       return initialState;
     },
     addNemCompany(state, { payload }: PayloadAction<Company>) {
-      return { ...state, companies: [...state.companies, payload] };
+      return {
+        ...state,
+        companies:
+          state.companies && state.companies.length > 0
+            ? [...state.companies, payload]
+            : [payload],
+      };
     },
     updateUser(state, { payload }: PayloadAction<Partial<User>>) {
       console.log(payload);
