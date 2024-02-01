@@ -1,3 +1,4 @@
+import Breadcrumbs from 'components/Ui/Breadcrumbs';
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import TopBar from '../../TopBar';
@@ -6,7 +7,10 @@ import { Container, OutletWrapper } from './MainLayout.styled';
 const MainLayout = () => {
   return (
     <Container>
-      <TopBar />
+      <div>
+        <TopBar />
+        <Breadcrumbs />
+      </div>
       <OutletWrapper>
         <Suspense fallback={null}>
           <Outlet />
