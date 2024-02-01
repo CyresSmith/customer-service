@@ -22,7 +22,7 @@ type Props = {
   name: string;
 };
 
-const CompanyLogo = ({ companyId, avatar, name, refetch }: Props) => {
+const CompanyLogo = ({ companyId, avatar, name }: Props) => {
   const {
     inputRef,
     handleClick,

@@ -2,21 +2,22 @@ import MainLayout from 'components/Layout/MainLayout';
 import PrivateRoute from 'helpers/PrivateRoute';
 import { useActions } from 'hooks';
 import { useAuth } from 'hooks/useAuth';
-import Clients from 'pages/Clients/Clients';
-import CompanyProfilePage from 'pages/CompanyProfilePage/CompanyProfilePage';
-import RecordLog from 'pages/RecordLog/RecordLog';
-import WorkSchedule from 'pages/WorkSchedule/WorkSchedule';
 import { lazy, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Bounce, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useCurrentQuery } from 'services/auth.api';
 
-const HomePage = lazy(() => import('../src/pages/Home'));
-const Workspace = lazy(() => import('components/Layout/UsersLayout'));
-const VerifyPage = lazy(() => import('../src/pages/Verify'));
+
+const HomePage = lazy(() => import('pages/Home'));
 const ProfilePage = lazy(() => import('../src/pages/Profile'));
-const ErrorPage = lazy(() => import('../src/pages/ErrorPage'));
+const CompanyProfile = lazy(() => import('pages/CompanyProfile'));
+const Clients = lazy(() => import('pages/Clients'));
+const WorkSchedule = lazy(() => import('pages/WorkSchedule'));
+const RecordLog = lazy(() => import('pages/RecordLog'));
+const VerifyPage = lazy(() => import('pages/Verify'));
+const ErrorPage = lazy(() => import('pages/ErrorPage'));
+const Workspace = lazy(() => import('components/Layout/UsersLayout'));
 
 function App() {
   const { accessToken, user } = useAuth();
@@ -75,7 +76,7 @@ function App() {
 
             <Route
               path="profile"
-              element={<PrivateRoute children={<CompanyProfilePage />} />}
+              element={<PrivateRoute children={<CompanyProfile />} />}
             />
           </Route>
           {/* <Route path="tests" element={<PrivatRoute><TestSPage /></PrivatRoute>} />

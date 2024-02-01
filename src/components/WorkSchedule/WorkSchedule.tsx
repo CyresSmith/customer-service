@@ -1,7 +1,7 @@
 type Props = {};
 
 const WorkSchedule = (props: Props) => {
-  return <div>WorkSchedule</div>;
+  return <div>WorkScheduleContent</div>;
 };
 
 export default WorkSchedule;
