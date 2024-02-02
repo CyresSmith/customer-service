@@ -65,9 +65,19 @@ export const FormInput = styled.input`
   }
 `;
 
-export const ButtonBox = styled.div<{$buttonWidth: string | undefined}>`
-  width: ${props => props.$buttonWidth};
+export const ButtonsWrapper = styled.div<{ $direction: string | undefined }>`
+  width: 100%;
+  display: flex;
+  flex-direction: ${props => props.$direction};
+  justify-content: center;
+  align-items: center;
+  gap: ${({ theme }) => theme.space[4]};
   margin: 0 auto;
+`
+
+export const ButtonBox = styled.div<{$buttonWidth: string | undefined, $second: boolean}>`
+  width: ${props => props.$buttonWidth};
+  margin: ${props => props.$second ? 0 : '0 auto'};
 `
 
 export const ValidationError = styled.span`

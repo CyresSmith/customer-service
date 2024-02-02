@@ -1,33 +1,40 @@
 import { useAuth } from "hooks";
-import { Avatar, AvatarWrapper, Container, SectionTitle, SectionWrapper, Title } from "./ProfileContent.styled";
+import { Container, SectionWrapper, Title } from "./ProfileContent.styled";
 import UpdateDataForm from "./UpdateForm";
 import { User } from "store/user/user.types";
 import { useUpdateUserMutation } from "services/auth.api";
 import { useActions } from "hooks";
+import { toast } from "react-toastify";
+import Avatar from "./Avatar";
 
 const ProfileContent = () => {
     const { user } = useAuth();
     const { updateUser } = useActions();
-    const [updateMutation] = useUpdateUserMutation();
+    const [updateMutation, {isLoading}] = useUpdateUserMutation();
 
     const handleSubmit = async (newData: Partial<User>): Promise<void> => {
         if (user) {
             const filtered = Object.fromEntries(Object.entries(newData).filter(([k, v]) => !Object.values(user).includes(v)));
-            console.log(filtered)
-            const result = await updateMutation({...filtered, id: user?.id});
-            console.log(result);
+            const data = await updateMutation({id: user?.id, data: filtered}).unwrap();
+            
+            if (data) {
+                updateUser(data);
+                toast.success(`Ваш профіль успішно оновлено`);
+            }
         }
     };
+
+    if (!user) {
+        return
+    }
 
     return (
         <Container>
             <Title>Редагування профілю</Title>
             <SectionWrapper>
                 {/* <SectionTitle>Основні дані</SectionTitle> */}
-                <AvatarWrapper>
-                    {user?.avatar && <Avatar src={user?.avatar} />}
-                </AvatarWrapper>
-                {user && <UpdateDataForm userData={user} onSubmit={handleSubmit} />}
+                <Avatar id={user.id} avatar={user.avatar} />
+                {user && <UpdateDataForm userData={user} onSubmit={handleSubmit} isLoading={isLoading} />}
             </SectionWrapper>
             {/* <SectionWrapper>
                 <SectionTitle>Змінити пароль</SectionTitle>

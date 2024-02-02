@@ -16,15 +16,19 @@ const userSlice = createSlice({
     logIn(_, { payload }: PayloadAction<AuthState>) {
       return { ...payload, isLoggedIn: true };
     },
+
     setCurrentUser(state, { payload }: PayloadAction<AuthState>) {
       return { ...state, ...payload, isLoggedIn: true };
     },
+
     refresh(state, { payload }: PayloadAction<TokenState>) {
       return { ...state, ...payload };
     },
+
     logOut() {
       return initialState;
     },
+
     addNemCompany(state, { payload }: PayloadAction<Company>) {
       return {
         ...state,
@@ -34,8 +38,19 @@ const userSlice = createSlice({
             : [payload],
       };
     },
-    updateUser(state, { payload }: PayloadAction<Partial<User>>) {
-      console.log(payload);
+
+    updateUser(state, { payload }: PayloadAction<User>) {
+      return {
+        ...state,
+        user: payload
+      };
+    },
+    
+    setAvatar(state, { payload }: PayloadAction<Pick<User, 'avatar'>>) {
+      return {
+        ...state,
+        user: {...state.user, avatar: payload}
+      }
     }
   },
 });

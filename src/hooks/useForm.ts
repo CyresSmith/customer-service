@@ -11,6 +11,21 @@ export type State = {
   avatar?: string;
 };
 
+// type RegisterState = {
+//   firstName?: string;
+//   lastName?: string;
+//   phone?: string;
+//   email: string;
+//   password: string;
+//   confirm: string;
+// };
+
+// type LoginState = Pick<RegisterState, 'email' | 'password'>;
+
+// type UpdateState = Omit<RegisterState, 'password' | 'confirm'>
+
+// type InitialState = RegisterState | LoginState | UpdateState;
+
 type Props = {
   initialState: State;
   onSubmit: (arg: State) => void;

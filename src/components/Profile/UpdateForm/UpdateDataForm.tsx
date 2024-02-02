@@ -1,10 +1,12 @@
 import CustomForm from "components/Ui/Form/CustomForm";
 import { State } from "hooks/useForm";
 import { FormBox } from "./UpdateForm.styled";
+import { IoMdClose, IoMdSave  } from 'react-icons/io';
 
 type Props = {
     userData: State;
     onSubmit: (arg: State) => void;
+    isLoading: boolean;
 };
 
 const updateInputs = [
@@ -14,7 +16,7 @@ const updateInputs = [
   { name: 'email', type: 'email' },
 ];
 
-const UpdateDataForm = ({ userData, onSubmit }: Props) => {
+const UpdateDataForm = ({ userData, onSubmit, isLoading }: Props) => {
 
     return (
         <FormBox>
@@ -24,6 +26,10 @@ const UpdateDataForm = ({ userData, onSubmit }: Props) => {
                 onSubmit={onSubmit}
                 buttonLabel="Зберегти зміни"
                 buttonWidth="fit-content"
+                resetButtonLabel="Відмінити"
+                SubmitButtonIcon={IoMdSave}
+                ResetButtonIcon={IoMdClose}
+                isLoading={isLoading}
             />
         </FormBox>
     )
