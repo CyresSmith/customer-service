@@ -7,8 +7,8 @@ export const Wrapper = styled.div`
 `
 
 export const AvatarBox = styled.div`
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     position: relative;
     border: ${theme.borders.bold} ${theme.colors.secondary.light};
     border-radius: ${theme.radii.round};
