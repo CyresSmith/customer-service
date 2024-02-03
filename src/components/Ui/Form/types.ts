@@ -30,5 +30,6 @@ export type ButtonsProps = {
     SubmitIcon?: IconType;
     ResetIcon?: IconType;
     isLoading?: boolean;
-    disabled: boolean;
+    disabledSubmit: boolean;
+    disabledReset: boolean;
 }

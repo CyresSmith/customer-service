@@ -6,6 +6,7 @@ import Button from "components/Ui/Buttons/Button";
 import { useActions } from "hooks";
 import { useUploadAvatarMutation } from "services/auth.api";
 import { toast } from "react-toastify";
+import Loader from "components/Ui/Loader";
 
 type Props = {
     id: string | number;
@@ -22,7 +23,7 @@ const Avatar = ({ id, avatar }: Props) => {
         reset,
     } = useFileUpload();
 
-    const [uploadAvatarMutation] = useUploadAvatarMutation();
+    const [uploadAvatarMutation, {isLoading}] = useUploadAvatarMutation();
 
     const { setAvatar } = useActions();
 
@@ -45,24 +46,29 @@ const Avatar = ({ id, avatar }: Props) => {
 
     return (
         <Wrapper>
+            {isLoading ? <Loader /> :
             <AvatarBox onClick={handleClick}>
-                {previewImage || avatar ?
-                    <AvatarImg src={previewImage ? previewImage : avatar} alt='Avatar' /> :
-                    <StyledCamera as={HiCamera} />
+                {isLoading ? <Loader /> :
+                    <>
+                        ({previewImage || avatar ?
+                        <AvatarImg src={previewImage ? previewImage : avatar} alt='Avatar' /> :
+                        <StyledCamera as={HiCamera} />
+                        }
+                        <VisuallyHidden>
+                            <input
+                                type="file"
+                                accept=".png,.jpg,.jpeg"
+                                size={5 * 1024 * 1024}
+                                ref={inputRef}
+                                onChange={handleSelect}
+                            />
+                        </VisuallyHidden>
+                        <Backdrop>
+                            <StyledUpload as={HiOutlineCloudUpload} />
+                        </Backdrop>)
+                    </>
                 }
-                <VisuallyHidden>
-                    <input
-                        type="file"
-                        accept=".png,.jpg,.jpeg"
-                        size={5 * 1024 * 1024}
-                        ref={inputRef}
-                        onChange={handleSelect}
-                    />
-                </VisuallyHidden>
-                <Backdrop>
-                    <StyledUpload as={HiOutlineCloudUpload} />
-                </Backdrop>
-            </AvatarBox>
+            </AvatarBox>}
             {currentFile && (
                 <ButtonsBox>
                     <Button

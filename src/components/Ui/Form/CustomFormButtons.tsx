@@ -11,7 +11,8 @@ const CustomFormButtons = ({
     SubmitIcon,
     ResetIcon,
     isLoading,
-    disabled
+    disabledSubmit,
+    disabledReset
 }: ButtonsProps) => {
     return (
         <ButtonsWrapper $direction={direction}>
@@ -21,7 +22,7 @@ const CustomFormButtons = ({
                     Icon={SubmitIcon}
                     type='submit'
                     isLoading={isLoading}
-                    disabled={disabled}
+                    disabled={disabledSubmit}
                     $colors="accent"
                 />
             </ButtonBox>
@@ -32,7 +33,7 @@ const CustomFormButtons = ({
                         children={resetButtonLabel}
                         Icon={ResetIcon}
                         type="button"
-                        disabled={disabled}
+                        disabled={disabledReset}
                         $colors="light"
                     />
                 </ButtonBox>

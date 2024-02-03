@@ -31,10 +31,15 @@ const CustomForm = ({
     }
   };
 
-  const disabledBtn: boolean =
-    isLoading ||
-    invalidFields?.length > 0 ||
-      JSON.stringify(state) === JSON.stringify(initialState)
+  const disabledReset: boolean = isLoading ||
+    JSON.stringify(Object.fromEntries(Object.entries(state).filter(i => i[0] !== 'avatar'))) ===
+    JSON.stringify(Object.fromEntries(Object.entries(initialState).filter(i => i[0] !== 'avatar'))) ?
+    true :
+    false;
+      
+
+  const disabledSubmit: boolean = invalidFields?.length > 0 || disabledReset ||
+    Object.values(state).some(i => i === '')
       ? true
       : false;
 
@@ -49,6 +54,7 @@ const CustomForm = ({
             value={state[name as keyof State]}
             handleChange={handleChange}
             isValid={errorMessage(name)}
+            disabledIcon={disabledSubmit}
           />
         ))}
       </FormInputsList>
@@ -61,7 +67,8 @@ const CustomForm = ({
         ResetIcon={ResetButtonIcon}
         direction={buttonsDirection}
         isLoading={isLoading}
-        disabled={disabledBtn}
+        disabledSubmit={disabledSubmit}
+        disabledReset={disabledReset}
         onReset={reset}
       />
 

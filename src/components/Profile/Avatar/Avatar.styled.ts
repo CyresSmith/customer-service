@@ -4,14 +4,17 @@ import theme from 'utils/theme';
 export const Wrapper = styled.div`
     position: relative;
     margin-bottom: ${theme.space[5]};
+    width: 150px;
+    height: 150px;
+    border: ${theme.borders.bold} ${theme.colors.secondary.light};
+    border-radius: ${theme.radii.round};
 `
 
 export const AvatarBox = styled.div`
-    width: 150px;
-    height: 150px;
-    position: relative;
-    border: ${theme.borders.bold} ${theme.colors.secondary.light};
     border-radius: ${theme.radii.round};
+    width: 100%;
+    height: 100%;
+    position: relative;
     overflow: hidden;
     display: flex;
     justify-content: center;
