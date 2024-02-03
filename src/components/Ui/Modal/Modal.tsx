@@ -3,7 +3,13 @@ import { useClickOutside, useEscapeKey } from 'hooks';
 import { ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { IoMdClose } from 'react-icons/io';
-import { Backdrop, ButtonBox, ModalContainer } from './Modal.styled';
+import {
+  Backdrop,
+  Background,
+  ButtonBox,
+  ChildrenBox,
+  ModalContainer,
+} from './Modal.styled';
 
 export type Modal = {
   children?: ReactNode;
@@ -35,6 +41,8 @@ const Modal = ({ children, closeModal, $w, $h, $isOpen }: Modal) => {
   return createPortal(
     <Backdrop $isOpen={isOpen}>
       <ModalContainer $w={$w} $h={$h} ref={modalRef} $isOpen={isOpen}>
+        <Background $isOpen={isOpen} />
+
         <ButtonBox>
           <Button
             Icon={IoMdClose}
@@ -44,7 +52,8 @@ const Modal = ({ children, closeModal, $w, $h, $isOpen }: Modal) => {
             $variant="text"
           />
         </ButtonBox>
-        {children}
+
+        <ChildrenBox>{children}</ChildrenBox>
       </ModalContainer>
     </Backdrop>,
     modalRoot as Element
