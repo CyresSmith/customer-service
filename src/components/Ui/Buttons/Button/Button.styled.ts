@@ -3,9 +3,15 @@ import theme from 'utils/theme';
 import { IButton } from './Button.types';
 import buttonStyle from './dynamicButtonStyles';
 
-export interface IButtonStyle extends IButton {
+export interface IButtonStyle
+  extends Pick<
+    IButton,
+    '$colors' | 'size' | '$round' | '$variant' | '$isIcon' | '$iconPosition'
+  > {
   $isIconThere: boolean;
 }
+
+export const BTN_DISABLED_OPACITY = 0.65;
 
 export const Btn = styled.button<IButtonStyle>`
   ${p => {
@@ -60,7 +66,7 @@ export const Btn = styled.button<IButtonStyle>`
 
   svg {
     transition: ${theme.transition.primary};
-    opacity: ${({ disabled }) => (disabled ? 0.8 : 1)};
+    opacity: ${({ disabled }) => (disabled ? `${BTN_DISABLED_OPACITY}` : 1)};
   }
 
   span {
@@ -68,7 +74,7 @@ export const Btn = styled.button<IButtonStyle>`
   }
 
   &:disabled {
-    opacity: 0.65;
+    opacity: ${BTN_DISABLED_OPACITY};
     cursor: default;
   }
 `;

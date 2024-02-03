@@ -1,24 +1,24 @@
-const translateWorkSchedule = (name: string) => {
-  switch (name) {
-    case 'monday':
+const translateWorkSchedule = (id: number | 'from' | 'to') => {
+  switch (id) {
+    case 1:
       return 'Понеділок';
 
-    case 'tuesday':
+    case 2:
       return 'Вівторок';
 
-    case 'wednesday':
+    case 3:
       return 'Середа';
 
-    case 'thursday':
+    case 4:
       return 'Четвер';
 
-    case 'friday':
+    case 5:
       return "П'ятниця";
 
-    case 'saturday':
+    case 6:
       return 'Субота';
 
-    case 'sunday':
+    case 7:
       return 'Неділя';
 
     case 'from':

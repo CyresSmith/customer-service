@@ -17,6 +17,7 @@ export const Backdrop = styled.div<Style>`
   background-color: ${theme.colors.backdrop};
   opacity: ${props => (props.$isOpen ? 1 : 0)};
   transition: ${theme.transition.primary};
+  backdrop-filter: blur(2px);
 `;
 
 export const ModalContainer = styled.div<Style>`
@@ -25,8 +26,8 @@ export const ModalContainer = styled.div<Style>`
   /* display: flex;
   align-items: center;
   justify-content: center; */
-  width: ${props => props.$w ? props.$w : 'auto'};
-  height: ${props => props.$h ? props.$h : 'auto'};
+  width: ${props => (props.$w ? props.$w : 'auto')};
+  height: ${props => (props.$h ? props.$h : 'auto')};
   padding: ${theme.space[6]} ${theme.space[5]};
   background-color: ${theme.colors.bg.main};
   border-radius: ${theme.radii.s};

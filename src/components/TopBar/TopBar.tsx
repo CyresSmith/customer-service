@@ -4,7 +4,7 @@ import Modal from 'components/Ui/Modal/Modal';
 import { useAuth } from 'hooks/useAuth';
 import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useMatch } from 'react-router-dom';
 import AuthNav from './AuthNav';
 import { Logo, TopBarWrapper } from './TopBar.styled';
 import UsersNav from './UsersNav';
@@ -15,14 +15,14 @@ const TopBar = () => {
   const { isLoggedIn } = useAuth();
   const [isOpen, setIsOpen] = useState<IsOpenType>(null);
   const { avatar, name, id } = useCompany();
-  const { pathname } = useLocation();
-  console.log('🚀 ~ TopBar ~ pathname:', pathname);
+  const match = useMatch('/:companyId/*');
+
   const closeModal = () => setIsOpen(null);
 
   return (
     <>
       <TopBarWrapper>
-        {!pathname.startsWith('') || !id ? (
+        {!match || isNaN(Number(match?.params?.companyId)) ? (
           <Logo to="/">
             <span>Logo</span>
           </Logo>

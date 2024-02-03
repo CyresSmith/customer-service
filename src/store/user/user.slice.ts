@@ -25,11 +25,11 @@ const userSlice = createSlice({
     logOut() {
       return initialState;
     },
-    addNemCompany(state, { payload }: PayloadAction<Company>) {
+    addNewCompany(state, { payload }: PayloadAction<Company>) {
       return {
         ...state,
         companies:
-          state.companies && state.companies.length > 0
+          state?.companies?.length > 0
             ? [...state.companies, payload]
             : [payload],
       };

@@ -1,9 +1,8 @@
 import Button from 'components/Ui/Buttons/Button';
 import Loader from 'components/Ui/Loader';
 import VisuallyHidden from 'components/Ui/VisuallyHidden';
-import handleError from 'helpers/errorHandler';
+import { useActions } from 'hooks';
 import useFileUpload from 'hooks/useFileUpload';
-import { useEffect, useMemo } from 'react';
 import { HiCamera, HiCloudUpload, HiX } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { useUploadCompanyAvatarMutation } from 'services/company.api';
@@ -14,7 +13,6 @@ import {
   InfoBox,
   LogoBox,
 } from './CompanyLogo.styled';
-import { useActions } from 'hooks';
 
 type Props = {
   companyId: string;
@@ -42,38 +40,24 @@ const CompanyLogo = ({
 
   const { setCompanyLogo } = useActions();
 
-  const data = useMemo(() => new FormData(), []);
-
-  const [uploadImage, { isSuccess, isError, isLoading, error }] =
-    useUploadCompanyAvatarMutation();
+  const [uploadImage, { isLoading }] = useUploadCompanyAvatarMutation();
 
   const handleUpload = async () => {
-    if (companyId && data.has('avatar')) {
-      const { url } = await uploadImage({ id: companyId, data }).unwrap();
-
-      if (url) {
-        setCompanyLogo({ avatar: url });
-        refetchCompanyData();
-      }
-    }
-  };
-
-  useEffect(() => {
     if (!currentFile) return;
 
-    data.append('avatar', currentFile);
-  }, [currentFile, data]);
+    const data = new FormData();
 
-  useEffect(() => {
-    if (isSuccess) {
+    data.append('avatar', currentFile);
+
+    const { url } = await uploadImage({ id: companyId, data }).unwrap();
+
+    if (url) {
+      setCompanyLogo({ avatar: url });
+      refetchCompanyData();
       reset();
       toast.success('Зображення успішно оновлено');
     }
-
-    if (isError) {
-      toast.error(handleError(error));
-    }
-  }, [error, isError, isSuccess, reset]);
+  };
 
   return (
     <div>

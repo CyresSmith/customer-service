@@ -43,7 +43,7 @@ const FourthStep = ({
   const [createCompany, { isLoading, isSuccess, isError, error }] =
     useCreateCompanyMutation();
 
-  const { addNemCompany } = useActions();
+  const { addNewCompany } = useActions();
   const navigate = useNavigate();
 
   const onSubmit = async () => {
@@ -54,7 +54,7 @@ const FourthStep = ({
     }).unwrap();
 
     if (data && data.name) {
-      addNemCompany(data);
+      addNewCompany(data);
       navigate(`${data.id}/profile`);
       toast.success(`Вітаю, Компанію "${data.name}" створено!`);
     }
