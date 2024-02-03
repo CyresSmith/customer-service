@@ -1,7 +1,7 @@
 import Button from 'components/Ui/Buttons/Button';
 import Select from 'components/Ui/Select';
 import translateWorkSchedule from 'helpers/translateWorkSchedule';
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { HiMinusCircle, HiPlusCircle } from 'react-icons/hi';
 import { Schedule } from '../SetScheduleModal';
 import { DayList, Time, WeekBox } from './SetWorkSchedule.styled';
@@ -12,9 +12,9 @@ type Props = {
   addSchedule: () => void;
   updateSchedule: (schedule: Schedule) => void;
   removeSchedule: (schedule: Schedule) => void;
+  addDisabled: boolean;
   currentSchedule: Schedule;
   schedules: Schedule[];
-  setSchedules: Dispatch<SetStateAction<Schedule[]>>;
 };
 
 const SetWorkSchedule = ({
@@ -23,7 +23,7 @@ const SetWorkSchedule = ({
   removeSchedule,
   currentSchedule,
   schedules,
-  setSchedules,
+  addDisabled,
 }: Props) => {
   const [selected, setSelected] = useState<number[]>([]);
   const [from, setFrom] = useState<string>('');
@@ -39,18 +39,20 @@ const SetWorkSchedule = ({
       schedule: { from, to },
     };
 
-    console.log('🚀 ~ useEffect ~ newSchedule:', newSchedule);
-
     updateSchedule(newSchedule);
   }, [from, selected, to]);
 
   const generateTimeArray = useMemo(() => {
     const times = [];
-    for (let hours = 0; hours < 24; hours++) {
-      for (let minutes = 0; minutes < 60; minutes += 30) {
-        const formattedHours = String(hours).padStart(2, '0');
-        const formattedMinutes = String(minutes).padStart(2, '0');
-        times.push(`${formattedHours}:${formattedMinutes}`);
+    for (let hours = 0; hours <= 24; hours++) {
+      if (hours === 24) {
+        times.push('24:00');
+      } else {
+        for (let minutes = 0; minutes < 60; minutes += 30) {
+          const formattedHours = String(hours).padStart(2, '0');
+          const formattedMinutes = String(minutes).padStart(2, '0');
+          times.push(`${formattedHours}:${formattedMinutes}`);
+        }
       }
     }
     return times;
@@ -59,14 +61,14 @@ const SetWorkSchedule = ({
   return (
     <WeekBox>
       <DayList>
-        {Array.from({ length: 7 }, (_, i) => i).map(i => (
+        {Array.from({ length: 7 }, (_, i) => i + 1).map(i => (
           <li key={i}>
             <Button
               disabled={currentSchedule.disabledDays?.includes(i)}
               $colors={selected?.includes(i as DayId) ? 'accent' : 'light'}
               onClick={() => handleDaySelect(i as DayId)}
             >
-              {translateWorkSchedule(i + 1)}
+              {translateWorkSchedule(i)}
             </Button>
           </li>
         ))}
@@ -95,6 +97,7 @@ const SetWorkSchedule = ({
       <Button
         disabled={
           (currentSchedule.id === 1 && schedules.length === 7) ||
+          (currentSchedule.id === 1 && addDisabled) ||
           (currentSchedule.id === 1 && !selected.length && !from && !to)
         }
         onClick={() => {

@@ -16,7 +16,6 @@ export type Schedule = {
 
 const SetScheduleModal = () => {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
-
   console.log('🚀 ~ SetScheduleModal ~ schedules:', schedules);
 
   const addSchedule = () => {
@@ -36,22 +35,12 @@ const SetScheduleModal = () => {
     ]);
   };
 
-  function updateDisabledDays(current: number[], newDays: number[]): number[] {
-    const filteredArray = current.filter(day => !newDays.includes(day));
-
-    const newArr = [
-      ...filteredArray,
-      ...newDays.filter(day => !current.includes(day)),
-    ];
-    console.log('🚀 ~ updateDisabledDays ~ newArr:', newArr);
-
-    return newArr;
-  }
-
   const updateSchedule = (schedule: Schedule) => {
     const arr = [...schedules];
 
     const idx = arr.findIndex(({ id }) => id === schedule.id);
+
+    const prevDays = arr.find(({ id }) => id === schedule.id)?.days;
 
     if (idx !== -1) {
       arr.splice(idx, 1, schedule);
@@ -65,10 +54,10 @@ const SetScheduleModal = () => {
           if (item.disabledDays) {
             return {
               ...item,
-              disabledDays: updateDisabledDays(
-                item.disabledDays,
-                schedule.days
-              ),
+              disabledDays: [
+                ...item.disabledDays.filter(day => !prevDays?.includes(day)),
+                ...schedule.days,
+              ],
             };
           } else {
             return {
@@ -95,14 +84,39 @@ const SetScheduleModal = () => {
       }
     });
 
-    console.log('🚀 ~ newSchedules ~ newSchedules:', newSchedules);
-
     setSchedules(newSchedules.filter(({ id }) => id !== schedule.id));
   };
+
+  const addDisabled = Boolean(
+    schedules.reduce((acc: number[], item) => {
+      item.days.map(day => {
+        if (acc.includes(day)) {
+          return;
+        } else {
+          acc.push(day);
+        }
+      });
+
+      return acc;
+    }, []).length === 7 ||
+      schedules.find(
+        ({ schedule }) => schedule.from === '' || schedule.to === ''
+      )
+  );
 
   useEffect(() => {
     addSchedule();
   }, []);
+
+  useEffect(() => {
+    const scheduleToRemove = schedules.find(
+      ({ disabledDays }) => disabledDays?.length === 7
+    );
+
+    if (scheduleToRemove) {
+      setSchedules(p => p.filter(({ id }) => id !== scheduleToRemove.id));
+    }
+  }, [schedules]);
 
   return (
     <ScheduleModalBox>
@@ -114,7 +128,7 @@ const SetScheduleModal = () => {
           updateSchedule={updateSchedule}
           removeSchedule={removeSchedule}
           schedules={schedules}
-          setSchedules={setSchedules}
+          addDisabled={addDisabled}
         />
       ))}
     </ScheduleModalBox>
