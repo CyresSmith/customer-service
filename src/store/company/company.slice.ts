@@ -8,15 +8,7 @@ const initialState: Company = {
   city: '',
   address: '',
   index: '',
-  workingHours: {
-    monday: { from: 0, to: 0 },
-    tuesday: { from: 0, to: 0 },
-    wednesday: { from: 0, to: 0 },
-    thursday: { from: 0, to: 0 },
-    friday: { from: 0, to: 0 },
-    saturday: { from: 0, to: 0 },
-    sunday: { from: 0, to: 0 },
-  },
+  workingHours: null,
   desc: '',
   avatar: '',
   images: [],
@@ -32,6 +24,12 @@ const companySlice = createSlice({
       return payload;
     },
     setCompanyLogo(state, { payload }: PayloadAction<Pick<Company, 'avatar'>>) {
+      return { ...state, ...payload };
+    },
+    setCompanySchedule(
+      state,
+      { payload }: PayloadAction<Pick<Company, 'workingHours'>>
+    ) {
       return { ...state, ...payload };
     },
     resetCompanyState() {

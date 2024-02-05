@@ -72,7 +72,6 @@ instance.interceptors.response.use(
 
             instance.defaults.headers.common.Authorization = `Bearer ${response?.data?.accessToken}`;
 
-            // ----------- Двічі спрацьовує originalRequest після оновлення токену.
             return instance(originalRequest);
           }
         } else {
