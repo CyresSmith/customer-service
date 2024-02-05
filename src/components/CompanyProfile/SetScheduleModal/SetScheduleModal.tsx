@@ -30,8 +30,7 @@ const SetScheduleModal = ({ closeModal }: Props) => {
 
   const [schedules, setSchedules] = useState<ISchedule[]>([]);
 
-  const [uploadWorkingHours, { isLoading, isSuccess }] =
-    useUpdateWorkingHoursMutation();
+  const [uploadWorkingHours, { isLoading }] = useUpdateWorkingHoursMutation();
 
   const addSchedule = () => {
     const disabledDays = schedules.reduce(
@@ -102,21 +101,14 @@ const SetScheduleModal = ({ closeModal }: Props) => {
     setSchedules(newSchedules.filter(({ id }) => id !== schedule.id));
   };
 
-  const addDisabled = Boolean(
-    schedules.reduce((acc: number[], item) => {
-      item.days.map(day => {
-        if (acc.includes(day)) {
-          return;
-        } else {
-          acc.push(day);
-        }
-      });
+  const isAllDaysDisabled = Boolean(
+    schedules.reduce((acc: number, item) => {
+      return acc + item.days.length;
+    }, 0) === 7
+  );
 
-      return acc;
-    }, []).length === 7 ||
-      schedules.find(
-        ({ schedule }) => schedule.from === '' || schedule.to === ''
-      )
+  const isTimeSelected = Boolean(
+    schedules.find(({ schedule }) => schedule.from === '' || schedule.to === '')
   );
 
   const getWorkingHours = useCallback((): IWorkingHours[] => {
@@ -166,7 +158,7 @@ const SetScheduleModal = ({ closeModal }: Props) => {
           updateSchedule={updateSchedule}
           removeSchedule={removeSchedule}
           schedules={schedules}
-          addDisabled={addDisabled}
+          addDisabled={isAllDaysDisabled || isTimeSelected}
         />
       ))}
 
@@ -174,7 +166,7 @@ const SetScheduleModal = ({ closeModal }: Props) => {
         <Button
           isLoading={isLoading}
           onClick={handleScheduleUpdate}
-          disabled={addDisabled}
+          disabled={isTimeSelected}
           Icon={HiCalendar}
         >
           Оновити графік
