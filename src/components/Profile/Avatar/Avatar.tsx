@@ -10,7 +10,7 @@ import Loader from "components/Ui/Loader";
 
 type Props = {
     id: string | number;
-    avatar: string;
+    avatar?: string;
 };
 
 const Avatar = ({ id, avatar }: Props) => {
@@ -50,7 +50,7 @@ const Avatar = ({ id, avatar }: Props) => {
             <AvatarBox onClick={handleClick}>
                 {isLoading ? <Loader /> :
                     <>
-                        ({previewImage || avatar ?
+                        {previewImage || avatar ?
                         <AvatarImg src={previewImage ? previewImage : avatar} alt='Avatar' /> :
                         <StyledCamera as={HiCamera} />
                         }
@@ -65,7 +65,7 @@ const Avatar = ({ id, avatar }: Props) => {
                         </VisuallyHidden>
                         <Backdrop>
                             <StyledUpload as={HiOutlineCloudUpload} />
-                        </Backdrop>)
+                        </Backdrop>
                     </>
                 }
             </AvatarBox>}

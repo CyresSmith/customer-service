@@ -56,6 +56,8 @@ const CustomFormInput = ({
       case 'index':
         return 'Індекс';
       default:
+      case 'newPassword':
+        return 'Новий пароль';
         break;
     }
   };

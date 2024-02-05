@@ -54,7 +54,7 @@ const CustomForm = ({
             value={state[name as keyof State]}
             handleChange={handleChange}
             isValid={errorMessage(name)}
-            disabledIcon={disabledSubmit}
+            disabledIcon={disabledReset}
           />
         ))}
       </FormInputsList>
@@ -71,28 +71,6 @@ const CustomForm = ({
         disabledReset={disabledReset}
         onReset={reset}
       />
-
-      {/* {
-        buttonWidth ?
-          <ButtonBox $buttonWidth={buttonWidth}>
-            <Button
-              isLoading={isLoading}
-              disabled={disabledBtn}
-              type="submit"
-              children={buttonLabel}
-              Icon={SubmitButtonIcon}
-              $colors="light"
-            />
-          </ButtonBox> :
-          <Button
-            isLoading={isLoading}
-            disabled={disabledBtn}
-            type="submit"
-            children={buttonLabel}
-            Icon={SubmitButtonIcon}
-            $colors="light"
-          />
-      } */}
     </Form>
   );
 };

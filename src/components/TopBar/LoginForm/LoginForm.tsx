@@ -26,7 +26,7 @@ const LoginForm = ({ closeModal }: Props) => {
   const navigate = useNavigate();
   const { logIn } = useActions();
 
-  const [loginMutation, { isLoading, isSuccess, isError, error }] =
+  const [loginMutation, { isLoading, isSuccess }] =
     useLogInMutation();
 
   const handleSubmit = async (state: State): Promise<void> => {
@@ -39,20 +39,11 @@ const LoginForm = ({ closeModal }: Props) => {
   };
 
   useEffect(() => {
-    if (isLoading) {
-      console.log('isLoading');
-    }
-
     if (isSuccess) {
       closeModal();
       navigate('/', { replace: true });
     }
-
-    if (isError) {
-      console.log('error: ', error);
-      toast.error(`${error instanceof Array ? error[0] : error}`);
-    }
-  }, [closeModal, error, isError, isLoading, isSuccess, navigate]);
+  }, [closeModal, isSuccess, navigate]);
 
   return (
     <FormBox>

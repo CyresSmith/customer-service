@@ -62,6 +62,9 @@ export const FormInput = styled.input`
 
   &:focus {
     border-color: ${theme.colors.accent.main};
+    box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
   }
 `;
 

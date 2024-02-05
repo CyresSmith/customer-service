@@ -51,7 +51,12 @@ const userSlice = createSlice({
         ...state,
         user: {...state.user, avatar: payload}
       }
-    }
+    },
+
+    updatePassword(_, { payload }) {
+      console.log(payload);
+      return payload;
+    },
   },
 });
 
