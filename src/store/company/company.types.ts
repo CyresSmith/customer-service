@@ -1,16 +1,8 @@
+import { ISchedule } from 'components/CompanyProfile/SetScheduleModal/SetScheduleModal';
+
 export interface IWorkTime {
   from: number;
   to: number;
-}
-
-export interface IWorkingHours {
-  monday: IWorkTime;
-  tuesday: IWorkTime;
-  wednesday: IWorkTime;
-  thursday: IWorkTime;
-  friday: IWorkTime;
-  saturday: IWorkTime;
-  sunday: IWorkTime;
 }
 
 export type Branches = 'one' | 'more';
@@ -34,7 +26,7 @@ export type Company = {
   city: string;
   address: string;
   index: string;
-  workingHours: IWorkingHours | null;
+  workingHours: IWorkingHours[] | null;
   desc: string;
   avatar: string;
   images: string[];
@@ -69,3 +61,5 @@ export interface UpdateAvatar {
   id: string;
   data: FormData;
 }
+
+export interface IWorkingHours extends Pick<ISchedule, 'days' | 'schedule'> {}

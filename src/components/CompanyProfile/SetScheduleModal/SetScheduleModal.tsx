@@ -1,5 +1,10 @@
-import { useEffect, useState } from 'react';
-import { ScheduleModalBox } from './SetScheduleModal.styled';
+import Button from 'components/Ui/Buttons/Button';
+import { useCompany } from 'hooks/useCompany';
+import { useCallback, useEffect, useState } from 'react';
+import { HiCalendar } from 'react-icons/hi';
+import { useUpdateWorkingHoursMutation } from 'services/company.api';
+import { IWorkingHours } from 'store/company/company.types';
+import { ButtonBox, ScheduleModalBox } from './SetScheduleModal.styled';
 import SetWorkSchedule from './SetWorkSchedule';
 
 export interface ITime {
@@ -7,16 +12,24 @@ export interface ITime {
   to: string;
 }
 
-export type Schedule = {
+export interface ISchedule {
   id: number;
   days: number[];
   disabledDays?: number[];
   schedule: ITime;
+}
+
+type Props = {
+  closeModal: () => void;
 };
 
-const SetScheduleModal = () => {
-  const [schedules, setSchedules] = useState<Schedule[]>([]);
-  console.log('🚀 ~ SetScheduleModal ~ schedules:', schedules);
+const SetScheduleModal = ({ closeModal }: Props) => {
+  const { id } = useCompany();
+
+  const [schedules, setSchedules] = useState<ISchedule[]>([]);
+
+  const [uploadWorkingHours, { isLoading, isSuccess }] =
+    useUpdateWorkingHoursMutation();
 
   const addSchedule = () => {
     const disabledDays = schedules.reduce(
@@ -35,7 +48,7 @@ const SetScheduleModal = () => {
     ]);
   };
 
-  const updateSchedule = (schedule: Schedule) => {
+  const updateSchedule = (schedule: ISchedule) => {
     const arr = [...schedules];
 
     const idx = arr.findIndex(({ id }) => id === schedule.id);
@@ -70,7 +83,7 @@ const SetScheduleModal = () => {
     );
   };
 
-  const removeSchedule = (schedule: Schedule) => {
+  const removeSchedule = (schedule: ISchedule) => {
     const newSchedules = schedules.map(item => {
       if (item.id === schedule.id) {
         return item;
@@ -104,6 +117,25 @@ const SetScheduleModal = () => {
       )
   );
 
+  const getWorkingHours = useCallback((): IWorkingHours[] => {
+    return schedules
+      .filter(({ schedule }) => schedule.from !== '' || schedule.to !== '')
+      .map(({ days, schedule }) => ({ days, schedule }));
+  }, [schedules]);
+
+  const handleScheduleUpdate = async () => {
+    const workingHours = getWorkingHours();
+
+    if (workingHours) {
+      await uploadWorkingHours({
+        id,
+        data: workingHours,
+      }).unwrap();
+
+      closeModal();
+    }
+  };
+
   useEffect(() => {
     addSchedule();
   }, []);
@@ -131,6 +163,17 @@ const SetScheduleModal = () => {
           addDisabled={addDisabled}
         />
       ))}
+
+      <ButtonBox>
+        <Button
+          isLoading={isLoading}
+          onClick={handleScheduleUpdate}
+          disabled={addDisabled}
+          Icon={HiCalendar}
+        >
+          Оновити графік
+        </Button>
+      </ButtonBox>
     </ScheduleModalBox>
   );
 };

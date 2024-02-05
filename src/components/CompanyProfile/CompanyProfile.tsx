@@ -1,8 +1,9 @@
 import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
 import translateActivityName from 'helpers/translateActivityName';
+import translateWorkSchedule from 'helpers/translateWorkSchedule';
 import { useCompany } from 'hooks/useCompany';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   HiBriefcase,
   HiCalendar,
@@ -23,6 +24,7 @@ import {
   Wrapper,
 } from './CompanyProfile.styled';
 import SetScheduleModal from './SetScheduleModal';
+import Button from 'components/Ui/Buttons/Button';
 
 const CompanyProfile = () => {
   const { name, avatar, address, phones, activities, id, workingHours } =
@@ -34,11 +36,11 @@ const CompanyProfile = () => {
 
   const [isSetWorkTimeModalOpen, setIsSetWorkTimeModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (workingHours) return;
-
-    setIsSetWorkTimeModalOpen(true);
-  }, [workingHours]);
+  // useEffect(() => {
+  //   if (name && !workingHours && !isSetWorkTimeModalOpen) {
+  //     setIsSetWorkTimeModalOpen(true);
+  //   }
+  // }, [isSetWorkTimeModalOpen, name, workingHours]);
 
   return (
     <>
@@ -105,17 +107,28 @@ const CompanyProfile = () => {
                   <Title>Графік роботи:</Title>
                 </TitleBox>
 
-                {
-                  <InfoList as="div">
-                    {workingHours ? (
-                      '<Schedule schedule={workingHours} />'
-                    ) : (
-                      <div>
-                        <p>Рабочій графік не встановлено!</p>
-                      </div>
-                    )}
+                {workingHours && workingHours.length ? (
+                  <InfoList>
+                    {workingHours.map(({ days, schedule }, i) => (
+                      <li key={i}>
+                        <p>
+                          {days.map(day => (
+                            <span key={day}>{translateWorkSchedule(day)} </span>
+                          ))}
+
+                          <span>з {schedule.from} </span>
+                          <span>до {schedule.to} </span>
+                        </p>
+                      </li>
+                    ))}
                   </InfoList>
-                }
+                ) : (
+                  <p>Графік не налаштовано</p>
+                )}
+
+                <Button onClick={() => setIsSetWorkTimeModalOpen(true)}>
+                  Налаштувати графік
+                </Button>
               </InfoBlock>
             </Info>
           </Wrapper>
@@ -125,7 +138,12 @@ const CompanyProfile = () => {
               closeModal={() => setIsSetWorkTimeModalOpen(false)}
               $isOpen={isSetWorkTimeModalOpen}
             >
-              <SetScheduleModal />
+              <SetScheduleModal
+                closeModal={() => {
+                  setIsSetWorkTimeModalOpen(false);
+                  refetchCompanyData();
+                }}
+              />
             </Modal>
           )}
         </>

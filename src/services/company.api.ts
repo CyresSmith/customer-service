@@ -3,8 +3,10 @@ import { axiosBaseQuery } from 'services/instance';
 import {
   Company,
   CreateCompany,
+  IWorkingHours,
   UpdateAvatar,
 } from '../store/company/company.types';
+import { MessageResponse } from './types';
 import { CompanyCategory } from './types/category.types';
 
 export const companyApi = createApi({
@@ -53,6 +55,18 @@ export const companyApi = createApi({
       }),
       invalidatesTags: ['companyApi'],
     }),
+
+    updateWorkingHours: builder.mutation<
+      MessageResponse,
+      { id: number | string; data: IWorkingHours[] }
+    >({
+      query: ({ id, data }) => ({
+        url: `/company/${id}/profile/working-hours`,
+        method: 'POST',
+        data,
+      }),
+      invalidatesTags: ['companyApi'],
+    }),
   }),
 });
 
@@ -62,4 +76,5 @@ export const {
   useGetCompanyByIdQuery,
   useGetCompanyProfileQuery,
   useUploadCompanyAvatarMutation,
+  useUpdateWorkingHoursMutation,
 } = companyApi;

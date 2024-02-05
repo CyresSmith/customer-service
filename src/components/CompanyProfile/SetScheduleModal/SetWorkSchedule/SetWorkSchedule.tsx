@@ -3,18 +3,18 @@ import Select from 'components/Ui/Select';
 import translateWorkSchedule from 'helpers/translateWorkSchedule';
 import { useEffect, useMemo, useState } from 'react';
 import { HiMinusCircle, HiPlusCircle } from 'react-icons/hi';
-import { Schedule } from '../SetScheduleModal';
+import { ISchedule } from '../SetScheduleModal';
 import { DayList, Time, WeekBox } from './SetWorkSchedule.styled';
 
 type DayId = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 type Props = {
   addSchedule: () => void;
-  updateSchedule: (schedule: Schedule) => void;
-  removeSchedule: (schedule: Schedule) => void;
+  updateSchedule: (schedule: ISchedule) => void;
+  removeSchedule: (schedule: ISchedule) => void;
   addDisabled: boolean;
-  currentSchedule: Schedule;
-  schedules: Schedule[];
+  currentSchedule: ISchedule;
+  schedules: ISchedule[];
 };
 
 const SetWorkSchedule = ({

@@ -6,3 +6,9 @@ export const ScheduleModalBox = styled.div`
   flex-direction: column;
   gap: ${theme.space[3]};
 `;
+
+export const ButtonBox = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: ${theme.space[5]};
+`;
