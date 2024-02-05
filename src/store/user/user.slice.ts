@@ -33,7 +33,7 @@ const userSlice = createSlice({
       return {
         ...state,
         companies:
-          state.companies && state.companies.length > 0
+          state?.companies?.length > 0
             ? [...state.companies, payload]
             : [payload],
       };
@@ -42,16 +42,22 @@ const userSlice = createSlice({
     updateUser(state, { payload }: PayloadAction<User>) {
       return {
         ...state,
-        user: payload
+        user: payload,
       };
     },
-    
+
     setAvatar(state, { payload }: PayloadAction<Pick<User, 'avatar'>>) {
-      return {
-        ...state,
-        user: {...state.user, avatar: payload}
+      if (state.user) {
+        return {
+          ...state,
+          user: {
+            ...state.user,
+            avatar: payload.avatar,
+          },
+        };
       }
-    }
+      return state;
+    },
   },
 });
 

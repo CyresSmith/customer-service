@@ -53,3 +53,8 @@ export const Address = styled.p`
 export const InfoList = styled.ul`
   margin-left: calc(${theme.space[2]} + ${ICON_SIZE});
 `;
+
+export const ButtonBox = styled.div`
+  margin-top: ${theme.space[4]};
+  margin-left: calc(${theme.space[2]} + ${ICON_SIZE});
+`;

@@ -9,7 +9,7 @@ const buttonStyle = ({
   $isIcon,
   $isIconThere,
   $iconPosition,
-}: IButtonStyle) => {
+}: Partial<IButtonStyle>) => {
   const color = (): string => {
     switch ($colors) {
       case 'light':
