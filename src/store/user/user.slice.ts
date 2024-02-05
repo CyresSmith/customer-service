@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { AuthState, Company, TokenState, UserState } from './user.types';
+import { AuthState, Company, TokenState, User, UserState } from './user.types';
 
 const initialState: UserState = {
   user: null,
@@ -16,16 +16,20 @@ const userSlice = createSlice({
     logIn(_, { payload }: PayloadAction<AuthState>) {
       return { ...payload, isLoggedIn: true };
     },
+
     setCurrentUser(state, { payload }: PayloadAction<AuthState>) {
       return { ...state, ...payload, isLoggedIn: true };
     },
+
     refresh(state, { payload }: PayloadAction<TokenState>) {
       return { ...state, ...payload };
     },
+
     logOut() {
       return initialState;
     },
-    addNewCompany(state, { payload }: PayloadAction<Company>) {
+
+    addNemCompany(state, { payload }: PayloadAction<Company>) {
       return {
         ...state,
         companies:
@@ -33,6 +37,26 @@ const userSlice = createSlice({
             ? [...state.companies, payload]
             : [payload],
       };
+    },
+
+    updateUser(state, { payload }: PayloadAction<User>) {
+      return {
+        ...state,
+        user: payload,
+      };
+    },
+
+    setAvatar(state, { payload }: PayloadAction<Pick<User, 'avatar'>>) {
+      if (state.user) {
+        return {
+          ...state,
+          user: {
+            ...state.user,
+            avatar: payload.avatar,
+          },
+        };
+      }
+      return state;
     },
   },
 });

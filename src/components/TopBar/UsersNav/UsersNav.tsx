@@ -23,7 +23,12 @@ import {
 
 const menuItems: MenuLink[] = [
   {
-    id: 2,
+    id: 'home',
+    label: 'Головна',
+    to: '/',
+  },
+  {
+    id: 'my-profile',
     label: 'Профіль',
     to: '/my-profile',
   },

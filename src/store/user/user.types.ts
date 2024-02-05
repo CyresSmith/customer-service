@@ -2,7 +2,7 @@ export type User = {
   firstName?: string;
   lastName?: string;
   phone?: string;
-  id: number;
+  id: number | string;
   email: string;
   verify: boolean;
   avatar?: string;
@@ -29,3 +29,13 @@ export type RegisterResponse = {
 export type AuthState = Omit<UserState, 'isLoggedIn'>;
 
 export type TokenState = Pick<UserState, 'accessToken' | 'refreshToken'>;
+
+export type UpdateUser = {
+  data: Partial<User>;
+  id: string | number;
+};
+
+export type UploadAvatar = {
+  data: FormData;
+  id: string | number;
+}

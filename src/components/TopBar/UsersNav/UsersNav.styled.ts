@@ -32,6 +32,7 @@ export const UsersAvatarWrapper = styled.div`
   position: relative;
   height: 35px;
   width: 35px;
+  overflow: hidden;
   background-color: ${theme.colors.secondary.light};
   border-radius: ${theme.radii.round};
 `;
@@ -42,7 +43,7 @@ export const UsersAvatar = styled.img`
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 `;
 
 export const UsersNoAvatar = styled.span`
@@ -68,7 +69,7 @@ export const NavListItemLink = styled(NavLink)`
   }
   &:focus-visible {
     color: ${theme.colors.primary.light};
-  }accent
+  }
 `;
 
 export const StyledIcon = styled.svg`

@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import {
   DoneIcon,
   FormInput,
@@ -20,6 +20,7 @@ type Props = {
   type: string;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
   isValid?: string;
+  disabledIcon: boolean;
 };
 
 const CustomFormInput = ({
@@ -28,6 +29,7 @@ const CustomFormInput = ({
   value,
   handleChange,
   isValid,
+  disabledIcon
 }: Props) => {
   const translateName = (name: string): string | undefined => {
     switch (name) {
@@ -59,6 +61,7 @@ const CustomFormInput = ({
   };
 
   const [hidden, setHidden] = useState(true);
+  const valueRef = useRef(value).current;
 
   return (
     <FormInputsListItem>
@@ -76,7 +79,7 @@ const CustomFormInput = ({
             <HideIcon as={hidden ? HiEyeOff : HiEye} hidden={hidden} />
           </HideButton>
         )}
-        {value !== '' && <DoneIcon $complate={isValid ? false : true} as={isValid ? IoMdClose : MdOutlineDone } />}
+        { !disabledIcon && value !== valueRef && value !== '' && <DoneIcon $complate={isValid ? false : true} as={isValid ? IoMdClose : MdOutlineDone } />}
       </FormInputBox>
       {isValid && <ValidationError>{isValid}</ValidationError>}
     </FormInputsListItem>

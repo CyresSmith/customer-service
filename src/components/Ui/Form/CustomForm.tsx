@@ -1,25 +1,10 @@
 import { State } from 'hooks/useForm';
-import { IconType } from 'react-icons';
 import { useForm } from '../../../hooks';
-import Button from '../Buttons/Button/Button';
-import { ButtonBox, Form, FormInputsList } from './CustomForm.styled';
+import { Form, FormInputsList } from './CustomForm.styled';
 import CustomFormInput from './CustomFormInput';
+import CustomFormButtons from './CustomFormButtons';
+import { FormProps } from './types';
 
-type FormInput = {
-  name: string;
-  type: string;
-  id?: string | number;
-};
-
-type Props = {
-  SubmitButtonIcon?: IconType | undefined;
-  buttonLabel: string;
-  buttonWidth?: string;
-  inputs: FormInput[];
-  onSubmit: (state: State) => void;
-  initialState: State;
-  isLoading?: boolean;
-};
 
 const CustomForm = ({
   buttonWidth,
@@ -28,10 +13,13 @@ const CustomForm = ({
   onSubmit,
   initialState,
   buttonLabel,
+  resetButtonLabel,
   SubmitButtonIcon,
-}: Props) => {
+  ResetButtonIcon,
+  buttonsDirection,
+}: FormProps) => {
 
-  const { handleChange, handleSubmit, state, invalidFields } = useForm({
+  const { handleChange, handleSubmit, state, invalidFields, reset } = useForm({
     initialState,
     onSubmit,
   });
@@ -43,10 +31,15 @@ const CustomForm = ({
     }
   };
 
-  const disabledBtn: boolean =
-    isLoading ||
-    invalidFields?.length > 0 ||
-      JSON.stringify(state) === JSON.stringify(initialState)
+  const disabledReset: boolean = isLoading ||
+    JSON.stringify(Object.fromEntries(Object.entries(state).filter(i => i[0] !== 'avatar'))) ===
+    JSON.stringify(Object.fromEntries(Object.entries(initialState).filter(i => i[0] !== 'avatar'))) ?
+    true :
+    false;
+      
+
+  const disabledSubmit: boolean = invalidFields?.length > 0 || disabledReset ||
+    Object.values(state).some(i => i === '')
       ? true
       : false;
 
@@ -61,11 +54,25 @@ const CustomForm = ({
             value={state[name as keyof State]}
             handleChange={handleChange}
             isValid={errorMessage(name)}
+            disabledIcon={disabledSubmit}
           />
         ))}
       </FormInputsList>
 
-      {
+      <CustomFormButtons
+        buttonWidth={buttonWidth}
+        submitButtonLabel={buttonLabel}
+        resetButtonLabel={resetButtonLabel}
+        SubmitIcon={SubmitButtonIcon}
+        ResetIcon={ResetButtonIcon}
+        direction={buttonsDirection}
+        isLoading={isLoading}
+        disabledSubmit={disabledSubmit}
+        disabledReset={disabledReset}
+        onReset={reset}
+      />
+
+      {/* {
         buttonWidth ?
           <ButtonBox $buttonWidth={buttonWidth}>
             <Button
@@ -85,7 +92,7 @@ const CustomForm = ({
             Icon={SubmitButtonIcon}
             $colors="light"
           />
-      }
+      } */}
     </Form>
   );
 };

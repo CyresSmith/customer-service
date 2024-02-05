@@ -1,6 +1,6 @@
 import CustomForm from "components/Ui/Form/CustomForm";
 import { State } from "hooks/useForm";
-import { FormBox } from "./UpdateForm.styled";
+import { FormBox } from "./UpdateDataForm.styled";
 
 type Props = {
     userData: State;
