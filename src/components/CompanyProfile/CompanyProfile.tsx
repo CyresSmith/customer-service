@@ -1,3 +1,4 @@
+import Button from 'components/Ui/Buttons/Button';
 import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
 import translateActivityName from 'helpers/translateActivityName';
@@ -14,6 +15,7 @@ import { useOutletContext } from 'react-router-dom';
 import CompanyLogo from './CompanyLogo';
 import {
   Address,
+  ButtonBox,
   Info,
   InfoBlock,
   InfoList,
@@ -24,7 +26,6 @@ import {
   Wrapper,
 } from './CompanyProfile.styled';
 import SetScheduleModal from './SetScheduleModal';
-import Button from 'components/Ui/Buttons/Button';
 
 const CompanyProfile = () => {
   const { name, avatar, address, phones, activities, id, workingHours } =
@@ -36,11 +37,10 @@ const CompanyProfile = () => {
 
   const [isSetWorkTimeModalOpen, setIsSetWorkTimeModalOpen] = useState(false);
 
-  // useEffect(() => {
-  //   if (name && !workingHours && !isSetWorkTimeModalOpen) {
-  //     setIsSetWorkTimeModalOpen(true);
-  //   }
-  // }, [isSetWorkTimeModalOpen, name, workingHours]);
+  const handleSetWorkTimeModalClose = () => {
+    refetchCompanyData();
+    setIsSetWorkTimeModalOpen(false);
+  };
 
   return (
     <>
@@ -126,24 +126,24 @@ const CompanyProfile = () => {
                   <p>Графік не налаштовано</p>
                 )}
 
-                <Button onClick={() => setIsSetWorkTimeModalOpen(true)}>
-                  Налаштувати графік
-                </Button>
+                <ButtonBox>
+                  <Button
+                    size="s"
+                    onClick={() => setIsSetWorkTimeModalOpen(true)}
+                  >
+                    Налаштувати графік
+                  </Button>
+                </ButtonBox>
               </InfoBlock>
             </Info>
           </Wrapper>
 
           {isSetWorkTimeModalOpen && (
             <Modal
-              closeModal={() => setIsSetWorkTimeModalOpen(false)}
+              closeModal={handleSetWorkTimeModalClose}
               $isOpen={isSetWorkTimeModalOpen}
             >
-              <SetScheduleModal
-                closeModal={() => {
-                  setIsSetWorkTimeModalOpen(false);
-                  refetchCompanyData();
-                }}
-              />
+              <SetScheduleModal closeModal={handleSetWorkTimeModalClose} />
             </Modal>
           )}
         </>

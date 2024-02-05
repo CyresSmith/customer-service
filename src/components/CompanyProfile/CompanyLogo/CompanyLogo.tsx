@@ -1,10 +1,8 @@
 import Button from 'components/Ui/Buttons/Button';
 import Loader from 'components/Ui/Loader';
 import VisuallyHidden from 'components/Ui/VisuallyHidden';
-
-import useFileUpload from 'hooks/useFileUpload';
-
 import { useActions } from 'hooks';
+import useFileUpload from 'hooks/useFileUpload';
 import { HiCamera, HiCloudUpload, HiX } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { useUploadCompanyAvatarMutation } from 'services/company.api';
@@ -59,64 +57,64 @@ const CompanyLogo = ({
       reset();
       toast.success('Зображення успішно оновлено');
     }
-
-    return (
-      <div>
-        <LogoBox
-          onClick={handleClick}
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-        >
-          {isLoading ? (
-            <Loader />
-          ) : (
-            <>
-              {avatar || previewImage ? (
-                <img
-                  src={previewImage ? previewImage : avatar}
-                  alt={`${name} logo`}
-                />
-              ) : (
-                <HiCamera id="camera" />
-              )}
-
-              <InfoBox id="upload">
-                <Backdrop />
-                <Info>Натисніть або перетягніть сюди файл</Info>
-              </InfoBox>
-
-              <VisuallyHidden>
-                <input
-                  type="file"
-                  accept=".png,.jpg,.jpeg"
-                  size={5 * 1024 * 1024}
-                  ref={inputRef}
-                  onChange={handleSelect}
-                />
-              </VisuallyHidden>
-            </>
-          )}
-        </LogoBox>
-
-        {currentFile && (
-          <ButtonsBox>
-            <Button
-              onClick={handleUpload}
-              $colors="light"
-              $variant="text"
-              Icon={HiCloudUpload}
-            >
-              Оновити
-            </Button>
-
-            <Button onClick={reset} $colors="light" $variant="text" Icon={HiX}>
-              Видалити
-            </Button>
-          </ButtonsBox>
-        )}
-      </div>
-    );
   };
+
+  return (
+    <div>
+      <LogoBox
+        onClick={handleClick}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <>
+            {avatar || previewImage ? (
+              <img
+                src={previewImage ? previewImage : avatar}
+                alt={`${name} logo`}
+              />
+            ) : (
+              <HiCamera id="camera" />
+            )}
+
+            <InfoBox id="upload">
+              <Backdrop />
+              <Info>Натисніть або перетягніть сюди файл</Info>
+            </InfoBox>
+
+            <VisuallyHidden>
+              <input
+                type="file"
+                accept=".png,.jpg,.jpeg"
+                size={5 * 1024 * 1024}
+                ref={inputRef}
+                onChange={handleSelect}
+              />
+            </VisuallyHidden>
+          </>
+        )}
+      </LogoBox>
+
+      {currentFile && (
+        <ButtonsBox>
+          <Button
+            onClick={handleUpload}
+            $colors="light"
+            $variant="text"
+            Icon={HiCloudUpload}
+          >
+            Оновити
+          </Button>
+
+          <Button onClick={reset} $colors="light" $variant="text" Icon={HiX}>
+            Видалити
+          </Button>
+        </ButtonsBox>
+      )}
+    </div>
+  );
 };
 
 export default CompanyLogo;

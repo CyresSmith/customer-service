@@ -26,6 +26,12 @@ const companySlice = createSlice({
     setCompanyLogo(state, { payload }: PayloadAction<Pick<Company, 'avatar'>>) {
       return { ...state, ...payload };
     },
+    setCompanySchedule(
+      state,
+      { payload }: PayloadAction<Pick<Company, 'workingHours'>>
+    ) {
+      return { ...state, ...payload };
+    },
     resetCompanyState() {
       return initialState;
     },

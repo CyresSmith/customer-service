@@ -1,4 +1,5 @@
 import Button from 'components/Ui/Buttons/Button';
+import { useActions } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useCallback, useEffect, useState } from 'react';
 import { HiCalendar } from 'react-icons/hi';
@@ -25,6 +26,7 @@ type Props = {
 
 const SetScheduleModal = ({ closeModal }: Props) => {
   const { id } = useCompany();
+  const { setCompanySchedule } = useActions();
 
   const [schedules, setSchedules] = useState<ISchedule[]>([]);
 
@@ -127,10 +129,14 @@ const SetScheduleModal = ({ closeModal }: Props) => {
     const workingHours = getWorkingHours();
 
     if (workingHours) {
-      await uploadWorkingHours({
+      const { message } = await uploadWorkingHours({
         id,
         data: workingHours,
       }).unwrap();
+
+      if (message) {
+        setCompanySchedule({ workingHours });
+      }
 
       closeModal();
     }
