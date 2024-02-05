@@ -30,7 +30,7 @@ const ProfileContent = () => {
 
     const handleDataUpdate = async (newData: Partial<User>): Promise<void> => {
         if (user) {
-            const filtered = Object.fromEntries(Object.entries(newData).filter(([k, v]) => !Object.values(user).includes(v)));
+            const filtered = Object.fromEntries(Object.entries(newData).filter(([, v]) => !Object.values(user).includes(v)));
             const data = await updateMutation({id: user?.id, data: filtered}).unwrap();
             
             if (data) {
