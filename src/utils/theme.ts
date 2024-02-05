@@ -97,6 +97,7 @@ const theme = {
 
   borders: {
     normal: '1px solid',
+    bold: '2px solid'
   },
 
   radii: {

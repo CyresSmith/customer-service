@@ -12,12 +12,14 @@ import UsersNav from './UsersNav';
 export type IsOpenType = 'register' | 'login' | null;
 
 const TopBar = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, accessToken } = useAuth();
   const [isOpen, setIsOpen] = useState<IsOpenType>(null);
   const { avatar, name, id } = useCompany();
   const { pathname } = useLocation();
-  console.log('🚀 ~ TopBar ~ pathname:', pathname);
+
   const closeModal = () => setIsOpen(null);
+
+  const isAuthenticate = !isLoggedIn && !accessToken ? false : true;
 
   return (
     <>
@@ -32,9 +34,7 @@ const TopBar = () => {
             {name && <span>{name}</span>}
           </Logo>
         )}
-
-        {isLoggedIn && <UsersNav />}
-        {!isLoggedIn && <AuthNav setIsOpen={setIsOpen} />}
+        {isAuthenticate ? <UsersNav /> : <AuthNav setIsOpen={setIsOpen} />}
       </TopBarWrapper>
 
       {isOpen && (
