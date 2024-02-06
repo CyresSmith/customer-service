@@ -64,7 +64,7 @@ export interface UpdateAvatar {
 
 export interface IUpdateCompanyProfile {
   id: string;
-  data: Omit<Company, 'avatar' | 'images'>;
+  data: Partial<Omit<Company, 'avatar' | 'images'>>;
 }
 
 export interface IWorkingHours extends Pick<ISchedule, 'days' | 'schedule'> {}

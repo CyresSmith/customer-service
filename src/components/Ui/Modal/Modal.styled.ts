@@ -17,15 +17,12 @@ export const Backdrop = styled.div<Style>`
   background-color: ${theme.colors.backdrop};
   opacity: ${props => (props.$isOpen ? 1 : 0)};
   transition: ${theme.transition.primary};
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(1px);
 `;
 
 export const ModalContainer = styled.div<Style>`
   z-index: 100;
   position: relative;
-  /* display: flex;
-  align-items: center;
-  justify-content: center; */
   width: ${props => (props.$w ? props.$w : 'auto')};
   height: ${props => (props.$h ? props.$h : 'auto')};
   padding: ${theme.space[6]} ${theme.space[5]};

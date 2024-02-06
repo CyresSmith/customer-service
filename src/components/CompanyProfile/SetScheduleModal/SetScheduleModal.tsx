@@ -3,7 +3,7 @@ import { useActions } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useCallback, useEffect, useState } from 'react';
 import { HiCalendar } from 'react-icons/hi';
-import { useUpdateWorkingHoursMutation } from 'services/company.api';
+import { useUpdateCompanyProfileMutation } from 'services/company.api';
 import { IWorkingHours } from 'store/company/company.types';
 import { ButtonBox, ScheduleModalBox } from './SetScheduleModal.styled';
 import SetWorkSchedule from './SetWorkSchedule';
@@ -30,7 +30,7 @@ const SetScheduleModal = ({ closeModal }: Props) => {
 
   const [schedules, setSchedules] = useState<ISchedule[]>([]);
 
-  const [uploadWorkingHours, { isLoading }] = useUpdateWorkingHoursMutation();
+  const [uploadWorkingHours, { isLoading }] = useUpdateCompanyProfileMutation();
 
   const addSchedule = () => {
     const disabledDays = schedules.reduce(
@@ -134,7 +134,7 @@ const SetScheduleModal = ({ closeModal }: Props) => {
     if (workingHours) {
       const { message } = await uploadWorkingHours({
         id,
-        data: workingHours,
+        data: { workingHours },
       }).unwrap();
 
       if (message) {

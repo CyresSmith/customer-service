@@ -4,10 +4,8 @@ import {
   Company,
   CreateCompany,
   IUpdateCompanyProfile,
-  IWorkingHours,
   UpdateAvatar,
 } from '../store/company/company.types';
-import { MessageResponse } from './types';
 import { CompanyCategory } from './types/category.types';
 
 export const companyApi = createApi({
@@ -48,10 +46,13 @@ export const companyApi = createApi({
       }),
     }),
 
-    uploadCompanyProfile: builder.mutation<Company, IUpdateCompanyProfile>({
+    updateCompanyProfile: builder.mutation<
+      { message: string },
+      IUpdateCompanyProfile
+    >({
       query: ({ id, data }) => ({
-        url: `/company/${id}/profile/update`,
-        method: 'POST',
+        url: `/company/${id}/profile`,
+        method: 'PATCH',
         data,
       }),
       invalidatesTags: ['companyApi'],
@@ -60,18 +61,6 @@ export const companyApi = createApi({
     uploadCompanyAvatar: builder.mutation<{ url: string }, UpdateAvatar>({
       query: ({ id, data }) => ({
         url: `/company/${id}/profile/avatar`,
-        method: 'POST',
-        data,
-      }),
-      invalidatesTags: ['companyApi'],
-    }),
-
-    updateWorkingHours: builder.mutation<
-      MessageResponse,
-      { id: number | string; data: IWorkingHours[] }
-    >({
-      query: ({ id, data }) => ({
-        url: `/company/${id}/profile/working-hours`,
         method: 'POST',
         data,
       }),
@@ -86,5 +75,5 @@ export const {
   useGetCompanyByIdQuery,
   useGetCompanyProfileQuery,
   useUploadCompanyAvatarMutation,
-  useUpdateWorkingHoursMutation,
+  useUpdateCompanyProfileMutation,
 } = companyApi;
