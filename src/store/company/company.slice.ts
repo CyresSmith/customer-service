@@ -32,6 +32,9 @@ const companySlice = createSlice({
     ) {
       return { ...state, ...payload };
     },
+    updateCompanyData(state, { payload }: PayloadAction<Partial<Company>>) {
+      return { ...state, ...payload };
+    },
     resetCompanyState() {
       return initialState;
     },

@@ -1,1 +1,1 @@
-export { default } from './AddPhoneModal';
+export { default } from './EditPhonesModal';

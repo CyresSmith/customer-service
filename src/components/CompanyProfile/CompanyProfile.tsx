@@ -9,14 +9,19 @@ import {
   HiBriefcase,
   HiCalendar,
   HiOfficeBuilding,
+  HiPencil,
+  HiPencilAlt,
   HiPhone,
+  HiPlus,
+  HiX,
 } from 'react-icons/hi';
 import { useOutletContext } from 'react-router-dom';
-import AddPhoneModal from './AddPhoneModal';
+import EditPhonesModal from './AddPhoneModal';
 import CompanyLogo from './CompanyLogo';
 import {
   Address,
   ButtonBox,
+  FlexBox,
   Info,
   InfoBlock,
   InfoList,
@@ -26,11 +31,14 @@ import {
   TitleBox,
   Wrapper,
 } from './CompanyProfile.styled';
+import RemovePhone from './RemovePhone';
 import SetScheduleModal from './SetScheduleModal';
 
 const CompanyProfile = () => {
   const { name, avatar, address, phones, activities, id, workingHours } =
     useCompany();
+
+  const [editedPhone, setEditedPhone] = useState<string | null>(null);
 
   const { refetchCompanyData } = useOutletContext<{
     refetchCompanyData: () => void;
@@ -40,6 +48,11 @@ const CompanyProfile = () => {
 
   const handleSetWorkTimeModalClose = () => {
     refetchCompanyData();
+    setOpenModal(null);
+  };
+
+  const handlePhoneModalClose = () => {
+    setEditedPhone(null);
     setOpenModal(null);
   };
 
@@ -81,13 +94,46 @@ const CompanyProfile = () => {
                 <InfoList>
                   {phones.map((phone: string, i) => (
                     <li key={i}>
-                      <p>{phone}</p>
+                      <FlexBox>
+                        <p>{phone}</p>
+
+                        <div>
+                          <Button
+                            $round
+                            $variant="text"
+                            size="s"
+                            $colors="light"
+                            Icon={HiPencil}
+                            onClick={() => {
+                              setEditedPhone(phone);
+                              setOpenModal('phone');
+                            }}
+                          ></Button>
+
+                          <Button
+                            $round
+                            $variant="text"
+                            size="s"
+                            $colors="danger"
+                            Icon={HiX}
+                            onClick={() => {
+                              setEditedPhone(phone);
+                              setOpenModal('removePhone');
+                            }}
+                          ></Button>
+                        </div>
+                      </FlexBox>
                     </li>
                   ))}
                 </InfoList>
 
                 <ButtonBox>
-                  <Button size="s" onClick={() => setOpenModal('phone')}>
+                  <Button
+                    Icon={HiPlus}
+                    size="s"
+                    $colors="light"
+                    onClick={() => setOpenModal('phone')}
+                  >
                     Додати телефон
                   </Button>
                 </ButtonBox>
@@ -143,7 +189,12 @@ const CompanyProfile = () => {
                 )}
 
                 <ButtonBox>
-                  <Button size="s" onClick={() => setOpenModal('schedule')}>
+                  <Button
+                    Icon={HiPencilAlt}
+                    size="s"
+                    $colors="light"
+                    onClick={() => setOpenModal('schedule')}
+                  >
                     Налаштувати графік
                   </Button>
                 </ButtonBox>
@@ -151,12 +202,25 @@ const CompanyProfile = () => {
             </Info>
           </Wrapper>
 
-          {openModal === 'phone' && (
+          {(openModal === 'phone' ||
+            (openModal === 'removePhone' && editedPhone)) && (
             <Modal
-              closeModal={() => setOpenModal(null)}
+              closeModal={handlePhoneModalClose}
               $isOpen={openModal === 'phone'}
             >
-              <AddPhoneModal closeModal={() => setOpenModal(null)} />
+              {openModal === 'phone' && (
+                <EditPhonesModal
+                  phone={editedPhone}
+                  closeModal={handlePhoneModalClose}
+                />
+              )}
+
+              {openModal === 'removePhone' && editedPhone && (
+                <RemovePhone
+                  phone={editedPhone}
+                  closeModal={handlePhoneModalClose}
+                />
+              )}
             </Modal>
           )}
 

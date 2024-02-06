@@ -3,6 +3,7 @@ import { useActions } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useCallback, useEffect, useState } from 'react';
 import { HiCalendar } from 'react-icons/hi';
+import { toast } from 'react-toastify';
 import { useUpdateCompanyProfileMutation } from 'services/company.api';
 import { IWorkingHours } from 'store/company/company.types';
 import { ButtonBox, ScheduleModalBox } from './SetScheduleModal.styled';
@@ -30,7 +31,8 @@ const SetScheduleModal = ({ closeModal }: Props) => {
 
   const [schedules, setSchedules] = useState<ISchedule[]>([]);
 
-  const [uploadWorkingHours, { isLoading }] = useUpdateCompanyProfileMutation();
+  const [uploadWorkingHours, { isLoading, isSuccess }] =
+    useUpdateCompanyProfileMutation();
 
   const addSchedule = () => {
     const disabledDays = schedules.reduce(
@@ -179,6 +181,10 @@ const SetScheduleModal = ({ closeModal }: Props) => {
     }
   }, [schedules]);
 
+  useEffect(() => {
+    if (isSuccess) toast.success('Графік роботи оновлено');
+  }, [isSuccess]);
+
   return (
     <ScheduleModalBox>
       {schedules.map(item => (
@@ -199,6 +205,7 @@ const SetScheduleModal = ({ closeModal }: Props) => {
           onClick={handleScheduleUpdate}
           disabled={isDaysNotSelected || isTimeNotSelected}
           Icon={HiCalendar}
+          $colors="accent"
         >
           Оновити графік
         </Button>

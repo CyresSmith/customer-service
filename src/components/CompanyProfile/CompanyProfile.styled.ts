@@ -11,6 +11,7 @@ export const Info = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.space[5]};
+  font-size: ${theme.fontSizes.l};
 `;
 
 export const Name = styled.h1`
@@ -54,6 +55,12 @@ export const Address = styled.p`
 
 export const InfoList = styled.ul`
   margin-left: calc(${theme.space[2]} + ${ICON_SIZE});
+`;
+
+export const FlexBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.space[3]};
 `;
 
 export const ButtonBox = styled.div`

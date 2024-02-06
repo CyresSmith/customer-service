@@ -32,6 +32,16 @@ const buttonStyle = ({
           ? theme.colors.bg.dark
           : theme.colors.accent.light;
 
+      case 'success':
+        return $variant === 'solid'
+          ? theme.colors.bg.dark
+          : theme.colors.success.light;
+
+      case 'danger':
+        return $variant === 'solid'
+          ? theme.colors.bg.dark
+          : theme.colors.danger.light;
+
       default:
         return theme.colors.primary.dark;
     }
@@ -59,6 +69,16 @@ const buttonStyle = ({
           ? theme.colors.bg.dark
           : theme.colors.accent.main;
 
+      case 'success':
+        return $variant === 'solid'
+          ? theme.colors.bg.dark
+          : theme.colors.success.main;
+
+      case 'danger':
+        return $variant === 'solid'
+          ? theme.colors.bg.dark
+          : theme.colors.danger.main;
+
       default:
         return theme.colors.secondary.main;
     }
@@ -78,6 +98,12 @@ const buttonStyle = ({
 
         case 'accent':
           return theme.colors.accent.light;
+
+        case 'success':
+          return theme.colors.success.light;
+
+        case 'danger':
+          return theme.colors.danger.light;
 
         default:
           return theme.colors.secondary.light;
@@ -102,6 +128,12 @@ const buttonStyle = ({
         case 'accent':
           return theme.colors.accent.main;
 
+        case 'success':
+          return theme.colors.success.main;
+
+        case 'danger':
+          return theme.colors.danger.main;
+
         default:
           return theme.colors.secondary.main;
       }
@@ -113,7 +145,7 @@ const buttonStyle = ({
   const padding = (): string => {
     switch (size) {
       case 's':
-        return $round ? theme.space[0] : `${theme.space[1]} ${theme.space[2]}`;
+        return $round ? theme.space[0] : `${theme.space[1]} ${theme.space[3]}`;
 
       case 'm':
         return $round ? theme.space[1] : `${theme.space[2]} ${theme.space[3]}`;
