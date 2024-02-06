@@ -12,6 +12,7 @@ import {
   HiPhone,
 } from 'react-icons/hi';
 import { useOutletContext } from 'react-router-dom';
+import AddPhoneModal from './AddPhoneModal';
 import CompanyLogo from './CompanyLogo';
 import {
   Address,
@@ -35,11 +36,11 @@ const CompanyProfile = () => {
     refetchCompanyData: () => void;
   }>();
 
-  const [isSetWorkTimeModalOpen, setIsSetWorkTimeModalOpen] = useState(false);
+  const [openModal, setOpenModal] = useState<string | null>(null);
 
   const handleSetWorkTimeModalClose = () => {
     refetchCompanyData();
-    setIsSetWorkTimeModalOpen(false);
+    setOpenModal(null);
   };
 
   return (
@@ -84,6 +85,12 @@ const CompanyProfile = () => {
                     </li>
                   ))}
                 </InfoList>
+
+                <ButtonBox>
+                  <Button size="s" onClick={() => setOpenModal('phone')}>
+                    Додати телефон
+                  </Button>
+                </ButtonBox>
               </InfoBlock>
 
               <InfoBlock>
@@ -99,6 +106,15 @@ const CompanyProfile = () => {
                     </li>
                   ))}
                 </InfoList>
+
+                {/* <ButtonBox>
+                  <Button
+                    size="s"
+                    onClick={() => setIsSetWorkTimeModalOpen(true)}
+                  >
+                    Налаштувати напрямки діяльності
+                  </Button>
+                </ButtonBox> */}
               </InfoBlock>
 
               <InfoBlock>
@@ -127,10 +143,7 @@ const CompanyProfile = () => {
                 )}
 
                 <ButtonBox>
-                  <Button
-                    size="s"
-                    onClick={() => setIsSetWorkTimeModalOpen(true)}
-                  >
+                  <Button size="s" onClick={() => setOpenModal('schedule')}>
                     Налаштувати графік
                   </Button>
                 </ButtonBox>
@@ -138,10 +151,19 @@ const CompanyProfile = () => {
             </Info>
           </Wrapper>
 
-          {isSetWorkTimeModalOpen && (
+          {openModal === 'phone' && (
+            <Modal
+              closeModal={() => setOpenModal(null)}
+              $isOpen={openModal === 'phone'}
+            >
+              <AddPhoneModal closeModal={() => setOpenModal(null)} />
+            </Modal>
+          )}
+
+          {openModal === 'schedule' && (
             <Modal
               closeModal={handleSetWorkTimeModalClose}
-              $isOpen={isSetWorkTimeModalOpen}
+              $isOpen={openModal === 'schedule'}
             >
               <SetScheduleModal closeModal={handleSetWorkTimeModalClose} />
             </Modal>

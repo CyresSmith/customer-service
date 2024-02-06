@@ -3,6 +3,7 @@ import { axiosBaseQuery } from 'services/instance';
 import {
   Company,
   CreateCompany,
+  IUpdateCompanyProfile,
   IWorkingHours,
   UpdateAvatar,
 } from '../store/company/company.types';
@@ -45,6 +46,15 @@ export const companyApi = createApi({
         url: `/company/${id}/profile`,
         method: 'GET',
       }),
+    }),
+
+    uploadCompanyProfile: builder.mutation<Company, IUpdateCompanyProfile>({
+      query: ({ id, data }) => ({
+        url: `/company/${id}/profile/update`,
+        method: 'POST',
+        data,
+      }),
+      invalidatesTags: ['companyApi'],
     }),
 
     uploadCompanyAvatar: builder.mutation<{ url: string }, UpdateAvatar>({

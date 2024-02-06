@@ -25,6 +25,7 @@ export interface MenuItem extends MenuLink {
   openItem: string | null;
   setOpenItem: Dispatch<SetStateAction<string | null>>;
   onItemClick?: () => void;
+  isChildren?: boolean;
 }
 
 const Item = ({
@@ -36,45 +37,40 @@ const Item = ({
   onItemClick,
   openItem,
   setOpenItem,
+  isChildren = false,
 }: MenuItem) => {
   const handleItemClick = () => {
-    if (onItemClick && !children) onItemClick();
+    if (onItemClick && !children?.length) onItemClick();
+
+    if (!isChildren && !children?.length) setOpenItem(null);
 
     if (children && children.length > 0) {
-      return setOpenItem(p => (p ? null : label));
-    }
-
-    if (openItem) {
-      setOpenItem(null);
+      setOpenItem(p => (p === label ? null : label));
     }
   };
 
-  const isOpen = () => Boolean(openItem);
+  const isOpen = openItem === label;
 
   return (
     <>
-      <ItemBox $isOpen={isOpen()} $menuSize={size}>
+      <ItemBox $isOpen={isOpen} $menuSize={size}>
         <ItemLink
           to={to}
           as={children && children.length > 0 ? 'button' : NavLink}
           onClick={handleItemClick}
         >
-          {Icon && <StyledIcon $menuSize={size} $isOpen={isOpen()} as={Icon} />}
+          {Icon && <StyledIcon $menuSize={size} $isOpen={isOpen} as={Icon} />}
 
           <Label $isIcon={Boolean(Icon)}>{label}</Label>
 
           {children && children.length > 0 && (
-            <ItemChevron
-              $menuSize={size}
-              as={HiChevronDown}
-              $isOpen={isOpen()}
-            />
+            <ItemChevron $menuSize={size} as={HiChevronDown} $isOpen={isOpen} />
           )}
         </ItemLink>
       </ItemBox>
 
       {children && children.length > 0 && (
-        <ChildrenBox $menuSize={size} $isOpen={isOpen()}>
+        <ChildrenBox $menuSize={size} $isOpen={isOpen}>
           <ul>
             {children.map(item => (
               <Item
@@ -82,6 +78,7 @@ const Item = ({
                 {...item}
                 size={size}
                 onItemClick={onItemClick}
+                isChildren
               />
             ))}
           </ul>

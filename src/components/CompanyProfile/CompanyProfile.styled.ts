@@ -23,6 +23,8 @@ export const TitleBox = styled.div`
   align-items: center;
   gap: ${theme.space[2]};
   margin-bottom: ${theme.space[2]};
+  padding-top: ${theme.space[5]};
+  border-top: 1px solid ${theme.colors.primary.dark};
 `;
 
 export const Title = styled.h5`

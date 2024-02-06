@@ -1,5 +1,5 @@
 import { useClickOutside } from 'hooks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HiChevronDown } from 'react-icons/hi';
 import { List, SelectBox, SelectEl } from './Select.styled';
 import { ISelect } from './select.types';
@@ -12,11 +12,11 @@ const Select = ({
   $variant = 'solid',
   onSelect,
   items,
-  selectedItemIdx,
+  selectedItem,
 }: ISelect) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<string | null>(
-    selectedItemIdx ? items[selectedItemIdx] : items[0]
+    selectedItem ? selectedItem : items[0]
   );
   const selectRef = useClickOutside(() => setIsOpen(false));
 
@@ -25,6 +25,12 @@ const Select = ({
     onSelect(item);
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    if (selectedItem) {
+      setSelected(selectedItem);
+    }
+  }, [selectedItem]);
 
   return (
     <SelectBox ref={selectRef}>

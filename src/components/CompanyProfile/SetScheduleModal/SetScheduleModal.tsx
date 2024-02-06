@@ -25,7 +25,7 @@ type Props = {
 };
 
 const SetScheduleModal = ({ closeModal }: Props) => {
-  const { id } = useCompany();
+  const { id, workingHours } = useCompany();
   const { setCompanySchedule } = useActions();
 
   const [schedules, setSchedules] = useState<ISchedule[]>([]);
@@ -49,8 +49,11 @@ const SetScheduleModal = ({ closeModal }: Props) => {
     ]);
   };
 
-  const updateSchedule = (schedule: ISchedule) => {
-    const arr = [...schedules];
+  const updateSchedule = (
+    schedule: ISchedule,
+    schedulesArr: ISchedule[]
+  ): ISchedule[] => {
+    const arr = [...schedulesArr];
 
     const idx = arr.findIndex(({ id }) => id === schedule.id);
 
@@ -60,29 +63,30 @@ const SetScheduleModal = ({ closeModal }: Props) => {
       arr.splice(idx, 1, schedule);
     }
 
-    setSchedules(
-      arr.map(item => {
-        if (item.id === schedule.id) {
-          return item;
+    return arr.map(item => {
+      if (item.id === schedule.id) {
+        return item;
+      } else {
+        if (item.disabledDays) {
+          return {
+            ...item,
+            disabledDays: [
+              ...item.disabledDays.filter(day => !prevDays?.includes(day)),
+              ...schedule.days,
+            ],
+          };
         } else {
-          if (item.disabledDays) {
-            return {
-              ...item,
-              disabledDays: [
-                ...item.disabledDays.filter(day => !prevDays?.includes(day)),
-                ...schedule.days,
-              ],
-            };
-          } else {
-            return {
-              ...item,
-              disabledDays: schedule.days,
-            };
-          }
+          return {
+            ...item,
+            disabledDays: schedule.days,
+          };
         }
-      })
-    );
+      }
+    });
   };
+
+  const handleSchedulesStateUpdate = (schedule: ISchedule) =>
+    setSchedules(updateSchedule(schedule, schedules));
 
   const removeSchedule = (schedule: ISchedule) => {
     const newSchedules = schedules.map(item => {
@@ -107,14 +111,21 @@ const SetScheduleModal = ({ closeModal }: Props) => {
     }, 0) === 7
   );
 
-  const isTimeSelected = Boolean(
+  const isTimeNotSelected = Boolean(
     schedules.find(({ schedule }) => schedule.from === '' || schedule.to === '')
+  );
+
+  const isDaysNotSelected = Boolean(
+    schedules.find(({ days }) => days.length === 0)
   );
 
   const getWorkingHours = useCallback((): IWorkingHours[] => {
     return schedules
       .filter(({ schedule }) => schedule.from !== '' || schedule.to !== '')
-      .map(({ days, schedule }) => ({ days, schedule }));
+      .map(({ days, schedule }) => ({
+        days: [...days].sort((a, b) => a - b),
+        schedule,
+      }));
   }, [schedules]);
 
   const handleScheduleUpdate = async () => {
@@ -135,7 +146,27 @@ const SetScheduleModal = ({ closeModal }: Props) => {
   };
 
   useEffect(() => {
-    addSchedule();
+    if (workingHours && workingHours.length > 0) {
+      setSchedules(
+        workingHours.map(({ days, schedule }, idx) => {
+          const disabledDays = workingHours.reduce(
+            (acc: number[], { days }, i) => {
+              return idx === i ? acc : [...acc, ...days];
+            },
+            []
+          );
+
+          return {
+            id: idx + 1,
+            days,
+            schedule,
+            disabledDays,
+          };
+        })
+      );
+    } else {
+      addSchedule();
+    }
   }, []);
 
   useEffect(() => {
@@ -155,10 +186,10 @@ const SetScheduleModal = ({ closeModal }: Props) => {
           key={item.id}
           currentSchedule={item}
           addSchedule={addSchedule}
-          updateSchedule={updateSchedule}
+          updateSchedule={handleSchedulesStateUpdate}
           removeSchedule={removeSchedule}
           schedules={schedules}
-          addDisabled={isAllDaysDisabled || isTimeSelected}
+          addDisabled={isAllDaysDisabled || isTimeNotSelected}
         />
       ))}
 
@@ -166,7 +197,7 @@ const SetScheduleModal = ({ closeModal }: Props) => {
         <Button
           isLoading={isLoading}
           onClick={handleScheduleUpdate}
-          disabled={isTimeSelected}
+          disabled={isDaysNotSelected || isTimeNotSelected}
           Icon={HiCalendar}
         >
           Оновити графік

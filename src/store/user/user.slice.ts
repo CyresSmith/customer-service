@@ -29,7 +29,7 @@ const userSlice = createSlice({
       return initialState;
     },
 
-    addNemCompany(state, { payload }: PayloadAction<Company>) {
+    addNewCompany(state, { payload }: PayloadAction<Company>) {
       return {
         ...state,
         companies:
