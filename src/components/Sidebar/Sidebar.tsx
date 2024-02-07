@@ -18,14 +18,20 @@ const items = [
     to: '',
     label: 'Клієнти',
     Icon: PiUsersThree,
-    children: [{ id: 1, to: 'clients-list', label: 'Список клієнтів' }, {id: 2, to: 'clients-statistic', label: 'Статистика'}]
+    children: [
+      { id: 1, to: 'clients-list', label: 'Список клієнтів' },
+      { id: 2, to: 'clients-statistic', label: 'Статистика' },
+    ],
   },
   {
     id: 4,
     to: '',
     label: 'Налашутвання',
     Icon: HiAdjustments,
-    children: [{ id: 1, to: 'profile', label: 'Профіль' }],
+    children: [
+      { id: 1, to: 'profile', label: 'Профіль' },
+      { id: 2, to: 'employees', label: 'Співробітники' },
+    ],
   },
 ];
 

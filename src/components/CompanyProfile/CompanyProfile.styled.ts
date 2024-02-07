@@ -12,7 +12,7 @@ export const Info = styled.div`
   flex-direction: column;
   gap: ${theme.space[5]};
   font-size: ${theme.fontSizes.l};
-  max-width: 470px;
+  max-width: 600px;
 `;
 
 export const Name = styled.h1`
