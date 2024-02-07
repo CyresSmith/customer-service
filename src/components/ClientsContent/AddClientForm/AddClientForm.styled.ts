@@ -50,11 +50,11 @@ export const SubmitBtnWrapper = styled.div`
 export const SubmitErrorsBox = styled.div`
     position: absolute;
     right: 0;
-    top: 110%;
+    top: calc(100% + ${theme.space[1]});
     width: 310px;
     padding: ${theme.space[3]};
     border: ${theme.borders.normal} ${theme.colors.bg.dark};
-    border-radius: ${theme.radii.m};
+    border-radius: ${theme.radii.s};
     background-color: ${theme.colors.bg.main};
     display: flex;
     flex-direction: column;
@@ -68,5 +68,6 @@ export const SubmitErrorsBox = styled.div`
 `
 
 export const SubmitError = styled.p`
+    display: inline-block;
     color: ${theme.colors.danger};
 `
