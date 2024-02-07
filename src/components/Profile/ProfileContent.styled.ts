@@ -12,7 +12,7 @@ export const Container = styled.div`
     flex-direction: column;
     align-items: center;
     color: ${theme.colors.secondary.light};
-    gap: ${theme.space[6]};
+    gap: ${theme.space[5]};
 `
 
 export const Title = styled.h2`

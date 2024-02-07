@@ -1,6 +1,7 @@
 import Button from "../Buttons/Button";
 import { ButtonBox, ButtonsWrapper } from "./CustomForm.styled";
 import { ButtonsProps } from "./types";
+import { nanoid } from "nanoid";
 
 const CustomFormButtons = ({
     buttonWidth,
@@ -18,6 +19,7 @@ const CustomFormButtons = ({
         <ButtonsWrapper $direction={direction}>
             <ButtonBox $second={resetButtonLabel ? true : false} $buttonWidth={buttonWidth}>
                 <Button
+                    id={nanoid()}
                     children={submitButtonLabel}
                     Icon={SubmitIcon}
                     type='submit'
@@ -29,6 +31,7 @@ const CustomFormButtons = ({
             {resetButtonLabel &&
                 <ButtonBox $second={resetButtonLabel ? true : false} $buttonWidth={buttonWidth}>
                     <Button
+                        id={nanoid()}
                         onClick={onReset}
                         children={resetButtonLabel}
                         Icon={ResetIcon}

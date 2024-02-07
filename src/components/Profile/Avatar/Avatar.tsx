@@ -23,7 +23,7 @@ import {
 
 type Props = {
   id: string | number;
-  avatar: string;
+  avatar?: string;
 };
 
 const Avatar = ({ id, avatar }: Props) => {

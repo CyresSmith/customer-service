@@ -58,6 +58,10 @@ const userSlice = createSlice({
       }
       return state;
     },
+
+    updatePassword(_, { payload }) {
+      return payload;
+    },
   },
 });
 
