@@ -3,11 +3,26 @@ import theme from 'utils/theme';
 
 export const Wrapper = styled.div`
     position: relative;
-    margin-bottom: ${theme.space[5]};
+    /* margin-bottom: ${theme.space[5]}; */
     width: 150px;
     height: 150px;
     border: ${theme.borders.bold} ${theme.colors.secondary.light};
     border-radius: ${theme.radii.round};
+    transition: ${theme.transition.primary};
+
+    &:hover {
+        border-color: ${theme.colors.accent.main};
+        box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
+        -webkit-box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
+        -moz-box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
+    }
+
+    &:focus {
+        border-color: ${theme.colors.accent.main};
+        box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
+        -webkit-box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
+        -moz-box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
+    }
 `
 
 export const AvatarBox = styled.div`
@@ -48,7 +63,7 @@ export const StyledCamera = styled.svg`
 export const StyledUpload = styled.svg`
     width: 50px;
     height: 50px;
-    stroke: ${theme.colors.secondary.light};
+    stroke: ${theme.colors.accent.main};
 `
 
 export const Backdrop = styled.div`
@@ -72,7 +87,7 @@ export const Backdrop = styled.div`
 
 export const ButtonsBox = styled.div`
     position: absolute;
-    top: -15px;
+    bottom: -50px;
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;

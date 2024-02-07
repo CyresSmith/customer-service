@@ -1,4 +1,4 @@
-import validateInputs from 'helpers/validators';
+import {inputsValidation} from 'helpers/inputsValidation';
 import { ChangeEvent, FormEvent, useState } from 'react';
 
 export type State = {
@@ -6,55 +6,33 @@ export type State = {
   lastName?: string;
   email?: string;
   password?: string;
+  newPassword?: string;
   phone?: string;
   confirm?: string;
   avatar?: string;
+  birthday?: string,
+  sex?: string,
+  discount?: string,
+  card?: string,
+  sourse?: string,
+  coments?: string,
 };
-
-// type RegisterState = {
-//   firstName?: string;
-//   lastName?: string;
-//   phone?: string;
-//   email: string;
-//   password: string;
-//   confirm: string;
-// };
-
-// type LoginState = Pick<RegisterState, 'email' | 'password'>;
-
-// type UpdateState = Omit<RegisterState, 'password' | 'confirm'>
-
-// type InitialState = RegisterState | LoginState | UpdateState;
 
 type Props = {
   initialState: State;
   onSubmit: (arg: State) => void;
 };
 
+export type ValidationReturn = { [key: string]: string }[];
+
 export const useForm = ({ initialState, onSubmit }: Props) => {
   const [state, setState] = useState<State>(initialState);
-  const [invalidFields, setInvalidFields] = useState<object[]>([]);
+  const [invalidFields, setInvalidFields] = useState<ValidationReturn>([]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
 
-    const isValid = validateInputs(name, value);
-
-    if (!isValid.ok && value !== '') {
-      if (!invalidFields.find(i => Object.keys(i)[0] === name)) {
-        setInvalidFields(s => [...s, { [name]: isValid.message }]);
-      }
-    } else {
-      setInvalidFields(s => s.filter(ss => Object.keys(ss)[0] !== name));
-    }
-
-    if (name === 'confirm') {
-      if (value !== '' && value !== state?.password) {
-        setInvalidFields(s => [...s, { [name]: 'Passwords must match' }]);
-      } else {
-        setInvalidFields(s => s.filter(ss => Object.keys(ss)[0] !== name));
-      }
-    }
+    inputsValidation({name, value, state, invalidFields, setInvalidFields});
 
     setState(prevState => ({ ...prevState, [name]: value }));
   };

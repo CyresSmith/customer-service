@@ -1,9 +1,11 @@
 import CustomForm from "components/Ui/Form/CustomForm";
 import { State } from "hooks/useForm";
 import { FormBox } from "./UpdateDataForm.styled";
+import { IoMdSave  } from 'react-icons/io';
 
 type Props = {
-    userData: State;
+    handleSubmit: (arg: State) => void;
+    isLoading: boolean;
 };
 
 const updateInputs = [
@@ -12,19 +14,24 @@ const updateInputs = [
     { name: 'confirm', type: 'password' },
 ];
 
-const UpdatePassForm = ({ userData }: Props) => {
-    const handleSubmit = () => {
+const initialState: State = {
+    password: '',
+    newPassword: '',
+    confirm: ''
+}
 
-    }
+const UpdatePassForm = ({ handleSubmit, isLoading }: Props) => {
 
     return (
         <FormBox>
             <CustomForm
                 inputs={updateInputs}
-                initialState={userData}
+                initialState={initialState}
                 onSubmit={handleSubmit}
-                buttonLabel="Зберегти зміни"
+                buttonLabel="Оновити пароль"
                 buttonWidth="fit-content"
+                SubmitButtonIcon={IoMdSave}
+                isLoading={isLoading}
             />
         </FormBox>
     )

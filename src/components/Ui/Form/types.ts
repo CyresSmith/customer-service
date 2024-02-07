@@ -6,6 +6,7 @@ export type InputProps = {
     name: string;
     type: string;
     id?: string | number;
+    isRequiried?: boolean;
 };
 
 export type FormProps = {

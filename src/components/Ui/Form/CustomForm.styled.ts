@@ -24,10 +24,16 @@ export const FormInputsListItem = styled.div`
 `;
 
 export const FormInputLabel = styled.label`
+
   &::first-letter {
     text-transform: capitalize;
   }
 `;
+
+export const Requiried = styled.span`
+  font-size: inherit;
+  color: ${theme.colors.danger};
+`
 
 export const FormInputBox = styled.div`
   position: relative;
@@ -59,9 +65,13 @@ export const FormInput = styled.input`
   transition: ${theme.transition.primary};
   font-size: ${theme.fontSizes.l};
   width: 100%;
+  resize: none;
 
   &:focus {
     border-color: ${theme.colors.accent.main};
+    box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
   }
 `;
 

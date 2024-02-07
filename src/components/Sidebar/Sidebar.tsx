@@ -13,7 +13,13 @@ const items = [
     label: 'Графік роботи',
     Icon: AiOutlineSchedule,
   },
-  { id: 3, to: 'clients', label: 'Клієнти', Icon: PiUsersThree },
+  {
+    id: 3,
+    to: '',
+    label: 'Клієнти',
+    Icon: PiUsersThree,
+    children: [{ id: 1, to: 'clients-list', label: 'Список клієнтів' }, {id: 2, to: 'clients-statistic', label: 'Статистика'}]
+  },
   {
     id: 4,
     to: '',

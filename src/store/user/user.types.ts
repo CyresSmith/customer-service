@@ -38,4 +38,12 @@ export type UpdateUser = {
 export type UploadAvatar = {
   data: FormData;
   id: string | number;
+};
+
+export type UpdatePassword = {
+  id: string | number;
+  data: {
+    password: string;
+    newPassword: string;
+  }
 }
