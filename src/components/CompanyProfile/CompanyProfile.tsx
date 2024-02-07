@@ -6,6 +6,7 @@ import translateWorkSchedule from 'helpers/translateWorkSchedule';
 import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
 import {
+  HiBookOpen,
   HiBriefcase,
   HiCalendar,
   HiOfficeBuilding,
@@ -18,7 +19,6 @@ import { HiQueueList, HiTableCells } from 'react-icons/hi2';
 import { useOutletContext } from 'react-router-dom';
 import CompanyLogo from './CompanyLogo';
 import {
-  Address,
   ButtonBox,
   FlexBox,
   Info,
@@ -35,9 +35,10 @@ import EditAddressModal from './EditAddressModal';
 import EditPhonesModal from './EditPhonesModal';
 import RemovePhoneModal from './RemovePhoneModal';
 import SetScheduleModal from './SetScheduleModal';
+import EditDescModal from './EditDescModal';
 
 const CompanyProfile = () => {
-  const { name, avatar, address, phones, activities, id, workingHours } =
+  const { name, avatar, address, phones, activities, id, workingHours, desc } =
     useCompany();
 
   const [editedPhone, setEditedPhone] = useState<string | null>(null);
@@ -85,7 +86,7 @@ const CompanyProfile = () => {
                 </TitleBox>
 
                 <FlexBox>
-                  <Address>{address}</Address>
+                  <InfoList as="p">{address}</InfoList>
 
                   <Button
                     $round
@@ -218,6 +219,28 @@ const CompanyProfile = () => {
                   </Button>
                 </ButtonBox>
               </InfoBlock>
+
+              <InfoBlock>
+                <TitleBox>
+                  <StyledIcon as={HiBookOpen} />
+                  <Title>Опис компанії:</Title>
+                </TitleBox>
+
+                <InfoList as="div">
+                  <FlexBox>
+                    <p>{desc ? desc : 'Немає шнформації'}</p>
+
+                    <Button
+                      $round
+                      $variant="text"
+                      size="s"
+                      $colors="light"
+                      Icon={HiPencil}
+                      onClick={() => setOpenModal('desc')}
+                    ></Button>
+                  </FlexBox>
+                </InfoList>
+              </InfoBlock>
             </Info>
           </Wrapper>
 
@@ -277,6 +300,16 @@ const CompanyProfile = () => {
               $isOpen={openModal === 'schedule'}
             >
               <SetScheduleModal closeModal={handleModalClose} />
+            </Modal>
+          )}
+
+          {openModal === 'desc' && (
+            <Modal
+              title="Змінити опис"
+              closeModal={handleModalClose}
+              $isOpen={openModal === 'desc'}
+            >
+              <EditDescModal closeModal={handleModalClose} />
             </Modal>
           )}
         </>

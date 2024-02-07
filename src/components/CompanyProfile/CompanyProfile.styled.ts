@@ -49,10 +49,6 @@ export const StyledIcon = styled.svg`
   fill: ${theme.colors.accent.main};
 `;
 
-export const Address = styled.p`
-  margin-left: calc(${theme.space[2]} + ${ICON_SIZE});
-`;
-
 export const InfoList = styled.ul`
   margin-left: calc(${theme.space[2]} + ${ICON_SIZE});
 `;
@@ -66,4 +62,8 @@ export const FlexBox = styled.div`
 export const ButtonBox = styled.div`
   margin-top: ${theme.space[4]};
   margin-left: calc(${theme.space[2]} + ${ICON_SIZE});
+`;
+
+export const ModalBox = styled.div`
+  width: 400px;
 `;

@@ -14,8 +14,8 @@ import {
   useGetCompanyActivitiesQuery,
   useUpdateCompanyProfileMutation,
 } from 'services/company.api';
+import { ModalBox } from '../CompanyProfile.styled';
 import { ButtonBox } from '../SetScheduleModal/SetScheduleModal.styled';
-import { Box } from './EditActivitiesModal.styled';
 
 type Props = { closeModal: () => void };
 
@@ -66,7 +66,7 @@ const EditActivitiesModal = ({ closeModal }: Props) => {
       {categoryLoading && <Loader />}
 
       {!categoryLoading && activitiesData && (
-        <Box>
+        <ModalBox>
           <CategoriesList>
             {activitiesData.map(item => (
               <Category
@@ -90,7 +90,7 @@ const EditActivitiesModal = ({ closeModal }: Props) => {
               Оновити напрямки
             </Button>
           </ButtonBox>
-        </Box>
+        </ModalBox>
       )}
     </>
   );

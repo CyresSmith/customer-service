@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { HiCloudUpload } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { useUpdateCompanyProfileMutation } from 'services/company.api';
-import { Box } from './EditPhonesModal.styled';
+import { ModalBox } from '../CompanyProfile.styled';
 
 const inputs = [{ name: 'phone', type: 'tel' }];
 
@@ -44,7 +44,7 @@ const EditPhonesModal = ({ closeModal, phone }: Props) => {
   }, [isSuccess]);
 
   return (
-    <Box>
+    <ModalBox>
       <CustomForm
         SubmitButtonIcon={HiCloudUpload}
         buttonLabel={phone ? 'Змінити' : 'Додати'}
@@ -53,7 +53,7 @@ const EditPhonesModal = ({ closeModal, phone }: Props) => {
         initialState={phone ? { phone } : { phone: '' }}
         isLoading={isLoading}
       />
-    </Box>
+    </ModalBox>
   );
 };
 

@@ -73,18 +73,21 @@ export const ButtonsWrapper = styled.div<{ $direction: string | undefined }>`
   align-items: center;
   gap: ${({ theme }) => theme.space[4]};
   margin: 0 auto;
-`
+`;
 
-export const ButtonBox = styled.div<{$buttonWidth: string | undefined, $second: boolean}>`
+export const ButtonBox = styled.div<{
+  $buttonWidth: string | undefined;
+  $second: boolean;
+}>`
   width: ${props => props.$buttonWidth};
-  margin: ${props => props.$second ? 0 : '0 auto'};
-`
+  margin: ${props => (props.$second ? 0 : '0 auto')};
+`;
 
 export const ValidationError = styled.span`
   position: absolute;
-  bottom: -35%;
+  top: calc(100% + ${theme.space[1]});
   right: 0;
-  color: ${({ theme }) => theme.colors.danger};
+  color: ${({ theme }) => theme.colors.danger.light};
 `;
 
 export const DoneIcon = styled.svg<{ $complate?: boolean }>`
@@ -94,5 +97,6 @@ export const DoneIcon = styled.svg<{ $complate?: boolean }>`
   transform: translateY(-50%);
   width: 15px;
   height: 15px;
-  fill: ${props => props.$complate ? theme.colors.success : theme.colors.danger};
-`
+  fill: ${props =>
+    props.$complate ? theme.colors.success.light : theme.colors.danger.light};
+`;

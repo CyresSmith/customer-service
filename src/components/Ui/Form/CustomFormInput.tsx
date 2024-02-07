@@ -11,8 +11,8 @@ import {
 } from './CustomForm.styled';
 
 import { HiEye, HiEyeOff } from 'react-icons/hi';
-import { MdOutlineDone } from "react-icons/md";
 import { IoMdClose } from 'react-icons/io';
+import { MdOutlineDone } from 'react-icons/md';
 
 type Props = {
   name: string;
@@ -21,6 +21,7 @@ type Props = {
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
   isValid?: string;
   disabledIcon: boolean;
+  as?: string;
 };
 
 const CustomFormInput = ({
@@ -29,7 +30,8 @@ const CustomFormInput = ({
   value,
   handleChange,
   isValid,
-  disabledIcon
+  disabledIcon,
+  as = 'input',
 }: Props) => {
   const translateName = (name: string): string | undefined => {
     switch (name) {
@@ -55,6 +57,8 @@ const CustomFormInput = ({
         return 'Адреса';
       case 'index':
         return 'Індекс';
+      case 'desc':
+        return 'Опис';
       default:
         break;
     }
@@ -68,6 +72,7 @@ const CustomFormInput = ({
       <FormInputLabel>{translateName(name)}</FormInputLabel>
       <FormInputBox>
         <FormInput
+          as={as}
           type={type !== 'password' ? type : hidden ? type : 'text'}
           name={name}
           value={value}
@@ -79,7 +84,12 @@ const CustomFormInput = ({
             <HideIcon as={hidden ? HiEyeOff : HiEye} hidden={hidden} />
           </HideButton>
         )}
-        { !disabledIcon && value !== valueRef && value !== '' && <DoneIcon $complate={isValid ? false : true} as={isValid ? IoMdClose : MdOutlineDone } />}
+        {!disabledIcon && value !== valueRef && value !== '' && (
+          <DoneIcon
+            $complate={isValid ? false : true}
+            as={isValid ? IoMdClose : MdOutlineDone}
+          />
+        )}
       </FormInputBox>
       {isValid && <ValidationError>{isValid}</ValidationError>}
     </FormInputsListItem>

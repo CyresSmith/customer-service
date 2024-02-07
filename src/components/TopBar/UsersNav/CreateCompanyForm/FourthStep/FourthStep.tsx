@@ -102,6 +102,7 @@ const FourthStep = ({
               value={state[name as keyof State]}
               handleChange={handleChange}
               isValid={errorMessage(name)}
+              disabledIcon
             />
           ))}
         </FormInputsList>

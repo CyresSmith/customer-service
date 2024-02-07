@@ -12,6 +12,7 @@ export type State = {
   city?: string;
   address?: string;
   index?: string;
+  desc?: string;
 };
 
 // type RegisterState = {

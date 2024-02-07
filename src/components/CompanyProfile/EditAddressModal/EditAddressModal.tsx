@@ -2,11 +2,11 @@ import CustomForm from 'components/Ui/Form/CustomForm';
 import { useActions } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { State } from 'hooks/useForm';
-import { HiCloudUpload } from 'react-icons/hi';
-import { useUpdateCompanyProfileMutation } from 'services/company.api';
-import { Box } from '../EditPhonesModal/EditPhonesModal.styled';
 import { useEffect } from 'react';
+import { HiCloudUpload } from 'react-icons/hi';
 import { toast } from 'react-toastify';
+import { useUpdateCompanyProfileMutation } from 'services/company.api';
+import { ModalBox } from '../CompanyProfile.styled';
 
 const inputs = [
   { name: 'city', type: 'text' },
@@ -50,7 +50,7 @@ const EditAddressModal = ({ closeModal }: Props) => {
   }, [isSuccess]);
 
   return (
-    <Box>
+    <ModalBox>
       <CustomForm
         SubmitButtonIcon={HiCloudUpload}
         buttonLabel="Змінити"
@@ -59,7 +59,7 @@ const EditAddressModal = ({ closeModal }: Props) => {
         initialState={getInitialState()}
         isLoading={isLoading}
       />
-    </Box>
+    </ModalBox>
   );
 };
 
