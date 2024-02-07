@@ -3,11 +3,10 @@ import { axiosBaseQuery } from 'services/instance';
 import {
   Company,
   CreateCompany,
-  IWorkingHours,
+  IUpdateCompanyProfile,
   UpdateAvatar,
 } from '../store/company/company.types';
-import { MessageResponse } from './types';
-import { CompanyCategory } from './types/category.types';
+import { Activity, CompanyCategory } from './types/category.types';
 
 export const companyApi = createApi({
   reducerPath: 'companyApi',
@@ -47,21 +46,28 @@ export const companyApi = createApi({
       }),
     }),
 
-    uploadCompanyAvatar: builder.mutation<{ url: string }, UpdateAvatar>({
+    updateCompanyProfile: builder.mutation<
+      { message: string },
+      IUpdateCompanyProfile
+    >({
       query: ({ id, data }) => ({
-        url: `/company/${id}/profile/avatar`,
-        method: 'POST',
+        url: `/company/${id}/profile`,
+        method: 'PATCH',
         data,
       }),
       invalidatesTags: ['companyApi'],
     }),
 
-    updateWorkingHours: builder.mutation<
-      MessageResponse,
-      { id: number | string; data: IWorkingHours[] }
-    >({
+    getCompanyActivities: builder.query<Activity[], string>({
+      query: id => ({
+        url: `/company/${id}/activities`,
+        method: 'GET',
+      }),
+    }),
+
+    uploadCompanyAvatar: builder.mutation<{ url: string }, UpdateAvatar>({
       query: ({ id, data }) => ({
-        url: `/company/${id}/profile/working-hours`,
+        url: `/company/${id}/profile/avatar`,
         method: 'POST',
         data,
       }),
@@ -76,5 +82,6 @@ export const {
   useGetCompanyByIdQuery,
   useGetCompanyProfileQuery,
   useUploadCompanyAvatarMutation,
-  useUpdateWorkingHoursMutation,
+  useUpdateCompanyProfileMutation,
+  useGetCompanyActivitiesQuery,
 } = companyApi;

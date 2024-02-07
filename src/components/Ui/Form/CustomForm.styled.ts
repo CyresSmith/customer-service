@@ -24,16 +24,15 @@ export const FormInputsListItem = styled.div`
 `;
 
 export const FormInputLabel = styled.label`
-
   &::first-letter {
     text-transform: capitalize;
   }
 `;
 
-export const Requiried = styled.span`
+export const Required = styled.span`
   font-size: inherit;
   color: ${theme.colors.danger};
-`
+`;
 
 export const FormInputBox = styled.div`
   position: relative;
@@ -69,9 +68,9 @@ export const FormInput = styled.input`
 
   &:focus {
     border-color: ${theme.colors.accent.main};
-    box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
-    -webkit-box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
-    -moz-box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
+    box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
   }
 `;
 
@@ -83,26 +82,30 @@ export const ButtonsWrapper = styled.div<{ $direction: string | undefined }>`
   align-items: center;
   gap: ${({ theme }) => theme.space[4]};
   margin: 0 auto;
-`
+`;
 
-export const ButtonBox = styled.div<{$buttonWidth: string | undefined, $second: boolean}>`
+export const ButtonBox = styled.div<{
+  $buttonWidth: string | undefined;
+  $second: boolean;
+}>`
   width: ${props => props.$buttonWidth};
-  margin: ${props => props.$second ? 0 : '0 auto'};
-`
+  margin: ${props => (props.$second ? 0 : '0 auto')};
+`;
 
 export const ValidationError = styled.span`
   position: absolute;
-  bottom: -35%;
+  top: calc(100% + ${theme.space[1]});
   right: 0;
-  color: ${({ theme }) => theme.colors.danger};
+  color: ${({ theme }) => theme.colors.danger.light};
 `;
 
-export const DoneIcon = styled.svg<{ $complate?: boolean }>`
+export const DoneIcon = styled.svg<{ $complete?: boolean }>`
   position: absolute;
   right: -20px;
   top: 50%;
   transform: translateY(-50%);
   width: 15px;
   height: 15px;
-  fill: ${props => props.$complate ? theme.colors.success : theme.colors.danger};
-`
+  fill: ${props =>
+    props.$complete ? theme.colors.success.light : theme.colors.danger.light};
+`;

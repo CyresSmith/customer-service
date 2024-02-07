@@ -1,36 +1,35 @@
-import { State } from "hooks/useForm";
-import { IconType } from "react-icons";
-
+import { State } from 'hooks/useForm';
+import { IconType } from 'react-icons';
 
 export type InputProps = {
-    name: string;
-    type: string;
-    id?: string | number;
-    isRequiried?: boolean;
+  name: string;
+  type: string;
+  id?: string | number;
+  isRequired?: boolean;
 };
 
 export type FormProps = {
-    SubmitButtonIcon?: IconType;
-    ResetButtonIcon?: IconType;
-    buttonLabel: string;
-    resetButtonLabel?: string;
-    buttonWidth?: string;
-    inputs: InputProps[];
-    onSubmit: (state: State) => void;
-    initialState: State;
-    isLoading?: boolean;
-    buttonsDirection?: string;
+  SubmitButtonIcon?: IconType;
+  ResetButtonIcon?: IconType;
+  buttonLabel: string;
+  resetButtonLabel?: string;
+  buttonWidth?: string;
+  inputs: InputProps[];
+  onSubmit: (state: State) => void;
+  initialState: State;
+  isLoading?: boolean;
+  buttonsDirection?: string;
 };
 
 export type ButtonsProps = {
-    submitButtonLabel: string;
-    resetButtonLabel?: string;
-    direction?: string;
-    buttonWidth?: string;
-    onReset: () => void;
-    SubmitIcon?: IconType;
-    ResetIcon?: IconType;
-    isLoading?: boolean;
-    disabledSubmit: boolean;
-    disabledReset: boolean;
-}
+  submitButtonLabel: string;
+  resetButtonLabel?: string;
+  direction?: string;
+  buttonWidth?: string;
+  onReset: () => void;
+  SubmitIcon?: IconType;
+  ResetIcon?: IconType;
+  isLoading?: boolean;
+  disabledSubmit: boolean;
+  disabledReset: boolean;
+};

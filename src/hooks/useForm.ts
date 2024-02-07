@@ -1,4 +1,4 @@
-import {inputsValidation} from 'helpers/inputsValidation';
+import { inputsValidation } from 'helpers/inputsValidation';
 import { ChangeEvent, FormEvent, useState } from 'react';
 
 export type State = {
@@ -10,12 +10,13 @@ export type State = {
   phone?: string;
   confirm?: string;
   avatar?: string;
-  birthday?: string,
-  sex?: string,
-  discount?: string,
-  card?: string,
-  sourse?: string,
-  coments?: string,
+  birthday?: string;
+  sex?: string;
+  discount?: string;
+  card?: string;
+  source?: string;
+  comments?: string;
+  desc?: string;
 };
 
 type Props = {
@@ -32,7 +33,7 @@ export const useForm = ({ initialState, onSubmit }: Props) => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
 
-    inputsValidation({name, value, state, invalidFields, setInvalidFields});
+    inputsValidation({ name, value, state, invalidFields, setInvalidFields });
 
     setState(prevState => ({ ...prevState, [name]: value }));
   };
