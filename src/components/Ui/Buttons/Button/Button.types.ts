@@ -10,7 +10,14 @@ export interface IButton {
   $iconPosition?: 'l' | 'r' | undefined;
   type?: 'submit' | 'button';
   size?: 's' | 'm' | 'l' | undefined;
-  $colors?: 'light' | 'main' | 'dark' | 'accent' | undefined;
+  $colors?:
+    | 'light'
+    | 'main'
+    | 'dark'
+    | 'accent'
+    | 'success'
+    | 'danger'
+    | undefined;
   $variant?: 'solid' | 'text' | undefined;
   $round?: boolean;
   $isIcon?: boolean;

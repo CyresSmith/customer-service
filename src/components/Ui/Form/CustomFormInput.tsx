@@ -1,3 +1,4 @@
+import { translateLabels } from 'helpers/translateLabels';
 import { ChangeEvent, useRef, useState } from 'react';
 import {
   DoneIcon,
@@ -7,14 +8,13 @@ import {
   FormInputsListItem,
   HideButton,
   HideIcon,
-  Requiried,
+  Required,
   ValidationError,
 } from './CustomForm.styled';
-import { translateLabels } from 'helpers/translateLabels';
 
 import { HiEye, HiEyeOff } from 'react-icons/hi';
-import { MdOutlineDone } from "react-icons/md";
 import { IoMdClose } from 'react-icons/io';
+import { MdOutlineDone } from 'react-icons/md';
 
 type Props = {
   name: string;
@@ -23,7 +23,7 @@ type Props = {
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
   isValid?: string;
   disabledIcon?: boolean;
-  isRequiried?: boolean;
+  isRequired?: boolean;
 };
 
 const CustomFormInput = ({
@@ -33,14 +33,17 @@ const CustomFormInput = ({
   handleChange,
   isValid,
   disabledIcon,
-  isRequiried
+  isRequired,
 }: Props) => {
   const [hidden, setHidden] = useState(true);
   const valueRef = useRef(value).current;
 
   return (
     <FormInputsListItem>
-      <FormInputLabel>{translateLabels(name)}{ isRequiried && <Requiried>{" (!)"}</Requiried> }</FormInputLabel>
+      <FormInputLabel>
+        {translateLabels(name)}
+        {isRequired && <Required>{' (!)'}</Required>}
+      </FormInputLabel>
       <FormInputBox>
         <FormInput
           type={type !== 'password' ? type : hidden ? type : 'text'}
@@ -55,7 +58,12 @@ const CustomFormInput = ({
             <HideIcon as={hidden ? HiEyeOff : HiEye} hidden={hidden} />
           </HideButton>
         )}
-        { !disabledIcon && value !== valueRef && value !== '' && <DoneIcon $complate={isValid ? false : true} as={isValid ? IoMdClose : MdOutlineDone } />}
+        {!disabledIcon && value !== valueRef && value !== '' && (
+          <DoneIcon
+            $complete={isValid ? false : true}
+            as={isValid ? IoMdClose : MdOutlineDone}
+          />
+        )}
       </FormInputBox>
       {isValid && <ValidationError>{isValid}</ValidationError>}
     </FormInputsListItem>

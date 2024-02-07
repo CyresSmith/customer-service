@@ -10,5 +10,5 @@ export const ScheduleModalBox = styled.div`
 export const ButtonBox = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: ${theme.space[5]};
+  margin-top: ${theme.space[6]};
 `;

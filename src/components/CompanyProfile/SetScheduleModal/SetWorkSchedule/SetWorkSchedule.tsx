@@ -33,6 +33,18 @@ const SetWorkSchedule = ({
     setSelected(p => (p?.includes(id) ? p?.filter(d => d !== id) : [...p, id]));
 
   useEffect(() => {
+    if (currentSchedule.days.length > 0) {
+      setSelected(currentSchedule.days);
+      setFrom(currentSchedule.schedule.from);
+      setTo(currentSchedule.schedule.to);
+    }
+  }, [
+    currentSchedule.days,
+    currentSchedule.schedule.from,
+    currentSchedule.schedule.to,
+  ]);
+
+  useEffect(() => {
     const newSchedule = {
       ...currentSchedule,
       days: selected,
@@ -78,6 +90,7 @@ const SetWorkSchedule = ({
         <span>{translateWorkSchedule('from')}</span>
 
         <Select
+          selectedItem={from}
           onSelect={item => setFrom(item)}
           $colors="light"
           items={generateTimeArray}
@@ -88,6 +101,7 @@ const SetWorkSchedule = ({
         <span>{translateWorkSchedule('to')}</span>
 
         <Select
+          selectedItem={to}
           onSelect={item => setTo(item)}
           $colors="light"
           items={generateTimeArray}

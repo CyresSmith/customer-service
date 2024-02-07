@@ -33,8 +33,16 @@ const theme = {
       main: '#87888C',
       dark: '#494a4d',
     },
-    danger: '#f72423',
-    success: '#38E54D',
+    danger: {
+      light: '#cc3837',
+      main: '#cf1e1d',
+      dark: '#cc0100',
+    },
+    success: {
+      light: '#3dcc4f',
+      main: '#1ec933',
+      dark: '#00ad15',
+    },
     backdrop: 'rgba(23, 24, 33, 0.5)',
   },
 
@@ -97,7 +105,7 @@ const theme = {
 
   borders: {
     normal: '1px solid',
-    bold: '2px solid'
+    bold: '2px solid',
   },
 
   radii: {
