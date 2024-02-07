@@ -10,8 +10,6 @@ import { useUpdateCompanyProfileMutation } from 'services/company.api';
 import { ModalBox } from '../CompanyProfile.styled';
 import { Form } from './EditDescModal.styled';
 
-const inputs = [{ name: 'desc', type: 'textarea' }];
-
 type Props = { closeModal: () => void };
 
 const EditDescModal = ({ closeModal }: Props) => {
@@ -49,16 +47,18 @@ const EditDescModal = ({ closeModal }: Props) => {
   };
 
   useEffect(() => {
-    if (isSuccess) toast.success('Опис оновлено');
-  }, [isSuccess]);
+    if (isSuccess) {
+      reset();
+      toast.success('Опис оновлено');
+    }
+  }, [isSuccess, reset]);
 
   return (
     <ModalBox>
       <Form onSubmit={handleSubmit}>
         <CustomFormInput
-          as="textarea"
           name="desc"
-          type="text"
+          type="textarea"
           value={state.desc}
           handleChange={handleChange}
           disabledIcon
@@ -67,7 +67,12 @@ const EditDescModal = ({ closeModal }: Props) => {
 
         <div>
           <Button
-            disabled={isLoading || Boolean(errorMessage('desc'))}
+            disabled={
+              isLoading ||
+              Boolean(errorMessage('desc')) ||
+              state.desc === '' ||
+              state.desc === desc
+            }
             Icon={HiCloudUpload}
             type="submit"
             $colors="accent"
