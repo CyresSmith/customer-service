@@ -1,5 +1,4 @@
-import inputsValidation from 'helpers/inputsValidation';
-// import validateInputs from 'helpers/validators';
+import {inputsValidation} from 'helpers/inputsValidation';
 import { ChangeEvent, FormEvent, useState } from 'react';
 
 export type State = {
@@ -11,6 +10,12 @@ export type State = {
   phone?: string;
   confirm?: string;
   avatar?: string;
+  birthday?: string,
+  sex?: string,
+  discount?: string,
+  card?: string,
+  sourse?: string,
+  coments?: string,
 };
 
 type Props = {
@@ -27,10 +32,9 @@ export const useForm = ({ initialState, onSubmit }: Props) => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
 
-    const validationResults: ValidationReturn = inputsValidation(name, value, state);
+    inputsValidation({name, value, state, invalidFields, setInvalidFields});
 
     setState(prevState => ({ ...prevState, [name]: value }));
-    setInvalidFields(validationResults)
   };
 
   const handleSubmit = (event: FormEvent): void => {
@@ -43,40 +47,3 @@ export const useForm = ({ initialState, onSubmit }: Props) => {
 
   return { state, setState, handleChange, handleSubmit, invalidFields, reset };
 };
-
-
-// =============================== Стара версія валідації, хай повисить
-
-    // const isValid = validateInputs(name, value);
-
-    // if (!isValid.ok && value !== '') {
-    //   if (!invalidFields.find(i => Object.keys(i)[0] === name)) {
-    //     setInvalidFields(s => [...s, { [name]: isValid.message }]);
-    //   }
-    // } else {
-    //   setInvalidFields(s => s.filter(ss => Object.keys(ss)[0] !== name));
-    // }
-
-    // if (name === 'newPassword' && isValid.ok) {
-    //   if (value !== '' && value === state?.password) {
-    //       setInvalidFields(s => [...s, { [name]: 'It must be different from the previous one' }]);
-    //     } else {
-    //       setInvalidFields(s => s.filter(ss => Object.keys(ss)[0] !== name));
-    //     }
-    // }
-    
-    // if (name === 'confirm') {
-    //   if (state.newPassword) {
-    //     if (value !== '' && value !== state?.newPassword) {
-    //       setInvalidFields(s => [...s, { [name]: 'Passwords must match' }]);
-    //     } else {
-    //       setInvalidFields(s => s.filter(ss => Object.keys(ss)[0] !== name));
-    //     }
-    //   } else {
-    //     if (value !== '' && value !== state?.password) {
-    //       setInvalidFields(s => [...s, { [name]: 'Passwords must match' }]);
-    //     } else {
-    //       setInvalidFields(s => s.filter(ss => Object.keys(ss)[0] !== name));
-    //     }
-    //   }
-    // }

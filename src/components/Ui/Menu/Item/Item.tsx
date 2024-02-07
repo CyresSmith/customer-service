@@ -49,7 +49,7 @@ const Item = ({
     }
   };
 
-  const isOpen = () => Boolean(openItem);
+  const isOpen = () => Boolean(openItem === label);
 
   return (
     <>

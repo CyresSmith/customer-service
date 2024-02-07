@@ -1,4 +1,5 @@
 import { State, ValidationReturn } from "hooks/useForm";
+import React from "react";
 
 type Result<T> = { ok: true, value: T } | { ok: false, message: string };
 type Value = string;
@@ -46,25 +47,32 @@ const validateInputs = (name: string, value: Value): Result<Value> => {
     }
 };
 
-const inputsValidation = (name: string, value: string, state: State): ValidationReturn => {
-    let invalidFields: ValidationReturn = [];
+type Args = {
+    name: string,
+    value: string,
+    state: State,
+    invalidFields: ValidationReturn,
+    setInvalidFields: React.Dispatch<React.SetStateAction<ValidationReturn>>
+}
 
+export const inputsValidation = ({name, value, state, invalidFields, setInvalidFields}: Args): void => {
     const isValid = validateInputs(name, value);
 
     if (!isValid.ok && value !== '') {
         if (!invalidFields.find(i => Object.keys(i)[0] === name)) {
-            invalidFields.push({ [name]: isValid.message });
+            // invalidFields.push({ [name]: isValid.message });
+            setInvalidFields(s => [...s, { [name]: isValid.message }]);
         }
     } else {
-        invalidFields = invalidFields.filter(ss => Object.keys(ss)[0] !== name);
+        setInvalidFields(s => s.filter(ss => Object.keys(ss)[0] !== name));
     }
 
     if (name === 'newPassword' && isValid.ok) {
         if (value !== '' && value === state?.password) {
             // invalidFields.push({ [name]: 'It must be different from the previous one' })
-            invalidFields.push({ [name]: 'Має відрізнятись від попереднього паролю' })
+            setInvalidFields(s => [...s, { [name]: 'Має відрізнятись від попереднього паролю' }]);
         } else {
-            invalidFields = invalidFields.filter(ss => Object.keys(ss)[0] !== name);
+            setInvalidFields(s => s.filter(ss => Object.keys(ss)[0] !== name));
         }
     }
     
@@ -72,23 +80,25 @@ const inputsValidation = (name: string, value: string, state: State): Validation
         if (state.newPassword) {
             if (value !== '' && value !== state?.newPassword) {
                 // invalidFields.push({ [name]: 'Passwords must match' })
-                invalidFields.push({ [name]: 'Паролі повинні співпадати' })
+                setInvalidFields(s => [...s, { [name]: 'Паролі повинні співпадати' }]);
             } else {
-                invalidFields = invalidFields.filter(ss => Object.keys(ss)[0] !== name);
+                setInvalidFields(s => s.filter(ss => Object.keys(ss)[0] !== name));
             }
         } else {
             if (value !== '' && value !== state?.password) {
                 // invalidFields.push({ [name]: 'Passwords must match' })
                 invalidFields.push({ [name]: 'Паролі повинні співпадати' })
+                setInvalidFields(s => [...s, { [name]: 'Паролі повинні співпадати' }]);
             } else {
-                invalidFields = invalidFields.filter(ss => Object.keys(ss)[0] !== name);
+                setInvalidFields(s => s.filter(ss => Object.keys(ss)[0] !== name));
             }
         }
     }
-
-    return invalidFields;
 };
 
-// export default validateInputs;
-
-export default inputsValidation;
+export const getErrorMessage = (name: string, invalidFields: ValidationReturn): string | undefined => {
+    const error = invalidFields.find(f => Object.keys(f)[0] === name);
+    if (error) {
+        return Object.values(error)[0];
+    }
+};
