@@ -24,16 +24,15 @@ export const FormInputsListItem = styled.div`
 `;
 
 export const FormInputLabel = styled.label`
-
   &::first-letter {
     text-transform: capitalize;
   }
 `;
 
-export const Requiried = styled.span`
+export const Required = styled.span`
   font-size: inherit;
   color: ${theme.colors.danger};
-`
+`;
 
 export const FormInputBox = styled.div`
   position: relative;
@@ -69,9 +68,9 @@ export const FormInput = styled.input`
 
   &:focus {
     border-color: ${theme.colors.accent.main};
-    box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
-    -webkit-box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
-    -moz-box-shadow: 0px 0px 5px 1px rgba(255,176,0,1);
+    box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
   }
 `;
 
@@ -100,7 +99,7 @@ export const ValidationError = styled.span`
   color: ${({ theme }) => theme.colors.danger.light};
 `;
 
-export const DoneIcon = styled.svg<{ $complate?: boolean }>`
+export const DoneIcon = styled.svg<{ $complete?: boolean }>`
   position: absolute;
   right: -20px;
   top: 50%;
@@ -108,5 +107,5 @@ export const DoneIcon = styled.svg<{ $complate?: boolean }>`
   width: 15px;
   height: 15px;
   fill: ${props =>
-    props.$complate ? theme.colors.success.light : theme.colors.danger.light};
+    props.$complete ? theme.colors.success.light : theme.colors.danger.light};
 `;
