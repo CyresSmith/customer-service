@@ -2,7 +2,7 @@ import CustomForm from 'components/Ui/Form/CustomForm';
 import { useActions } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { State } from 'hooks/useForm';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { HiCloudUpload } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { useUpdateCompanyProfileMutation } from 'services/company.api';
@@ -13,9 +13,6 @@ const inputs = [{ name: 'phone', type: 'tel' }];
 type Props = { closeModal: () => void; phone: string | null };
 
 const EditPhonesModal = ({ closeModal, phone }: Props) => {
-  const [initialState, setInitialState] = useState(
-    phone ? { phone } : { phone: '' }
-  );
   const { id, phones } = useCompany();
   const { updateCompanyData } = useActions();
   const [uploadPhone, { isLoading, isSuccess }] =
@@ -53,7 +50,7 @@ const EditPhonesModal = ({ closeModal, phone }: Props) => {
         buttonLabel={phone ? 'Змінити' : 'Додати'}
         inputs={inputs}
         onSubmit={handleSubmit}
-        initialState={initialState}
+        initialState={phone ? { phone } : { phone: '' }}
         isLoading={isLoading}
       />
     </Box>

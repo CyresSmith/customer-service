@@ -10,11 +10,11 @@ import {
   Message,
   Phone,
   RemovePhoneBox,
-} from './RemovePhone.styled';
+} from './RemovePhoneModal.styled';
 
 type Props = { phone: string; closeModal: () => void };
 
-const RemovePhone = ({ phone, closeModal }: Props) => {
+const RemovePhoneModal = ({ phone, closeModal }: Props) => {
   const { id, phones } = useCompany();
 
   const [updatePhones, { isLoading, isSuccess }] =
@@ -67,4 +67,4 @@ const RemovePhone = ({ phone, closeModal }: Props) => {
   );
 };
 
-export default RemovePhone;
+export default RemovePhoneModal;

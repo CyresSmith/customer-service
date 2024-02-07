@@ -10,13 +10,12 @@ import {
   HiCalendar,
   HiOfficeBuilding,
   HiPencil,
-  HiPencilAlt,
   HiPhone,
   HiPlus,
   HiX,
 } from 'react-icons/hi';
+import { HiQueueList, HiTableCells } from 'react-icons/hi2';
 import { useOutletContext } from 'react-router-dom';
-import EditPhonesModal from './AddPhoneModal';
 import CompanyLogo from './CompanyLogo';
 import {
   Address,
@@ -31,7 +30,10 @@ import {
   TitleBox,
   Wrapper,
 } from './CompanyProfile.styled';
-import RemovePhone from './RemovePhone';
+import EditActivitiesModal from './EditActivitiesModal';
+import EditAddressModal from './EditAddressModal';
+import EditPhonesModal from './EditPhonesModal';
+import RemovePhoneModal from './RemovePhoneModal';
 import SetScheduleModal from './SetScheduleModal';
 
 const CompanyProfile = () => {
@@ -46,14 +48,14 @@ const CompanyProfile = () => {
 
   const [openModal, setOpenModal] = useState<string | null>(null);
 
-  const handleSetWorkTimeModalClose = () => {
+  const handleModalClose = () => {
     refetchCompanyData();
     setOpenModal(null);
   };
 
   const handlePhoneModalClose = () => {
     setEditedPhone(null);
-    setOpenModal(null);
+    handleModalClose();
   };
 
   return (
@@ -82,7 +84,20 @@ const CompanyProfile = () => {
                   <Title>Адреса:</Title>
                 </TitleBox>
 
-                <Address>{address}</Address>
+                <FlexBox>
+                  <Address>{address}</Address>
+
+                  <Button
+                    $round
+                    $variant="text"
+                    size="s"
+                    $colors="light"
+                    Icon={HiPencil}
+                    onClick={() => {
+                      setOpenModal('address');
+                    }}
+                  ></Button>
+                </FlexBox>
               </InfoBlock>
 
               <InfoBlock>
@@ -110,17 +125,19 @@ const CompanyProfile = () => {
                             }}
                           ></Button>
 
-                          <Button
-                            $round
-                            $variant="text"
-                            size="s"
-                            $colors="danger"
-                            Icon={HiX}
-                            onClick={() => {
-                              setEditedPhone(phone);
-                              setOpenModal('removePhone');
-                            }}
-                          ></Button>
+                          {phones.length > 1 && (
+                            <Button
+                              $round
+                              $variant="text"
+                              size="s"
+                              $colors="danger"
+                              Icon={HiX}
+                              onClick={() => {
+                                setEditedPhone(phone);
+                                setOpenModal('removePhone');
+                              }}
+                            ></Button>
+                          )}
                         </div>
                       </FlexBox>
                     </li>
@@ -153,14 +170,16 @@ const CompanyProfile = () => {
                   ))}
                 </InfoList>
 
-                {/* <ButtonBox>
+                <ButtonBox>
                   <Button
+                    Icon={HiQueueList}
                     size="s"
-                    onClick={() => setIsSetWorkTimeModalOpen(true)}
+                    $colors="light"
+                    onClick={() => setOpenModal('activities')}
                   >
-                    Налаштувати напрямки діяльності
+                    Налаштувати напрямки
                   </Button>
-                </ButtonBox> */}
+                </ButtonBox>
               </InfoBlock>
 
               <InfoBlock>
@@ -190,7 +209,7 @@ const CompanyProfile = () => {
 
                 <ButtonBox>
                   <Button
-                    Icon={HiPencilAlt}
+                    Icon={HiTableCells}
                     size="s"
                     $colors="light"
                     onClick={() => setOpenModal('schedule')}
@@ -202,9 +221,26 @@ const CompanyProfile = () => {
             </Info>
           </Wrapper>
 
+          {openModal === 'address' && (
+            <Modal
+              title="Змінити адресу"
+              closeModal={handleModalClose}
+              $isOpen={openModal === 'address'}
+            >
+              <EditAddressModal closeModal={handleModalClose} />
+            </Modal>
+          )}
+
           {(openModal === 'phone' ||
             (openModal === 'removePhone' && editedPhone)) && (
             <Modal
+              title={
+                openModal === 'removePhone'
+                  ? 'Видалити номер'
+                  : openModal === 'phone' && editedPhone
+                  ? 'Змінити номер'
+                  : 'Додати номер'
+              }
               closeModal={handlePhoneModalClose}
               $isOpen={openModal === 'phone'}
             >
@@ -216,7 +252,7 @@ const CompanyProfile = () => {
               )}
 
               {openModal === 'removePhone' && editedPhone && (
-                <RemovePhone
+                <RemovePhoneModal
                   phone={editedPhone}
                   closeModal={handlePhoneModalClose}
                 />
@@ -224,12 +260,23 @@ const CompanyProfile = () => {
             </Modal>
           )}
 
+          {openModal === 'activities' && (
+            <Modal
+              title="Налаштувати напрямки"
+              closeModal={handleModalClose}
+              $isOpen={openModal === 'activities'}
+            >
+              <EditActivitiesModal closeModal={handleModalClose} />
+            </Modal>
+          )}
+
           {openModal === 'schedule' && (
             <Modal
-              closeModal={handleSetWorkTimeModalClose}
+              title="Налаштувати графік роботи"
+              closeModal={handleModalClose}
               $isOpen={openModal === 'schedule'}
             >
-              <SetScheduleModal closeModal={handleSetWorkTimeModalClose} />
+              <SetScheduleModal closeModal={handleModalClose} />
             </Modal>
           )}
         </>

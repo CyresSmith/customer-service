@@ -3,19 +3,20 @@ import { useClickOutside, useEscapeKey } from 'hooks';
 import { ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { IoMdClose } from 'react-icons/io';
-import { Backdrop, ButtonBox, ModalContainer } from './Modal.styled';
+import { Backdrop, ButtonBox, ModalContainer, Title } from './Modal.styled';
 
 export type Modal = {
   children?: ReactNode;
   $isOpen?: boolean;
   $w?: string;
   $h?: string;
+  title?: string;
   closeModal: () => void;
 };
 
 const modalRoot = document.querySelector('#modal-root');
 
-const Modal = ({ children, closeModal, $w, $h, $isOpen }: Modal) => {
+const Modal = ({ children, closeModal, $w, $h, title, $isOpen }: Modal) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -44,6 +45,8 @@ const Modal = ({ children, closeModal, $w, $h, $isOpen }: Modal) => {
             $variant="text"
           />
         </ButtonBox>
+
+        {title && <Title>{title}</Title>}
         {children}
       </ModalContainer>
     </Backdrop>,

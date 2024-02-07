@@ -6,7 +6,7 @@ import {
   IUpdateCompanyProfile,
   UpdateAvatar,
 } from '../store/company/company.types';
-import { CompanyCategory } from './types/category.types';
+import { Activity, CompanyCategory } from './types/category.types';
 
 export const companyApi = createApi({
   reducerPath: 'companyApi',
@@ -58,6 +58,13 @@ export const companyApi = createApi({
       invalidatesTags: ['companyApi'],
     }),
 
+    getCompanyActivities: builder.query<Activity[], string>({
+      query: id => ({
+        url: `/company/${id}/activities`,
+        method: 'GET',
+      }),
+    }),
+
     uploadCompanyAvatar: builder.mutation<{ url: string }, UpdateAvatar>({
       query: ({ id, data }) => ({
         url: `/company/${id}/profile/avatar`,
@@ -76,4 +83,5 @@ export const {
   useGetCompanyProfileQuery,
   useUploadCompanyAvatarMutation,
   useUpdateCompanyProfileMutation,
+  useGetCompanyActivitiesQuery,
 } = companyApi;

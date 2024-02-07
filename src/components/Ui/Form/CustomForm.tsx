@@ -1,10 +1,9 @@
 import { State } from 'hooks/useForm';
 import { useForm } from '../../../hooks';
 import { Form, FormInputsList } from './CustomForm.styled';
-import CustomFormInput from './CustomFormInput';
 import CustomFormButtons from './CustomFormButtons';
+import CustomFormInput from './CustomFormInput';
 import { FormProps } from './types';
-
 
 const CustomForm = ({
   buttonWidth,
@@ -18,7 +17,6 @@ const CustomForm = ({
   ResetButtonIcon,
   buttonsDirection,
 }: FormProps) => {
-
   const { handleChange, handleSubmit, state, invalidFields, reset } = useForm({
     initialState,
     onSubmit,
@@ -31,14 +29,22 @@ const CustomForm = ({
     }
   };
 
-  const disabledReset: boolean = isLoading ||
-    JSON.stringify(Object.fromEntries(Object.entries(state).filter(i => i[0] !== 'avatar'))) ===
-    JSON.stringify(Object.fromEntries(Object.entries(initialState).filter(i => i[0] !== 'avatar'))) ?
-    true :
-    false;
-      
+  const disabledReset: boolean =
+    isLoading ||
+    JSON.stringify(
+      Object.fromEntries(Object.entries(state).filter(i => i[0] !== 'avatar'))
+    ) ===
+      JSON.stringify(
+        Object.fromEntries(
+          Object.entries(initialState).filter(i => i[0] !== 'avatar')
+        )
+      )
+      ? true
+      : false;
 
-  const disabledSubmit: boolean = invalidFields?.length > 0 || disabledReset ||
+  const disabledSubmit: boolean =
+    invalidFields?.length > 0 ||
+    disabledReset ||
     Object.values(state).some(i => i === '')
       ? true
       : false;

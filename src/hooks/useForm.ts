@@ -9,6 +9,9 @@ export type State = {
   phone?: string;
   confirm?: string;
   avatar?: string;
+  city?: string;
+  address?: string;
+  index?: string;
 };
 
 // type RegisterState = {

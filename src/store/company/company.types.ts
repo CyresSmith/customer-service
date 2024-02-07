@@ -62,9 +62,14 @@ export interface UpdateAvatar {
   data: FormData;
 }
 
+interface IUpdateCompanyProfileData
+  extends Omit<Company, 'avatar' | 'images' | 'activities'> {
+  activities: string[];
+}
+
 export interface IUpdateCompanyProfile {
   id: string;
-  data: Partial<Omit<Company, 'avatar' | 'images'>>;
+  data: Partial<IUpdateCompanyProfileData>;
 }
 
 export interface IWorkingHours extends Pick<ISchedule, 'days' | 'schedule'> {}
