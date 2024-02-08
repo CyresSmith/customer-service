@@ -18,6 +18,7 @@ const RecordLog = lazy(() => import('pages/RecordLog'));
 const VerifyPage = lazy(() => import('pages/Verify'));
 const ErrorPage = lazy(() => import('pages/ErrorPage'));
 const Workspace = lazy(() => import('components/Layout/UsersLayout'));
+const EmployeesPage = lazy(() => import('pages/EmployeesPage'));
 
 function App() {
   const { accessToken, user } = useAuth();
@@ -67,11 +68,21 @@ function App() {
                 path="work-schedule"
                 element={<PrivateRoute children={<WorkSchedule />} />}
               />
-              <Route path='clients-list' element={<PrivateRoute children={<ClientsListPage />} />} />
-              <Route path='clients-statistic' element={<PrivateRoute children={<ClientsListPage />} />} />
+              <Route
+                path="clients-list"
+                element={<PrivateRoute children={<ClientsListPage />} />}
+              />
+              <Route
+                path="clients-statistic"
+                element={<PrivateRoute children={<ClientsListPage />} />}
+              />
               <Route
                 path="profile"
                 element={<PrivateRoute children={<CompanyProfile />} />}
+              />
+              <Route
+                path="employees"
+                element={<PrivateRoute children={<EmployeesPage />} />}
               />
             </Route>
           </Route>

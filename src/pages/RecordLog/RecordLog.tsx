@@ -1,11 +1,9 @@
+import PageContentLayout from 'components/Ui/PageContentLayout';
+
 type Props = {};
 
 const RecordLog = (props: Props) => {
-  return (
-    <>
-      <p>Журнал записів</p>
-    </>
-  );
+  return <PageContentLayout content={<p>Журнал записів</p>} />;
 };
 
 export default RecordLog;

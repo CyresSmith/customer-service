@@ -1,10 +1,8 @@
+import PageContentLayout from 'components/Ui/PageContentLayout';
 import WorkSchedule from 'components/WorkSchedule';
-import { Navigate, useParams } from 'react-router-dom';
 
 const WorkSchedulePage = () => {
-  const { companyId } = useParams();
-
-  return companyId ? <WorkSchedule /> : <Navigate to="/" replace={true} />;
+  return <PageContentLayout content={<WorkSchedule />} />;
 };
 
 export default WorkSchedulePage;

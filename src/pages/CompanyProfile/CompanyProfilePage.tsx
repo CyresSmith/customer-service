@@ -1,10 +1,8 @@
 import CompanyProfile from 'components/CompanyProfile/CompanyProfile';
-import { Navigate, useParams } from 'react-router-dom';
+import PageContentLayout from 'components/Ui/PageContentLayout';
 
 const CompanyProfilePage = () => {
-  const { companyId } = useParams();
-
-  return companyId ? <CompanyProfile /> : <Navigate to="/" replace={true} />;
+  return <PageContentLayout content={<CompanyProfile />} />;
 };
 
 export default CompanyProfilePage;
