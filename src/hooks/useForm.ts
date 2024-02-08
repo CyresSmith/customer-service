@@ -1,39 +1,25 @@
 import { inputsValidation } from 'helpers/inputsValidation';
 import { ChangeEvent, FormEvent, useState } from 'react';
 
-export type State = {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  password?: string;
-  newPassword?: string;
-  phone?: string;
-  confirm?: string;
-  avatar?: string;
-  birthday?: string;
-  sex?: string;
-  discount?: string;
-  card?: string;
-  source?: string;
-  comments?: string;
-  desc?: string;
-};
-
-type Props = {
-  initialState: State;
-  onSubmit: (arg: State) => void;
-};
+type ReturnType<Type> = {
+    state: Type;
+    setState: React.Dispatch<React.SetStateAction<Type>>;
+    handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    handleSubmit: (event: FormEvent) => void;
+    invalidFields: ValidationReturn;
+    reset: () => void;
+}
 
 export type ValidationReturn = { [key: string]: string }[];
 
-export const useForm = ({ initialState, onSubmit }: Props) => {
-  const [state, setState] = useState<State>(initialState);
+export function useForm<Type extends { [k: string]: unknown}> (initialState: Type, onSubmit: (state: Type) => void): ReturnType<Type> {
+  const [state, setState] = useState<Type>(initialState);
   const [invalidFields, setInvalidFields] = useState<ValidationReturn>([]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
 
-    inputsValidation({ name, value, state, invalidFields, setInvalidFields });
+    inputsValidation<Type>(name, value, state, invalidFields, setInvalidFields);
 
     setState(prevState => ({ ...prevState, [name]: value }));
   };
@@ -47,4 +33,4 @@ export const useForm = ({ initialState, onSubmit }: Props) => {
   const reset = () => setState(initialState);
 
   return { state, setState, handleChange, handleSubmit, invalidFields, reset };
-};
+}

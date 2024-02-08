@@ -1,10 +1,10 @@
 import CustomForm from 'components/Ui/Form/CustomForm';
-import { State } from 'hooks/useForm';
 import { useEffect } from 'react';
 import { HiOutlineUserAdd } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { useRegisterMutation } from 'services/auth.api';
 import { FormBox } from '../TopBar.styled';
+import { UserRegister } from 'store/user/user.types';
 
 type Props = {
   closeModal: () => void;
@@ -19,7 +19,7 @@ const registerInputs = [
   { name: 'confirm', type: 'password' },
 ];
 
-const initialRegState: State = {
+const initialRegState: UserRegister = {
   firstName: '',
   lastName: '',
   phone: '',
@@ -32,7 +32,7 @@ const RegisterForm = ({ closeModal }: Props) => {
   const [register, { isLoading, isSuccess, isError, error }] =
     useRegisterMutation();
 
-  const handleSubmit = async (state: State): Promise<void> => {
+  const handleSubmit = async (state: UserRegister): Promise<void> => {
     const data = await register(state).unwrap();
 
     if (data && data.user?.firstName) {
@@ -59,7 +59,7 @@ const RegisterForm = ({ closeModal }: Props) => {
 
   return (
     <FormBox>
-      <CustomForm
+      <CustomForm<UserRegister>
         SubmitButtonIcon={HiOutlineUserAdd}
         isLoading={isLoading}
         buttonLabel="Реєстрація"

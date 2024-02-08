@@ -1,4 +1,4 @@
-import { State, ValidationReturn } from 'hooks/useForm';
+import { ValidationReturn } from 'hooks/useForm';
 import React from 'react';
 
 type Result<T> = { ok: true; value: T } | { ok: false; message: string };
@@ -7,6 +7,7 @@ type IndexType = { [prop: string]: RegExp };
 
 const validators: IndexType = {
   phone: new RegExp(
+    // eslint-disable-next-line no-useless-escape
     /^[\+]?3?[\s]?8?[\s]?\(?0\d{2}?\)?[\s]?\d{3}[\s|-]?\d{2}[\s|-]?\d{2}$/
   ),
   password: new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z\W]{8,}$/),
@@ -61,21 +62,21 @@ const validateInputs = (name: string, value: Value): Result<Value> => {
   }
 };
 
-type Args = {
-  name: string;
-  value: string;
-  state: State;
-  invalidFields: ValidationReturn;
-  setInvalidFields: React.Dispatch<React.SetStateAction<ValidationReturn>>;
-};
+// type Args = {
+//   name: string;
+//   value: string;
+//   state: State;
+//   invalidFields: ValidationReturn;
+//   setInvalidFields: React.Dispatch<React.SetStateAction<ValidationReturn>>;
+// };
 
-export const inputsValidation = ({
-  name,
-  value,
-  state,
-  invalidFields,
-  setInvalidFields,
-}: Args): void => {
+export const inputsValidation = <T extends {[k: string]: unknown}>(
+  name: string,
+  value: string,
+  state: T,
+  invalidFields: ValidationReturn,
+  setInvalidFields: React.Dispatch<React.SetStateAction<ValidationReturn>>
+  ): void => {
   const isValid = validateInputs(name, value);
 
   if (!isValid.ok && value !== '') {

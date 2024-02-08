@@ -1,7 +1,7 @@
 import Button from 'components/Ui/Buttons/Button';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { InputProps } from 'components/Ui/Form/types';
-import { State, useForm } from 'hooks/useForm';
+import { useForm } from 'hooks/useForm';
 import {
   ButtonsBox,
   Form,
@@ -13,6 +13,8 @@ import {
   SubmitError,
   SubmitErrorsBox,
 } from './AddClientForm.styled';
+import { useCreateClientMutation } from 'services/clients.api';
+import { Client } from 'store/clients/clients.types';
 
 // type Social = { name: string, link: string };
 // type ClientsSocial = {socials: Social[]};
@@ -24,35 +26,39 @@ const inputs: InputProps[] = [
   { name: 'birthday', type: 'date' },
   { name: 'phone', type: 'text', isRequired: true },
   { name: 'email', type: 'email' },
-  { name: 'sex', type: 'text' },
+  { name: 'gender', type: 'text' },
   { name: 'discount', type: 'text' },
   { name: 'card', type: 'text' },
   { name: 'source', type: 'text' },
   { name: 'comments', type: 'textarea' },
 ];
 
-const initialState: State = {
+const initialState: Client = {
+  id: '',
   firstName: '',
   lastName: '',
   birthday: '',
   phone: '',
   email: '',
-  sex: '',
-  discount: '',
+  discount: undefined,
   card: '',
   source: '',
   comments: '',
+  gender: undefined
 };
 
 const AddClientsForm = () => {
-  const onSubmit = (state: State) => {
-    console.log(state);
+  const [createClientMutatuin, {isLoading}] = useCreateClientMutation();
+
+  const onSubmit = async (state: Client) => {
+    const data = await createClientMutatuin(state);
+    console.log(data);
   };
 
-  const { state, handleChange, handleSubmit, invalidFields } = useForm({
+  const { state, handleChange, handleSubmit, invalidFields } = useForm<Client>(
     initialState,
     onSubmit,
-  });
+  );
 
   const disabledReset: boolean =
     JSON.stringify(state) === JSON.stringify(initialState) ? true : false;
@@ -63,8 +69,6 @@ const AddClientsForm = () => {
     (state.firstName === '' && state.phone === '')
       ? true
       : false;
-
-  console.log(invalidFields);
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -80,7 +84,7 @@ const AddClientsForm = () => {
                 name={name}
                 type={type}
                 isRequired={isRequired}
-                value={state[name as keyof State]}
+                value={state[name as keyof Client]}
                 handleChange={handleChange}
                 disabledIcon={true}
               />
@@ -96,13 +100,14 @@ const AddClientsForm = () => {
             children="Зберегти"
             type="submit"
             $colors="accent"
+            isLoading={isLoading}
           />
           {invalidFields.length > 0 && (
             <SubmitErrorsBox>
-              {invalidFields.map(i => (
-                <SubmitError>
-                  {Object.keys(i)[0] === 'phone' ? 'Телефон - ' : "Ім'я - "}
-                  {Object.values(i)[0]}
+              {invalidFields.map((item, i) => (
+                <SubmitError key={i}>
+                  {Object.keys(item)[0] === 'phone' ? 'Телефон - ' : "Ім'я - "}
+                  {Object.values(item)[0]}
                 </SubmitError>
               ))}
             </SubmitErrorsBox>

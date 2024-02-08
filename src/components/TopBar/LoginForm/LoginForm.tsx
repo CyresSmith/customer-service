@@ -1,12 +1,12 @@
 import CustomForm from 'components/Ui/Form/CustomForm';
 import { useActions } from 'hooks';
-import { State } from 'hooks/useForm';
 import { useEffect } from 'react';
 import { HiLogin } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useLogInMutation } from 'services/auth.api';
 import { FormBox } from '../TopBar.styled';
+import { User, UserLogin } from 'store/user/user.types';
 
 type Props = {
   closeModal: () => void;
@@ -17,7 +17,7 @@ const loginInputs = [
   { name: 'password', type: 'password' },
 ];
 
-const initialLoginState: Pick<State, 'email' | 'password'> = {
+const initialLoginState: UserLogin = {
   email: '',
   password: '',
 };
@@ -29,7 +29,7 @@ const LoginForm = ({ closeModal }: Props) => {
   const [loginMutation, { isLoading, isSuccess }] =
     useLogInMutation();
 
-  const handleSubmit = async (state: State): Promise<void> => {
+  const handleSubmit = async (state: UserLogin): Promise<void> => {
     const data = await loginMutation(state).unwrap();
 
     if (data) {
@@ -47,7 +47,7 @@ const LoginForm = ({ closeModal }: Props) => {
 
   return (
     <FormBox>
-      <CustomForm
+      <CustomForm<User>
         SubmitButtonIcon={HiLogin}
         isLoading={isLoading}
         buttonLabel="Увійти"
