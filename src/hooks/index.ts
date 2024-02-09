@@ -1,4 +1,5 @@
 export { useActions } from './useAction';
+export { useAdminRights } from './useAdminRights';
 export { useAuth } from './useAuth';
 export { useClickOutside } from './useClickOutside';
 export { useEscapeKey } from './useEscKey';

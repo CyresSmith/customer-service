@@ -32,14 +32,16 @@ import {
 } from './CompanyProfile.styled';
 import EditActivitiesModal from './EditActivitiesModal';
 import EditAddressModal from './EditAddressModal';
+import EditDescModal from './EditDescModal';
 import EditPhonesModal from './EditPhonesModal';
 import RemovePhoneModal from './RemovePhoneModal';
 import SetScheduleModal from './SetScheduleModal';
-import EditDescModal from './EditDescModal';
+import { useAdminRights } from 'hooks';
 
 const CompanyProfile = () => {
   const { name, avatar, address, phones, activities, id, workingHours, desc } =
     useCompany();
+  const isAdmin = useAdminRights();
 
   const [editedPhone, setEditedPhone] = useState<string | null>(null);
 
@@ -88,16 +90,18 @@ const CompanyProfile = () => {
                 <FlexBox>
                   <InfoList as="p">{address}</InfoList>
 
-                  <Button
-                    $round
-                    $variant="text"
-                    size="s"
-                    $colors="light"
-                    Icon={HiPencil}
-                    onClick={() => {
-                      setOpenModal('address');
-                    }}
-                  ></Button>
+                  {isAdmin && (
+                    <Button
+                      $round
+                      $variant="text"
+                      size="s"
+                      $colors="light"
+                      Icon={HiPencil}
+                      onClick={() => {
+                        setOpenModal('address');
+                      }}
+                    ></Button>
+                  )}
                 </FlexBox>
               </InfoBlock>
 
@@ -113,48 +117,52 @@ const CompanyProfile = () => {
                       <FlexBox>
                         <p>{phone}</p>
 
-                        <div>
-                          <Button
-                            $round
-                            $variant="text"
-                            size="s"
-                            $colors="light"
-                            Icon={HiPencil}
-                            onClick={() => {
-                              setEditedPhone(phone);
-                              setOpenModal('phone');
-                            }}
-                          ></Button>
-
-                          {phones.length > 1 && (
+                        {isAdmin && (
+                          <div>
                             <Button
                               $round
                               $variant="text"
                               size="s"
-                              $colors="danger"
-                              Icon={HiX}
+                              $colors="light"
+                              Icon={HiPencil}
                               onClick={() => {
                                 setEditedPhone(phone);
-                                setOpenModal('removePhone');
+                                setOpenModal('phone');
                               }}
                             ></Button>
-                          )}
-                        </div>
+
+                            {phones.length > 1 && (
+                              <Button
+                                $round
+                                $variant="text"
+                                size="s"
+                                $colors="danger"
+                                Icon={HiX}
+                                onClick={() => {
+                                  setEditedPhone(phone);
+                                  setOpenModal('removePhone');
+                                }}
+                              ></Button>
+                            )}
+                          </div>
+                        )}
                       </FlexBox>
                     </li>
                   ))}
                 </InfoList>
 
-                <ButtonBox>
-                  <Button
-                    Icon={HiPlus}
-                    size="s"
-                    $colors="light"
-                    onClick={() => setOpenModal('phone')}
-                  >
-                    Додати телефон
-                  </Button>
-                </ButtonBox>
+                {isAdmin && (
+                  <ButtonBox>
+                    <Button
+                      Icon={HiPlus}
+                      size="s"
+                      $colors="light"
+                      onClick={() => setOpenModal('phone')}
+                    >
+                      Додати телефон
+                    </Button>
+                  </ButtonBox>
+                )}
               </InfoBlock>
 
               <InfoBlock>
@@ -171,16 +179,18 @@ const CompanyProfile = () => {
                   ))}
                 </InfoList>
 
-                <ButtonBox>
-                  <Button
-                    Icon={HiQueueList}
-                    size="s"
-                    $colors="light"
-                    onClick={() => setOpenModal('activities')}
-                  >
-                    Налаштувати напрямки
-                  </Button>
-                </ButtonBox>
+                {isAdmin && (
+                  <ButtonBox>
+                    <Button
+                      Icon={HiQueueList}
+                      size="s"
+                      $colors="light"
+                      onClick={() => setOpenModal('activities')}
+                    >
+                      Налаштувати напрямки
+                    </Button>
+                  </ButtonBox>
+                )}
               </InfoBlock>
 
               <InfoBlock>
@@ -208,16 +218,18 @@ const CompanyProfile = () => {
                   <p>Графік не налаштовано</p>
                 )}
 
-                <ButtonBox>
-                  <Button
-                    Icon={HiTableCells}
-                    size="s"
-                    $colors="light"
-                    onClick={() => setOpenModal('schedule')}
-                  >
-                    Налаштувати графік
-                  </Button>
-                </ButtonBox>
+                {isAdmin && (
+                  <ButtonBox>
+                    <Button
+                      Icon={HiTableCells}
+                      size="s"
+                      $colors="light"
+                      onClick={() => setOpenModal('schedule')}
+                    >
+                      Налаштувати графік
+                    </Button>
+                  </ButtonBox>
+                )}
               </InfoBlock>
 
               <InfoBlock>
@@ -230,14 +242,16 @@ const CompanyProfile = () => {
                   <FlexBox>
                     <p>{desc ? desc : 'Немає шнформації'}</p>
 
-                    <Button
-                      $round
-                      $variant="text"
-                      size="s"
-                      $colors="light"
-                      Icon={HiPencil}
-                      onClick={() => setOpenModal('desc')}
-                    ></Button>
+                    {isAdmin && (
+                      <Button
+                        $round
+                        $variant="text"
+                        size="s"
+                        $colors="light"
+                        Icon={HiPencil}
+                        onClick={() => setOpenModal('desc')}
+                      ></Button>
+                    )}
                   </FlexBox>
                 </InfoList>
               </InfoBlock>

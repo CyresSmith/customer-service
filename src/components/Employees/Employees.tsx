@@ -11,7 +11,6 @@ type Props = {};
 
 const Employees = (props: Props) => {
   const { employees } = useCompany();
-  console.log('🚀 ~ Employees ~ employees:', employees);
 
   return (
     <>
