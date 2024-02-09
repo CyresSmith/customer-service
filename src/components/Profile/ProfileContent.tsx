@@ -1,7 +1,7 @@
 import { useAuth } from "hooks";
 import { Container, Title } from "./ProfileContent.styled";
 import UpdateDataForm from "./UpdateForm";
-import { UpdatePassword, User } from "store/user/user.types";
+import { Auth, UpdatePassword, User } from "store/user/user.types";
 import { useUpdatePasswordMutation, useUpdateUserMutation } from "services/auth.api";
 import { useActions } from "hooks";
 import { toast } from "react-toastify";
@@ -11,7 +11,6 @@ import Button from "components/Ui/Buttons/Button";
 import Modal from "components/Ui/Modal/Modal";
 import { useEffect, useState } from "react";
 import UpdatePassForm from "./UpdateForm/UpdatePassForm";
-import { State } from "hooks/useForm";
 
 const ProfileContent = () => {
     const { user } = useAuth();
@@ -40,7 +39,7 @@ const ProfileContent = () => {
         }
     };
 
-    const handlePassUpdate = async (state: State): Promise<void> => {
+    const handlePassUpdate = async (state: Auth): Promise<void> => {
         const { password, newPassword } = state;
 
         if (user) {

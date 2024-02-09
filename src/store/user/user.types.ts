@@ -10,6 +10,16 @@ export type User = {
 
 export type UserData = Omit<User, 'verify'>;
 
+export type Auth = {
+  password: string;
+  confirm: string;
+  newPassword: string;
+};
+
+export type UserRegister = Partial<User> & Pick<Auth, 'password' | 'confirm'>;
+
+export type UserLogin = Pick<User, 'email'> & Pick<Auth, 'password'>;
+
 export type Company = {
   id: string;
   name: string;

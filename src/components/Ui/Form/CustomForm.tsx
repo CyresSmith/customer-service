@@ -1,5 +1,4 @@
 import { getErrorMessage } from 'helpers/inputsValidation';
-import { State } from 'hooks/useForm';
 import { useForm } from '../../../hooks';
 import Checkbox from './Checkbox';
 import { Form, FormInputsList } from './CustomForm.styled';
@@ -7,7 +6,7 @@ import CustomFormButtons from './CustomFormButtons';
 import CustomFormInput from './CustomFormInput';
 import { FormProps } from './types';
 
-const CustomForm = ({
+const CustomForm = <T extends { [k: string]: string | number | undefined }>({
   buttonWidth,
   isLoading,
   inputs,
@@ -19,10 +18,8 @@ const CustomForm = ({
   ResetButtonIcon,
   buttonsDirection,
 }: FormProps) => {
-  const { handleChange, handleSubmit, state, invalidFields, reset } = useForm({
-    initialState,
-    onSubmit,
-  });
+  const { handleChange, handleSubmit, state, invalidFields, reset } =
+    useForm<T>(initialState, onSubmit);
 
   const disabledReset: boolean =
     isLoading ||
@@ -54,7 +51,7 @@ const CustomForm = ({
                 key={i}
                 name={name}
                 isRequired={isRequired}
-                isChecked={Boolean(state[name as keyof State])}
+                isChecked={state[name as keyof T]}
                 handleCheck={handleChange}
               />
             ) : (
@@ -62,7 +59,7 @@ const CustomForm = ({
                 key={i}
                 type={type}
                 name={name}
-                value={String(state[name as keyof State])}
+                value={state[name as keyof T]}
                 handleChange={handleChange}
                 isValid={getErrorMessage(name, invalidFields)}
                 disabledIcon={disabledReset}

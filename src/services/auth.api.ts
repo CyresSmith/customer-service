@@ -1,7 +1,6 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
-import { State } from 'hooks/useForm';
 import { axiosBaseQuery } from 'services/instance';
-import { AuthState, RegisterResponse, UpdatePassword, UpdateUser, User } from '../store/user/user.types';
+import { AuthState, RegisterResponse, UpdatePassword, UpdateUser, User, UserLogin, UserRegister, UserState } from '../store/user/user.types';
 import { UploadAvatar } from '../store/user/user.types';
 
 export const authApi = createApi({
@@ -12,7 +11,7 @@ export const authApi = createApi({
   tagTypes: ['authApi'],
 
   endpoints: builder => ({
-    register: builder.mutation<RegisterResponse, Omit<State, 'confirm'>>({
+    register: builder.mutation<RegisterResponse, UserRegister>({
       query: data => ({
         url: '/users/register',
         method: 'POST',
@@ -28,7 +27,7 @@ export const authApi = createApi({
       }),
     }),
 
-    logIn: builder.mutation<AuthState, Pick<State, 'email' | 'password'>>({
+    logIn: builder.mutation<UserState, UserLogin>({
       query: data => ({
         url: '/auth/login',
         method: 'POST',
