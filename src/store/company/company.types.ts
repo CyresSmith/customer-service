@@ -1,4 +1,6 @@
 import { ISchedule } from 'components/CompanyProfile/SetScheduleModal/SetScheduleModal';
+import { Activity } from 'services/types/category.types';
+import { IEmployee } from 'services/types/employee.types';
 
 export interface IWorkTime {
   from: number;
@@ -10,11 +12,6 @@ export type Branches = 'one' | 'more';
 export type EmployeesCount = '2-5' | '6-9' | '10+';
 
 type Activity = {
-  id: string;
-  name: string;
-};
-
-type Employee = {
   id: string;
   name: string;
 };
@@ -31,7 +28,7 @@ export type Company = {
   avatar: string;
   images: string[];
   activities: Activity[];
-  employees: Employee[];
+  employees: IEmployee[];
 };
 
 export interface CreateCompany

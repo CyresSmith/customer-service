@@ -1,39 +1,50 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { Company } from './company.types';
 
-const initialState: Company = {
-  id: '',
-  name: '',
-  phones: [],
-  city: '',
-  address: '',
-  index: '',
-  workingHours: null,
-  desc: '',
-  avatar: '',
-  images: [],
-  activities: [],
-  employees: [],
+type ICompanyInitialState = {
+  company: Company;
+  userRole: string;
+};
+
+const initialState: ICompanyInitialState = {
+  company: {
+    id: '',
+    name: '',
+    phones: [],
+    city: '',
+    address: '',
+    index: '',
+    workingHours: null,
+    desc: '',
+    avatar: '',
+    images: [],
+    activities: [],
+    employees: [],
+  },
+  userRole: 'user',
 };
 
 const companySlice = createSlice({
   name: 'company',
   initialState,
   reducers: {
-    setCompany(_, { payload }: PayloadAction<Company>) {
-      return payload;
+    setCompany(state, { payload }: PayloadAction<Company>) {
+      return { ...state, company: payload };
+    },
+    setUserRole(state, { payload }: PayloadAction<string>) {
+      return { ...state, userRole: payload };
     },
     setCompanyLogo(state, { payload }: PayloadAction<Pick<Company, 'avatar'>>) {
-      return { ...state, ...payload };
+      return { ...state, company: { ...state.company, ...payload } };
     },
     setCompanySchedule(
       state,
       { payload }: PayloadAction<Pick<Company, 'workingHours'>>
     ) {
-      return { ...state, ...payload };
+      return { ...state, company: { ...state.company, ...payload } };
     },
     updateCompanyData(state, { payload }: PayloadAction<Partial<Company>>) {
-      return { ...state, ...payload };
+      return { ...state, company: { ...state.company, ...payload } };
     },
     resetCompanyState() {
       return initialState;

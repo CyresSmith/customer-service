@@ -24,6 +24,7 @@ type Props = {
   isValid?: string;
   disabledIcon?: boolean;
   isRequired?: boolean;
+  isReadonly?: boolean;
 };
 
 const CustomFormInput = ({
@@ -34,6 +35,7 @@ const CustomFormInput = ({
   isValid,
   disabledIcon,
   isRequired,
+  isReadonly = false,
 }: Props) => {
   const [hidden, setHidden] = useState(true);
   const valueRef = useRef(value).current;
@@ -51,6 +53,7 @@ const CustomFormInput = ({
           value={value}
           as={type === 'textarea' ? 'textarea' : 'input'}
           onChange={handleChange}
+          readOnly={isReadonly}
         />
 
         {type === 'password' && (
