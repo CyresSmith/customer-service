@@ -70,10 +70,7 @@ const FindUserForm = ({ existUser, setExistUser, handleBackClick }: Props) => {
   };
 
   const { state, setState, handleChange, handleSubmit, invalidFields, reset } =
-    useForm({
-      initialState,
-      onSubmit,
-    });
+    useForm<typeof initialState>(initialState, onSubmit);
 
   const handleClick = () => {
     reset();
@@ -105,7 +102,7 @@ const FindUserForm = ({ existUser, setExistUser, handleBackClick }: Props) => {
                   <CustomFormInput
                     type={type}
                     name={name}
-                    value={String(state[name as keyof State])}
+                    value={state[name as keyof typeof initialState]}
                     handleChange={handleChange}
                     isValid={getErrorMessage(name, invalidFields)}
                     isRequired={isRequired}

@@ -18,7 +18,7 @@ import { MdOutlineDone } from 'react-icons/md';
 
 type Props = {
   name: string;
-  value: string | undefined;
+  value: string | number | undefined;
   type: string;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
   isValid?: string;

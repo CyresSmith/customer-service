@@ -107,10 +107,9 @@ function NewUserEmployeeForm({ handleBackClick, closeModal }: Props) {
     }
   };
 
-  const { state, handleChange, handleSubmit, invalidFields } = useForm({
-    initialState,
-    onSubmit,
-  });
+  const { state, handleChange, handleSubmit, invalidFields } = useForm<
+    typeof initialState
+  >(initialState, onSubmit);
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -121,7 +120,7 @@ function NewUserEmployeeForm({ handleBackClick, closeModal }: Props) {
               key={i}
               name={name}
               isRequired={isRequired}
-              isChecked={Boolean(state[name as keyof State])}
+              isChecked={Boolean(state[name as keyof typeof initialState])}
               handleCheck={handleChange}
             />
           ) : (
@@ -129,7 +128,7 @@ function NewUserEmployeeForm({ handleBackClick, closeModal }: Props) {
               key={i}
               type={type}
               name={name}
-              value={String(state[name as keyof State])}
+              value={String(state[name as keyof typeof initialState])}
               handleChange={handleChange}
               isValid={getErrorMessage(name, invalidFields)}
               isRequired={isRequired}

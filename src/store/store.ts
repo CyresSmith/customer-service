@@ -15,6 +15,8 @@ import { authApi } from '../services/auth.api';
 import companySlice from './company/company.slice';
 import loadingSlice from './loading/loading.slice';
 import userSlice from './user/user.slice';
+import clientsSlice from './clients/clients.slice';
+import { clientsApi } from 'services/clients.api';
 
 const persistUserConfig = {
   key: 'service',
@@ -31,8 +33,10 @@ const rootReducer = combineReducers({
   loading: loadingSlice.reducer,
   company: companySlice.reducer,
   user: persistedUserReducer,
+  clients: clientsSlice.reducer,
   [authApi.reducerPath]: authApi.reducer,
   [companyApi.reducerPath]: companyApi.reducer,
+  [clientsApi.reducerPath]: clientsApi.reducer,
 });
 
 export const store = configureStore({
@@ -44,7 +48,8 @@ export const store = configureStore({
       },
     })
       .concat(authApi.middleware)
-      .concat(companyApi.middleware),
+      .concat(companyApi.middleware)
+      .concat(clientsApi.middleware)
 });
 
 export type TypeRootState = ReturnType<typeof rootReducer>;

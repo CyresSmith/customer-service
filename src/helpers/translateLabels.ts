@@ -26,7 +26,7 @@ export const translateLabels = (name: string): string | undefined => {
       return 'Новий пароль';
     case 'birthday':
       return 'Дата народження';
-    case 'sex':
+    case 'gender':
       return 'Стать';
     case 'discount':
       return 'Знижка';

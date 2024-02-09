@@ -4,7 +4,7 @@ import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import areAllFieldsFilled from 'helpers/areAllFieldsFilled';
 import handleError from 'helpers/errorHandler';
 import { useActions } from 'hooks';
-import { State, useForm } from 'hooks/useForm';
+import { useForm } from 'hooks/useForm';
 import { useEffect } from 'react';
 import { IoMdAddCircle } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
@@ -25,6 +25,14 @@ const inputs = [
   { name: 'index', type: 'text' },
   { name: 'phone', type: 'phone' },
 ];
+
+type InitialState = {
+  name: string;
+  city: string;
+  address: string;
+  index: string;
+  phone: string;
+};
 
 const initialState = {
   name: '',
@@ -60,10 +68,8 @@ const FourthStep = ({
     }
   };
 
-  const { handleChange, handleSubmit, state, invalidFields, reset } = useForm({
-    initialState,
-    onSubmit,
-  });
+  const { handleChange, handleSubmit, state, invalidFields, reset } =
+    useForm<InitialState>(initialState, onSubmit);
 
   const errorMessage = (name: string): string | undefined => {
     const error = invalidFields.find(f => Object.keys(f)[0] === name);
@@ -99,7 +105,7 @@ const FourthStep = ({
               key={i}
               type={type}
               name={name}
-              value={state[name as keyof State]}
+              value={state[name as keyof InitialState]}
               handleChange={handleChange}
               isValid={errorMessage(name)}
               disabledIcon

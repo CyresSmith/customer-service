@@ -64,11 +64,9 @@ const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
     }
   };
 
-  const { state, setState, handleChange, handleSubmit, invalidFields } =
-    useForm({
-      initialState,
-      onSubmit,
-    });
+  const { state, handleChange, handleSubmit, invalidFields } = useForm<
+    typeof initialState
+  >(initialState, onSubmit);
 
   const [addEmployee, { isLoading }] = useAddExistUserEmployeeMutation();
 
@@ -76,28 +74,26 @@ const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
     <>
       <Form onSubmit={handleSubmit}>
         <FormInputsList>
-          {inputs.map(
-            ({ name, type, isRequired = false, isReadonly = false }, i) =>
-              type === 'checkbox' ? (
-                <Checkbox
-                  key={i}
-                  name={name}
-                  isRequired={isRequired}
-                  isChecked={Boolean(state[name as keyof State])}
-                  handleCheck={handleChange}
-                />
-              ) : (
-                <CustomFormInput
-                  key={i}
-                  type={type}
-                  name={name}
-                  value={String(state[name as keyof State])}
-                  handleChange={handleChange}
-                  isValid={getErrorMessage(name, invalidFields)}
-                  isRequired={isRequired}
-                  isReadonly={isReadonly}
-                />
-              )
+          {inputs.map(({ name, type, isRequired = false }, i) =>
+            type === 'checkbox' ? (
+              <Checkbox
+                key={i}
+                name={name}
+                isRequired={isRequired}
+                isChecked={Boolean(state[name as keyof typeof initialState])}
+                handleCheck={handleChange}
+              />
+            ) : (
+              <CustomFormInput
+                key={i}
+                type={type}
+                name={name}
+                value={String(state[name as keyof typeof initialState])}
+                handleChange={handleChange}
+                isValid={getErrorMessage(name, invalidFields)}
+                isRequired={isRequired}
+              />
+            )
           )}
         </FormInputsList>
 
