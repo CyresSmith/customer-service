@@ -1,6 +1,7 @@
 import { getErrorMessage } from 'helpers/inputsValidation';
 import { State } from 'hooks/useForm';
 import { useForm } from '../../../hooks';
+import Checkbox from './Checkbox';
 import { Form, FormInputsList } from './CustomForm.styled';
 import CustomFormButtons from './CustomFormButtons';
 import CustomFormInput from './CustomFormInput';
@@ -46,17 +47,30 @@ const CustomForm = ({
   return (
     <Form onSubmit={handleSubmit}>
       <FormInputsList>
-        {inputs.map(({ name, type }, i) => (
-          <CustomFormInput
-            key={i}
-            type={type}
-            name={name}
-            value={state[name as keyof State]}
-            handleChange={handleChange}
-            isValid={getErrorMessage(name, invalidFields)}
-            disabledIcon={disabledReset}
-          />
-        ))}
+        {inputs.map(
+          ({ name, type, isRequired = false, isReadonly = false }, i) =>
+            type === 'checkbox' ? (
+              <Checkbox
+                key={i}
+                name={name}
+                isRequired={isRequired}
+                isChecked={Boolean(state[name as keyof State])}
+                handleCheck={handleChange}
+              />
+            ) : (
+              <CustomFormInput
+                key={i}
+                type={type}
+                name={name}
+                value={String(state[name as keyof State])}
+                handleChange={handleChange}
+                isValid={getErrorMessage(name, invalidFields)}
+                disabledIcon={disabledReset}
+                isRequired={isRequired}
+                isReadonly={isReadonly}
+              />
+            )
+        )}
       </FormInputsList>
 
       <CustomFormButtons

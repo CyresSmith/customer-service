@@ -2,14 +2,16 @@ export type User = {
   firstName?: string;
   lastName?: string;
   phone?: string;
-  id: number | string;
+  id: string;
   email: string;
   verify: boolean;
   avatar?: string;
 };
 
+export type UserData = Omit<User, 'verify'>;
+
 export type Company = {
-  id: number | string;
+  id: string;
   name: string;
 };
 
@@ -37,13 +39,13 @@ export type UpdateUser = {
 
 export type UploadAvatar = {
   data: FormData;
-  id: string | number;
+  id: string;
 };
 
 export type UpdatePassword = {
-  id: string | number;
+  id: string;
   data: {
     password: string;
     newPassword: string;
-  }
-}
+  };
+};

@@ -17,6 +17,9 @@ export type State = {
   source?: string;
   comments?: string;
   desc?: string;
+  provider?: boolean;
+  admin?: boolean;
+  jobTitle?: string;
 };
 
 type Props = {
@@ -31,11 +34,15 @@ export const useForm = ({ initialState, onSubmit }: Props) => {
   const [invalidFields, setInvalidFields] = useState<ValidationReturn>([]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = event.target;
+    const { name, value, type } = event.target;
 
     inputsValidation({ name, value, state, invalidFields, setInvalidFields });
 
-    setState(prevState => ({ ...prevState, [name]: value }));
+    setState(prevState => {
+      return type === 'checkbox'
+        ? { ...prevState, [name]: !prevState[name as keyof State] }
+        : { ...prevState, [name]: value };
+    });
   };
 
   const handleSubmit = (event: FormEvent): void => {

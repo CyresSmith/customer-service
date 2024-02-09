@@ -1,13 +1,31 @@
 import Button from 'components/Ui/Buttons/Button';
+import Modal from 'components/Ui/Modal/Modal';
+import { useState } from 'react';
+import { HiPlusCircle } from 'react-icons/hi';
+import AddEmployeeModal from './AddEmployeeModal';
 
-type Props = {};
+const EmployeesBar = () => {
+  const [openModal, setOpenModal] = useState<string | null>(null);
 
-const EmployeesBar = (props: Props) => {
   return (
     <>
-      <Button $colors="light">Додати</Button>
-      <Button $colors="light">Змінити</Button>
-      <Button $colors="light">Видалити</Button>
+      <Button
+        onClick={() => setOpenModal('addEmployee')}
+        Icon={HiPlusCircle}
+        $colors="light"
+      >
+        Додати співробітника
+      </Button>
+
+      {openModal && (
+        <Modal
+          title="Додати співробітника"
+          $isOpen={openModal === 'addEmployee'}
+          closeModal={() => setOpenModal(null)}
+        >
+          <AddEmployeeModal closeModal={() => setOpenModal(null)} />
+        </Modal>
+      )}
     </>
   );
 };
