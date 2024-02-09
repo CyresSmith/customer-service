@@ -51,7 +51,7 @@ const CustomForm = <T extends { [k: string]: string | number | undefined }>({
                 key={i}
                 name={name}
                 isRequired={isRequired}
-                isChecked={state[name as keyof T]}
+                isChecked={Boolean(state[name as keyof T])}
                 handleCheck={handleChange}
               />
             ) : (
