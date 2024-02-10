@@ -14,7 +14,8 @@ const initialState: ClientsState = {
         comments: '',
         birthday: '',
         gender: undefined,
-        card: ''
+        card: '',
+        companyId: undefined
     },
     allClients: [],
 };
@@ -24,8 +25,12 @@ const clientsSlice = createSlice({
     initialState,
     reducers: {
         addNewClient(state, { payload }: PayloadAction<Client>) {
-            return { choosen: { ...state.choosen, payload }, allClients: [payload, ...state.allClients] }
+            console.log(payload)
+            return { choosen: payload, allClients: [payload, ...state.allClients] }
         },
+        setClients(state, { payload }: PayloadAction<Client[]>) {
+            return {...state, allClients: payload}
+        }
     },
 });
 

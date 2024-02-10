@@ -1,12 +1,17 @@
 import Button from 'components/Ui/Buttons/Button';
 import Modal from 'components/Ui/Modal/Modal';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { IoMdAddCircle } from 'react-icons/io';
 import AddClientForm from './AddClientForm';
+import Search from 'components/Ui/Search/Search';
+import { BarWrapper, SearchWrapper } from './ClientsListBar.styled';
 
-type Props = {};
+type Props = {
+  searchQuery: string;
+  handleSearch: (event: ChangeEvent<HTMLInputElement>) => void;
+};
 
-const ClientsListBar = (props: Props) => {
+const ClientsListBar = ({searchQuery, handleSearch}: Props) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const toggleModal = () => {
@@ -18,7 +23,13 @@ const ClientsListBar = (props: Props) => {
   };
 
   return (
-    <>
+    <BarWrapper>
+      <SearchWrapper>
+        <Search
+          value={searchQuery}
+          onChange={handleSearch}
+        />
+      </SearchWrapper>
       <Button
         type="button"
         onClick={toggleModal}
@@ -29,12 +40,12 @@ const ClientsListBar = (props: Props) => {
 
       {modalOpen && (
         <Modal
-          children={<AddClientForm />}
+          children={<AddClientForm closeModal={toggleModal} />}
           $isOpen={modalOpen}
           closeModal={toggleModal}
         />
       )}
-    </>
+    </BarWrapper>
   );
 };
 

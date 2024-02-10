@@ -72,12 +72,12 @@ select {
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background-color: #43ffd2;
+  background-color: #FFB000;
 }
 
 ::-webkit-scrollbar-track {

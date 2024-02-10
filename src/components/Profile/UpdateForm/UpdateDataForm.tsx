@@ -1,11 +1,11 @@
 import CustomForm from "components/Ui/Form/CustomForm";
-import { State } from "hooks/useForm";
 import { FormBox } from "./UpdateDataForm.styled";
 import { IoMdClose, IoMdSave  } from 'react-icons/io';
+import { User } from "store/user/user.types";
 
 type Props = {
-    userData: State;
-    onSubmit: (arg: State) => void;
+    userData: User;
+    onSubmit: (arg: User) => void;
     isLoading: boolean;
 };
 
