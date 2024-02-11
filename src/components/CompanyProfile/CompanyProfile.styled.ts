@@ -3,8 +3,9 @@ import theme from 'utils/theme';
 
 export const Wrapper = styled.section`
   display: grid;
-  grid-template-columns: 250px 1fr;
+  grid-template-columns: max-content 1fr;
   gap: ${theme.space[5]};
+  align-items: start;
 `;
 
 export const Info = styled.div`
