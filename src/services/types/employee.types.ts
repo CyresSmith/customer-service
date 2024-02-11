@@ -50,3 +50,9 @@ export type addNewUserEmployeeData = {
   id: string;
   data: addNewUserEmployee;
 };
+
+export interface UpdateEmployeeAvatar {
+  employeeId: string;
+  companyId: string;
+  data: FormData;
+}

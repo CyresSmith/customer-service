@@ -1,8 +1,10 @@
+import Avatar from 'components/Avatar';
 import Button from 'components/Ui/Buttons/Button';
 import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
 import translateActivityName from 'helpers/translateActivityName';
 import translateWorkSchedule from 'helpers/translateWorkSchedule';
+import { useActions, useAdminRights } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
 import {
@@ -17,7 +19,8 @@ import {
 } from 'react-icons/hi';
 import { HiQueueList, HiTableCells } from 'react-icons/hi2';
 import { useOutletContext } from 'react-router-dom';
-import CompanyLogo from './CompanyLogo';
+import { toast } from 'react-toastify';
+import { useUploadCompanyAvatarMutation } from 'services/company.api';
 import {
   ButtonBox,
   FlexBox,
@@ -36,7 +39,6 @@ import EditDescModal from './EditDescModal';
 import EditPhonesModal from './EditPhonesModal';
 import RemovePhoneModal from './RemovePhoneModal';
 import SetScheduleModal from './SetScheduleModal';
-import { useAdminRights } from 'hooks';
 
 const CompanyProfile = () => {
   const { name, avatar, address, phones, activities, id, workingHours, desc } =
@@ -50,6 +52,24 @@ const CompanyProfile = () => {
   }>();
 
   const [openModal, setOpenModal] = useState<string | null>(null);
+
+  const { setCompanyLogo } = useActions();
+
+  const [uploadImage, { isLoading }] = useUploadCompanyAvatarMutation();
+
+  const handleUpload = async (file: File) => {
+    const data = new FormData();
+
+    data.append('avatar', file);
+
+    const { url } = await uploadImage({ id, data }).unwrap();
+
+    if (url) {
+      setCompanyLogo({ avatar: url });
+      refetchCompanyData();
+      toast.success('Зображення успішно оновлено');
+    }
+  };
 
   const handleModalClose = () => {
     refetchCompanyData();
@@ -68,11 +88,14 @@ const CompanyProfile = () => {
       ) : (
         <>
           <Wrapper>
-            <CompanyLogo
-              name={name}
-              avatar={avatar}
-              companyId={id}
-              refetchCompanyData={refetchCompanyData}
+            <Avatar
+              allowChanges={isAdmin}
+              light
+              size={250}
+              alt={`${name} logo`}
+              isLoading={isLoading}
+              currentImageUrl={avatar}
+              handleUpload={handleUpload}
             />
 
             <Info>
