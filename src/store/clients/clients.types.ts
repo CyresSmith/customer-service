@@ -13,6 +13,7 @@ export type Client = {
   birthday?: string;
   gender?: Gender;
   card?: string;
+  companyId?: number;
 };
 
 export type Company = {
@@ -25,9 +26,9 @@ export type ClientsState = {
   allClients: Client[];
 };
 
-export type CreateResponse = {
-  client: Client;
-  message: string;
+export type AddClient = {
+  data: Partial<Client>,
+  companyId: number
 };
 
 export type UpdateClient = {

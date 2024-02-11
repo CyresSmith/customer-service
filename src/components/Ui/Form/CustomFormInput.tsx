@@ -25,6 +25,8 @@ type Props = {
   disabledIcon?: boolean;
   isRequired?: boolean;
   isReadonly?: boolean;
+  label?: boolean;
+  placeholder?: string;
 };
 
 const CustomFormInput = ({
@@ -36,16 +38,19 @@ const CustomFormInput = ({
   disabledIcon,
   isRequired,
   isReadonly = false,
+  label = true,
+  placeholder = '',
 }: Props) => {
   const [hidden, setHidden] = useState(true);
   const valueRef = useRef(value).current;
 
   return (
     <FormInputsListItem>
-      <FormInputLabel>
-        {translateLabels(name)}
-        {isRequired && <Required>{' (!)'}</Required>}
-      </FormInputLabel>
+      {label &&
+        <FormInputLabel>
+          {translateLabels(name)}
+          {isRequired && <Required>{' (!)'}</Required>}
+        </FormInputLabel>}
       <FormInputBox>
         <FormInput
           type={type !== 'password' ? type : hidden ? type : 'text'}
@@ -54,6 +59,7 @@ const CustomFormInput = ({
           as={type === 'textarea' ? 'textarea' : 'input'}
           onChange={handleChange}
           readOnly={isReadonly}
+          placeholder={placeholder}
         />
 
         {type === 'password' && (

@@ -23,4 +23,5 @@ export const OutletWrapper = styled.div`
   padding: ${theme.space[5]};
   border-radius: ${theme.radii.m};
   box-shadow: ${theme.shadow.m};
+  overflow: hidden;
 `;

@@ -1,6 +1,6 @@
 import { BaseQueryFn, createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQuery } from "./instance";
-import { Client, CreateResponse } from "store/clients/clients.types";
+import { AddClient, Client } from "store/clients/clients.types";
 
 export const clientsApi = createApi({
     reducerPath: 'clientsApi',
@@ -11,17 +11,25 @@ export const clientsApi = createApi({
 
     endpoints: builder => ({
 
-        createClient: builder.mutation<CreateResponse, Partial<Client>>({
-            query: data => ({
-                url: '/clients/create',
+        createClient: builder.mutation<Client, AddClient>({
+            query: ({data, companyId}) => ({
+                url: `clients/${companyId}/create`,
                 method: 'POST',
                 data,
             }),
             invalidatesTags: ['clientsApi'],
+        }),
+
+        getAll: builder.query<Client[], unknown>({
+            query: (companyId: number) => ({
+                url: `clients/${companyId}/get-all`,
+                method: 'GET',
+            }),
         }),
     }),
 });
 
 export const {
     useCreateClientMutation,
+    useGetAllQuery
 } = clientsApi;

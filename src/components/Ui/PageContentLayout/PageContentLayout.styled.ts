@@ -17,4 +17,5 @@ export const PageLayoutBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.space[4]};
+  height: 100%;
 `;

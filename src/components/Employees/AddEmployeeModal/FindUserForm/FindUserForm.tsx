@@ -4,7 +4,6 @@ import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { getErrorMessage } from 'helpers/inputsValidation';
 import { useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { State } from 'hooks/useForm';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { HiArrowLeft, HiSearch, HiX } from 'react-icons/hi';
 import { useFindUserDataMutation } from 'services/company.api';

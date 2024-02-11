@@ -15,6 +15,10 @@ import {
 } from './AddClientForm.styled';
 import { useCreateClientMutation } from 'services/clients.api';
 import { Client } from 'store/clients/clients.types';
+import { useActions } from 'hooks';
+import { useParams } from 'react-router';
+import { IoMdSave  } from 'react-icons/io';
+import { toast } from 'react-toastify';
 
 // type Social = { name: string, link: string };
 // type ClientsSocial = {socials: Social[]};
@@ -47,12 +51,30 @@ const initialState: Client = {
   gender: undefined
 };
 
-const AddClientsForm = () => {
-  const [createClientMutatuin, {isLoading}] = useCreateClientMutation();
+type Props = {
+  closeModal: () => void;
+};
+
+const AddClientsForm = ({closeModal}: Props) => {
+  const [createClientMutatuin, { isLoading }] = useCreateClientMutation();
+  const { addNewClient } = useActions();
+
+  const {companyId} = useParams();
 
   const onSubmit = async (state: Client) => {
-    const data = await createClientMutatuin(state);
-    console.log(data);
+    if (!companyId) {
+      return;
+    }
+
+    const data = Object.fromEntries(Object.entries(state).filter(i => i[1] !== ''));
+
+    const result = await createClientMutatuin({data, companyId: +companyId}).unwrap();
+    
+    if (result) {
+      addNewClient(result);
+      closeModal();
+      toast.success('Нового клієнта успішно збережено')
+    }
   };
 
   const { state, handleChange, handleSubmit, invalidFields } = useForm<Client>(
@@ -101,6 +123,7 @@ const AddClientsForm = () => {
             type="submit"
             $colors="accent"
             isLoading={isLoading}
+            Icon={IoMdSave}
           />
           {invalidFields.length > 0 && (
             <SubmitErrorsBox>
