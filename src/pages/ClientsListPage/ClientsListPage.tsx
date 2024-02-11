@@ -11,21 +11,28 @@ const ClientsListPage = () => {
   const { setClients } = useActions();
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-    const handleSearch = (event: ChangeEvent<HTMLInputElement>): void => {
-        setSearchQuery(event.target.value)
-    };
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>): void => {
+    setSearchQuery(event.target.value);
+  };
 
-  const {data, isSuccess} = useGetAllQuery(companyId, {
+  const { data, isSuccess } = useGetAllQuery(companyId, {
     skip: Boolean(!companyId),
   });
 
   useEffect(() => {
     if (isSuccess && data) {
-      setClients(data)
+      setClients(data);
     }
-  }, [data, isSuccess, setClients])
+  }, [data, isSuccess, setClients]);
 
-  return <PageContentLayout bar={<ClientsListBar searchQuery={searchQuery} handleSearch={handleSearch} />} content={<ClientsList search={searchQuery} />} />;
+  return (
+    <PageContentLayout
+      bar={
+        <ClientsListBar searchQuery={searchQuery} handleSearch={handleSearch} />
+      }
+      content={<ClientsList search={searchQuery} />}
+    />
+  );
 };
 
 export default ClientsListPage;
