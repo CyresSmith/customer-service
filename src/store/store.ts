@@ -10,13 +10,14 @@ import {
   persistStore,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { clientsApi } from 'services/clients.api';
 import { companyApi } from 'services/company.api';
+import { employeeApi } from 'services/employee.api';
 import { authApi } from '../services/auth.api';
+import clientsSlice from './clients/clients.slice';
 import companySlice from './company/company.slice';
 import loadingSlice from './loading/loading.slice';
 import userSlice from './user/user.slice';
-import clientsSlice from './clients/clients.slice';
-import { clientsApi } from 'services/clients.api';
 
 const persistUserConfig = {
   key: 'service',
@@ -37,6 +38,7 @@ const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
   [companyApi.reducerPath]: companyApi.reducer,
   [clientsApi.reducerPath]: clientsApi.reducer,
+  [employeeApi.reducerPath]: employeeApi.reducer,
 });
 
 export const store = configureStore({
@@ -50,6 +52,7 @@ export const store = configureStore({
       .concat(authApi.middleware)
       .concat(companyApi.middleware)
       .concat(clientsApi.middleware)
+      .concat(employeeApi.middleware),
 });
 
 export type TypeRootState = ReturnType<typeof rootReducer>;

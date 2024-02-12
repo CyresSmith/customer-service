@@ -2,9 +2,8 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const EmployeesList = styled.ul`
-  display: flex;
-  flex-direction: column;
-  gap: ${theme.space[4]};
+  height: 100%;
+  overflow-y: auto;
 `;
 
 export const ItemLayout = styled.div`
