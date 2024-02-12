@@ -37,6 +37,8 @@ const Avatar = ({
     reset,
   } = useFileUpload();
 
+  console.log(currentFile)
+
   return (
     <AvatarBox width={size}>
       {!allowChanges ? (
@@ -91,7 +93,7 @@ const Avatar = ({
           </ImageBox>
 
           {currentFile && (
-            <ButtonsBox>
+            <ButtonsBox width={size}>
               <Button
                 onClick={() => {
                   handleUpload(currentFile);

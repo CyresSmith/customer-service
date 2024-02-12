@@ -49,7 +49,7 @@ export type UpdateUser = {
 
 export type UploadAvatar = {
   data: FormData;
-  id: string;
+  id: number;
 };
 
 export type UpdatePassword = {
