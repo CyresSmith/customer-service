@@ -21,7 +21,7 @@ export const ClientName = styled.p`
 
 export const SidesWrapper = styled.div`
     display: flex;
-    gap: ${theme.space[4]};
+    gap: ${theme.space[5]};
 `
 
 export const LeftSideWrapper = styled.div`
@@ -32,13 +32,6 @@ export const LeftSideWrapper = styled.div`
 
 export const BtnWrapper = styled.div`
     width: fit-content;
-`
-
-export const AvaSkeleton = styled.div`
-    width: 200px;
-    height: 200px;
-    background-color: ${theme.colors.bg.dark};
-    border-radius: ${theme.radii.m};
 `
 
 export const Bar = styled.div`

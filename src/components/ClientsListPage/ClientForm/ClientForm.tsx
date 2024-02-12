@@ -49,7 +49,13 @@ const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
   );
 
   const disabledReset: boolean =
-    JSON.stringify(state) === JSON.stringify(initialState) ? true : false;
+    JSON.stringify(
+      Object.fromEntries(Object.entries(state).filter(i => i[0] !== 'avatar' && i[0] !== 'updatedAt'))
+    ) ===
+      JSON.stringify(
+        Object.fromEntries(
+          Object.entries(initialState).filter(i => i[0] !== 'avatar' && i[0] !== 'updatedAt')
+        ))
 
   const disabledSubmit: boolean =
     invalidFields?.length > 0 ||

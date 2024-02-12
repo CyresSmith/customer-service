@@ -1,6 +1,5 @@
 import { useClients } from "hooks/useClients";
 import { ClientName, Container, Skeleton } from "./ClientProfile.styled";
-import { Client } from "store/clients/clients.types";
 import { useGetByIdQuery } from "services/clients.api";
 import { useEffect, useState } from "react";
 import { useActions } from "hooks";
@@ -13,11 +12,12 @@ type Props = {
     id: number;
 }
 
-const ClientProfile = ({companyId, id}: Props) => {
-    const { data, isLoading } = useGetByIdQuery({ companyId, id });
+const ClientProfile = ({ companyId, id }: Props) => {
+    const { data, isLoading, refetch } = useGetByIdQuery({ companyId, id });
     const { setChoosenClient } = useActions();
     const { choosen } = useClients();
-    const [section, setSection] = useState<string>('profile')
+    const [section, setSection] = useState<string>('profile');
+    
 
     useEffect(() => {
         if (data) {
@@ -28,10 +28,6 @@ const ClientProfile = ({companyId, id}: Props) => {
     const handleBarClick = (id: string): void => {
         setSection(id)
     }
-    
-    const handleUpdate = (state: Client): void => {
-        console.log(state);
-    }
 
     return isLoading || id != choosen.id ?
         <Skeleton><Loader /></Skeleton> : (
@@ -39,7 +35,7 @@ const ClientProfile = ({companyId, id}: Props) => {
             <ClientName>{ choosen.firstName + ' ' + choosen.lastName }</ClientName>
             <ClientProfileBar handleClick={handleBarClick} isActiveSection={section} />
             {section === 'profile' ?
-                <Profile handleUpdate={handleUpdate} initialState={choosen} /> : <Skeleton />
+                <Profile companyId={companyId} clientRefetch={refetch} /> : <Skeleton />
             }
         </Container>
     )

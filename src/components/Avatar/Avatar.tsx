@@ -37,8 +37,6 @@ const Avatar = ({
     reset,
   } = useFileUpload();
 
-  console.log(currentFile)
-
   return (
     <AvatarBox width={size}>
       {!allowChanges ? (

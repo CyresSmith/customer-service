@@ -9,9 +9,9 @@ const initialState: ClientsState = {
         id: '',
         email: '',
         avatar: '',
-        discount: undefined,
+        discount: 0,
         source: '',
-        comments: '',
+        comment: '',
         birthday: '',
         gender: undefined,
         card: '',
@@ -33,7 +33,32 @@ const clientsSlice = createSlice({
         },
         setChoosenClient(state, { payload }: PayloadAction<Client>) {
             return {...state, choosen: payload}
-        }
+        },
+        updateClient(state, { payload }: PayloadAction<Client>) {
+            return {
+                choosen: payload,
+                allClients: state.allClients.map(client => {
+                    if (client.id === state.choosen.id) {
+                        return payload;
+                    }
+                    return client;
+                })
+            };
+        },
+        setClientAvatar(state, { payload }: PayloadAction<Pick<Client, 'avatar'>>) {
+            return {
+                choosen: {
+                    ...state.choosen,
+                    avatar: payload.avatar,
+                    },
+                allClients: state.allClients.map(client => {
+                    if (client.id === state.choosen.id) {
+                        return { ...client, ...payload };
+                    }
+                    return client;
+                })
+            };
+        },
     },
 });
 

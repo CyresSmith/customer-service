@@ -9,7 +9,7 @@ export type Client = {
   avatar?: string;
   discount?: number | string;
   source?: string;
-  comments?: string;
+  comment?: string;
   birthday?: string;
   gender?: Gender;
   card?: string;
@@ -34,9 +34,11 @@ export type AddClient = {
 export type UpdateClient = {
   data: Partial<Client>;
   id: string | number;
+  companyId: number;
 };
 
 export type UploadAvatar = {
   data: FormData;
   id: string | number;
+  companyId: number;
 };
