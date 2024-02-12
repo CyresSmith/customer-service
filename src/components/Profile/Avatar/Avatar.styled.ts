@@ -5,7 +5,7 @@ export const Wrapper = styled.div`
     position: relative;
     /* margin-bottom: ${theme.space[5]}; */
     width: 150px;
-    height: 150px;
+    min-height: 150px;
     border: ${theme.borders.bold} ${theme.colors.secondary.light};
     border-radius: ${theme.radii.round};
     transition: ${theme.transition.primary};

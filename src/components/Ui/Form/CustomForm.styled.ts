@@ -31,7 +31,7 @@ export const FormInputLabel = styled.label`
 
 export const Required = styled.span`
   font-size: inherit;
-  color: ${theme.colors.danger};
+  color: ${theme.colors.danger.light};
 `;
 
 export const FormInputBox = styled.div`

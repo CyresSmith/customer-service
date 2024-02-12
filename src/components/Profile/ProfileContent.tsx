@@ -1,5 +1,5 @@
 import { useAuth } from "hooks";
-import { Container, Title } from "./ProfileContent.styled";
+import { Container, ContentWrapper, Title } from "./ProfileContent.styled";
 import UpdateDataForm from "./UpdateForm";
 import { Auth, UpdatePassword, User } from "store/user/user.types";
 import { useUpdatePasswordMutation, useUpdateUserMutation } from "services/auth.api";
@@ -70,7 +70,8 @@ const ProfileContent = () => {
 
     return (
         <Container>
-            <Title>Редагування профілю</Title>
+            <ContentWrapper>
+                <Title>Редагування профілю</Title>
                 <Avatar id={user.id} avatar={user.avatar} />
                 {user && <UpdateDataForm userData={user} onSubmit={handleDataUpdate} isLoading={isLoading} />}
                 <Button id="updatePass" type='button' Icon={RiLockPasswordLine} $colors="light" onClick={toggleModal}>Змінити пароль</Button>
@@ -81,6 +82,7 @@ const ProfileContent = () => {
                     closeModal={toggleModal}
                     />
                 )}
+            </ContentWrapper>
         </Container>
     )
 };

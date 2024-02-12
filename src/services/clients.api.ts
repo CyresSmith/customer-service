@@ -26,10 +26,18 @@ export const clientsApi = createApi({
                 method: 'GET',
             }),
         }),
+
+        getById: builder.query<Client, { companyId: number, id: number }>({
+            query: ({companyId, id}) => ({
+                url: `clients/${companyId}/${id}`,
+                method: 'GET'
+            })
+        })
     }),
 });
 
 export const {
     useCreateClientMutation,
-    useGetAllQuery
+    useGetAllQuery,
+    useGetByIdQuery,
 } = clientsApi;

@@ -15,7 +15,7 @@ const ClientsListPage = () => {
     setSearchQuery(event.target.value);
   };
 
-  const { data, isSuccess } = useGetAllQuery(companyId, {
+  const { data, isSuccess, refetch } = useGetAllQuery(companyId, {
     skip: Boolean(!companyId),
   });
 
@@ -28,9 +28,9 @@ const ClientsListPage = () => {
   return (
     <PageContentLayout
       bar={
-        <ClientsListBar searchQuery={searchQuery} handleSearch={handleSearch} />
+        <ClientsListBar refetchData={refetch} searchQuery={searchQuery} handleSearch={handleSearch} />
       }
-      content={<ClientsList search={searchQuery} />}
+      content={<ClientsList companyId={companyId} search={searchQuery} />}
     />
   );
 };

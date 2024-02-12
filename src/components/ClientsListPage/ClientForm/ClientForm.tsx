@@ -12,13 +12,9 @@ import {
   SubmitBtnWrapper,
   SubmitError,
   SubmitErrorsBox,
-} from './AddClientForm.styled';
-import { useCreateClientMutation } from 'services/clients.api';
+} from './ClientForm.styled';
 import { Client } from 'store/clients/clients.types';
-import { useActions } from 'hooks';
-import { useParams } from 'react-router';
 import { IoMdSave  } from 'react-icons/io';
-import { toast } from 'react-toastify';
 
 // type Social = { name: string, link: string };
 // type ClientsSocial = {socials: Social[]};
@@ -37,45 +33,15 @@ const inputs: InputProps[] = [
   { name: 'comments', type: 'textarea' },
 ];
 
-const initialState: Client = {
-  id: '',
-  firstName: '',
-  lastName: '',
-  birthday: '',
-  phone: '',
-  email: '',
-  discount: undefined,
-  card: '',
-  source: '',
-  comments: '',
-  gender: undefined
-};
-
 type Props = {
-  closeModal: () => void;
+  initialState: Client;
+  onSubmit: (state: Client) => void;
+  isLoading: boolean;
+  type: string;
 };
 
-const AddClientsForm = ({closeModal}: Props) => {
-  const [createClientMutatuin, { isLoading }] = useCreateClientMutation();
-  const { addNewClient } = useActions();
-
-  const {companyId} = useParams();
-
-  const onSubmit = async (state: Client) => {
-    if (!companyId) {
-      return;
-    }
-
-    const data = Object.fromEntries(Object.entries(state).filter(i => i[1] !== ''));
-
-    const result = await createClientMutatuin({data, companyId: +companyId}).unwrap();
-    
-    if (result) {
-      addNewClient(result);
-      closeModal();
-      toast.success('Нового клієнта успішно збережено')
-    }
-  };
+const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
+  
 
   const { state, handleChange, handleSubmit, invalidFields } = useForm<Client>(
     initialState,
@@ -94,7 +60,7 @@ const AddClientsForm = ({closeModal}: Props) => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <FormTitle>Новий клієнт</FormTitle>
+      {type === 'add' && <FormTitle>Новий клієнт</FormTitle>}
       <FormSidesWrapper>
         <FormInputsList>
           {inputs.map(({ name, type, isRequired }, i) => (
@@ -141,4 +107,4 @@ const AddClientsForm = ({closeModal}: Props) => {
   );
 };
 
-export default AddClientsForm;
+export default ClientForm;

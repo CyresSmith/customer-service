@@ -14,7 +14,6 @@ export const OutletWrapper = styled.div`
   width: 100%;
   height: calc(100vh - 139px);
   /* background-color: ${theme.colors.bg.main};
-  padding: ${theme.space[3]} ${theme.space[4]};
   border-radius: ${theme.radii.m};
   box-shadow: ${theme.shadow.m}; */
 `;

@@ -30,6 +30,9 @@ const clientsSlice = createSlice({
         },
         setClients(state, { payload }: PayloadAction<Client[]>) {
             return {...state, allClients: payload}
+        },
+        setChoosenClient(state, { payload }: PayloadAction<Client>) {
+            return {...state, choosen: payload}
         }
     },
 });
