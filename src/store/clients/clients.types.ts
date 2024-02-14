@@ -1,4 +1,4 @@
-type Gender = 'male' | 'female' | 'other' | undefined;
+type Gender = 'male' | 'female' | 'other' | 'choose';
 
 export type Client = {
   firstName: string;

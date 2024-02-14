@@ -30,7 +30,7 @@ const inputs: InputProps[] = [
   { name: 'discount', type: 'text' },
   { name: 'card', type: 'text' },
   { name: 'source', type: 'text' },
-  { name: 'comments', type: 'textarea' },
+  { name: 'comment', type: 'textarea' },
 ];
 
 type Props = {

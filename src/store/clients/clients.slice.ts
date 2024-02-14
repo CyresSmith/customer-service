@@ -13,7 +13,7 @@ const initialState: ClientsState = {
         source: '',
         comment: '',
         birthday: '',
-        gender: undefined,
+        gender: 'choose',
         card: '',
         companyId: undefined
     },
