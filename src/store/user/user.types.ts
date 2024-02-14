@@ -16,7 +16,7 @@ export type Auth = {
   newPassword: string;
 };
 
-export type UserRegister = Partial<User> & Pick<Auth, 'password' | 'confirm'>;
+export type UserRegister = Omit<User, 'verify' | 'id'> & Pick<Auth, 'password' | 'confirm'>;
 
 export type UserLogin = Pick<User, 'email'> & Pick<Auth, 'password'>;
 

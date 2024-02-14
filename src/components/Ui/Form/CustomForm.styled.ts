@@ -5,9 +5,14 @@ export const Form = styled.form`
   display: flex;
   width: 100%;
   flex-direction: column;
-  gap: ${theme.space[6]};
+  gap: ${theme.space[5]};
   justify-content: center;
 `;
+
+export const FormTitle = styled.p`
+  text-align: center;
+  font-size: ${theme.fontSizes.heading.xs};
+`
 
 export const FormInputsList = styled.ul`
   display: flex;
