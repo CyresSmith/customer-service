@@ -21,8 +21,8 @@ const addInitialState: Client = {
   discount: undefined,
   card: '',
   source: '',
-  comments: '',
-  gender: undefined
+  comment: '',
+  gender: ''
 };
 
 type Props = {

@@ -6,7 +6,6 @@ import {
   ButtonsBox,
   Form,
   FormInputsList,
-  FormInputsListItem,
   FormSidesWrapper,
   FormTitle,
   SubmitBtnWrapper,
@@ -14,7 +13,7 @@ import {
   SubmitErrorsBox,
 } from './ClientForm.styled';
 import { Client } from 'store/clients/clients.types';
-import { IoMdSave  } from 'react-icons/io';
+import { IoMdSave } from 'react-icons/io';
 
 // type Social = { name: string, link: string };
 // type ClientsSocial = {socials: Social[]};
@@ -26,12 +25,14 @@ const inputs: InputProps[] = [
   { name: 'birthday', type: 'date' },
   { name: 'phone', type: 'text', isRequired: true },
   { name: 'email', type: 'email' },
-  { name: 'gender', type: 'text' },
+  { name: 'gender', type: 'select' },
   { name: 'discount', type: 'text' },
   { name: 'card', type: 'text' },
   { name: 'source', type: 'text' },
   { name: 'comment', type: 'textarea' },
 ];
+
+const genderOptions: string[] = ['male', 'female', 'other'];
 
 type Props = {
   initialState: Client;
@@ -41,12 +42,12 @@ type Props = {
 };
 
 const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
-  
-
-  const { state, handleChange, handleSubmit, invalidFields } = useForm<Client>(
+  const { state, setState, handleChange, handleSubmit, invalidFields } = useForm<Client>(
     initialState,
     onSubmit,
   );
+
+  console.log(state);
 
   const disabledReset: boolean =
     JSON.stringify(
@@ -63,6 +64,10 @@ const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
     (state.firstName === '' && state.phone === '')
       ? true
       : false;
+  
+  const handleSelect = (item: string) => {
+    setState({ ...state, gender: item })
+  };
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -70,19 +75,17 @@ const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
       <FormSidesWrapper>
         <FormInputsList>
           {inputs.map(({ name, type, isRequired }, i) => (
-            <FormInputsListItem
-              className={type === 'textarea' ? 'textarea' : i.toString()}
+            <CustomFormInput
               key={i}
-            >
-              <CustomFormInput
-                name={name}
-                type={type}
-                isRequired={isRequired}
-                value={state[name as keyof Client]}
-                handleChange={handleChange}
-                disabledIcon={true}
-              />
-            </FormInputsListItem>
+              name={name}
+              type={type}
+              isRequired={isRequired}
+              value={state[name as keyof Client]}
+              handleChange={handleChange}
+              disabledIcon={true}
+              selectItems={genderOptions}
+              handleSelect={handleSelect}
+            />
           ))}
         </FormInputsList>
       </FormSidesWrapper>

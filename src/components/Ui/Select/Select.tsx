@@ -26,6 +26,8 @@ const Select = ({
     setIsOpen(false);
   };
 
+  console.log(selectedItem)
+
   useEffect(() => {
     if (selectedItem) {
       setSelected(selectedItem);

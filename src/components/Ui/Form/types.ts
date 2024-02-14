@@ -20,6 +20,7 @@ export type FormProps<T> = {
   initialState: T;
   isLoading?: boolean;
   buttonsDirection?: string;
+  selectItems?: string[];
 };
 
 export type ButtonsProps = {

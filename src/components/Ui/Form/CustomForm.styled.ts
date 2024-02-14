@@ -21,11 +21,12 @@ export const FormInputsList = styled.ul`
   justify-content: center;
 `;
 
-export const FormInputsListItem = styled.div`
+export const FormInputsListItem = styled.div<{$type?: string}>`
   position: relative;
   display: flex;
   flex-direction: column;
   gap: ${theme.space[1]};
+  grid-column: ${props => props.$type === 'textarea' ? 'span 3' : 'auto'};
 `;
 
 export const FormInputLabel = styled.label`

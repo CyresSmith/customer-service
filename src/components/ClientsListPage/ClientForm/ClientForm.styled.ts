@@ -29,13 +29,6 @@ export const FormInputsList = styled.ul`
     gap: ${theme.space[4]};
 `
 
-export const FormInputsListItem = styled.li`
-    
-    &.textarea {
-        grid-column: span 3;
-    }
-`
-
 export const ButtonsBox = styled.div`
     width: 100%;
     display: flex;

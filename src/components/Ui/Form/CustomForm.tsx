@@ -1,7 +1,7 @@
 import { getErrorMessage } from 'helpers/inputsValidation';
 import { useForm } from '../../../hooks';
 import Checkbox from './Checkbox';
-import { Form, FormInputsList, FormTitle } from './CustomForm.styled';
+import { Form, FormInputsList, FormInputsListItem, FormTitle } from './CustomForm.styled';
 import CustomFormButtons from './CustomFormButtons';
 import CustomFormInput from './CustomFormInput';
 import { FormProps } from './types';
@@ -17,7 +17,8 @@ const CustomForm = <T extends { [k: string]: string | number | undefined }>({
   SubmitButtonIcon,
   ResetButtonIcon,
   buttonsDirection,
-  title
+  title,
+  selectItems
 }: FormProps<T>) => {
   const { handleChange, handleSubmit, state, invalidFields, reset } =
     useForm<T>(initialState, onSubmit);
@@ -48,16 +49,18 @@ const CustomForm = <T extends { [k: string]: string | number | undefined }>({
       <FormInputsList>
         {inputs.map(
           ({ name, type, isRequired = false, isReadonly = false }, i) =>
-            type === 'checkbox' ? (
-              <Checkbox
-                key={i}
-                name={name}
-                isRequired={isRequired}
-                isChecked={Boolean(state[name as keyof T])}
-                handleCheck={handleChange}
-              />
-            ) : (
+            <FormInputsListItem>
+              {type === 'checkbox' ? (
+                <Checkbox
+                  key={i}
+                  name={name}
+                  isRequired={isRequired}
+                  isChecked={Boolean(state[name as keyof T])}
+                  handleCheck={handleChange}
+                />
+              ) : (
               <CustomFormInput
+                selectItems={selectItems}
                 key={i}
                 type={type}
                 name={name}
@@ -68,7 +71,8 @@ const CustomForm = <T extends { [k: string]: string | number | undefined }>({
                 isRequired={isRequired}
                 isReadonly={isReadonly}
               />
-            )
+            )}
+            </FormInputsListItem>
         )}
       </FormInputsList>
 

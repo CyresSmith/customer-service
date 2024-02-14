@@ -1,5 +1,3 @@
-type Gender = 'male' | 'female' | 'other' | 'choose';
-
 export type Client = {
   firstName: string;
   lastName?: string;
@@ -11,7 +9,7 @@ export type Client = {
   source?: string;
   comment?: string;
   birthday?: string;
-  gender?: Gender;
+  gender?: string;
   card?: string;
   companyId?: number;
 };

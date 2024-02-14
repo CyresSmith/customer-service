@@ -34,9 +34,11 @@ const ClientsList = ({search, companyId}: Props) => {
 
     return companyId && (
         <>
-            <List>
-                {clients.map((client, i) => <ClientsListItem handleClick={handleClientClick} key={i} client={client} />)}
-            </List>
+            {clients.length > 0 &&
+                <List>
+                    {clients.map((client, i) => <ClientsListItem handleClick={handleClientClick} key={i} client={client} idx={i} />)}
+                </List>
+            }
             {clients.length === 0 && search &&
                 <NoClients>{`Не знайдено клієнта за номером телефону ${search}, створіть нового.`}</NoClients>
             }
