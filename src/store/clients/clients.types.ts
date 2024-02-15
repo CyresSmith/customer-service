@@ -5,7 +5,7 @@ export type Client = {
   id: number | string;
   email?: string;
   avatar?: string;
-  discount?: number | string;
+  discount?: number;
   source?: string;
   comment?: string;
   birthday?: string;

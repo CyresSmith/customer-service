@@ -15,7 +15,7 @@ type Props = {
 
 export const Profile = ({ companyId, clientRefetch }: Props) => {
     const [uploadAvatar, { isLoading: uploadLoading }] = useUploadAvatarMutation();
-    const [updateClientMutation] = useUpdateClientMutation();
+    const [updateClientMutation, {isLoading: updateLoading}] = useUpdateClientMutation();
     const { setClientAvatar, updateClient } = useActions();
     const { choosen } = useClients();
 
@@ -63,7 +63,7 @@ export const Profile = ({ companyId, clientRefetch }: Props) => {
                     <Button type='button' children='Видалити' $colors="light" />
                 </BtnWrapper>
             </LeftSideWrapper>
-            <ClientForm type='update' onSubmit={handleUpdate} isLoading={false} initialState={choosen} />
+            <ClientForm type='update' onSubmit={handleUpdate} isLoading={updateLoading} initialState={choosen} />
         </SidesWrapper>
     )
 }

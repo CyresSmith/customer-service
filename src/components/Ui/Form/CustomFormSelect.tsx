@@ -15,12 +15,26 @@ const CustomFormSelect = <T,>({ selectItems, selectedItem, handleSelect }: Selec
         }
     };
 
-    const close = () => {
+    const handleClose = () => {
         setIsOpen(false);
     };
 
     const onSelect = (item: T) => {
         handleSelect(item);
+        handleClose();
+    };
+
+    const onEnterSelect = (event: React.KeyboardEvent<HTMLLIElement>, item: T) => {
+        if (event.key === 'Enter') {
+            handleSelect(item);
+            handleClose();
+        }
+    };
+
+    const onEnterToggleOpen = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter') {
+            toggleOpen()
+        }
     };
 
     const translate = (item: T): string | undefined => {
@@ -37,14 +51,20 @@ const CustomFormSelect = <T,>({ selectItems, selectedItem, handleSelect }: Selec
         }
     }
 
-    useEscapeKey(close);
-    const selectRef = useClickOutside(close);
+    useEscapeKey(handleClose);
+    const selectRef = useClickOutside(handleClose);
 
     return (
-        <Select onClick={toggleOpen} ref={selectRef} $open={isOpen}>
+        <Select onKeyDown={(event) => onEnterToggleOpen(event)} tabIndex={0} onClick={toggleOpen} ref={selectRef} $open={isOpen}>
             <Selected>{translate(selectedItem)}</Selected>
             <SelectList $open={isOpen}>
-                {selectItems.map((item, i) => <SelectListItem onClick={() => onSelect(item)} key={i}>{translate(item)}</SelectListItem>)}
+                {isOpen && selectItems.map((item, i) =>
+                    <SelectListItem
+                        tabIndex={0}
+                        onKeyDown={(event) => onEnterSelect(event, item)}
+                        onClick={() => onSelect(item)}
+                        key={i}
+                    >{translate(item)}</SelectListItem>)}
             </SelectList>
             <SelectIcon as={HiChevronDown} $open={isOpen} />
         </Select>

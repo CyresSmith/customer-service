@@ -123,6 +123,7 @@ export const DoneIcon = styled.svg<{ $complete?: boolean }>`
 export const Select = styled.div<{$open: boolean}>`
   ${baseInputStyles};
   position: relative;
+  outline: none;
   cursor: pointer;
 
   ${p => p.$open && `
@@ -131,6 +132,13 @@ export const Select = styled.div<{$open: boolean}>`
     -webkit-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
     -moz-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
     `
+  }
+
+  &:focus {
+    border-color: ${theme.colors.accent.main};
+    box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
   }
 `
 
@@ -164,13 +172,17 @@ export const SelectListItem = styled.li`
   padding: ${theme.space[3]};
   color: ${theme.colors.secondary.light};
   transition: ${theme.transition.primary};
+  outline: none;
 
   &::first-letter {
     text-transform: uppercase;
   }
 
-  &:hover,
-  :focus-visible {
+  &:hover {
+    background-color: ${theme.colors.bg.dark};
+  }
+
+  &:focus-visible {
     background-color: ${theme.colors.bg.dark};
   }
 `

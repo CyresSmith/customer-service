@@ -47,8 +47,6 @@ const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
     onSubmit,
   );
 
-  console.log(state);
-
   const disabledReset: boolean =
     JSON.stringify(
       Object.fromEntries(Object.entries(state).filter(i => i[0] !== 'avatar' && i[0] !== 'updatedAt'))
