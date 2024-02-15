@@ -15,7 +15,7 @@ import {
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { IoMdClose } from 'react-icons/io';
 import { MdOutlineDone } from 'react-icons/md';
-import Select from '../Select';
+import CustomFormSelect from './CustomFormSelect';
 
 type Props = {
   name: string;
@@ -58,7 +58,11 @@ const CustomFormInput = ({
         </FormInputLabel>}
       <FormInputBox>
         {type === 'select' && selectItems && handleSelect ? 
-          <Select onSelect={handleSelect} items={selectItems} selectedItem={value ? value as string : 'Не обрано'} /> :
+          <CustomFormSelect<string>
+            handleSelect={handleSelect}
+            selectItems={selectItems}
+            selectedItem={value as string}
+          /> :
           <FormInput
             type={type !== 'password' ? type : hidden ? type : 'text'}
             name={name}

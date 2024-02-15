@@ -1,6 +1,18 @@
 import styled from 'styled-components';
 import theme from 'utils/theme';
 
+const baseInputStyles = `
+  color: ${theme.colors.bg.dark};
+  padding: ${theme.space[2]} ${theme.space[3]};
+  border-radius: ${theme.radii.s};
+  background-color: ${theme.colors.secondary.light};
+  border: ${theme.borders.normal} ${theme.colors.bg.dark};
+  transition: ${theme.transition.primary};
+  font-size: ${theme.fontSizes.l};
+  width: 100%;
+  resize: none;
+`
+
 export const Form = styled.form`
   display: flex;
   width: 100%;
@@ -62,15 +74,7 @@ export const HideIcon = styled.svg<{ hidden: boolean }>`
 `;
 
 export const FormInput = styled.input`
-  color: ${theme.colors.bg.dark};
-  padding: ${theme.space[2]} ${theme.space[3]};
-  border-radius: ${theme.radii.s};
-  background-color: ${theme.colors.secondary.light};
-  border: ${theme.borders.normal} ${theme.colors.bg.dark};
-  transition: ${theme.transition.primary};
-  font-size: ${theme.fontSizes.l};
-  width: 100%;
-  resize: none;
+  ${baseInputStyles};
 
   &:focus {
     border-color: ${theme.colors.accent.main};
@@ -115,3 +119,73 @@ export const DoneIcon = styled.svg<{ $complete?: boolean }>`
   fill: ${props =>
     props.$complete ? theme.colors.success.light : theme.colors.danger.light};
 `;
+
+export const Select = styled.div<{$open: boolean}>`
+  ${baseInputStyles};
+  position: relative;
+  cursor: pointer;
+
+  ${p => p.$open && `
+    border-color: ${theme.colors.accent.main};
+    box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
+    `
+  }
+`
+
+export const Selected = styled.p`
+  &::first-letter {
+    text-transform: uppercase;
+  }
+`
+
+export const SelectList = styled.ul<{ $open: boolean }>`
+  position: absolute;
+  top: calc(100% + ${theme.space[2]});
+  right: 0;
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${theme.space[2]};
+  box-shadow: ${theme.shadow.m};
+  background-color: ${theme.colors.bg.main};
+  border-radius: ${theme.radii.m};
+  width: 100%;
+  max-height: ${props => props.$open ? '500px' : '0'};
+  transition: ${theme.transition.primary};
+  overflow: hidden;
+`
+
+export const SelectListItem = styled.li`
+  width: 100%;
+  text-align: center;
+  padding: ${theme.space[3]};
+  color: ${theme.colors.secondary.light};
+  transition: ${theme.transition.primary};
+
+  &::first-letter {
+    text-transform: uppercase;
+  }
+
+  &:hover,
+  :focus-visible {
+    background-color: ${theme.colors.bg.dark};
+  }
+`
+
+export const SelectIcon = styled.svg<{$open: boolean}>`
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: ${theme.space[3]};
+  top: 25%;
+  fill: ${theme.colors.secondary.dark};
+  transition: inherit;
+
+  ${props => props.$open && `
+    fill: ${theme.colors.accent.main};
+    transform: rotate(180deg);
+  `};
+`

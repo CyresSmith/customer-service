@@ -11,7 +11,7 @@ export const DropWrapper = styled.div<Pick<Props, '$isOpen'>>`
   border: ${theme.borders.normal} ${theme.colors.bg.main};
   border-radius: ${theme.radii.m};
   display: flex;
-  max-height: ${props => (props.$isOpen ? '100vh' : '0')};
+  max-height: ${props => (props.$isOpen ? '500px' : '0')};
   transition: ${theme.transition.modal};
   box-shadow: ${theme.shadow.m}
 `;

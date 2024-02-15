@@ -35,3 +35,9 @@ export type ButtonsProps = {
   disabledSubmit: boolean;
   disabledReset: boolean;
 };
+
+export type SelectProps<T> = {
+  selectItems: T[];
+  selectedItem: T;
+  handleSelect: (item: T) => void;
+}
