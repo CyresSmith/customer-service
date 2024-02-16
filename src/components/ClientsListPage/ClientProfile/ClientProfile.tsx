@@ -10,14 +10,15 @@ import { Profile } from "./ClientProfileComponents/Profile";
 type Props = {
     companyId: number;
     id: number;
+    deleteClient: (id: number) => void;
+    deleteLoading: boolean;
 }
 
-const ClientProfile = ({ companyId, id }: Props) => {
+const ClientProfile = ({ companyId, id, deleteClient, deleteLoading }: Props) => {
     const { data, isLoading, refetch } = useGetByIdQuery({ companyId, id });
     const { setChoosenClient } = useActions();
     const { choosen } = useClients();
     const [section, setSection] = useState<string>('profile');
-    
 
     useEffect(() => {
         if (data) {
@@ -35,7 +36,7 @@ const ClientProfile = ({ companyId, id }: Props) => {
             <ClientName>{ choosen.firstName + ' ' + choosen.lastName }</ClientName>
             <ClientProfileBar handleClick={handleBarClick} isActiveSection={section} />
             {section === 'profile' ?
-                <Profile companyId={companyId} clientRefetch={refetch} /> : <Skeleton />
+                <Profile deleteLoading={deleteLoading} deleteClient={deleteClient} companyId={companyId} clientRefetch={refetch} /> : <Skeleton />
             }
         </Container>
     )

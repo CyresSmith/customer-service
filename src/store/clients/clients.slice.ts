@@ -59,6 +59,12 @@ const clientsSlice = createSlice({
                 })
             };
         },
+        deleteClient(state, { payload }: PayloadAction<{id: number}>) {
+            return {
+                choosen: initialState.choosen,
+                allClients: state.allClients.filter(client => client.id !== payload.id)
+            };
+        },
     },
 });
 

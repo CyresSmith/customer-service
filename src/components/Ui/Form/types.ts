@@ -6,6 +6,7 @@ export type InputProps = {
   id?: string | number;
   isRequired?: boolean;
   isReadonly?: boolean;
+  placeholder?: string;
 };
 
 export type FormProps<T> = {

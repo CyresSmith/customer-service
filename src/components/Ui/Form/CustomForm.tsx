@@ -49,10 +49,9 @@ const CustomForm = <T extends { [k: string]: string | number | undefined }>({
       <FormInputsList>
         {inputs.map(
           ({ name, type, isRequired = false, isReadonly = false }, i) =>
-            <FormInputsListItem>
+            <FormInputsListItem key={i}>
               {type === 'checkbox' ? (
                 <Checkbox
-                  key={i}
                   name={name}
                   isRequired={isRequired}
                   isChecked={Boolean(state[name as keyof T])}
@@ -61,7 +60,6 @@ const CustomForm = <T extends { [k: string]: string | number | undefined }>({
               ) : (
               <CustomFormInput
                 selectItems={selectItems}
-                key={i}
                 type={type}
                 name={name}
                 value={state[name as keyof T]}

@@ -18,7 +18,7 @@ const addInitialState: Client = {
   birthday: '',
   phone: '',
   email: '',
-  discount: undefined,
+  discount: 0,
   card: '',
   source: '',
   comment: '',

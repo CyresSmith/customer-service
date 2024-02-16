@@ -12,6 +12,7 @@ export type Client = {
   gender?: string;
   card?: string;
   companyId?: number;
+  // socialLinks?: string[];
 };
 
 export type Company = {

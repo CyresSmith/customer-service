@@ -50,7 +50,16 @@ export const clientsApi = createApi({
                     data,
                 }),
                 invalidatesTags: ['clientsApi'],
+            }),
+            
+            delete: builder.mutation<{message: string}, { companyId: number, id: number }>({
+                query: ({ companyId, id }) => ({
+                    url: `clients/${companyId}/${id}/delete`,
+                    method: 'DELETE'
                 }),
+                invalidatesTags: ['clientsApi'],
+            }),
+
         });
     },
 });
@@ -61,4 +70,5 @@ export const {
     useGetByIdQuery,
     useUpdateClientMutation,
     useUploadAvatarMutation,
+    useDeleteMutation
 } = clientsApi;

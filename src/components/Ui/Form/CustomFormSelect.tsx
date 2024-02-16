@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { Select, Selected, SelectIcon, SelectList, SelectListItem } from './CustomForm.styled';
 import { SelectProps } from './types';
 import { useClickOutside, useEscapeKey } from 'hooks';
@@ -37,17 +37,18 @@ const CustomFormSelect = <T,>({ selectItems, selectedItem, handleSelect }: Selec
         }
     };
 
-    const translate = (item: T): string | undefined => {
+    const translate = (item: T): ReactNode => {
         switch (item) {
             case '':
-                return 'не обрано'
+                return 'не обрано';
             case 'male':
                 return 'чоловіча'
             case 'female':
                 return 'жіноча'
             case 'other':
                 return 'інша'
-            default: break;
+            default:
+                return item as string;
         }
     }
 

@@ -15,10 +15,6 @@ import {
 import { Client } from 'store/clients/clients.types';
 import { IoMdSave } from 'react-icons/io';
 
-// type Social = { name: string, link: string };
-// type ClientsSocial = {socials: Social[]};
-// type ClientsInputs = (InputProps | ClientsSocial)[];
-
 const inputs: InputProps[] = [
   { name: 'firstName', type: 'text', isRequired: true },
   { name: 'lastName', type: 'text' },
@@ -29,7 +25,7 @@ const inputs: InputProps[] = [
   { name: 'discount', type: 'text' },
   { name: 'card', type: 'text' },
   { name: 'source', type: 'text' },
-  { name: 'comment', type: 'textarea' },
+  { name: 'comment', type: 'textarea', placeholder: 'Побажання клієнта, додаткова інформація, примітки адміністратора..' },
 ];
 
 const genderOptions: string[] = ['male', 'female', 'other'];
@@ -72,7 +68,7 @@ const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
       {type === 'add' && <FormTitle>Новий клієнт</FormTitle>}
       <FormSidesWrapper>
         <FormInputsList>
-          {inputs.map(({ name, type, isRequired }, i) => (
+          {inputs.map(({ name, type, isRequired, placeholder }, i) => (
             <CustomFormInput
               key={i}
               name={name}
@@ -83,6 +79,7 @@ const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
               disabledIcon={true}
               selectItems={genderOptions}
               handleSelect={handleSelect}
+              placeholder={placeholder}
             />
           ))}
         </FormInputsList>

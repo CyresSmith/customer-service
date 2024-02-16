@@ -11,9 +11,11 @@ import { useClients } from "hooks/useClients";
 type Props = {
     companyId: number;
     clientRefetch: () => void;
+    deleteClient: (id: number) => void;
+    deleteLoading: boolean;
 }
 
-export const Profile = ({ companyId, clientRefetch }: Props) => {
+export const Profile = ({ companyId, clientRefetch, deleteClient, deleteLoading }: Props) => {
     const [uploadAvatar, { isLoading: uploadLoading }] = useUploadAvatarMutation();
     const [updateClientMutation, {isLoading: updateLoading}] = useUpdateClientMutation();
     const { setClientAvatar, updateClient } = useActions();
@@ -60,7 +62,13 @@ export const Profile = ({ companyId, clientRefetch }: Props) => {
                     isLoading={uploadLoading}
                 />
                 <BtnWrapper>
-                    <Button type='button' children='Видалити' $colors="light" />
+                    <Button
+                        onClick={() => deleteClient(+choosen.id)}
+                        isLoading={deleteLoading}
+                        type='button'
+                        children='Видалити'
+                        $colors="light"
+                    />
                 </BtnWrapper>
             </LeftSideWrapper>
             <ClientForm type='update' onSubmit={handleUpdate} isLoading={updateLoading} initialState={choosen} />

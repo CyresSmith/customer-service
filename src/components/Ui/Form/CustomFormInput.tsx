@@ -71,7 +71,7 @@ const CustomFormInput = ({
             onChange={handleChange}
             readOnly={isReadonly}
             placeholder={placeholder}
-            autoComplete='off'
+            // autoComplete='off'
           />
         }
         {type === 'password' && (
