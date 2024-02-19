@@ -51,6 +51,10 @@ export const ImageBox = styled.div<IImageBox>`
     fill: ${theme.colors.white};
   }
 
+  > svg[id='static'] {
+    transform: translate(-50%, 50%);
+  }
+
   > svg[id='camera'] {
     top: 50%;
     transform: translate(-50%, -50%);

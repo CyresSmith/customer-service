@@ -34,12 +34,10 @@ export const SelectItem = styled.li<SelectedItem>`
 
   &:first-of-type {
     border-radius: ${theme.radii.s} 0 0 ${theme.radii.s};
-    /* text-align: left; */
   }
 
   &:last-of-type {
     border-radius: 0 ${theme.radii.s} ${theme.radii.s} 0;
-    /* text-align: right; */
   }
 
   &:hover {

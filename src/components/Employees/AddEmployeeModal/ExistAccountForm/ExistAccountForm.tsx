@@ -8,6 +8,7 @@ import { useCompany } from 'hooks/useCompany';
 import { State } from 'hooks/useForm';
 import { HiArrowLeft, HiPlusCircle } from 'react-icons/hi';
 import { useAddExistUserEmployeeMutation } from 'services/company.api';
+import { EmployeeRoleEnum } from 'services/types/employee.types';
 import { ButtonBox } from '../AddEmployeeModal.styled';
 
 type Props = {
@@ -50,7 +51,7 @@ const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
         employeeData: {
           jobTitle,
           provider,
-          role: admin ? 'admin' : 'employee',
+          role: admin ? EmployeeRoleEnum.ADMIN : EmployeeRoleEnum.EMPLOYEE,
         },
       },
     }).unwrap();

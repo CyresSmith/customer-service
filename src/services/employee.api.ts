@@ -1,6 +1,9 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from 'services/instance';
-import { UpdateEmployeeAvatar } from './types/employee.types';
+import {
+  UpdateEmployeeAvatar,
+  UpdateEmployeeProfile,
+} from './types/employee.types';
 
 export const employeeApi = createApi({
   reducerPath: 'employeeApi',
@@ -28,7 +31,22 @@ export const employeeApi = createApi({
       }),
       invalidatesTags: ['employeeApi'],
     }),
+
+    updateEmployeeProfile: builder.mutation<
+      { message: string },
+      { companyId: string; employeeId: string; data: UpdateEmployeeProfile }
+    >({
+      query: ({ companyId, employeeId, data }) => ({
+        url: `company/${companyId}/employee/${employeeId}/profile`,
+        method: 'PATCH',
+        data,
+      }),
+      invalidatesTags: ['employeeApi'],
+    }),
   }),
 });
 
-export const { useUploadEmployeeAvatarMutation } = employeeApi;
+export const {
+  useUploadEmployeeAvatarMutation,
+  useUpdateEmployeeProfileMutation,
+} = employeeApi;

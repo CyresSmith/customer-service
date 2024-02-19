@@ -45,12 +45,13 @@ const CustomFormInput = ({
   const valueRef = useRef(value).current;
 
   return (
-    <FormInputsListItem>
-      {label &&
+    <FormInputsListItem id={name}>
+      {label && (
         <FormInputLabel>
           {translateLabels(name)}
           {isRequired && <Required>{' (!)'}</Required>}
-        </FormInputLabel>}
+        </FormInputLabel>
+      )}
       <FormInputBox>
         <FormInput
           type={type !== 'password' ? type : hidden ? type : 'text'}
