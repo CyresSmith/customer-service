@@ -7,6 +7,8 @@ import { useUpdateClientMutation, useUploadAvatarMutation } from "services/clien
 import { useActions } from "hooks";
 import { toast } from "react-toastify";
 import { useClients } from "hooks/useClients";
+import ConfirmOperation from "components/Ui/ConfirmOperation";
+import { useState } from "react";
 
 type Props = {
     companyId: number;
@@ -20,6 +22,11 @@ export const Profile = ({ companyId, clientRefetch, deleteClient, deleteLoading 
     const [updateClientMutation, {isLoading: updateLoading}] = useUpdateClientMutation();
     const { setClientAvatar, updateClient } = useActions();
     const { choosen } = useClients();
+    const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+
+    const confirmToggle = () => {
+        setConfirmOpen(o => !o);
+    };
 
     const handleUpload = async (currentFile: File) => {
         if (!currentFile) {
@@ -63,7 +70,7 @@ export const Profile = ({ companyId, clientRefetch, deleteClient, deleteLoading 
                 />
                 <BtnWrapper>
                     <Button
-                        onClick={() => deleteClient(+choosen.id)}
+                        onClick={confirmToggle}
                         isLoading={deleteLoading}
                         type='button'
                         children='Видалити'
@@ -72,6 +79,13 @@ export const Profile = ({ companyId, clientRefetch, deleteClient, deleteLoading 
                 </BtnWrapper>
             </LeftSideWrapper>
             <ClientForm type='update' onSubmit={handleUpdate} isLoading={updateLoading} initialState={choosen} />
+            {confirmOpen &&
+                <ConfirmOperation
+                    children={`Підвтердити видалення клієнта ${choosen.lastName ? choosen.firstName + ' ' +choosen.lastName : choosen.firstName}?`}
+                    callback={() => deleteClient(+choosen.id)}
+                    closeConfirm={confirmToggle}
+                />
+            }
         </SidesWrapper>
     )
 }

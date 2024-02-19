@@ -1,11 +1,12 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 export interface IButton {
   id?: string;
   isLoading?: boolean;
   disabled?: boolean;
   children?: ReactNode | undefined;
-  onClick?: () => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onClick?: (e: any | undefined) => void;
   Icon?: React.ElementType | undefined;
   $iconPosition?: 'l' | 'r' | undefined;
   type?: 'submit' | 'button';

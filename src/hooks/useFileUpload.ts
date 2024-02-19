@@ -22,7 +22,6 @@ const useFileUpload = (): ImageUploadHookResult => {
   const handleClick = () => inputRef.current?.click();
 
   const handleSelect = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.files?.[0])
     const selectedFile = e.target.files?.[0];
 
     if (selectedFile) {
