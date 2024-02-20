@@ -224,15 +224,15 @@ const CompanyProfile = () => {
 
                 {workingHours && workingHours.length ? (
                   <InfoList>
-                    {workingHours.map(({ days, schedule }, i) => (
+                    {workingHours.map(({ days, hours }, i) => (
                       <li key={i}>
                         <p>
                           {days.map(day => (
                             <span key={day}>{translateWorkSchedule(day)} </span>
                           ))}
 
-                          <span>з {schedule.from} </span>
-                          <span>до {schedule.to} </span>
+                          <span>з {hours?.from} </span>
+                          <span>до {hours?.to} </span>
                         </p>
                       </li>
                     ))}

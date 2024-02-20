@@ -4,13 +4,14 @@ import {
   UpdateEmployeeAvatar,
   UpdateEmployeeProfile,
 } from './types/employee.types';
+import { IEmployeeSchedule } from './types/schedule.types';
 
 export const employeeApi = createApi({
   reducerPath: 'employeeApi',
 
   baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-  tagTypes: ['employeeApi'],
+  tagTypes: ['employeeApi', 'employeeSchedule'],
 
   endpoints: builder => ({
     // getCompanyCategories: builder.query<CompanyCategory[], null>({
@@ -43,10 +44,23 @@ export const employeeApi = createApi({
       }),
       invalidatesTags: ['employeeApi'],
     }),
+
+    updateEmployeeSchedule: builder.mutation<
+      { message: string },
+      { companyId: string; employeeId: string; data: IEmployeeSchedule }
+    >({
+      query: ({ companyId, employeeId, data }) => ({
+        url: `company/${companyId}/employee/${employeeId}/schedule`,
+        method: 'PATCH',
+        data,
+      }),
+      invalidatesTags: ['employeeSchedule'],
+    }),
   }),
 });
 
 export const {
   useUploadEmployeeAvatarMutation,
   useUpdateEmployeeProfileMutation,
+  useUpdateEmployeeScheduleMutation,
 } = employeeApi;

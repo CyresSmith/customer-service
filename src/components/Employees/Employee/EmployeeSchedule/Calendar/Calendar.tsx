@@ -14,9 +14,11 @@ import {
 } from 'date-fns';
 
 type Props = {
+  dateToDateString: (date: Date) => string;
   selectedMonth: Date;
   selectedDays: string[];
-  setSelectedDays: Dispatch<SetStateAction<string[]>>;
+  setSelectedDays?: Dispatch<SetStateAction<string[]>>;
+  handleDayClick: (date: Date) => void;
   toNextMonth: () => void;
   toPrevMonth: () => void;
 };
@@ -32,9 +34,10 @@ const weekDays = [
 ];
 
 const Calendar = ({
+  dateToDateString,
   selectedMonth,
   selectedDays,
-  setSelectedDays,
+  handleDayClick,
   toNextMonth,
   toPrevMonth,
 }: Props) => {
@@ -76,16 +79,7 @@ const Calendar = ({
       : [...prevMonthDays, ...monthDays, ...nextMonthDays].length;
   };
 
-  const dateString = (date: Date) => format(date, 'MM-dd-yyyy');
   const dateFormat = (date: Date) => format(date, 'd');
-
-  const handleDayClick = (date: Date) => {
-    const day = dateString(date);
-
-    setSelectedDays(p =>
-      p.includes(day) ? p.filter(item => item !== day) : [...p, day]
-    );
-  };
 
   return (
     <CalendarBox>
@@ -102,8 +96,8 @@ const Calendar = ({
         <Day
           key={i}
           onClick={() => handleDayClick(date)}
-          $today={dateString(date) === dateString(today)}
-          $selected={selectedDays.includes(dateString(date))}
+          $today={dateToDateString(date) === dateToDateString(today)}
+          $selected={selectedDays.includes(dateToDateString(date))}
         >
           {dateFormat(date)}
         </Day>

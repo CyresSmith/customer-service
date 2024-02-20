@@ -1,3 +1,5 @@
+import { ITime } from './schedule.types';
+
 export interface IEmployeeUser {
   id: string;
   email: string;

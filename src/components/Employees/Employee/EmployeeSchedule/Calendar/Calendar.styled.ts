@@ -25,8 +25,12 @@ export const Day = styled.div<ICalendarDay>`
       : $today
       ? theme.colors.accent.main
       : theme.colors.bg.light};
-  color: ${({ $today }) =>
-    $today ? theme.colors.bg.dark : theme.colors.white};
+  color: ${({ $today, $selected }) =>
+    $selected
+      ? theme.colors.bg.main
+      : $today
+      ? theme.colors.bg.dark
+      : theme.colors.white};
   border-radius: ${theme.radii.s};
   padding: ${theme.space[2]};
   height: 73px;
@@ -38,6 +42,15 @@ export const Day = styled.div<ICalendarDay>`
     $today ? theme.fontWeights.bold : theme.fontWeights.light};
   cursor: pointer;
   transition: ${theme.transition.primary};
+
+  &:hover {
+    background-color: ${({ $today, $selected }) =>
+      $selected
+        ? theme.colors.secondary.light
+        : $today
+        ? theme.colors.accent.light
+        : theme.colors.secondary.main};
+  }
 
   &.other {
     opacity: 0.4;
