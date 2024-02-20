@@ -1,68 +1,74 @@
-import { extendMoment } from 'moment-range';
-import moment, { Moment } from 'moment/min/moment-with-locales';
 import { Dispatch, SetStateAction } from 'react';
 import { CalendarBox, Day, WeekDay } from './Calendar.styled';
 
-const momentRange = extendMoment(moment);
+import {
+  addMonths,
+  eachDayOfInterval,
+  format,
+  isMonday,
+  lastDayOfMonth,
+  nextMonday,
+  nextSunday,
+  previousMonday,
+  startOfMonth,
+} from 'date-fns';
 
 type Props = {
-  year: number;
-  month: number;
+  selectedMonth: Date;
   selectedDays: string[];
   setSelectedDays: Dispatch<SetStateAction<string[]>>;
   toNextMonth: () => void;
   toPrevMonth: () => void;
 };
 
+const weekDays = [
+  'понеділок',
+  'вівторок',
+  'середа',
+  'четвер',
+  'п’ятниця',
+  'субота',
+  'неділя',
+];
+
 const Calendar = ({
-  year,
-  month,
+  selectedMonth,
   selectedDays,
   setSelectedDays,
   toNextMonth,
   toPrevMonth,
 }: Props) => {
-  const today = moment();
-  const firstDay = moment([year, month]);
-  const lastDay = moment(firstDay).endOf('month');
-  const monthDays = Array.from(momentRange.range(firstDay, lastDay).by('day'));
+  const today = new Date(Date.now());
 
-  const prevYear = month === 0 ? year - 1 : year;
-  const prevMonth = month === 0 ? 11 : month - 1;
+  const monthDays = eachDayOfInterval({
+    start: selectedMonth,
+    end: lastDayOfMonth(selectedMonth),
+  });
 
-  const prevMonthLastMonday = moment([prevYear, prevMonth])
-    .endOf('month')
-    .isoWeekday(1);
+  const prevMonthStart = startOfMonth(addMonths(selectedMonth, -1));
+  const prevMonthLastDay = lastDayOfMonth(prevMonthStart);
 
-  const prevMonthLastDay = moment([prevYear, prevMonth]).endOf('month');
+  const prevMonthDays = eachDayOfInterval({
+    start: prevMonthLastDay,
+    end: previousMonday(prevMonthLastDay),
+  });
 
-  const prevMonthDays = Array.from(
-    momentRange.range(prevMonthLastMonday, prevMonthLastDay).by('day')
-  );
+  const nextMonthFirstDay = startOfMonth(addMonths(selectedMonth, 1));
+  const nextMonthFirstSunday = nextSunday(nextMonthFirstDay);
 
-  const nextMonth = month === 11 ? 0 : month + 1;
-  const nextYear = month === 11 ? year + 1 : year;
+  const nextMonthDays = eachDayOfInterval({
+    start: nextMonthFirstDay,
+    end: nextSunday(nextMonthFirstDay),
+  });
 
-  const nextMonthFirstDay = moment([nextYear, nextMonth]);
+  const nextMonthSecondMonday = nextMonday(nextMonthFirstSunday);
 
-  const nextMonthFirstSunday = moment([nextYear, nextMonth])
-    .startOf('month')
-    .isoWeekday(7);
+  const nextMonthExtended = eachDayOfInterval({
+    start: nextMonthSecondMonday,
+    end: nextSunday(nextMonthSecondMonday),
+  });
 
-  const nextMonthDays = Array.from(
-    momentRange.range(nextMonthFirstDay, nextMonthFirstSunday).by('day')
-  );
-
-  const nextMonthSecondFirstMonday = nextMonthFirstSunday.clone().add(1, 'd');
-  const nextMonthSecondSunday = nextMonthFirstSunday.clone().add(7, 'd');
-
-  const nextMonthExtended = Array.from(
-    momentRange
-      .range(nextMonthSecondFirstMonday, nextMonthSecondSunday)
-      .by('day')
-  );
-
-  const isFirstDayMonday = firstDay.isoWeekday() === 1;
+  const isFirstDayMonday = isMonday(selectedMonth);
 
   const daysCount = () => {
     return isFirstDayMonday
@@ -70,9 +76,10 @@ const Calendar = ({
       : [...prevMonthDays, ...monthDays, ...nextMonthDays].length;
   };
 
-  const dateString = (date: Moment) => date.format('MM-DD-YYYY');
+  const dateString = (date: Date) => format(date, 'MM-dd-yyyy');
+  const dateFormat = (date: Date) => format(date, 'd');
 
-  const handleDayClick = (date: Moment) => {
+  const handleDayClick = (date: Date) => {
     const day = dateString(date);
 
     setSelectedDays(p =>
@@ -82,13 +89,13 @@ const Calendar = ({
 
   return (
     <CalendarBox>
-      {moment.weekdays().map(day => (
-        <WeekDay>{day}</WeekDay>
+      {weekDays.map(day => (
+        <WeekDay key={day}>{day}</WeekDay>
       ))}
       {!isFirstDayMonday &&
         prevMonthDays.map((date, i) => (
           <Day className="other" key={i} onClick={toPrevMonth}>
-            {date.format('D')}
+            {dateFormat(date)}
           </Day>
         ))}
       {monthDays.map((date, i) => (
@@ -98,18 +105,18 @@ const Calendar = ({
           $today={dateString(date) === dateString(today)}
           $selected={selectedDays.includes(dateString(date))}
         >
-          {date.format('D')}
+          {dateFormat(date)}
         </Day>
       ))}
       {nextMonthDays.map((date, i) => (
         <Day className="other" key={i} onClick={toNextMonth}>
-          <span>{date.format('D')}</span>
+          <span>{dateFormat(date)}</span>
         </Day>
       ))}
       {daysCount() < 42 &&
         nextMonthExtended.map((date, i) => (
           <Day className="other" key={i} onClick={toNextMonth}>
-            {date.format('D')}
+            {dateFormat(date)}
           </Day>
         ))}
     </CalendarBox>

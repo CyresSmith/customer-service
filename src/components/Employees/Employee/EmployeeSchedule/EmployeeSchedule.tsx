@@ -1,5 +1,4 @@
 import Button from 'components/Ui/Buttons/Button';
-import moment from 'moment/min/moment-with-locales';
 import { useState } from 'react';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
 import { MdToday } from 'react-icons/md';
@@ -12,47 +11,30 @@ import {
   MonthName,
 } from './EmployeeSchedule.styled';
 
-moment.locale('uk');
+import { addMonths, format, setDefaultOptions, startOfMonth } from 'date-fns';
+import { uk } from 'date-fns/locale';
 
-moment.updateLocale('uk', {
-  week: {
-    dow: 1,
-  },
-});
+setDefaultOptions({ locale: uk });
 
 type Props = { employee: IEmployee };
 
 const EmployeeSchedule = ({ employee }: Props) => {
-  const today = moment();
+  const currentMonthStart = startOfMonth(new Date(Date.now()));
+  const [selectedMonth, setSelectedMonth] = useState(currentMonthStart);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
+
   console.log('🚀 ~ EmployeeSchedule ~ selectedDays:', selectedDays);
-  const [month, setMonth] = useState(today.month());
-  const [year, setYear] = useState(today.year());
 
   const handleNextMonthClick = () => {
-    if (month === 11) {
-      setYear(p => p + 1);
-      setMonth(0);
-    } else {
-      setMonth(p => p + 1);
-    }
+    setSelectedMonth(addMonths(selectedMonth, 1));
   };
 
   const handlePrevMonthClick = () => {
-    if (month === 0) {
-      setYear(p => p - 1);
-      setMonth(11);
-    } else {
-      setMonth(p => p - 1);
-    }
+    setSelectedMonth(addMonths(selectedMonth, -1));
   };
 
-  const currentYear = today.year();
-  const currentMonth = today.month();
-
   const toToday = () => {
-    setYear(currentYear);
-    setMonth(currentMonth);
+    setSelectedMonth(currentMonthStart);
   };
 
   return (
@@ -69,7 +51,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
               $colors="light"
             />
             <MonthName>
-              {moment([year, month]).format('MMMM yyyy').toLocaleUpperCase()}
+              {format(selectedMonth, 'LLLL yyyy').toLocaleUpperCase()}
             </MonthName>
             <Button
               onClick={handleNextMonthClick}
@@ -79,14 +61,13 @@ const EmployeeSchedule = ({ employee }: Props) => {
             />
           </MonthBox>
 
-          {(currentMonth !== month || currentYear !== year) && (
+          {currentMonthStart !== selectedMonth && (
             <Button onClick={toToday} Icon={MdToday} $round $colors="light" />
           )}
         </CalendarHeader>
 
         <Calendar
-          year={year}
-          month={month}
+          selectedMonth={selectedMonth}
           selectedDays={selectedDays}
           setSelectedDays={setSelectedDays}
           toNextMonth={handleNextMonthClick}
