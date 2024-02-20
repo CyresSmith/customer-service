@@ -4,6 +4,7 @@ import { Props } from './Dropdown';
 
 export const DropWrapper = styled.div<Pick<Props, '$isOpen'>>`
   position: absolute;
+  z-index: 100;
   top: calc(100% + ${theme.space[3]});
   right: 0;
   background-color: ${theme.colors.bg.main};
