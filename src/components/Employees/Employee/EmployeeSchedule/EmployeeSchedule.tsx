@@ -1,19 +1,33 @@
 import Button from 'components/Ui/Buttons/Button';
+import moment from 'moment/min/moment-with-locales';
 import { useState } from 'react';
-import { HiMinusCircle, HiPlusCircle } from 'react-icons/hi';
+import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
+import { MdToday } from 'react-icons/md';
 import { IEmployee } from 'services/types/employee.types';
 import Calendar from './Calendar';
-import { EmployeeScheduleBox } from './EmployeeSchedule.styled';
+import {
+  CalendarHeader,
+  EmployeeScheduleBox,
+  MonthBox,
+  MonthName,
+} from './EmployeeSchedule.styled';
+
+moment.locale('uk');
+
+moment.updateLocale('uk', {
+  week: {
+    dow: 1,
+  },
+});
 
 type Props = { employee: IEmployee };
 
 const EmployeeSchedule = ({ employee }: Props) => {
-  const [selectedDays, setSelectedDays] = useState(null);
-  const [today, setToday] = useState(new Date());
-  const [month, setMonth] = useState(today.getMonth());
-  // console.log('🚀 ~ EmployeeSchedule ~ month:', month);
-  const [year, setYear] = useState(today.getFullYear());
-  // console.log('🚀 ~ EmployeeSchedule ~ year:', year);
+  const today = moment();
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  console.log('🚀 ~ EmployeeSchedule ~ selectedDays:', selectedDays);
+  const [month, setMonth] = useState(today.month());
+  const [year, setYear] = useState(today.year());
 
   const handleNextMonthClick = () => {
     if (month === 11) {
@@ -33,15 +47,51 @@ const EmployeeSchedule = ({ employee }: Props) => {
     }
   };
 
+  const currentYear = today.year();
+  const currentMonth = today.month();
+
+  const toToday = () => {
+    setYear(currentYear);
+    setMonth(currentMonth);
+  };
+
   return (
     <EmployeeScheduleBox>
       <div>EmployeeScheduleBox</div>
 
       <div>
-        <Button onClick={handlePrevMonthClick} Icon={HiMinusCircle} $round />
-        <Button onClick={handleNextMonthClick} Icon={HiPlusCircle} $round />
+        <CalendarHeader>
+          <MonthBox>
+            <Button
+              onClick={handlePrevMonthClick}
+              Icon={HiArrowLeft}
+              $round
+              $colors="light"
+            />
+            <MonthName>
+              {moment([year, month]).format('MMMM yyyy').toLocaleUpperCase()}
+            </MonthName>
+            <Button
+              onClick={handleNextMonthClick}
+              Icon={HiArrowRight}
+              $round
+              $colors="light"
+            />
+          </MonthBox>
 
-        <Calendar year={year} month={month} />
+          {(currentMonth !== month || currentYear !== year) && (
+            <Button onClick={toToday} Icon={MdToday} $round $colors="light" />
+          )}
+        </CalendarHeader>
+
+        <Calendar
+          year={year}
+          month={month}
+          selectedDays={selectedDays}
+          setSelectedDays={setSelectedDays}
+          toNextMonth={handleNextMonthClick}
+          toPrevMonth={handlePrevMonthClick}
+        />
       </div>
     </EmployeeScheduleBox>
   );

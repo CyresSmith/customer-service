@@ -7,3 +7,22 @@ export const EmployeeScheduleBox = styled.div`
   gap: ${theme.space[5]};
   align-items: start;
 `;
+
+export const CalendarHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.space[4]};
+  margin-bottom: ${theme.space[4]};
+`;
+
+export const MonthBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.space[4]};
+`;
+
+export const MonthName = styled.p`
+  width: 130px;
+  text-align: center;
+  font-size: ${theme.fontSizes.l};
+`;

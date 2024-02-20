@@ -3,24 +3,43 @@ import theme from 'utils/theme';
 
 export const CalendarBox = styled.div`
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
   gap: ${theme.space[2]};
 `;
 
-export const Day = styled.div`
-  background-color: ${theme.colors.bg.light};
-  border-radius: ${theme.radii.s};
-  padding: ${theme.space[2]};
-  width: calc((100% - (${theme.space[2]} * 6)) / 7);
-  height: 73px;
+interface ICalendarDay {
+  $today?: boolean;
+  $selected?: boolean;
+}
+
+export const WeekDay = styled.span`
+  text-align: center;
+  text-transform: capitalize;
 `;
 
-export const OtherMonthDay = styled.div`
-  background-color: ${theme.colors.bg.light};
+export const Day = styled.div<ICalendarDay>`
+  background-color: ${({ $today, $selected }) =>
+    $selected
+      ? theme.colors.secondary.light
+      : $today
+      ? theme.colors.accent.main
+      : theme.colors.bg.light};
+  color: ${({ $today }) =>
+    $today ? theme.colors.bg.dark : theme.colors.white};
   border-radius: ${theme.radii.s};
   padding: ${theme.space[2]};
-  width: calc((100% - (${theme.space[2]} * 6)) / 7);
   height: 73px;
-  opacity: 0.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: ${theme.fontSizes.xl};
+  font-weight: ${({ $today }) =>
+    $today ? theme.fontWeights.bold : theme.fontWeights.light};
+  cursor: pointer;
+  transition: ${theme.transition.primary};
+
+  &.other {
+    opacity: 0.4;
+  }
 `;
