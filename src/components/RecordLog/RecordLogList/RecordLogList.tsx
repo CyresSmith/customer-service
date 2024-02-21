@@ -3,7 +3,7 @@ import { RecordLogListItem } from "./RecordLogListItem";
 
 const items = [
     [
-        { from: 2, to: 4 },
+        { from: 1, to: 4 },
         { from: 5, to: 6 },
         { from: 10, to: 15 },
     ],

@@ -1,14 +1,23 @@
-import { List, ListItem } from "./HoursList.styled";
+import { Container, TableList, TableListItem } from "./HoursList.styled";
+import { TimeList } from "./TimeList";
 
 type Props = {
-    workHours: unknown[];
+    workHours: string[];
 };
 
-const HoursList = ({workHours}: Props) => {
+const HoursList = ({ workHours }: Props) => {
+    const tableArray = Array.from({ length: workHours.length * 4 - 4 });
+
+    console.log(tableArray.length)
+
     return (
-        <List>
-            {workHours.map((wh, i) => <ListItem key={i} />)}
-        </List>
+        <Container>
+            <TimeList side='left' workHours={workHours} />
+            <TableList>
+                {tableArray.map((wh, i) => <TableListItem key={i} />)}
+            </TableList>
+            <TimeList side='rigth' workHours={workHours} />
+        </Container>
     )
 };
 

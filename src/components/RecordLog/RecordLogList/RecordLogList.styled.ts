@@ -9,7 +9,7 @@ export const List = styled.ul<{$wh: number}>`
     display: grid;
     grid-template-columns: repeat(4, 0.25fr);
     grid-template-rows: 1fr;
-    /* padding-top: ${theme.space[4]}; */
+    padding: ${theme.space[4]} 50px;
     width: 100%;
     height: ${props => props.$wh * 50}px;
     margin: 0 auto;

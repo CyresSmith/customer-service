@@ -6,7 +6,7 @@ export const List = styled.ul<{$wh: number}>`
     height: 100%;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(${props => props.$wh}, 50px);
+    grid-template-rows: repeat(${props => props.$wh}, 25px);
 `
 
 export const ListItem = styled.li<{$from: number, $to: number}>`
@@ -19,6 +19,6 @@ export const ListItem = styled.li<{$from: number, $to: number}>`
 export const ListItemContent = styled.div`
     width: 100%;
     height: 100%;
-    background-color: ${theme.colors.accent.light};
+    background-color: ${theme.colors.primary.rgba};
     border-radius: ${theme.radii.s};
 `
