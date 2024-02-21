@@ -51,19 +51,20 @@ const CustomFormInput = ({
 
   return (
     <FormInputsListItem $type={type}>
-      {label &&
+      {label && (
         <FormInputLabel>
           {translateLabels(name)}
           {isRequired && <Required>{' (!)'}</Required>}
         </FormInputLabel>
       )}
       <FormInputBox>
-        {type === 'select' && selectItems && handleSelect ? 
+        {type === 'select' && selectItems && handleSelect ? (
           <CustomFormSelect<string>
             handleSelect={handleSelect}
             selectItems={selectItems}
             selectedItem={value as string}
-          /> :
+          />
+        ) : (
           <FormInput
             type={type !== 'password' ? type : hidden ? type : 'text'}
             name={name}
@@ -74,7 +75,7 @@ const CustomFormInput = ({
             placeholder={placeholder}
             // autoComplete='off'
           />
-        }
+        )}
         {type === 'password' && (
           <HideButton type="button" onClick={() => setHidden(p => !p)}>
             <HideIcon as={hidden ? HiEyeOff : HiEye} hidden={hidden} />
