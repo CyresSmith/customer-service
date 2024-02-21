@@ -265,6 +265,8 @@ const EmployeeSchedule = ({ employee }: Props) => {
   };
 
   const handleAddBreakHoursClick = () => {
+    if (!isEditingAllowed) return;
+
     if (isBreak) {
       setIsBreak(false);
       setBreakFrom('');
@@ -379,25 +381,28 @@ const EmployeeSchedule = ({ employee }: Props) => {
         )}
       </CalendarSide>
 
+      {/* {isEditingAllowed && ( */}
       <SelectionSide>
         <div>
-          <ScheduleSection>
-            <p>Швидкий вибір днів</p>
+          {isEditingAllowed && (
+            <ScheduleSection>
+              <p>Швидкий вибір днів</p>
 
-            <SelectDaysBox>
-              {quickSelectButtons.map(({ type, label }) => (
-                <li key={type}>
-                  <Button
-                    onClick={() => handleQuickSelectClick(type)}
-                    $colors={selectType === type ? 'accent' : 'light'}
-                    disabled={!isEditingAllowed}
-                  >
-                    {label}
-                  </Button>
-                </li>
-              ))}
-            </SelectDaysBox>
-          </ScheduleSection>
+              <SelectDaysBox>
+                {quickSelectButtons.map(({ type, label }) => (
+                  <li key={type}>
+                    <Button
+                      onClick={() => handleQuickSelectClick(type)}
+                      $colors={selectType === type ? 'accent' : 'light'}
+                      disabled={!isEditingAllowed}
+                    >
+                      {label}
+                    </Button>
+                  </li>
+                ))}
+              </SelectDaysBox>
+            </ScheduleSection>
+          )}
 
           <ScheduleSection>
             <p>Робочій час</p>
@@ -421,20 +426,18 @@ const EmployeeSchedule = ({ employee }: Props) => {
                   onSelect={setTo}
                   $colors="light"
                   items={timeArrayFrom(from)}
-                  disabled={!isEditingAllowed && from === ''}
+                  disabled={!isEditingAllowed || from === ''}
                 />
               </SelectBox>
             </SelectDaysBox>
           </ScheduleSection>
 
           <ScheduleSection>
-            {isEditingAllowed && (
-              <Checkbox
-                isChecked={isBreak}
-                handleCheck={handleAddBreakHoursClick}
-                name="break"
-              />
-            )}
+            <Checkbox
+              isChecked={isBreak}
+              handleCheck={handleAddBreakHoursClick}
+              name="break"
+            />
             {isBreak && (
               <SelectDaysBox>
                 <SelectBox>
@@ -457,7 +460,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
                     onSelect={setBreakTo}
                     $colors="light"
                     items={timeArrayFrom(breakFrom || '')}
-                    disabled={!isEditingAllowed && breakFrom === ''}
+                    disabled={!isEditingAllowed || breakFrom === ''}
                   />
                 </SelectBox>
               </SelectDaysBox>
@@ -489,6 +492,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
           </ButtonsBox>
         )}
       </SelectionSide>
+      {/* )} */}
     </EmployeeScheduleBox>
   );
 };

@@ -2,15 +2,13 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const EmployeeScheduleBox = styled.div`
-  display: grid;
-  grid-template-columns: 550px 250px;
+  display: flex;
   gap: ${theme.space[5]};
-  align-items: start;
+  min-height: 534px;
 `;
 
 export const CalendarSide = styled.div`
-  width: 100%;
-  min-height: 534px;
+  width: 550px;
   position: relative;
 `;
 
@@ -18,7 +16,7 @@ export const SelectionSide = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
+  width: 250px;
 `;
 
 export const ButtonsBox = styled.div`

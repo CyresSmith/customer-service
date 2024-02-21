@@ -6,6 +6,7 @@ export const ProfileBox = styled.div`
   grid-template-columns: 250px 550px;
   gap: ${theme.space[5]};
   align-items: start;
+  min-height: 350px;
 `;
 
 export const AvatarBox = styled.div`

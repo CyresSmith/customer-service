@@ -6,6 +6,7 @@ import {
   eachDayOfInterval,
   format,
   getDate,
+  getMonth,
   isMonday,
   lastDayOfMonth,
   nextMonday,
@@ -95,7 +96,10 @@ const Calendar = ({
         <Day
           key={i}
           onClick={() => handleDayClick(getDate(date))}
-          $today={getDate(date) === getDate(today)}
+          $today={
+            getDate(date) === getDate(today) &&
+            getMonth(selectedMonth) === getMonth(today)
+          }
           $selected={selectedDays.includes(getDate(date))}
         >
           {dateFormat(date)}
