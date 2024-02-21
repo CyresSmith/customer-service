@@ -91,7 +91,7 @@ const Avatar = ({
           </ImageBox>
 
           {currentFile && (
-            <ButtonsBox>
+            <ButtonsBox width={size}>
               <Button
                 onClick={() => {
                   handleUpload(currentFile);

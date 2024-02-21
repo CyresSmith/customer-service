@@ -71,6 +71,7 @@ export const Btn = styled.button<IButtonStyle>`
 
   span {
     color: inherit;
+    pointer-events: none;
   }
 
   &:disabled {

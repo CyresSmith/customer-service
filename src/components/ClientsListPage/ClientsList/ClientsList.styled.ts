@@ -1,13 +1,19 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import theme from 'utils/theme';
+
+const appeare = keyframes`
+    0% { transform: translate(0, 200%); opacity: 0 }
+    100% { transform: translate(0, 0); opacity: 1 }
+`
 
 export const List = styled.ul`
     width: 100%;
-    /* height: 100%; */
+    height: 100%;
     display: flex;
     flex-direction: column;
     gap: ${theme.space[3]};
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 `
 
 export const ListItem = styled.li`
@@ -19,6 +25,8 @@ export const ListItem = styled.li`
     border-radius: ${theme.radii.s};
     background-color: ${theme.colors.bg.main};
     cursor: pointer;
+    animation: ${appeare};
+    animation-duration: 500ms;
     transition: ${theme.transition.primary};
 
     &:hover,
@@ -43,7 +51,9 @@ export const Avatar = styled.img`
     position: absolute;
     top: 0;
     left: 0;
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 `
 export const Name = styled.p`
     font-size: ${theme.fontSizes.l};

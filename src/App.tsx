@@ -14,7 +14,7 @@ const ProfilePage = lazy(() => import('../src/pages/Profile'));
 const CompanyProfile = lazy(() => import('pages/CompanyProfile'));
 const ClientsListPage = lazy(() => import('./pages/ClientsListPage'));
 const WorkSchedule = lazy(() => import('pages/WorkSchedule'));
-const RecordLog = lazy(() => import('pages/RecordLog'));
+const RecordLog = lazy(() => import('pages/RecordLogPage'));
 const VerifyPage = lazy(() => import('pages/Verify'));
 const ErrorPage = lazy(() => import('pages/ErrorPage'));
 const Workspace = lazy(() => import('components/Layout/UsersLayout'));

@@ -2,25 +2,66 @@ import Button from 'components/Ui/Buttons/Button';
 import Modal from 'components/Ui/Modal/Modal';
 import { ChangeEvent, useState } from 'react';
 import { IoMdAddCircle } from 'react-icons/io';
-import AddClientForm from './AddClientForm';
+import ClientForm from '../ClientForm';
 import Search from 'components/Ui/Search/Search';
 import { BarWrapper, SearchWrapper } from './ClientsListBar.styled';
+import { Client } from 'store/clients/clients.types';
+import { useCreateClientMutation } from 'services/clients.api';
+import { useParams } from 'react-router-dom';
+import { useActions } from 'hooks';
+import { toast } from 'react-toastify';
+
+const addInitialState: Client = {
+  id: '',
+  firstName: '',
+  lastName: '',
+  birthday: '',
+  phone: '',
+  email: '',
+  discount: 0,
+  card: '',
+  source: '',
+  comment: '',
+  gender: ''
+};
 
 type Props = {
   searchQuery: string;
   handleSearch: (event: ChangeEvent<HTMLInputElement>) => void;
+  refetchData: () => void;
 };
 
-const ClientsListBar = ({searchQuery, handleSearch}: Props) => {
+const ClientsListBar = ({searchQuery, handleSearch, refetchData}: Props) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [createClientMutatuin, { isLoading }] = useCreateClientMutation();
+  const { addNewClient } = useActions();
 
-  const toggleModal = () => {
+  const {companyId} = useParams();
+
+  const handleAddClient = async (state: Client) => {
+    if (!companyId) {
+      return;
+    }
+
+    const data = Object.fromEntries(Object.entries(state).filter(i => i[1] !== ''));
+
+    const result = await createClientMutatuin({data, companyId: +companyId}).unwrap();
+    
+    if (result) {
+      addNewClient(result);
+      toggleModal();
+      toast.success('Нового клієнта успішно збережено')
+    }
+  };
+
+  function toggleModal () {
     if (modalOpen) {
+      refetchData();
       setModalOpen(false);
     } else {
       setModalOpen(true);
     }
-  };
+  }
 
   return (
     <BarWrapper>
@@ -40,7 +81,13 @@ const ClientsListBar = ({searchQuery, handleSearch}: Props) => {
 
       {modalOpen && (
         <Modal
-          children={<AddClientForm closeModal={toggleModal} />}
+          children={
+            <ClientForm
+              type='add'
+              initialState={addInitialState}
+              onSubmit={handleAddClient}
+              isLoading={isLoading}
+            />}
           $isOpen={modalOpen}
           closeModal={toggleModal}
         />

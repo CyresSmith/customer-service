@@ -9,6 +9,7 @@ interface IImageBox {
 }
 
 export const AvatarBox = styled.div<{ width: number }>`
+  position: relative;
   width: ${({ width }) => (width ? `${width}px` : '250px')};
   display: flex;
   flex-direction: column;
@@ -26,8 +27,15 @@ export const ImageBox = styled.div<IImageBox>`
   background-color: ${({ $light }) =>
     $light ? `rgba(255, 255, 255, 0.5 )` : `rgba(0, 0, 0, 0.5 )`};
   cursor: ${({ $allowChanges }) => (!$allowChanges ? 'default' : 'pointer')};
+  transition: ${theme.transition.modal};
 
-  &:hover {
+  &:hover,
+    :focus {
+    border-color: ${theme.colors.accent.main};
+    box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
+
     > svg {
       opacity: 0.8;
     }
@@ -68,10 +76,16 @@ export const ImageBox = styled.div<IImageBox>`
   }
 `;
 
-export const ButtonsBox = styled.div`
+export const ButtonsBox = styled.div<{width: number}>`
+  position: absolute;
+  left: 0; 
+  right: 0;
+  bottom: -${props => props.width === 300 ? props.width * 0.1 : props.width * 0.15}px;
+  margin-left: auto; 
+  margin-right: auto; 
+  width: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  margin-top: ${theme.space[3]};
+  gap: ${theme.space[2]};
 `;

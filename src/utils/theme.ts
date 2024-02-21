@@ -24,6 +24,7 @@ const theme = {
       // main: '#D2E603',
     },
     primary: {
+      rgba: 'rgba(143, 227, 217, 0.6)',
       light: '#8fe3d9',
       main: '#5a8c86',
       dark: '#213331',
@@ -118,7 +119,8 @@ const theme = {
 
   transition: {
     primary: 'all 250ms ease-in-out',
-    modal: 'all 500ms linear',
+    modal: 'all 350ms linear',
+    drop: 'all 500ms linear',
   },
 
   shadow: {

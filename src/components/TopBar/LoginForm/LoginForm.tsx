@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useLogInMutation } from 'services/auth.api';
 import { FormBox } from '../TopBar.styled';
-import { User, UserLogin } from 'store/user/user.types';
+import { UserLogin } from 'store/user/user.types';
 
 type Props = {
   closeModal: () => void;
@@ -47,13 +47,14 @@ const LoginForm = ({ closeModal }: Props) => {
 
   return (
     <FormBox>
-      <CustomForm<User>
+      <CustomForm<UserLogin>
         SubmitButtonIcon={HiLogin}
         isLoading={isLoading}
         buttonLabel="Увійти"
         onSubmit={handleSubmit}
         initialState={initialLoginState}
         inputs={loginInputs}
+        title='Авторизація'
       />
     </FormBox>
   );

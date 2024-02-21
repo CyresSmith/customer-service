@@ -1,4 +1,3 @@
-import { State } from 'hooks/useForm';
 import { IconType } from 'react-icons';
 
 export type InputProps = {
@@ -7,19 +6,22 @@ export type InputProps = {
   id?: string | number;
   isRequired?: boolean;
   isReadonly?: boolean;
+  placeholder?: string;
 };
 
-export type FormProps = {
+export type FormProps<T> = {
+  title?: string;
   SubmitButtonIcon?: IconType;
   ResetButtonIcon?: IconType;
   buttonLabel: string;
   resetButtonLabel?: string;
   buttonWidth?: string;
   inputs: InputProps[];
-  onSubmit: (state: State) => void;
-  initialState: State;
+  onSubmit: (state: T) => void;
+  initialState: T;
   isLoading?: boolean;
   buttonsDirection?: string;
+  selectItems?: string[];
 };
 
 export type ButtonsProps = {
@@ -34,3 +36,9 @@ export type ButtonsProps = {
   disabledSubmit: boolean;
   disabledReset: boolean;
 };
+
+export type SelectProps<T> = {
+  selectItems: T[];
+  selectedItem: T;
+  handleSelect: (item: T) => void;
+}

@@ -27,6 +27,8 @@ export function useForm<Type extends { [k: string]: unknown }>(
     setState(prevState => {
       return type === 'checkbox'
         ? { ...prevState, [name]: !prevState[name] }
+        : name === 'discount'
+        ? {...prevState, [name]: +value}
         : { ...prevState, [name]: value };
     });
   };
