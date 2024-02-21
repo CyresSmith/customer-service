@@ -5,6 +5,7 @@ import {
   addMonths,
   eachDayOfInterval,
   format,
+  getDate,
   isMonday,
   lastDayOfMonth,
   nextMonday,
@@ -14,11 +15,10 @@ import {
 } from 'date-fns';
 
 type Props = {
-  dateToDateString: (date: Date) => string;
   selectedMonth: Date;
-  selectedDays: string[];
+  selectedDays: number[];
   setSelectedDays?: Dispatch<SetStateAction<string[]>>;
-  handleDayClick: (date: Date) => void;
+  handleDayClick: (date: number) => void;
   toNextMonth: () => void;
   toPrevMonth: () => void;
 };
@@ -34,7 +34,6 @@ const weekDays = [
 ];
 
 const Calendar = ({
-  dateToDateString,
   selectedMonth,
   selectedDays,
   handleDayClick,
@@ -95,9 +94,9 @@ const Calendar = ({
       {monthDays.map((date, i) => (
         <Day
           key={i}
-          onClick={() => handleDayClick(date)}
-          $today={dateToDateString(date) === dateToDateString(today)}
-          $selected={selectedDays.includes(dateToDateString(date))}
+          onClick={() => handleDayClick(getDate(date))}
+          $today={getDate(date) === getDate(today)}
+          $selected={selectedDays.includes(getDate(date))}
         >
           {dateFormat(date)}
         </Day>

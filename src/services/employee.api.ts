@@ -14,13 +14,6 @@ export const employeeApi = createApi({
   tagTypes: ['employeeApi', 'employeeSchedule'],
 
   endpoints: builder => ({
-    // getCompanyCategories: builder.query<CompanyCategory[], null>({
-    //   query: () => ({
-    //     url: `/category/company`,
-    //     method: 'GET',
-    //   }),
-    // }),
-
     uploadEmployeeAvatar: builder.mutation<
       { url: string },
       UpdateEmployeeAvatar
@@ -56,6 +49,27 @@ export const employeeApi = createApi({
       }),
       invalidatesTags: ['employeeSchedule'],
     }),
+
+    getEmployeeSchedule: builder.query<
+      IEmployeeSchedule,
+      { companyId: string; employeeId: string; year: number; month: number }
+    >({
+      query: ({ companyId, employeeId, year, month }) => ({
+        url: `company/${companyId}/employee/${employeeId}/schedule?year=${year}&month=${month}`,
+        method: 'GET',
+      }),
+    }),
+
+    deleteEmployeeSchedule: builder.mutation<
+      { message: string },
+      { companyId: string; employeeId: string; scheduleId: string }
+    >({
+      query: ({ companyId, employeeId, scheduleId }) => ({
+        url: `company/${companyId}/employee/${employeeId}/schedule/${scheduleId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['employeeSchedule'],
+    }),
   }),
 });
 
@@ -63,4 +77,6 @@ export const {
   useUploadEmployeeAvatarMutation,
   useUpdateEmployeeProfileMutation,
   useUpdateEmployeeScheduleMutation,
+  useGetEmployeeScheduleQuery,
+  useDeleteEmployeeScheduleMutation,
 } = employeeApi;

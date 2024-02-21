@@ -1,5 +1,5 @@
 import Button from 'components/Ui/Buttons/Button';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { HiArrowLeft, HiArrowRight, HiTrash } from 'react-icons/hi';
 import { MdToday } from 'react-icons/md';
 import { IEmployee } from 'services/types/employee.types';
@@ -7,6 +7,7 @@ import Calendar from './Calendar';
 import {
   ButtonsBox,
   CalendarHeader,
+  CalendarSide,
   EmployeeScheduleBox,
   MonthBox,
   MonthName,
@@ -17,6 +18,7 @@ import {
 } from './EmployeeSchedule.styled';
 
 import Checkbox from 'components/Ui/Form/Checkbox';
+import Loader from 'components/Ui/Loader';
 import Select from 'components/Ui/Select';
 import {
   addMonths,
@@ -34,12 +36,17 @@ import {
   startOfMonth,
 } from 'date-fns';
 import { uk } from 'date-fns/locale';
+import arraysAreEqual from 'helpers/areArrayEqual';
 import generateTimeArray from 'helpers/generateTimeArray';
+import { useAdminRights, useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { IoIosSave } from 'react-icons/io';
 import { toast } from 'react-toastify';
-import { useUpdateEmployeeScheduleMutation } from 'services/employee.api';
-import { IWorkSchedule } from 'services/types/schedule.types';
+import {
+  useDeleteEmployeeScheduleMutation,
+  useGetEmployeeScheduleQuery,
+  useUpdateEmployeeScheduleMutation,
+} from 'services/employee.api';
 
 setDefaultOptions({ locale: uk });
 
@@ -59,71 +66,87 @@ const quickSelectButtons = [
 
 type Props = { employee: IEmployee };
 
-const initialState: IWorkSchedule = {
-  hours: {
-    from: '',
-    to: '',
-  },
-  break: {
-    from: '',
-    to: '',
-  },
+const initialState = {
+  from: '',
+  to: '',
+  breakFrom: '',
+  breakTo: '',
   days: [],
 };
 
 const EmployeeSchedule = ({ employee }: Props) => {
+  const isAdmin = useAdminRights();
+  const { user } = useAuth();
+
+  const isEditingAllowed = isAdmin || user?.id === employee?.user?.id;
+
   const currentMonthStart = startOfMonth(new Date(Date.now()));
+
+  const datesArrToDaysArr = useCallback(
+    (dates: Date[]) => dates.map(day => getDate(day)),
+    []
+  );
 
   const { id: companyId } = useCompany();
 
   const [selectedMonth, setSelectedMonth] = useState(currentMonthStart);
+
+  const { isLoading: isScheduleLoading, data: employeeSchedule } =
+    useGetEmployeeScheduleQuery(
+      {
+        companyId,
+        employeeId: employee.id,
+        year: getYear(selectedMonth),
+        month: getMonth(selectedMonth) + 1,
+      },
+      { refetchOnMountOrArgChange: true }
+    );
+
   const [selectType, setSelectType] = useState<SelectType | null>(null);
-  const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const [from, setFrom] = useState(initialState?.hours?.from);
-  const [to, setTo] = useState(initialState?.hours?.to);
+  const [selectedDays, setSelectedDays] = useState<number[]>(initialState.days);
+  const [from, setFrom] = useState(initialState.from);
+  const [to, setTo] = useState(initialState.to);
   const [isBreak, setIsBreak] = useState(false);
-  const [breakFrom, setBreakFrom] = useState(initialState?.break?.from);
-  const [breakTo, setBreakTo] = useState(initialState?.break?.to);
+  const [breakFrom, setBreakFrom] = useState(initialState.breakFrom);
+  const [breakTo, setBreakTo] = useState(initialState.breakTo);
 
-  const [updateSchedule, { isLoading, isError, isSuccess, error }] =
-    useUpdateEmployeeScheduleMutation();
+  const [updateSchedule, { isLoading }] = useUpdateEmployeeScheduleMutation();
 
-  console.log('🚀 ~ EmployeeSchedule ~ selectedDays:', selectedDays);
+  const [deleteSchedule, { isLoading: isDeleteLoading }] =
+    useDeleteEmployeeScheduleMutation();
 
   const state = {
-    hours: {
-      from,
-      to,
-    },
-    break: {
-      from: breakFrom,
-      to: breakTo,
-    },
+    from: '',
+    to: '',
+    breakFrom: '',
+    breakTo: '',
     days: selectedDays,
   };
 
-  const handleScheduleUpdate = async () => {
+  const getUpdateData = () => {
     let schedule = {
       hours: { from, to },
-      days: selectedDays.map(day => getDate(day)),
+      days: selectedDays,
     };
 
     if (breakFrom !== '' && breakTo !== '') {
       schedule = Object.assign(schedule, {
-        break: { from: breakFrom, to: breakTo },
+        breakHours: { from: breakFrom, to: breakTo },
       });
     }
 
-    const data = {
+    return {
       year: getYear(selectedMonth),
       month: getMonth(selectedMonth) + 1,
       schedule,
     };
+  };
 
+  const handleScheduleUpdate = async () => {
     const { message } = await updateSchedule({
       companyId,
       employeeId: employee.id,
-      data,
+      data: getUpdateData(),
     }).unwrap();
 
     if (message) {
@@ -136,11 +159,6 @@ const EmployeeSchedule = ({ employee }: Props) => {
   const isSaveDisabled =
     isStateChanged || !selectedDays.length || from === '' || to === '';
 
-  const dateToDateString = (date: Date) => format(date, 'MM-dd-yyyy');
-
-  const datesArrToDatesStringArr = (dates: Date[]) =>
-    dates.map(day => dateToDateString(day));
-
   const resetState = () => {
     setSelectedDays([]);
     setSelectType(null);
@@ -152,10 +170,12 @@ const EmployeeSchedule = ({ employee }: Props) => {
   };
 
   const handleNextMonthClick = () => {
+    resetState();
     setSelectedMonth(addMonths(selectedMonth, 1));
   };
 
   const handlePrevMonthClick = () => {
+    resetState();
     setSelectedMonth(addMonths(selectedMonth, -1));
   };
 
@@ -168,51 +188,52 @@ const EmployeeSchedule = ({ employee }: Props) => {
     setSelectedMonth(currentMonthStart);
   };
 
-  const handleDayClick = (date: Date) => {
-    if (selectedDays.some(day => getMonth(day) !== getMonth(date))) {
-      resetState();
-    }
+  const handleDayClick = (date: number) => {
+    if (!isEditingAllowed) return;
 
     if (selectType) setSelectType(null);
 
-    const day = dateToDateString(date);
-
     setSelectedDays(p =>
-      p.includes(day) ? p.filter(item => item !== day) : [...p, day]
+      p.includes(date)
+        ? p.filter(item => item !== date)
+        : [...p, date].sort((a, b) => a - b)
     );
   };
+
+  const eachWeekend = datesArrToDaysArr(eachWeekendOfMonth(selectedMonth));
+
+  const weekdays = datesArrToDaysArr(
+    selectedMonthDays.filter(day => !eachWeekend.includes(getDate(day)))
+  );
+
+  const evenDays = datesArrToDaysArr(
+    selectedMonthDays.filter(day => getDate(day) % 2 === 0)
+  );
+
+  const oddDays = datesArrToDaysArr(
+    selectedMonthDays.filter(day => getDate(day) % 2 !== 0)
+  );
 
   const handleQuickSelectClick = (type: SelectType) => {
     if (selectType === type) {
       return resetState();
     }
 
-    let selectedDays: Date[] = [];
-
     if (type === SelectType.ALL) {
-      selectedDays = selectedMonthDays;
+      setSelectedDays(datesArrToDaysArr(selectedMonthDays));
     }
 
     if (type === SelectType.WEEKDAY) {
-      const eachWeekend = datesArrToDatesStringArr(
-        eachWeekendOfMonth(selectedMonth)
-      );
-
-      selectedDays = selectedMonthDays.filter(
-        day => !eachWeekend.includes(dateToDateString(day))
-      );
+      setSelectedDays(weekdays);
     }
 
     if (type === SelectType.EVEN) {
-      selectedDays = selectedMonthDays.filter(day => day.getDate() % 2 === 0);
+      setSelectedDays(evenDays);
     }
 
     if (type === SelectType.ODD) {
-      selectedDays = selectedMonthDays.filter(day => day.getDate() % 2 !== 0);
+      setSelectedDays(oddDays);
     }
-
-    setSelectedDays(datesArrToDatesStringArr(selectedDays));
-    setSelectType(type);
   };
 
   const timeArray = generateTimeArray();
@@ -243,42 +264,120 @@ const EmployeeSchedule = ({ employee }: Props) => {
     setBreakFrom(nextItem);
   };
 
+  const handleAddBreakHoursClick = () => {
+    if (isBreak) {
+      setIsBreak(false);
+      setBreakFrom('');
+      setBreakTo('');
+    } else {
+      setIsBreak(true);
+    }
+  };
+
+  const handleResetClick = async () => {
+    resetState();
+
+    if (employeeSchedule && employeeSchedule.id) {
+      const { message } = await deleteSchedule({
+        companyId,
+        employeeId: employee.id,
+        scheduleId: String(employeeSchedule.id),
+      }).unwrap();
+
+      if (message) {
+        toast.success(message);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!employeeSchedule) return;
+
+    resetState();
+
+    const { schedule } = employeeSchedule;
+
+    if (schedule) {
+      const { days, hours, breakHours } = schedule;
+
+      setSelectedDays(days);
+
+      setFrom(hours.from);
+      setTo(hours.to);
+
+      if (breakHours) {
+        setIsBreak(true);
+        setBreakFrom(breakHours.from);
+        setBreakTo(breakHours.to);
+      }
+    }
+  }, [employeeSchedule]);
+
+  useEffect(() => {
+    if (arraysAreEqual(selectedDays, datesArrToDaysArr(selectedMonthDays)))
+      setSelectType(SelectType.ALL);
+
+    if (arraysAreEqual(selectedDays, weekdays))
+      setSelectType(SelectType.WEEKDAY);
+
+    if (arraysAreEqual(selectedDays, evenDays)) setSelectType(SelectType.EVEN);
+
+    if (arraysAreEqual(selectedDays, oddDays)) setSelectType(SelectType.ODD);
+  }, [
+    datesArrToDaysArr,
+    evenDays,
+    oddDays,
+    selectedDays,
+    selectedMonthDays,
+    weekdays,
+  ]);
+
   return (
     <EmployeeScheduleBox>
-      <div>
-        <CalendarHeader>
-          <MonthBox>
-            <Button
-              onClick={handlePrevMonthClick}
-              Icon={HiArrowLeft}
-              $round
-              $colors="light"
-            />
-            <MonthName>
-              {format(selectedMonth, 'LLLL yyyy').toLocaleUpperCase()}
-            </MonthName>
-            <Button
-              onClick={handleNextMonthClick}
-              Icon={HiArrowRight}
-              $round
-              $colors="light"
-            />
-          </MonthBox>
+      <CalendarSide>
+        {isScheduleLoading || isDeleteLoading || isLoading ? (
+          <Loader />
+        ) : (
+          <>
+            <CalendarHeader>
+              <MonthBox>
+                <Button
+                  onClick={handlePrevMonthClick}
+                  Icon={HiArrowLeft}
+                  $round
+                  $colors="light"
+                />
+                <MonthName>
+                  {format(selectedMonth, 'LLLL yyyy').toLocaleUpperCase()}
+                </MonthName>
+                <Button
+                  onClick={handleNextMonthClick}
+                  Icon={HiArrowRight}
+                  $round
+                  $colors="light"
+                />
+              </MonthBox>
 
-          {!isThisMonth(selectedMonth) && (
-            <Button onClick={toToday} Icon={MdToday} $round $colors="light" />
-          )}
-        </CalendarHeader>
+              {!isThisMonth(selectedMonth) && (
+                <Button
+                  onClick={toToday}
+                  Icon={MdToday}
+                  $round
+                  $colors="light"
+                />
+              )}
+            </CalendarHeader>
 
-        <Calendar
-          dateToDateString={dateToDateString}
-          selectedMonth={selectedMonth}
-          selectedDays={selectedDays}
-          handleDayClick={handleDayClick}
-          toNextMonth={handleNextMonthClick}
-          toPrevMonth={handlePrevMonthClick}
-        />
-      </div>
+            <Calendar
+              selectedMonth={selectedMonth}
+              selectedDays={selectedDays}
+              handleDayClick={handleDayClick}
+              toNextMonth={handleNextMonthClick}
+              toPrevMonth={handlePrevMonthClick}
+            />
+          </>
+        )}
+      </CalendarSide>
 
       <SelectionSide>
         <div>
@@ -287,11 +386,11 @@ const EmployeeSchedule = ({ employee }: Props) => {
 
             <SelectDaysBox>
               {quickSelectButtons.map(({ type, label }) => (
-                <li>
+                <li key={type}>
                   <Button
-                    key={type}
                     onClick={() => handleQuickSelectClick(type)}
                     $colors={selectType === type ? 'accent' : 'light'}
+                    disabled={!isEditingAllowed}
                   >
                     {label}
                   </Button>
@@ -311,6 +410,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
                   onSelect={handleFromSelect}
                   $colors="light"
                   items={timeArray}
+                  disabled={!isEditingAllowed}
                 />
               </SelectBox>
 
@@ -321,19 +421,20 @@ const EmployeeSchedule = ({ employee }: Props) => {
                   onSelect={setTo}
                   $colors="light"
                   items={timeArrayFrom(from)}
-                  disabled={from === ''}
+                  disabled={!isEditingAllowed && from === ''}
                 />
               </SelectBox>
             </SelectDaysBox>
           </ScheduleSection>
 
           <ScheduleSection>
-            <Checkbox
-              isChecked={isBreak}
-              handleCheck={() => setIsBreak(p => !p)}
-              name="break"
-            />
-
+            {isEditingAllowed && (
+              <Checkbox
+                isChecked={isBreak}
+                handleCheck={handleAddBreakHoursClick}
+                name="break"
+              />
+            )}
             {isBreak && (
               <SelectDaysBox>
                 <SelectBox>
@@ -344,6 +445,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
                     onSelect={setBreakFrom}
                     $colors="light"
                     items={timeArrayFrom(from)}
+                    disabled={!isEditingAllowed}
                   />
                 </SelectBox>
 
@@ -355,7 +457,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
                     onSelect={setBreakTo}
                     $colors="light"
                     items={timeArrayFrom(breakFrom || '')}
-                    disabled={breakFrom === ''}
+                    disabled={!isEditingAllowed && breakFrom === ''}
                   />
                 </SelectBox>
               </SelectDaysBox>
@@ -363,28 +465,29 @@ const EmployeeSchedule = ({ employee }: Props) => {
           </ScheduleSection>
         </div>
 
-        <ButtonsBox>
-          <Button
-            onClick={resetState}
-            // isLoading={isLoading}
-            Icon={HiTrash}
-            disabled={isStateChanged}
-            $colors="light"
-            $variant="text"
-          >
-            Скинути
-          </Button>
+        {isEditingAllowed && (
+          <ButtonsBox>
+            <Button
+              onClick={handleResetClick}
+              Icon={HiTrash}
+              disabled={isStateChanged || isLoading}
+              $colors="light"
+              $variant="text"
+            >
+              Скинути
+            </Button>
 
-          <Button
-            isLoading={isLoading}
-            onClick={handleScheduleUpdate}
-            Icon={IoIosSave}
-            disabled={isSaveDisabled}
-            $colors="accent"
-          >
-            Зберегти
-          </Button>
-        </ButtonsBox>
+            <Button
+              isLoading={isLoading}
+              onClick={handleScheduleUpdate}
+              Icon={IoIosSave}
+              disabled={isSaveDisabled || isLoading}
+              $colors="accent"
+            >
+              Зберегти
+            </Button>
+          </ButtonsBox>
+        )}
       </SelectionSide>
     </EmployeeScheduleBox>
   );

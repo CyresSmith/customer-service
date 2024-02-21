@@ -8,6 +8,12 @@ export const EmployeeScheduleBox = styled.div`
   align-items: start;
 `;
 
+export const CalendarSide = styled.div`
+  width: 100%;
+  min-height: 534px;
+  position: relative;
+`;
+
 export const SelectionSide = styled.div`
   display: flex;
   flex-direction: column;

@@ -6,12 +6,12 @@ export interface ITime {
 export interface IWorkSchedule {
   hours: ITime;
   days: number[];
-  break?: ITime;
+  breakHours?: ITime;
 }
 
 export interface IEmployeeSchedule {
   year: number;
   month: number;
   schedule: IWorkSchedule;
-  scheduleId?: number;
+  id?: number;
 }
