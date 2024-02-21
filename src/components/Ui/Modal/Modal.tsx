@@ -12,18 +12,24 @@ export type Modal = {
   $h?: string;
   title?: string;
   closeModal: () => void;
+  closeIconBtn?: boolean;
+  id?: string;
 };
 
 const modalRoot = document.querySelector('#modal-root');
 
-const Modal = ({ children, closeModal, $w, $h, title, $isOpen }: Modal) => {
+const Modal = ({ children, closeModal, $w, $h, title, $isOpen, closeIconBtn = true, id }: Modal) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setIsOpen(p => !p);
   }, [$isOpen]);
 
-  const close = (): void => {
+  const close = (e: KeyboardEvent | MouseEvent): void => {
+    if ('target' in e && 'id' in e!.target! && e?.target?.id === 'modal') {
+      return;
+    }
+
     setIsOpen(false);
     setTimeout(() => {
       closeModal();
@@ -34,17 +40,19 @@ const Modal = ({ children, closeModal, $w, $h, title, $isOpen }: Modal) => {
   useEscapeKey(close);
 
   return createPortal(
-    <Backdrop $isOpen={isOpen}>
-      <ModalContainer $w={$w} $h={$h} ref={modalRef} $isOpen={isOpen}>
-        <ButtonBox>
-          <Button
-            Icon={IoMdClose}
-            onClick={close}
-            $round
-            $colors="accent"
-            $variant="text"
-          />
-        </ButtonBox>
+    <Backdrop $isOpen={isOpen} id={id}>
+      <ModalContainer $w={$w} $h={$h} ref={modalRef} $isOpen={isOpen} id={id}>
+        {closeIconBtn && 
+          <ButtonBox>
+            <Button
+              Icon={IoMdClose}
+              onClick={close}
+              $round
+              $colors="accent"
+              $variant="text"
+            />
+          </ButtonBox>
+        }
 
         {title && <Title>{title}</Title>}
         {children}

@@ -4,15 +4,22 @@ import theme from 'utils/theme';
 export const Container = styled.div`
     width: 100%;
     height: 100%;
+    padding: ${theme.space[4]};
     background-color: ${theme.colors.bg.dark};
-    padding: ${theme.space[4]} ${theme.space[4]};
     border-radius: ${theme.radii.m};
     box-shadow: ${theme.shadow.m};
+    color: ${theme.colors.secondary.light};
+    overflow: hidden;
+`
+
+export const ContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: ${theme.colors.secondary.light};
     gap: ${theme.space[5]};
+    width: 100%;
+    height: 100%;
+    overflow: auto;
 `
 
 export const Title = styled.h2`

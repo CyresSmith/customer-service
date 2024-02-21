@@ -1,5 +1,3 @@
-type Gender = 'male' | 'female' | 'other' | undefined;
-
 export type Client = {
   firstName: string;
   lastName?: string;
@@ -7,13 +5,14 @@ export type Client = {
   id: number | string;
   email?: string;
   avatar?: string;
-  discount?: number | string;
+  discount?: number;
   source?: string;
-  comments?: string;
+  comment?: string;
   birthday?: string;
-  gender?: Gender;
+  gender?: string;
   card?: string;
   companyId?: number;
+  // socialLinks?: string[];
 };
 
 export type Company = {
@@ -34,9 +33,11 @@ export type AddClient = {
 export type UpdateClient = {
   data: Partial<Client>;
   id: string | number;
+  companyId: number;
 };
 
 export type UploadAvatar = {
   data: FormData;
   id: string | number;
+  companyId: number;
 };

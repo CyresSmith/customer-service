@@ -15,18 +15,21 @@ import {
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { IoMdClose } from 'react-icons/io';
 import { MdOutlineDone } from 'react-icons/md';
+import CustomFormSelect from './CustomFormSelect';
 
 type Props = {
   name: string;
   value: string | number | undefined;
   type: string;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleSelect?: (item: string) => void;
   isValid?: string;
   disabledIcon?: boolean;
   isRequired?: boolean;
   isReadonly?: boolean;
   label?: boolean;
   placeholder?: string;
+  selectItems?: string[];
 };
 
 const CustomFormInput = ({
@@ -34,35 +37,44 @@ const CustomFormInput = ({
   type,
   value,
   handleChange,
+  handleSelect,
   isValid,
   disabledIcon,
   isRequired,
   isReadonly = false,
   label = true,
   placeholder = '',
+  selectItems,
 }: Props) => {
   const [hidden, setHidden] = useState(true);
   const valueRef = useRef(value).current;
 
   return (
-    <FormInputsListItem id={name}>
-      {label && (
+    <FormInputsListItem $type={type}>
+      {label &&
         <FormInputLabel>
           {translateLabels(name)}
           {isRequired && <Required>{' (!)'}</Required>}
         </FormInputLabel>
       )}
       <FormInputBox>
-        <FormInput
-          type={type !== 'password' ? type : hidden ? type : 'text'}
-          name={name}
-          value={value}
-          as={type === 'textarea' ? 'textarea' : 'input'}
-          onChange={handleChange}
-          readOnly={isReadonly}
-          placeholder={placeholder}
-        />
-
+        {type === 'select' && selectItems && handleSelect ? 
+          <CustomFormSelect<string>
+            handleSelect={handleSelect}
+            selectItems={selectItems}
+            selectedItem={value as string}
+          /> :
+          <FormInput
+            type={type !== 'password' ? type : hidden ? type : 'text'}
+            name={name}
+            value={value}
+            as={type === 'textarea' ? 'textarea' : 'input'}
+            onChange={handleChange}
+            readOnly={isReadonly}
+            placeholder={placeholder}
+            // autoComplete='off'
+          />
+        }
         {type === 'password' && (
           <HideButton type="button" onClick={() => setHidden(p => !p)}>
             <HideIcon as={hidden ? HiEyeOff : HiEye} hidden={hidden} />

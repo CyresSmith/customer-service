@@ -28,6 +28,7 @@ const Select = ({
     setIsOpen(false);
   };
 
+
   const handleOpen = () => {
     if (disabled) return;
 

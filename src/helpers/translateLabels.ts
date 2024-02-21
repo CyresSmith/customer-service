@@ -34,7 +34,7 @@ export const translateLabels = (name: string): string | undefined => {
       return 'Картка';
     case 'source':
       return 'Джерело';
-    case 'comments':
+    case 'comment':
       return 'Коментар';
     case 'jobTitle':
       return 'Посада';
