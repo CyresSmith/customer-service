@@ -1,9 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { EmployeeRoleEnum } from 'services/types/employee.types';
 import { Company } from './company.types';
 
 type ICompanyInitialState = {
   company: Company;
-  userRole: string;
+  userRole: EmployeeRoleEnum;
 };
 
 const initialState: ICompanyInitialState = {
@@ -21,7 +22,7 @@ const initialState: ICompanyInitialState = {
     activities: [],
     employees: [],
   },
-  userRole: 'user',
+  userRole: EmployeeRoleEnum.USER,
 };
 
 const companySlice = createSlice({
@@ -31,7 +32,7 @@ const companySlice = createSlice({
     setCompany(state, { payload }: PayloadAction<Company>) {
       return { ...state, company: payload };
     },
-    setUserRole(state, { payload }: PayloadAction<string>) {
+    setUserRole(state, { payload }: PayloadAction<EmployeeRoleEnum>) {
       return { ...state, userRole: payload };
     },
     setCompanyLogo(state, { payload }: PayloadAction<Pick<Company, 'avatar'>>) {

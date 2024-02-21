@@ -5,20 +5,16 @@ import { useCallback, useEffect, useState } from 'react';
 import { HiCalendar } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { useUpdateCompanyProfileMutation } from 'services/company.api';
+import { ITime } from 'services/types/schedule.types';
 import { IWorkingHours } from 'store/company/company.types';
 import { ButtonBox, ScheduleModalBox } from './SetScheduleModal.styled';
 import SetWorkSchedule from './SetWorkSchedule';
 
-export interface ITime {
-  from: string;
-  to: string;
-}
-
-export interface ISchedule {
+export interface ICompanySchedule {
   id: number;
   days: number[];
   disabledDays?: number[];
-  schedule: ITime;
+  hours: ITime;
 }
 
 type Props = {
@@ -29,7 +25,7 @@ const SetScheduleModal = ({ closeModal }: Props) => {
   const { id, workingHours } = useCompany();
   const { setCompanySchedule } = useActions();
 
-  const [schedules, setSchedules] = useState<ISchedule[]>([]);
+  const [schedules, setSchedules] = useState<ICompanySchedule[]>([]);
 
   const [uploadWorkingHours, { isLoading, isSuccess }] =
     useUpdateCompanyProfileMutation();
@@ -46,15 +42,15 @@ const SetScheduleModal = ({ closeModal }: Props) => {
         id: p.length + 1,
         days: [],
         disabledDays,
-        schedule: { from: '', to: '' },
+        hours: { from: '', to: '' },
       },
     ]);
   };
 
   const updateSchedule = (
-    schedule: ISchedule,
-    schedulesArr: ISchedule[]
-  ): ISchedule[] => {
+    schedule: ICompanySchedule,
+    schedulesArr: ICompanySchedule[]
+  ): ICompanySchedule[] => {
     const arr = [...schedulesArr];
 
     const idx = arr.findIndex(({ id }) => id === schedule.id);
@@ -87,10 +83,10 @@ const SetScheduleModal = ({ closeModal }: Props) => {
     });
   };
 
-  const handleSchedulesStateUpdate = (schedule: ISchedule) =>
+  const handleSchedulesStateUpdate = (schedule: ICompanySchedule) =>
     setSchedules(updateSchedule(schedule, schedules));
 
-  const removeSchedule = (schedule: ISchedule) => {
+  const removeSchedule = (schedule: ICompanySchedule) => {
     const newSchedules = schedules.map(item => {
       if (item.id === schedule.id) {
         return item;
@@ -114,7 +110,7 @@ const SetScheduleModal = ({ closeModal }: Props) => {
   );
 
   const isTimeNotSelected = Boolean(
-    schedules.find(({ schedule }) => schedule.from === '' || schedule.to === '')
+    schedules.find(({ hours }) => hours?.from === '' || hours?.to === '')
   );
 
   const isDaysNotSelected = Boolean(
@@ -123,10 +119,10 @@ const SetScheduleModal = ({ closeModal }: Props) => {
 
   const getWorkingHours = useCallback((): IWorkingHours[] => {
     return schedules
-      .filter(({ schedule }) => schedule.from !== '' || schedule.to !== '')
-      .map(({ days, schedule }) => ({
+      .filter(({ hours }) => hours.from !== '' || hours.to !== '')
+      .map(({ days, hours }) => ({
         days: [...days].sort((a, b) => a - b),
-        schedule,
+        hours,
       }));
   }, [schedules]);
 
@@ -150,7 +146,7 @@ const SetScheduleModal = ({ closeModal }: Props) => {
   useEffect(() => {
     if (workingHours && workingHours.length > 0) {
       setSchedules(
-        workingHours.map(({ days, schedule }, idx) => {
+        workingHours.map(({ days, hours }, idx) => {
           const disabledDays = workingHours.reduce(
             (acc: number[], { days }, i) => {
               return idx === i ? acc : [...acc, ...days];
@@ -161,7 +157,7 @@ const SetScheduleModal = ({ closeModal }: Props) => {
           return {
             id: idx + 1,
             days,
-            schedule,
+            hours,
             disabledDays,
           };
         })

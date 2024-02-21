@@ -8,6 +8,7 @@ import { useCompany } from 'hooks/useCompany';
 import { State, useForm } from 'hooks/useForm';
 import { HiArrowLeft, HiPlusCircle } from 'react-icons/hi';
 import { useAddNewUserEmployeeMutation } from 'services/company.api';
+import { EmployeeRoleEnum } from 'services/types/employee.types';
 import { ButtonBox } from '../AddEmployeeModal.styled';
 
 type Props = {
@@ -84,7 +85,7 @@ function NewUserEmployeeForm({ handleBackClick, closeModal }: Props) {
         employeeData: {
           jobTitle,
           provider,
-          role: admin ? 'admin' : 'employee',
+          role: admin ? EmployeeRoleEnum.ADMIN : EmployeeRoleEnum.EMPLOYEE,
         },
         userData: {
           email,

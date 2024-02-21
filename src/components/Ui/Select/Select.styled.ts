@@ -44,7 +44,7 @@ export const SelectEl = styled.div<ISelectStyle>`
       }      
     `;
   }}
-  cursor: pointer;
+  cursor:  ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -52,6 +52,8 @@ export const SelectEl = styled.div<ISelectStyle>`
   font-weight: ${theme.fontWeights.bold};
   transition: ${theme.transition.primary};
   min-width: 90px;
+  width: 100%;
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 
   > svg {
     transition: ${theme.transition.primary};

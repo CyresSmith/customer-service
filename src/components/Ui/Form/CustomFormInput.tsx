@@ -55,7 +55,8 @@ const CustomFormInput = ({
         <FormInputLabel>
           {translateLabels(name)}
           {isRequired && <Required>{' (!)'}</Required>}
-        </FormInputLabel>}
+        </FormInputLabel>
+      )}
       <FormInputBox>
         {type === 'select' && selectItems && handleSelect ? 
           <CustomFormSelect<string>

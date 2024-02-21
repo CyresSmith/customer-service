@@ -1,3 +1,5 @@
+import { ITime } from './schedule.types';
+
 export interface IEmployeeUser {
   id: string;
   email: string;
@@ -7,14 +9,31 @@ export interface IEmployeeUser {
   avatar: string;
 }
 
+export enum EmployeeStatusEnum {
+  WORKING = 'working',
+  FIRED = 'fired',
+}
+
+export enum EmployeeRoleEnum {
+  OWNER = 'owner',
+  ADMIN = 'admin',
+  EMPLOYEE = 'employee',
+  USER = 'user',
+}
+
 export interface IEmployee {
   id: string;
   jobTitle: string;
   provider: boolean;
-  role: string;
-  status: string;
+  role: EmployeeRoleEnum;
+  status: EmployeeStatusEnum;
   avatar: string;
   info: string;
+  email: string;
+  phone: string;
+  firstName: string;
+  lastName: string;
+  birthday: string;
   user: IEmployeeUser;
 }
 
@@ -56,3 +75,7 @@ export interface UpdateEmployeeAvatar {
   companyId: string;
   data: FormData;
 }
+
+export type UpdateEmployeeProfile = Partial<
+  Omit<IEmployee, 'id' | 'user' | 'avatar'>
+>;

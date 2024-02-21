@@ -21,25 +21,36 @@ const Select = ({
   const selectRef = useClickOutside(() => setIsOpen(false));
 
   const handleSelect = (item: string) => {
+    if (disabled) return;
+
     setSelected(item);
     onSelect(item);
     setIsOpen(false);
   };
 
-  console.log(selectedItem)
+
+  const handleOpen = () => {
+    if (disabled) return;
+
+    setIsOpen(p => !p);
+  };
 
   useEffect(() => {
     if (selectedItem) {
       setSelected(selectedItem);
     }
-  }, [selectedItem]);
+
+    if (selectedItem === '') {
+      setSelected(items[0]);
+    }
+  }, [items, selectedItem]);
 
   return (
     <SelectBox ref={selectRef}>
       <SelectEl
         id={id}
         disabled={disabled}
-        onClick={() => setIsOpen(p => !p)}
+        onClick={handleOpen}
         size={size}
         $colors={$colors}
         $variant={$variant}
