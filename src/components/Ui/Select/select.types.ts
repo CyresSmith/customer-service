@@ -8,4 +8,6 @@ export interface ISelect
 }
 
 export interface ISelectStyle
-  extends Omit<ISelect, 'id' | 'items' | 'onSelect' | 'selectedItem'> {}
+  extends Omit<ISelect, 'id' | 'items' | 'onSelect' | 'selectedItem'> {
+  $isOpen: boolean;
+}

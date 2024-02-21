@@ -59,6 +59,8 @@ export const SelectEl = styled.div<ISelectStyle>`
     transition: ${theme.transition.primary};
     opacity: ${({ disabled }) => (disabled ? `${BTN_DISABLED_OPACITY}` : 1)};
     margin-left: auto;
+
+    transform: ${({ $isOpen }) => ($isOpen ? 'rotate(90deg)' : 'rotate(0)')};
   }
 
   span {

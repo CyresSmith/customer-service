@@ -28,7 +28,6 @@ const Select = ({
     setIsOpen(false);
   };
 
-
   const handleOpen = () => {
     if (disabled) return;
 
@@ -54,8 +53,10 @@ const Select = ({
         size={size}
         $colors={$colors}
         $variant={$variant}
+        $isOpen={isOpen}
       >
         <span>{selected}</span>
+
         <HiChevronDown />
       </SelectEl>
 
