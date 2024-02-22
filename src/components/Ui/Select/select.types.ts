@@ -4,7 +4,7 @@ export interface ISelect
   extends Pick<IButton, 'id' | 'disabled' | 'size' | '$colors' | '$variant'> {
   items: string[];
   selectedItem: string;
-  onSelect: (item: string) => void;
+  onSelect: (item: string, id: string) => void;
 }
 
 export interface ISelectStyle

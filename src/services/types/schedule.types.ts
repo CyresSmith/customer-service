@@ -3,15 +3,28 @@ export interface ITime {
   to: string;
 }
 
-export interface IWorkSchedule {
+export interface IDaySchedule {
   hours: ITime;
-  days: number[];
   breakHours?: ITime;
+  day: number;
 }
 
-export interface IEmployeeSchedule {
+export interface IMonthSchedule {
+  id?: number;
   year: number;
   month: number;
-  schedule: IWorkSchedule;
-  id?: number;
+  schedule: IDaySchedule[];
+}
+
+export interface IUpdateEmployeeSchedule {
+  companyId: string;
+  employeeId: string;
+  data: IMonthSchedule;
+}
+
+export interface IGetEmployeeSchedule {
+  companyId: string;
+  employeeId: string;
+  year: number;
+  month: number;
 }

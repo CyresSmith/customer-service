@@ -3,13 +3,16 @@ import theme from 'utils/theme';
 
 interface IIsChecked {
   $isChecked: boolean;
+  $isDisabled: boolean;
 }
 
 export const StyledLabel = styled.label<IIsChecked>`
   display: inline-flex;
   align-items: center;
   gap: ${theme.space[2]};
-  cursor: pointer;
+  cursor: ${({ $isDisabled }) => ($isDisabled ? 'default' : 'pointer')};
+  opacity: ${({ $isDisabled }) => ($isDisabled ? 0.5 : 1)};
+  transition: ${theme.transition.primary};
 
   &:hover {
     > svg {
