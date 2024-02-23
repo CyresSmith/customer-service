@@ -1,8 +1,8 @@
 import { useCompany } from "hooks/useCompany";
 import { ListsWrapper, RecordContainer } from "./RecordLog.styled";
 import RecordLogList from "./RecordLogList/RecordLogList";
-import ScheduleGrid from "./RecordLogList/ScheduleGrid";
-import { dayHours } from "./dayHours";
+import generateTimeArray, { getSchedule } from "helpers/generateTimeArray";
+import TimeList from "./RecordLogList/TimeList";
 
 const items = [
     {
@@ -40,70 +40,67 @@ const items = [
             }
         ]
     },
-    {
-        id: 1,
-        days: [
-            {
-                day: 1,
-                hours: {
-                    from: '09:00',
-                    to: '18:00'
-                }
-            },
-            {
-                day: 2,
-                hours: {
-                    from: '09:00',
-                    to: '18:00'
-                }
-            }
-        ]
-    },
-    {
-        id: 2,
-        days: [
-            {
-                day: 1,
-                hours: {
-                    from: '12:00',
-                    to: '20:00'
-                }
-            },
-            {
-                day: 2,
-                hours: {
-                    from: '10:00',
-                    to: '16:00'
-                }
-            }
-        ]
-    }
+    // {
+    //     id: 1,
+    //     days: [
+    //         {
+    //             day: 1,
+    //             hours: {
+    //                 from: '09:00',
+    //                 to: '18:00'
+    //             }
+    //         },
+    //         {
+    //             day: 2,
+    //             hours: {
+    //                 from: '09:00',
+    //                 to: '18:00'
+    //             }
+    //         }
+    //     ]
+    // },
+    // {
+    //     id: 2,
+    //     days: [
+    //         {
+    //             day: 1,
+    //             hours: {
+    //                 from: '12:00',
+    //                 to: '20:00'
+    //             }
+    //         },
+    //         {
+    //             day: 2,
+    //             hours: {
+    //                 from: '10:00',
+    //                 to: '16:00'
+    //             }
+    //         }
+    //     ]
+    // }
 ]
 
 const RecordLog = () => {
     const { workingHours } = useCompany();
 
-    if (workingHours === null) {
+    if (!workingHours) {
         return;
     }
 
-    const getHoursArray = (): string[]=> {
-        const { schedule } = workingHours[0];
-        const { from, to } = schedule;
-        
-        return dayHours.filter(h => Number(h.split(':')[0]) >= Number(from.split(':')[0]) && Number(h.split(':')[0]) <= Number(to.split(':')[0]))
-    };
+    const { schedule } = workingHours[0];
+    const { from, to } = schedule;
 
-    const schedule = getHoursArray();
-    // const timeItems = Array.from({ length: schedule.length * 4 - 4 });
+    const timeArray = generateTimeArray(true);
 
-    return (
+    const companyDaySchedule = getSchedule(timeArray, from, to);
+
+    return workingHours && (
         <RecordContainer $columns={items.length}>
-            <ScheduleGrid hours={schedule} />
+            <TimeList side="left" workHours={companyDaySchedule} />
             <ListsWrapper>
-                {items.map((item, i) => <RecordLogList companySchedule={schedule} key={i} item={item.days[0]} />)}
+                {items.map((item, i) => <RecordLogList companySchedule={companyDaySchedule} key={i} item={item.days[0]} />)}
             </ListsWrapper>
-            
+            <TimeList side="right" workHours={companyDaySchedule} />
         </RecordContainer>
     )
 };

@@ -8,14 +8,10 @@ export const RecordContainer = styled.div<{ $columns: number }>`
     overflow: auto;
     border-radius: ${theme.radii.m};
     padding: ${theme.space[4]} 50px;
+    background-color: ${theme.colors.bg.main};
 `
 
 export const ListsWrapper = styled.div`
-    position: absolute;
-    z-index: 1;
-    left: 50px;
-    /* right: 50px; */
-    height: 100%;
-    width: calc(100% - 100px);
+    width: 100%;
     display: flex;
 `

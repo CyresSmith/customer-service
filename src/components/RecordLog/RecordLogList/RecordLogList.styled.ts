@@ -3,7 +3,6 @@ import theme from 'utils/theme';
 
 export const List = styled.ul<{$wh: number}>`
     width: 100%;
-    height: fit-content;
     display: grid;
     grid-template-rows: repeat($wh, ${theme.timeStep});
     
@@ -21,7 +20,7 @@ export const ListItem = styled.li<{ $skip: boolean, $isHour: boolean }>`
     background-color: ${props => props.$skip ? 'rgba(17, 17, 20, 0.5)' : 'none'};
     pointer-events: ${props => props.$skip ? 'none' : 'all'};
     transition: ${theme.transition.primary};
-    border-top: ${props => props.$isHour ? `${theme.borders.normal} ${theme.colors.secondary.light}` : 'none'};
+    border-top: ${theme.borders.normal} ${props => props.$isHour ? `${theme.colors.secondary.light}` : `${theme.colors.secondary.dark}`};
     cursor: ${props => props.$skip ? 'not-allowed' : 'pointer'};
 
     &:hover {
@@ -33,7 +32,7 @@ export const ListItem = styled.li<{ $skip: boolean, $isHour: boolean }>`
     }
 
     &:last-child {
-        border-bottom: ${theme.borders.normal} ${theme.colors.secondary.light};
+        height: 0;
     }
 `
 

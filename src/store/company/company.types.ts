@@ -20,7 +20,7 @@ export type Company = {
   id: string;
   name: string;
   phones: string[];
-  city: string;
+  city: string;   
   address: string;
   index: string;
   workingHours: IWorkingHours[] | null;
