@@ -34,12 +34,9 @@ export const Day = styled.div<ICalendarDay>`
   border-radius: ${theme.radii.s};
   padding: ${theme.space[2]};
   height: 73px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: ${theme.fontSizes.xl};
-  font-weight: ${({ $today }) =>
-    $today ? theme.fontWeights.bold : theme.fontWeights.light};
+  /* display: flex;
+  flex-direction: column;
+  justify-content: space-between; */
   cursor: pointer;
   transition: ${theme.transition.primary};
 
@@ -55,4 +52,29 @@ export const Day = styled.div<ICalendarDay>`
   &.other {
     opacity: 0.4;
   }
+`;
+
+export const DayDate = styled.p<ICalendarDay>`
+  font-size: ${theme.fontSizes.xl};
+  font-weight: ${({ $today }) =>
+    $today ? theme.fontWeights.bold : theme.fontWeights.regular};
+
+  padding-bottom: ${theme.space[1]};
+  margin-bottom: ${theme.space[1]};
+
+  border-bottom: ${theme.borders.normal};
+  text-align: center;
+`;
+
+export const DaySchedule = styled.p`
+  font-size: ${theme.fontSizes.s};
+  font-weight: ${theme.fontWeights.regular};
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.space[0]};
+`;
+
+export const Break = styled.span`
+  font-size: ${theme.fontSizes.xs};
 `;

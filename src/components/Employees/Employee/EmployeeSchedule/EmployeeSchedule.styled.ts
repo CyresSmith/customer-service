@@ -8,7 +8,7 @@ export const EmployeeScheduleBox = styled.div`
 `;
 
 export const CalendarSide = styled.div`
-  width: 550px;
+  width: 650px;
   position: relative;
 `;
 

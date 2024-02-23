@@ -21,10 +21,11 @@ const Checkbox = ({
   handleCheck,
 }: Props) => {
   return (
-    <StyledLabel $isChecked={isChecked}>
+    <StyledLabel $isChecked={isChecked} $isDisabled={isReadonly}>
       <StyledIcon
         as={isChecked ? HiCheckCircle : HiMinusCircle}
         $isChecked={isChecked}
+        $isDisabled={isReadonly}
       />
       <Name>
         {translateLabels(name)} {isRequired && <Required>{'(!)'}</Required>}

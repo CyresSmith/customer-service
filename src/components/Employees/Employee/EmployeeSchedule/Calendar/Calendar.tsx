@@ -1,5 +1,12 @@
 import { Dispatch, SetStateAction } from 'react';
-import { CalendarBox, Day, WeekDay } from './Calendar.styled';
+import {
+  Break,
+  CalendarBox,
+  Day,
+  DayDate,
+  DaySchedule,
+  WeekDay,
+} from './Calendar.styled';
 
 import {
   addMonths,
@@ -14,8 +21,10 @@ import {
   previousMonday,
   startOfMonth,
 } from 'date-fns';
+import { IDaySchedule } from 'services/types/schedule.types';
 
 type Props = {
+  monthSchedule: IDaySchedule[];
   selectedMonth: Date;
   selectedDays: number[];
   setSelectedDays?: Dispatch<SetStateAction<string[]>>;
@@ -35,6 +44,7 @@ const weekDays = [
 ];
 
 const Calendar = ({
+  monthSchedule = [],
   selectedMonth,
   selectedDays,
   handleDayClick,
@@ -92,19 +102,41 @@ const Calendar = ({
             {dateFormat(date)}
           </Day>
         ))}
-      {monthDays.map((date, i) => (
-        <Day
-          key={i}
-          onClick={() => handleDayClick(getDate(date))}
-          $today={
-            getDate(date) === getDate(today) &&
-            getMonth(selectedMonth) === getMonth(today)
-          }
-          $selected={selectedDays.includes(getDate(date))}
-        >
-          {dateFormat(date)}
-        </Day>
-      ))}
+      {monthDays.map((date, i) => {
+        const dayDate = getDate(date);
+        const isToday =
+          dayDate === getDate(today) &&
+          getMonth(selectedMonth) === getMonth(today);
+
+        const daySchedule = monthSchedule.find(({ day }) => day === dayDate);
+
+        return (
+          <Day
+            key={i}
+            onClick={() => handleDayClick(dayDate)}
+            $today={isToday}
+            $selected={selectedDays.includes(dayDate)}
+          >
+            <DayDate $today={isToday}>{dateFormat(date)}</DayDate>
+            {daySchedule && (
+              <DaySchedule>
+                <span>
+                  {daySchedule?.hours?.from} - {daySchedule?.hours?.to}
+                </span>
+
+                {daySchedule?.breakHours?.from &&
+                  daySchedule?.breakHours?.to && (
+                    <Break>
+                      {daySchedule.breakHours.from}
+                      {' - '}
+                      {daySchedule.breakHours.to}
+                    </Break>
+                  )}
+              </DaySchedule>
+            )}
+          </Day>
+        );
+      })}
       {nextMonthDays.map((date, i) => (
         <Day className="other" key={i} onClick={toNextMonth}>
           <span>{dateFormat(date)}</span>

@@ -87,8 +87,8 @@ const RecordLog = () => {
         return;
     }
 
-    const { schedule } = workingHours[0];
-    const { from, to } = schedule;
+    const { hours } = workingHours[0];
+    const { from, to } = hours;
 
     const timeArray = generateTimeArray(true);
 

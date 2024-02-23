@@ -1,5 +1,4 @@
-import { ISchedule } from 'components/CompanyProfile/SetScheduleModal/SetScheduleModal';
-import { Activity } from 'services/types/category.types';
+import { ICompanySchedule } from 'components/CompanyProfile/SetScheduleModal/SetScheduleModal';
 import { IEmployee } from 'services/types/employee.types';
 
 export interface IWorkTime {
@@ -11,7 +10,7 @@ export type Branches = 'one' | 'more';
 
 export type EmployeesCount = '2-5' | '6-9' | '10+';
 
-type Activity = {
+export type Activity = {
   id: string;
   name: string;
 };
@@ -69,4 +68,5 @@ export interface IUpdateCompanyProfile {
   data: Partial<IUpdateCompanyProfileData>;
 }
 
-export interface IWorkingHours extends Pick<ISchedule, 'days' | 'hours'> {}
+export interface IWorkingHours
+  extends Pick<ICompanySchedule, 'days' | 'hours'> {}
