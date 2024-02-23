@@ -130,7 +130,7 @@ const theme = {
         -moz-box-shadow: 1px 3px 13px 2px rgba(0, 0, 0, 0.37);`,
     l: ``,
   },
-  timeStep: '30px'
+  timeStep: 30
 };
 
 export default theme;

@@ -12,7 +12,7 @@ export const List = styled.ul<{ $side: string }>`
 export const ListItem = styled.li<{$quarter: boolean, $half: boolean}>`
     width: 100%;
     text-align: center;
-    height: ${theme.timeStep};
+    height: ${theme.timeStep}px;
     font-size: ${props => props.$quarter || props.$half ? `${theme.fontSizes.m}` : `${theme.fontSizes.l}`};
     color: ${props => props.$quarter ? 'transparent' : props.$half ? `${theme.colors.secondary.main}` : `${theme.colors.secondary.light}`};
 `
