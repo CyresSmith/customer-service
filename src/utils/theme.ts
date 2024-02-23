@@ -32,7 +32,7 @@ const theme = {
     secondary: {
       light: '#b1b3ba',
       main: '#87888C',
-      dark: '#494a4d',
+      dark: '#737478',
     },
     danger: {
       light: '#cc3837',
@@ -130,6 +130,7 @@ const theme = {
         -moz-box-shadow: 1px 3px 13px 2px rgba(0, 0, 0, 0.37);`,
     l: ``,
   },
+  timeStep: '30px'
 };
 
 export default theme;

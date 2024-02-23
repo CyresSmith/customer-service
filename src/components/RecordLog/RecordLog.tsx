@@ -1,34 +1,84 @@
 import { useCompany } from "hooks/useCompany";
-import { RecordContainer } from "./RecordLog.styled";
-import HoursList from "./RecordLogList/HoursList";
+import { ListsWrapper, RecordContainer } from "./RecordLog.styled";
 import RecordLogList from "./RecordLogList/RecordLogList";
+import ScheduleGrid from "./RecordLogList/ScheduleGrid";
+import { dayHours } from "./dayHours";
 
-const dayHours: string[] = [
-    '00:00',
-    '01:00',
-    '02:00',
-    '03:00',
-    '04:00',
-    '05:00',
-    '06:00',
-    '07:00',
-    '08:00',
-    '09:00',
-    '10:00',
-    '11:00',
-    '12:00',
-    '13:00',
-    '14:00',
-    '15:00',
-    '16:00',
-    '17:00',
-    '18:00',
-    '19:00',
-    '20:00',
-    '21:00',
-    '22:00',
-    '23:00',
-];
+const items = [
+    {
+        id: 2,
+        days: [
+            {
+                day: 1,
+                hours: {
+                    from: '10:00',
+                    to: '16:00'
+                },
+                events: [
+                    {
+                        id: 1,
+                        time: {
+                            from: '11:00',
+                            to: '13:00'
+                        }
+                    },
+                    {
+                        id: 2,
+                        time: {
+                            from: '14:00',
+                            to: '15:00'
+                        }
+                    }
+                ]
+            },
+            {
+                day: 2,
+                hours: {
+                    from: '10:00',
+                    to: '16:00'
+                }
+            }
+        ]
+    },
+    {
+        id: 1,
+        days: [
+            {
+                day: 1,
+                hours: {
+                    from: '09:00',
+                    to: '18:00'
+                }
+            },
+            {
+                day: 2,
+                hours: {
+                    from: '09:00',
+                    to: '18:00'
+                }
+            }
+        ]
+    },
+    {
+        id: 2,
+        days: [
+            {
+                day: 1,
+                hours: {
+                    from: '12:00',
+                    to: '20:00'
+                }
+            },
+            {
+                day: 2,
+                hours: {
+                    from: '10:00',
+                    to: '16:00'
+                }
+            }
+        ]
+    }
+]
 
 const RecordLog = () => {
     const { workingHours } = useCompany();
@@ -45,12 +95,15 @@ const RecordLog = () => {
     };
 
     const schedule = getHoursArray();
-    const timeItems = Array.from({ length: schedule.length * 4 - 4 });
+    // const timeItems = Array.from({ length: schedule.length * 4 - 4 });
 
     return (
-        <RecordContainer>
-            {schedule.length > 0 && <HoursList workHours={schedule} />}
-            <RecordLogList workHours={timeItems} />
+        <RecordContainer $columns={items.length}>
+            <ScheduleGrid hours={schedule} />
+            <ListsWrapper>
+                {items.map((item, i) => <RecordLogList companySchedule={schedule} key={i} item={item.days[0]} />)}
+            </ListsWrapper>
+            
         </RecordContainer>
     )
 };

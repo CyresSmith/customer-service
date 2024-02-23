@@ -1,18 +1,15 @@
-import EmployeeRecordsList from "./EmployeeRecordsList";
-import { ListItem } from "./RecordLogList.styled"
+import {ListItem, Time } from "./RecordLogList.styled";
 
 type Props = {
-    wh: number;
-    actions: {
-        from: number;
-        to: number;
-    }[];
+    hour: string;
+    index: number;
 };
 
-export const RecordLogListItem = ({wh, actions}: Props) => {
+export const RecordLogListItem = ({ hour, index }: Props) => {
+    
     return (
-        <ListItem $wh={wh}>
-            <EmployeeRecordsList actions={actions} wh={wh} />
+        <ListItem $isHour={index !== 0 && index % 4 === 0} $skip={hour === 'skip'}>
+            <Time>{ hour }</Time>
         </ListItem>
     )
 };
