@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const EmployeeModalContent = styled.div`
-  min-width: 800px;
+  min-width: 650px;
 `;
 
 export const EmployeeModalHeader = styled.div`

@@ -4,7 +4,7 @@ import { Form } from 'components/Ui/Form/CustomForm.styled';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { InputProps } from 'components/Ui/Form/types';
 import { getErrorMessage } from 'helpers/inputsValidation';
-import { useActions, useAdminRights, useForm } from 'hooks';
+import { useActions, useAdminRights, useAuth, useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { IoIosSave } from 'react-icons/io';
 import { useOutletContext } from 'react-router-dom';
@@ -49,8 +49,11 @@ const ProfileInfo = ({ employee }: Props) => {
   } = employee;
 
   const isAdmin = useAdminRights();
+  const { user: currentUser } = useAuth();
   const { id: companyId, employees } = useCompany();
   const { updateCompanyData } = useActions();
+
+  const isEditingAllowed = isAdmin || currentUser?.id === employee?.user?.id;
 
   const initialState = {
     firstName: firstName || user.firstName || '',
@@ -114,7 +117,7 @@ const ProfileInfo = ({ employee }: Props) => {
               />
             ) : (
               <CustomFormInput
-                isReadonly={!isAdmin}
+                isReadonly={name === 'jobTitle' ? !isAdmin : !isEditingAllowed}
                 key={i}
                 type={type}
                 name={name}
@@ -127,7 +130,7 @@ const ProfileInfo = ({ employee }: Props) => {
           )}
         </FormInputsList>
 
-        {isAdmin && (
+        {isEditingAllowed && (
           <ButtonBox>
             <Button
               isLoading={isLoading}
