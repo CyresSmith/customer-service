@@ -3,6 +3,7 @@ import Loader from 'components/Ui/Loader';
 import VisuallyHidden from 'components/Ui/VisuallyHidden';
 import useFileUpload from 'hooks/useFileUpload';
 import { HiCamera, HiCloudUpload, HiX } from 'react-icons/hi';
+import { HiCursorArrowRays } from 'react-icons/hi2';
 import { AvatarBox, ButtonsBox, ImageBox } from './Avatar.styled';
 
 type Props = {
@@ -49,7 +50,7 @@ const Avatar = ({
           {currentImageUrl ? (
             <img src={currentImageUrl} alt={alt} />
           ) : (
-            <HiCamera />
+            <HiCamera id="static" />
           )}
         </ImageBox>
       ) : (
@@ -75,7 +76,7 @@ const Avatar = ({
                 ) : (
                   <HiCamera id="camera" />
                 )}
-                <HiCloudUpload id="upload" />
+                <HiCursorArrowRays id="upload" />
 
                 <VisuallyHidden>
                   <input

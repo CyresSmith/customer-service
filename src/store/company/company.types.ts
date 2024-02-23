@@ -69,4 +69,4 @@ export interface IUpdateCompanyProfile {
   data: Partial<IUpdateCompanyProfileData>;
 }
 
-export interface IWorkingHours extends Pick<ISchedule, 'days' | 'schedule'> {}
+export interface IWorkingHours extends Pick<ISchedule, 'days' | 'hours'> {}

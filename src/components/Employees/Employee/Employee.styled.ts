@@ -1,28 +1,16 @@
 import styled from 'styled-components';
 import theme from 'utils/theme';
 
-type IsOpen = {
-  $isOpen: boolean;
-};
-
-export const EmployeeBox = styled.li<IsOpen>`
-  height: ${({ $isOpen }) => ($isOpen ? '500px' : '82px')};
-  background-color: ${theme.colors.bg.main};
-  border-radius: ${theme.radii.s};
-  transition: ${theme.transition.primary};
-  overflow: hidden;
-
-  &:not(:last-child) {
-    margin-bottom: ${theme.space[4]};
-  }
-`;
-
-export const EmployeeHeader = styled.div<IsOpen>`
+export const EmployeeBox = styled.li`
   cursor: pointer;
   padding: ${theme.space[4]} 0;
   transition: ${theme.transition.primary};
-  background-color: ${({ $isOpen }) =>
-    $isOpen ? theme.colors.bg.light : theme.colors.bg.main};
+  background-color: ${theme.colors.bg.main};
+  border-radius: ${theme.radii.s};
+
+  &:not(:last-of-type) {
+    margin-bottom: ${theme.space[4]};
+  }
 
   &:hover {
     background-color: ${theme.colors.bg.light};
@@ -74,16 +62,4 @@ export const JobTitle = styled.span`
   text-overflow: ellipsis;
   word-wrap: break-word;
   white-space: nowrap;
-`;
-
-export const Sections = styled.div`
-  display: flex;
-  gap: ${theme.space[1]};
-  margin-bottom: ${theme.space[3]};
-  border-bottom: ${theme.borders.normal} ${theme.colors.bg.light};
-  padding-bottom: ${theme.space[4]};
-`;
-
-export const EmployeeContent = styled.div`
-  padding: ${theme.space[4]};
 `;

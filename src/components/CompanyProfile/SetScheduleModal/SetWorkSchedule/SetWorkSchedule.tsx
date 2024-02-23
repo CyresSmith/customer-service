@@ -1,7 +1,8 @@
 import Button from 'components/Ui/Buttons/Button';
 import Select from 'components/Ui/Select';
+import generateTimeArray from 'helpers/generateTimeArray';
 import translateWorkSchedule from 'helpers/translateWorkSchedule';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HiMinusCircle, HiPlusCircle } from 'react-icons/hi';
 import { ISchedule } from '../SetScheduleModal';
 import { DayList, Time, WeekBox } from './SetWorkSchedule.styled';
@@ -34,41 +35,25 @@ const SetWorkSchedule = ({
 
   useEffect(() => {
     if (currentSchedule.days.length > 0) {
-      setSelected(currentSchedule.days);
-      setFrom(currentSchedule.schedule.from);
-      setTo(currentSchedule.schedule.to);
+      setSelected(currentSchedule?.days);
+      setFrom(currentSchedule?.hours?.from);
+      setTo(currentSchedule?.hours?.to);
     }
   }, [
-    currentSchedule.days,
-    currentSchedule.schedule.from,
-    currentSchedule.schedule.to,
+    currentSchedule?.days,
+    currentSchedule?.hours?.from,
+    currentSchedule?.hours?.to,
   ]);
 
   useEffect(() => {
     const newSchedule = {
       ...currentSchedule,
       days: selected,
-      schedule: { from, to },
+      hours: { from, to },
     };
 
     updateSchedule(newSchedule);
   }, [from, selected, to]);
-
-  const generateTimeArray = useMemo(() => {
-    const times = [];
-    for (let hours = 0; hours <= 24; hours++) {
-      if (hours === 24) {
-        times.push('24:00');
-      } else {
-        for (let minutes = 0; minutes < 60; minutes += 30) {
-          const formattedHours = String(hours).padStart(2, '0');
-          const formattedMinutes = String(minutes).padStart(2, '0');
-          times.push(`${formattedHours}:${formattedMinutes}`);
-        }
-      }
-    }
-    return times;
-  }, []);
 
   return (
     <WeekBox>
@@ -93,7 +78,7 @@ const SetWorkSchedule = ({
           selectedItem={from}
           onSelect={item => setFrom(item)}
           $colors="light"
-          items={generateTimeArray}
+          items={generateTimeArray()}
         />
       </Time>
 
@@ -104,7 +89,7 @@ const SetWorkSchedule = ({
           selectedItem={to}
           onSelect={item => setTo(item)}
           $colors="light"
-          items={generateTimeArray}
+          items={generateTimeArray()}
         />
       </Time>
 

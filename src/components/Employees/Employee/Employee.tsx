@@ -1,55 +1,36 @@
-import Button from 'components/Ui/Buttons/Button';
+import Modal from 'components/Ui/Modal/Modal';
 import translateEmployee from 'helpers/translateEmployee';
 import { useState } from 'react';
 import { HiFaceSmile } from 'react-icons/hi2';
-import { IEmployee } from 'services/types/employee.types';
+import { EmployeeRoleEnum, IEmployee } from 'services/types/employee.types';
 import { ItemLayout } from '../Employees.styled';
 import {
   EmployeeBox,
-  EmployeeContent,
-  EmployeeHeader,
   EmployeeImg,
   JobTitle,
   Name,
   NameBox,
-  Sections,
 } from './Employee.styled';
-import EmployeeProfile from './EmployeeProfile';
+import EmployeeModal from './EmployeeModal';
 
 type Props = { employee: IEmployee };
 
-const sectionButtons = [
-  { id: 1, label: 'Профіль' },
-  { id: 2, label: 'Графік' },
-  { id: 3, label: 'Послуги' },
-];
-
 const Employee = ({ employee }: Props) => {
-  const { id, jobTitle, role, status, avatar, provider, user } = employee;
-  const {
-    id: employeeUserId,
-    email,
-    phone,
-    firstName,
-    lastName,
-    avatar: userAvatar,
-  } = user;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<number>(
-    sectionButtons[0].id
-  );
+  const { avatar, user, firstName, lastName, role, jobTitle } = employee;
 
-  const fullName = firstName + ' ' + lastName;
+  const fullName =
+    (firstName || user.firstName) + ' ' + (lastName || user.lastName);
 
   return (
-    <EmployeeBox $isOpen={isOpen}>
-      <EmployeeHeader $isOpen={isOpen} onClick={() => setIsOpen(p => !p)}>
+    <>
+      <EmployeeBox onClick={() => setIsModalOpen(p => !p)}>
         <ItemLayout>
           <EmployeeImg>
-            {avatar !== '' || userAvatar !== '' ? (
+            {avatar !== '' || user.avatar !== '' ? (
               <img
-                src={avatar || userAvatar}
+                src={avatar || user.avatar}
                 alt={`${firstName + ' ' + lastName} image`}
               />
             ) : (
@@ -60,7 +41,9 @@ const Employee = ({ employee }: Props) => {
           <NameBox>
             <Name>{fullName}</Name>
             <JobTitle>
-              {role === 'owner' ? translateEmployee(role) : jobTitle}
+              {role === EmployeeRoleEnum.OWNER
+                ? translateEmployee(role)
+                : jobTitle}
             </JobTitle>
           </NameBox>
 
@@ -68,26 +51,14 @@ const Employee = ({ employee }: Props) => {
 
           <p>{translateEmployee(status)}</p>
         </ItemLayout>
-      </EmployeeHeader>
+      </EmployeeBox>
 
-      <EmployeeContent>
-        <Sections>
-          {sectionButtons.map(({ label, id }) => (
-            <Button
-              key={label}
-              size="s"
-              $colors="light"
-              $variant={activeSection === id ? 'solid' : 'text'}
-              onClick={() => setActiveSection(id)}
-            >
-              {label}
-            </Button>
-          ))}
-        </Sections>
-
-        {activeSection === 1 && <EmployeeProfile employeeId={id} />}
-      </EmployeeContent>
-    </EmployeeBox>
+      {isModalOpen && (
+        <Modal $isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
+          <EmployeeModal employee={employee} />
+        </Modal>
+      )}
+    </>
   );
 };
 

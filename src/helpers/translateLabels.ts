@@ -42,6 +42,11 @@ export const translateLabels = (name: string): string | undefined => {
       return 'Надає послуги';
     case 'isAdmin':
       return 'Права адміністрування';
+    case 'info':
+      return 'Додаткова інформація';
+    case 'break':
+      return 'Перерва';
+
     default:
       break;
   }
