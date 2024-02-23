@@ -8,6 +8,10 @@ export const ProfileInfoBox = styled.div`
   > form {
     height: 100%;
     justify-content: space-between;
+
+    > ul {
+      gap: ${theme.space[5]};
+    }
   }
 `;
 
