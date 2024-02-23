@@ -42,7 +42,7 @@ const validateInputs = (name: string, value: Value): Result<Value> => {
         break;
       case 'phone':
         // message = 'Please enter a valid phone number';
-        message = 'Введіть валідний номер телефону';
+        message = 'Введіть валідний номер';
         break;
 
       case 'index':
@@ -70,13 +70,13 @@ const validateInputs = (name: string, value: Value): Result<Value> => {
 //   setInvalidFields: React.Dispatch<React.SetStateAction<ValidationReturn>>;
 // };
 
-export const inputsValidation = <T extends {[k: string]: unknown}>(
+export const inputsValidation = <T extends { [k: string]: unknown }>(
   name: string,
   value: string,
   state: T,
   invalidFields: ValidationReturn,
   setInvalidFields: React.Dispatch<React.SetStateAction<ValidationReturn>>
-  ): void => {
+): void => {
   const isValid = validateInputs(name, value);
 
   if (!isValid.ok && value !== '') {

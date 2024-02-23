@@ -285,17 +285,15 @@ const EmployeeSchedule = ({ employee }: Props) => {
       setTo(time);
 
       if (from !== '') {
+        isBreak && setBreakTime(from, time);
         newData = { ...newData, from };
       }
     }
 
     if (id === 'breakFrom') {
       setBreakFrom(time);
-
-      if (breakTo === '') {
-        setBreakTo(nextTime());
-        newData = { ...newData, to: nextTime() };
-      }
+      setBreakTo(nextTime());
+      newData = { ...newData, to: nextTime() };
     }
 
     if (id == 'breakTo') setBreakTo(time);
@@ -409,42 +407,88 @@ const EmployeeSchedule = ({ employee }: Props) => {
       }
     } else {
       setIsBreak(true);
-
-      if (isTimeForBreak) {
-        const breakFrom =
-          timeArray[timeArray.findIndex(item => item === from) + 1];
-        const breakTo = timeArray[timeArray.findIndex(item => item === to) - 1];
-
-        setBreakFrom(breakFrom);
-        setBreakTo(breakTo);
-
-        setScheduleState(p =>
-          p.map(item => ({
-            ...item,
-            breakHours: { from: breakFrom, to: breakTo },
-          }))
-        );
-      }
+      setBreakTime(from, to);
     }
 
     setIsStateChanged(true);
+  };
+
+  const setBreakTime = (workingHoursFrom: string, workingHoursTo: string) => {
+    if (isTimeForBreak) {
+      const breakTime = timeArrayFrom(workingHoursFrom, workingHoursTo);
+      const breakFromIdx = Math.floor(breakTime.length / 2) - 1;
+      const breakFrom = breakTime[breakFromIdx];
+      const breakTo = breakTime[breakFromIdx + 1];
+
+      setBreakFrom(breakFrom);
+      setBreakTo(breakTo);
+
+      setScheduleState(p => {
+        const newArr = [...p];
+
+        for (const selectedDay of selectedDays) {
+          const idx = newArr.findIndex(({ day }) => day === selectedDay);
+
+          if (idx > -1) {
+            const newObj = {
+              ...newArr[idx],
+              breakHours: { from: breakFrom, to: breakTo },
+            };
+            newArr[idx] = newObj;
+          } else {
+            newArr.push({
+              day: selectedDay,
+              hours: { from: workingHoursFrom, to: workingHoursTo },
+              breakHours: { from: breakFrom, to: breakTo },
+            });
+          }
+        }
+        return newArr;
+      });
+    }
   };
 
   const handleResetClick = async () => {
     resetState();
     setScheduleState([]);
 
-    if (employeeSchedule && employeeSchedule.id) {
-      const { message } = await deleteSchedule({
-        companyId,
-        employeeId: employee.id,
-        scheduleId: String(employeeSchedule.id),
-      }).unwrap();
+    let toastMessage: string = '';
 
-      if (message) {
-        refetch();
-        toast.success(message);
+    if (employeeSchedule && employeeSchedule.id) {
+      if (selectedDays.length > 0) {
+        const { message } = await updateSchedule({
+          companyId,
+          employeeId: employee.id,
+          data: {
+            year: getYear(selectedMonth),
+            month: getMonth(selectedMonth) + 1,
+            schedule: scheduleState.filter(
+              ({ day }) => !selectedDays.includes(day)
+            ),
+          },
+        }).unwrap();
+
+        if (message) {
+          toastMessage = message;
+        }
+      } else {
+        const { message } = await deleteSchedule({
+          companyId,
+          employeeId: employee.id,
+          scheduleId: String(employeeSchedule.id),
+        }).unwrap();
+
+        if (message) {
+          toastMessage = message;
+        }
       }
+
+      if (toastMessage !== '') {
+        toast.success(toastMessage);
+      }
+      setIsStateChanged(false);
+      refetch();
+      resetState();
     }
   };
 
@@ -519,127 +563,127 @@ const EmployeeSchedule = ({ employee }: Props) => {
         )}
       </CalendarSide>
 
-      {/* {isEditingAllowed && ( */}
-      <SelectionSide>
-        <div>
-          {isEditingAllowed && (
-            <ScheduleSection>
-              <p>Швидкий вибір днів</p>
-
-              <SelectDaysBox>
-                {quickSelectButtons.map(({ type, label }) => (
-                  <li key={type}>
-                    <Button
-                      onClick={() => handleQuickSelectClick(type)}
-                      $colors={selectType === type ? 'accent' : 'light'}
-                      disabled={!isEditingAllowed}
-                    >
-                      {label}
-                    </Button>
-                  </li>
-                ))}
-              </SelectDaysBox>
-            </ScheduleSection>
-          )}
-
-          {selectedDays.length > 0 && (
-            <>
+      {isEditingAllowed && (
+        <SelectionSide>
+          <div>
+            {isEditingAllowed && (
               <ScheduleSection>
-                <p>Робочій час</p>
+                <p>Швидкий вибір днів</p>
 
                 <SelectDaysBox>
-                  <SelectBox>
-                    <p>з</p>
-                    <Select
-                      id="from"
-                      selectedItem={from}
-                      onSelect={handleTimeSelect}
-                      $colors="light"
-                      items={timeArray}
-                      disabled={!isEditingAllowed}
-                    />
-                  </SelectBox>
-
-                  <SelectBox>
-                    <p>до</p>
-                    <Select
-                      id="to"
-                      selectedItem={to}
-                      onSelect={handleTimeSelect}
-                      $colors="light"
-                      items={timeArrayFrom(from)}
-                      disabled={!isEditingAllowed || from === ''}
-                    />
-                  </SelectBox>
+                  {quickSelectButtons.map(({ type, label }) => (
+                    <li key={type}>
+                      <Button
+                        onClick={() => handleQuickSelectClick(type)}
+                        $colors={selectType === type ? 'accent' : 'light'}
+                        disabled={!isEditingAllowed}
+                      >
+                        {label}
+                      </Button>
+                    </li>
+                  ))}
                 </SelectDaysBox>
               </ScheduleSection>
+            )}
 
-              <ScheduleSection>
-                <Checkbox
-                  isChecked={isBreak}
-                  handleCheck={handleAddBreakHoursClick}
-                  name="break"
-                  isReadonly={!isTimeForBreak}
-                />
-                {isBreak && (
+            {selectedDays.length > 0 && (
+              <>
+                <ScheduleSection>
+                  <p>Робочій час</p>
+
                   <SelectDaysBox>
                     <SelectBox>
                       <p>з</p>
-
                       <Select
-                        id="breakFrom"
-                        selectedItem={breakFrom || ''}
+                        id="from"
+                        selectedItem={from}
                         onSelect={handleTimeSelect}
                         $colors="light"
-                        items={timeArrayFrom(from, breakTo || to)}
+                        items={timeArray}
                         disabled={!isEditingAllowed}
                       />
                     </SelectBox>
 
                     <SelectBox>
                       <p>до</p>
-
                       <Select
-                        id="breakTo"
-                        selectedItem={breakTo || ''}
+                        id="to"
+                        selectedItem={to}
                         onSelect={handleTimeSelect}
                         $colors="light"
-                        items={timeArrayFrom(breakFrom || '', to || '')}
-                        disabled={!isEditingAllowed || breakFrom === ''}
+                        items={timeArrayFrom(from)}
+                        disabled={!isEditingAllowed || from === ''}
                       />
                     </SelectBox>
                   </SelectDaysBox>
-                )}
-              </ScheduleSection>
-            </>
+                </ScheduleSection>
+
+                <ScheduleSection>
+                  <Checkbox
+                    isChecked={isBreak}
+                    handleCheck={handleAddBreakHoursClick}
+                    name="break"
+                    isReadonly={!isTimeForBreak}
+                  />
+                  {isBreak && (
+                    <SelectDaysBox>
+                      <SelectBox>
+                        <p>з</p>
+
+                        <Select
+                          id="breakFrom"
+                          selectedItem={breakFrom || ''}
+                          onSelect={handleTimeSelect}
+                          $colors="light"
+                          items={timeArrayFrom(from, breakTo || to)}
+                          disabled={!isEditingAllowed}
+                        />
+                      </SelectBox>
+
+                      <SelectBox>
+                        <p>до</p>
+
+                        <Select
+                          id="breakTo"
+                          selectedItem={breakTo || ''}
+                          onSelect={handleTimeSelect}
+                          $colors="light"
+                          items={timeArrayFrom(breakFrom || '', to || '')}
+                          disabled={!isEditingAllowed || breakFrom === ''}
+                        />
+                      </SelectBox>
+                    </SelectDaysBox>
+                  )}
+                </ScheduleSection>
+              </>
+            )}
+          </div>
+
+          {isEditingAllowed && (
+            <ButtonsBox>
+              <Button
+                onClick={handleResetClick}
+                Icon={HiTrash}
+                disabled={isLoading}
+                $colors="light"
+                $variant="text"
+              >
+                Скинути
+              </Button>
+
+              <Button
+                isLoading={isLoading}
+                onClick={handleScheduleUpdate}
+                Icon={IoIosSave}
+                disabled={!isStateChanged || isLoading}
+                $colors="accent"
+              >
+                Зберегти
+              </Button>
+            </ButtonsBox>
           )}
-        </div>
-
-        {isEditingAllowed && (
-          <ButtonsBox>
-            <Button
-              onClick={handleResetClick}
-              Icon={HiTrash}
-              // disabled={isStateChanged || isLoading}
-              $colors="light"
-              $variant="text"
-            >
-              Скинути
-            </Button>
-
-            <Button
-              isLoading={isLoading}
-              onClick={handleScheduleUpdate}
-              Icon={IoIosSave}
-              disabled={!isStateChanged || isLoading}
-              $colors="accent"
-            >
-              Зберегти
-            </Button>
-          </ButtonsBox>
-        )}
-      </SelectionSide>
-      {/* )} */}
+        </SelectionSide>
+      )}
     </EmployeeScheduleBox>
   );
 };
