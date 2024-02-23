@@ -1,10 +1,15 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from 'services/instance';
+import { MessageResponse } from './types';
 import {
   UpdateEmployeeAvatar,
   UpdateEmployeeProfile,
 } from './types/employee.types';
-import { IEmployeeSchedule } from './types/schedule.types';
+import {
+  IGetEmployeeSchedule,
+  IMonthSchedule,
+  IUpdateEmployeeSchedule,
+} from './types/schedule.types';
 
 export const employeeApi = createApi({
   reducerPath: 'employeeApi',
@@ -27,7 +32,7 @@ export const employeeApi = createApi({
     }),
 
     updateEmployeeProfile: builder.mutation<
-      { message: string },
+      MessageResponse,
       { companyId: string; employeeId: string; data: UpdateEmployeeProfile }
     >({
       query: ({ companyId, employeeId, data }) => ({
@@ -39,8 +44,8 @@ export const employeeApi = createApi({
     }),
 
     updateEmployeeSchedule: builder.mutation<
-      { message: string },
-      { companyId: string; employeeId: string; data: IEmployeeSchedule }
+      MessageResponse,
+      IUpdateEmployeeSchedule
     >({
       query: ({ companyId, employeeId, data }) => ({
         url: `company/${companyId}/employee/${employeeId}/schedule`,
@@ -50,10 +55,7 @@ export const employeeApi = createApi({
       invalidatesTags: ['employeeSchedule'],
     }),
 
-    getEmployeeSchedule: builder.query<
-      IEmployeeSchedule,
-      { companyId: string; employeeId: string; year: number; month: number }
-    >({
+    getEmployeeSchedule: builder.query<IMonthSchedule, IGetEmployeeSchedule>({
       query: ({ companyId, employeeId, year, month }) => ({
         url: `company/${companyId}/employee/${employeeId}/schedule?year=${year}&month=${month}`,
         method: 'GET',

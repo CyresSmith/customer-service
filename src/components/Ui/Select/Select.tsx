@@ -20,11 +20,11 @@ const Select = ({
   );
   const selectRef = useClickOutside(() => setIsOpen(false));
 
-  const handleSelect = (item: string) => {
+  const handleSelect = (item: string, id: string) => {
     if (disabled) return;
 
     setSelected(item);
-    onSelect(item);
+    onSelect(item, id);
     setIsOpen(false);
   };
 
@@ -68,7 +68,7 @@ const Select = ({
         $isOpen={isOpen}
       >
         {items.map(item => (
-          <li key={item} onClick={() => handleSelect(item)}>
+          <li key={item} onClick={() => handleSelect(item, id)}>
             {item}
           </li>
         ))}
