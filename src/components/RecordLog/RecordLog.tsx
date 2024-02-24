@@ -4,134 +4,145 @@ import RecordLogList from "./RecordLogList/RecordLogList";
 import generateTimeArray, { getSchedule } from "helpers/generateTimeArray";
 import TimeList from "./RecordLogList/TimeList";
 
-const items = [
-    {
-        id: 2,
-        days: [
-            {
-                day: 1,
-                hours: {
-                    from: '10:00',
-                    to: '16:00'
-                },
-                events: [
-                    {
-                        id: 1,
-                        time: {
-                            from: '11:00',
-                            to: '13:00'
-                        }
-                    },
-                    {
-                        id: 2,
-                        time: {
-                            from: '14:00',
-                            to: '15:00'
-                        }
-                    }
-                ]
-            },
-            {
-                day: 2,
-                hours: {
-                    from: '10:00',
-                    to: '16:00'
-                }
-            }
-        ]
-    },
-    {
-        id: 1,
-        days: [
-            {
-                day: 1,
-                hours: {
-                    from: '09:00',
-                    to: '18:00'
-                },
-                events: [
-                    {
-                        id: 1,
-                        time: {
-                            from: '09:30',
-                            to: '11:00'
-                        }
-                    },
-                    {
-                        id: 2,
-                        time: {
-                            from: '12:00',
-                            to: '13:30'
-                        }
-                    }
-                ]
-            },
-            {
-                day: 2,
-                hours: {
-                    from: '09:00',
-                    to: '18:00'
-                }
-            }
-        ]
-    },
-    {
-        id: 2,
-        days: [
-            {
-                day: 1,
-                hours: {
-                    from: '12:00',
-                    to: '20:00'
-                },
-                events: [
-                    {
-                        id: 1,
-                        time: {
-                            from: '12:00',
-                            to: '13:45'
-                        }
-                    },
-                    {
-                        id: 2,
-                        time: {
-                            from: '16:00',
-                            to: '17:30'
-                        }
-                    }
-                ]
-            },
-            {
-                day: 2,
-                hours: {
-                    from: '10:00',
-                    to: '16:00'
-                }
-            }
-        ]
-    }
-]
+// const items = [
+//     {
+//         id: 2,
+//         days: [
+//             {
+//                 day: 1,
+//                 hours: {
+//                     from: '10:00',
+//                     to: '16:00'
+//                 },
+//                 events: [
+//                     {
+//                         id: 1,
+//                         time: {
+//                             from: '11:00',
+//                             to: '13:00'
+//                         }
+//                     },
+//                     {
+//                         id: 2,
+//                         time: {
+//                             from: '14:00',
+//                             to: '15:00'
+//                         }
+//                     }
+//                 ]
+//             },
+//             {
+//                 day: 2,
+//                 hours: {
+//                     from: '10:00',
+//                     to: '16:00'
+//                 }
+//             }
+//         ]
+//     },
+//     {
+//         id: 1,
+//         days: [
+//             {
+//                 day: 1,
+//                 hours: {
+//                     from: '09:00',
+//                     to: '18:00'
+//                 },
+//                 events: [
+//                     {
+//                         id: 1,
+//                         time: {
+//                             from: '09:30',
+//                             to: '11:00'
+//                         }
+//                     },
+//                     {
+//                         id: 2,
+//                         time: {
+//                             from: '12:00',
+//                             to: '13:30'
+//                         }
+//                     }
+//                 ]
+//             },
+//             {
+//                 day: 2,
+//                 hours: {
+//                     from: '09:00',
+//                     to: '18:00'
+//                 }
+//             }
+//         ]
+//     },
+//     {
+//         id: 2,
+//         days: [
+//             {
+//                 day: 1,
+//                 hours: {
+//                     from: '12:00',
+//                     to: '20:00'
+//                 },
+//                 events: [
+//                     {
+//                         id: 1,
+//                         time: {
+//                             from: '12:00',
+//                             to: '13:45'
+//                         }
+//                     },
+//                     {
+//                         id: 2,
+//                         time: {
+//                             from: '16:00',
+//                             to: '17:30'
+//                         }
+//                     }
+//                 ]
+//             },
+//             {
+//                 day: 2,
+//                 hours: {
+//                     from: '10:00',
+//                     to: '16:00'
+//                 }
+//             }
+//         ]
+//     }
+//
 
-const RecordLog = () => {
-    const { workingHours } = useCompany();
+type Props = {
+    date: Date;
+}
+
+const RecordLog = ({date}: Props) => {
+    const { workingHours, employees } = useCompany();
 
     if (!workingHours) {
         return;
     }
 
-    const { hours } = workingHours[0];
-    const { from, to } = hours;
+    // const today = workingHours.find(wh => wh.days.includes());
+    // const { from, to } = today!.hours;
 
     const timeArray = generateTimeArray(true);
 
+    const providers = employees.filter(e => e.provider);
     const companyDaySchedule = getSchedule(timeArray, from, to);
 
     return workingHours && (
-        <RecordContainer $columns={items.length}>
-            <TimeList side="left" workHours={companyDaySchedule} />
+        <RecordContainer $columns={providers.length}>
+            {/* <TimeList side="left" workHours={companyDaySchedule} />
             <ListsWrapper>
-                {items.map((item, i) => <RecordLogList companySchedule={companyDaySchedule} key={i} item={item.days[0]} />)}
-            </ListsWrapper>
+                {providers.map(provider =>
+                    <RecordLogList
+                        companySchedule={companyDaySchedule}
+                        key={provider.id}
+                        schedules={provider.schedules}
+                        date={date}
+                />)}
+            </ListsWrapper> */}
             <TimeList side="right" workHours={companyDaySchedule} />
         </RecordContainer>
     )

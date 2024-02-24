@@ -1,7 +1,9 @@
+import { IEmployee } from "services/types/employee.types";
 import { EmployeeEvent } from "./EmployeeEvent";
 import { List, ListWrapper } from "./RecordLogList.styled"
 import { RecordLogListItem } from "./RecordLogListItem";
 import { getSchedule } from "helpers/generateTimeArray";
+import { IMonthSchedule } from "services/types/schedule.types";
 
 export type EventType = {
     id: number,
@@ -13,21 +15,25 @@ export type EventType = {
 
 type Props = {
     companySchedule: string[];
-    item: {
-        day: number,
-        hours: {
-            from: string,
-            to: string
-        },
-        events?: EventType[],
-    }
+    // item: {
+    //     day: number,
+    //     hours: {
+    //         from: string,
+    //         to: string
+    //     },
+    //     events?: EventType[],
+    // }
+    schedules: IMonthSchedule[],
+    date: Date;
 };
 
-const RecordLogList = ({ item, companySchedule }: Props) => {
-    const { hours, events } = item;
+const RecordLogList = ({ companySchedule, schedules, date }: Props) => {
+    const { year, month, day } = date;
+
+    const chosenSchedule = schedules.filter(s => s.year === year && s.month === month + 1)[0].schedule.find(sh => sh.day === day)?.hours;
 
     const getEmployeeSchedule = (): string[]=> {
-        const { from, to } = hours;
+        const { from, to } = chosenSchedule!;
 
         const workingHours = getSchedule(companySchedule, from, to);
 
@@ -51,7 +57,7 @@ const RecordLogList = ({ item, companySchedule }: Props) => {
             <List $wh={employeeSchedule.length}>
                 {employeeSchedule.map((hour, i) => <RecordLogListItem key={i} index={i} hour={hour} />)}
             </List>
-            {events && events?.length > 0 && events.map((e, i) => <EmployeeEvent key={i} event={e} employeeSchedule={employeeSchedule} />)}
+            {/* {events && events?.length > 0 && events.map((e, i) => <EmployeeEvent key={i} event={e} employeeSchedule={employeeSchedule} />)} */}
         </ListWrapper>
     )
 };

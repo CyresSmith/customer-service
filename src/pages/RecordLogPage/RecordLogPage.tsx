@@ -1,16 +1,15 @@
 import RecordLog from 'components/RecordLog';
 import RecordLogBar from 'components/RecordLog/RecordLogBar';
 import PageContentLayout from 'components/Ui/PageContentLayout';
+import { useState } from 'react';
 
-// type Props = {};
+const RecordLogPage = () => {
+  const [date, setDate] = useState<Date>(new Date());
 
-const RecordLogPage = (props: Props) => {
   return (
     <PageContentLayout
-      bar={
-        <RecordLogBar />
-      }
-      content={<RecordLog />}
+      bar={<RecordLogBar date={date} setDate={setDate} />}
+      content={<RecordLog date={date} />}
     />
   );
 };
