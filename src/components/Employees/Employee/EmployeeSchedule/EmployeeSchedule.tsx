@@ -15,6 +15,7 @@ import {
   SelectBox,
   SelectDaysBox,
   SelectionSide,
+  Title,
 } from './EmployeeSchedule.styled';
 
 import Checkbox from 'components/Ui/Form/Checkbox';
@@ -26,6 +27,7 @@ import {
   eachWeekendOfMonth,
   format,
   getDate,
+  getDay,
   getMonth,
   getYear,
   isThisMonth,
@@ -68,7 +70,7 @@ type Props = { employee: IEmployee };
 const EmployeeSchedule = ({ employee }: Props) => {
   const isAdmin = useAdminRights();
   const { user } = useAuth();
-  const { id: companyId } = useCompany();
+  const { id: companyId, workingHours } = useCompany();
 
   const isEditingAllowed = isAdmin || user?.id === employee?.user?.id;
 
@@ -90,7 +92,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
       companyId,
       employeeId: employee.id,
       year: getYear(selectedMonth),
-      month: getMonth(selectedMonth) + 1,
+      month: getMonth(selectedMonth),
     },
     { refetchOnMountOrArgChange: true }
   );
@@ -104,7 +106,6 @@ const EmployeeSchedule = ({ employee }: Props) => {
   const [breakFrom, setBreakFrom] = useState('');
   const [breakTo, setBreakTo] = useState('');
   const [isStateChanged, setIsStateChanged] = useState(false);
-
   const [updateSchedule, { isLoading }] = useUpdateEmployeeScheduleMutation();
   const [deleteSchedule, { isLoading: isDeleteLoading }] =
     useDeleteEmployeeScheduleMutation();
@@ -115,7 +116,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
       employeeId: employee.id,
       data: {
         year: getYear(selectedMonth),
-        month: getMonth(selectedMonth) + 1,
+        month: getMonth(selectedMonth),
         schedule: scheduleState,
       },
     }).unwrap();
@@ -126,6 +127,19 @@ const EmployeeSchedule = ({ employee }: Props) => {
       toast.success(message);
     }
   };
+
+  const disabledDays =
+    workingHours?.find(({ days }) =>
+      days.includes(
+        getDay(
+          new Date(
+            getYear(selectedMonth),
+            getMonth(selectedMonth),
+            selectedDays[0]
+          )
+        )
+      )
+    )?.days || [];
 
   const resetState = () => {
     setSelectedDays([]);
@@ -139,11 +153,13 @@ const EmployeeSchedule = ({ employee }: Props) => {
 
   const handleNextMonthClick = () => {
     resetState();
+    setScheduleState([]);
     setSelectedMonth(addMonths(selectedMonth, 1));
   };
 
   const handlePrevMonthClick = () => {
     resetState();
+    setScheduleState([]);
     setSelectedMonth(addMonths(selectedMonth, -1));
   };
 
@@ -555,6 +571,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
               monthSchedule={scheduleState}
               selectedMonth={selectedMonth}
               selectedDays={selectedDays}
+              disabledDays={disabledDays}
               handleDayClick={handleDayClick}
               toNextMonth={handleNextMonthClick}
               toPrevMonth={handlePrevMonthClick}
@@ -566,30 +583,28 @@ const EmployeeSchedule = ({ employee }: Props) => {
       {isEditingAllowed && (
         <SelectionSide>
           <div>
-            {isEditingAllowed && (
-              <ScheduleSection>
-                <p>Швидкий вибір днів</p>
+            <ScheduleSection>
+              <Title>Швидкий вибір днів</Title>
 
-                <SelectDaysBox>
-                  {quickSelectButtons.map(({ type, label }) => (
-                    <li key={type}>
-                      <Button
-                        onClick={() => handleQuickSelectClick(type)}
-                        $colors={selectType === type ? 'accent' : 'light'}
-                        disabled={!isEditingAllowed}
-                      >
-                        {label}
-                      </Button>
-                    </li>
-                  ))}
-                </SelectDaysBox>
-              </ScheduleSection>
-            )}
+              <SelectDaysBox>
+                {quickSelectButtons.map(({ type, label }) => (
+                  <li key={type}>
+                    <Button
+                      onClick={() => handleQuickSelectClick(type)}
+                      $colors={selectType === type ? 'accent' : 'light'}
+                      disabled={!isEditingAllowed}
+                    >
+                      {label}
+                    </Button>
+                  </li>
+                ))}
+              </SelectDaysBox>
+            </ScheduleSection>
 
             {selectedDays.length > 0 && (
               <>
                 <ScheduleSection>
-                  <p>Робочій час</p>
+                  <Title>Робочій час</Title>
 
                   <SelectDaysBox>
                     <SelectBox>

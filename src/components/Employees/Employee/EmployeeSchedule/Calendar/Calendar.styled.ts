@@ -11,11 +11,23 @@ export const CalendarBox = styled.div`
 interface ICalendarDay {
   $today?: boolean;
   $selected?: boolean;
+  $isDisabled?: boolean;
 }
 
-export const WeekDay = styled.span`
-  text-align: center;
+export const WeekDay = styled.p`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${theme.space[0]};
   text-transform: capitalize;
+  font-size: ${theme.fontSizes.l};
+  font-weight: ${theme.fontWeights.regular};
+`;
+
+export const Hours = styled.span`
+  font-size: ${theme.fontSizes.s};
+  font-weight: ${theme.fontWeights.light};
+  color: ${theme.colors.secondary.light};
 `;
 
 export const Day = styled.div<ICalendarDay>`
@@ -34,11 +46,9 @@ export const Day = styled.div<ICalendarDay>`
   border-radius: ${theme.radii.s};
   padding: ${theme.space[2]};
   height: 73px;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: space-between; */
-  cursor: pointer;
+  cursor: ${({ $isDisabled }) => ($isDisabled ? 'default' : 'pointer')};
   transition: ${theme.transition.primary};
+  opacity: ${({ $isDisabled }) => ($isDisabled ? 0.4 : 1)};
 
   &:hover {
     background-color: ${({ $today, $selected }) =>

@@ -5,6 +5,7 @@ import {
   Day,
   DayDate,
   DaySchedule,
+  Hours,
   WeekDay,
 } from './Calendar.styled';
 
@@ -13,6 +14,7 @@ import {
   eachDayOfInterval,
   format,
   getDate,
+  getDay,
   getMonth,
   isMonday,
   lastDayOfMonth,
@@ -21,37 +23,32 @@ import {
   previousMonday,
   startOfMonth,
 } from 'date-fns';
+import { weekDays } from 'helpers/constants';
+import { useCompany } from 'hooks/useCompany';
 import { IDaySchedule } from 'services/types/schedule.types';
 
 type Props = {
   monthSchedule: IDaySchedule[];
   selectedMonth: Date;
   selectedDays: number[];
+  disabledDays: number[];
   setSelectedDays?: Dispatch<SetStateAction<string[]>>;
   handleDayClick: (date: number) => void;
   toNextMonth: () => void;
   toPrevMonth: () => void;
 };
 
-const weekDays = [
-  'понеділок',
-  'вівторок',
-  'середа',
-  'четвер',
-  'п’ятниця',
-  'субота',
-  'неділя',
-];
-
 const Calendar = ({
-  monthSchedule = [],
   selectedMonth,
-  selectedDays,
+  monthSchedule = [],
+  selectedDays = [],
+  disabledDays = [],
   handleDayClick,
   toNextMonth,
   toPrevMonth,
 }: Props) => {
   const today = new Date(Date.now());
+  const { workingHours } = useCompany();
 
   const monthDays = eachDayOfInterval({
     start: selectedMonth,
@@ -91,11 +88,27 @@ const Calendar = ({
 
   const dateFormat = (date: Date) => format(date, 'd');
 
+  const isDayDisabled = (dayIndex: number) => {
+    return disabledDays.length > 0 ? !disabledDays.includes(dayIndex) : false;
+  };
+
   return (
     <CalendarBox>
-      {weekDays.map(day => (
-        <WeekDay key={day}>{day}</WeekDay>
-      ))}
+      {weekDays.map(({ name, id }) => {
+        const hours = workingHours?.find(({ days }) =>
+          days.includes(id)
+        )?.hours;
+
+        return (
+          <div>
+            <WeekDay key={name}>
+              <span>{name}</span>
+
+              {hours && <Hours>{`${hours.from} - ${hours.to}`}</Hours>}
+            </WeekDay>
+          </div>
+        );
+      })}
       {!isFirstDayMonday &&
         prevMonthDays.map((date, i) => (
           <Day className="other" key={i} onClick={toPrevMonth}>
@@ -104,18 +117,22 @@ const Calendar = ({
         ))}
       {monthDays.map((date, i) => {
         const dayDate = getDate(date);
+
         const isToday =
           dayDate === getDate(today) &&
           getMonth(selectedMonth) === getMonth(today);
 
         const daySchedule = monthSchedule.find(({ day }) => day === dayDate);
 
+        const isDisabled = isDayDisabled(getDay(date));
+
         return (
           <Day
             key={i}
-            onClick={() => handleDayClick(dayDate)}
+            onClick={() => !isDisabled && handleDayClick(dayDate)}
             $today={isToday}
             $selected={selectedDays.includes(dayDate)}
+            $isDisabled={isDisabled}
           >
             <DayDate $today={isToday}>{dateFormat(date)}</DayDate>
             {daySchedule && (

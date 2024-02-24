@@ -237,8 +237,11 @@ const CompanyProfile = () => {
                     {workingHours.map(({ days, hours }, i) => (
                       <li key={i}>
                         <p>
-                          {days.map(day => (
-                            <span key={day}>{translateWorkSchedule(day)} </span>
+                          {days.map((day, idx) => (
+                            <span key={day}>
+                              {translateWorkSchedule(day)}
+                              {idx + 1 < days.length && <span>,</span>}{' '}
+                            </span>
                           ))}
 
                           <span>з {hours?.from} </span>
