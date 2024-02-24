@@ -118,13 +118,23 @@ type Props = {
 
 const RecordLog = ({date}: Props) => {
     const { workingHours, employees } = useCompany();
+    const chosenDay = new Date(date).getDay();
 
     if (!workingHours) {
-        return;
+        return (
+            <p>Не встановлено графік роботи компанії!</p>
+        )
     }
 
-    // const today = workingHours.find(wh => wh.days.includes());
-    // const { from, to } = today!.hours;
+    const today = workingHours.find(wh => wh.days.includes(chosenDay));
+
+    if (!today && !today!.hours) {
+        return (
+            <p>Не встановлено графік роботи для обраного дня!</p>
+        )
+    }
+
+    const { from, to } = today!.hours;
 
     const timeArray = generateTimeArray(true);
 
@@ -133,16 +143,16 @@ const RecordLog = ({date}: Props) => {
 
     return workingHours && (
         <RecordContainer $columns={providers.length}>
-            {/* <TimeList side="left" workHours={companyDaySchedule} />
+            <TimeList side="left" workHours={companyDaySchedule} />
             <ListsWrapper>
                 {providers.map(provider =>
                     <RecordLogList
                         companySchedule={companyDaySchedule}
                         key={provider.id}
-                        schedules={provider.schedules}
+                        schedules={provider.schedules ? provider.schedules : []}
                         date={date}
                 />)}
-            </ListsWrapper> */}
+            </ListsWrapper>
             <TimeList side="right" workHours={companyDaySchedule} />
         </RecordContainer>
     )

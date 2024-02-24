@@ -3,7 +3,7 @@ import theme from 'utils/theme';
 
 export const List = styled.ul<{ $side: string }>`
     position: absolute;
-    top: 8px;
+    top: 18px;
     left: ${props => props.$side === 'left' ? '0' : null};
     right: ${props => props.$side === 'right' ? '0' : null};
     width: 50px;

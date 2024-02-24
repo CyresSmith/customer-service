@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import Button from "../Buttons/Button";
 import { Container, DateWrapper, DateValue } from "./DateSwitcher.styled";
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
+import { addDays, subDays } from "date-fns";
 
 type Props = {
     date: Date;
@@ -10,15 +11,23 @@ type Props = {
 
 const DateSwitcher = ({ date, setDate }: Props) => {
 
-    // const chosenDate = new Date(year, month, day).toLocaleDateString('uk-UK', { weekday: 'short', day: 'numeric', month: 'long' });
+    const chosenDate = new Date(date).toLocaleDateString('uk-UK', { weekday: 'short', day: 'numeric', month: 'long' });
+
+    const handleDayChange = (event: string) => {
+        if (event === '+') {
+            setDate(addDays(date, 1));
+        } else {
+            setDate(subDays(date, 1));
+        }
+    };
 
     return (
         <Container>
-            <Button Icon={HiArrowLeft} $round={true} $colors="light" />
+            <Button onClick={() => handleDayChange('-')} Icon={HiArrowLeft} $round={true} $colors="light" />
             <DateWrapper>
-                {/* <DateValue>{ chosenDate }</DateValue> */}
+                <DateValue>{ chosenDate }</DateValue>
             </DateWrapper>
-            <Button Icon={HiArrowRight} $round={true} $colors="light" />
+            <Button onClick={() => handleDayChange('+')} Icon={HiArrowRight} $round={true} $colors="light" />
         </Container>
     )
 };

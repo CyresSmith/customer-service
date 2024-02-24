@@ -1,5 +1,5 @@
-import { IEmployee } from "services/types/employee.types";
-import { EmployeeEvent } from "./EmployeeEvent";
+// import { IEmployee } from "services/types/employee.types";
+// import { EmployeeEvent } from "./EmployeeEvent";
 import { List, ListWrapper } from "./RecordLogList.styled"
 import { RecordLogListItem } from "./RecordLogListItem";
 import { getSchedule } from "helpers/generateTimeArray";
@@ -28,9 +28,13 @@ type Props = {
 };
 
 const RecordLogList = ({ companySchedule, schedules, date }: Props) => {
-    const { year, month, day } = date;
+    const chosenDay = new Date(date).getDay();
+    const chosenMonth = new Date(date).getMonth();
+    const chosenYear = new Date(date).getFullYear();
 
-    const chosenSchedule = schedules.filter(s => s.year === year && s.month === month + 1)[0].schedule.find(sh => sh.day === day)?.hours;
+    const chosenSchedule = schedules.length > 0 ?
+        schedules.filter(s => s.year === chosenYear && s.month === chosenMonth + 1)[0].schedule.find(sh => sh.day === chosenDay)?.hours :
+        {from: '', to: ''};
 
     const getEmployeeSchedule = (): string[]=> {
         const { from, to } = chosenSchedule!;
