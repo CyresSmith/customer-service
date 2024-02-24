@@ -72,9 +72,9 @@ const Item = ({
       {children && children.length > 0 && (
         <ChildrenBox $menuSize={size} $isOpen={isOpen}>
           <ul>
-            {children.map(item => (
+            {children.map((item, i) => (
               <Item
-                key={item.id}
+                key={i}
                 {...item}
                 size={size}
                 onItemClick={onItemClick}

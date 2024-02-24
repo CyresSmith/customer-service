@@ -1,21 +1,20 @@
 import Button from 'components/Ui/Buttons/Button';
 import Select from 'components/Ui/Select';
+import { weekDays } from 'helpers/constants';
 import generateTimeArray from 'helpers/generateTimeArray';
 import translateWorkSchedule from 'helpers/translateWorkSchedule';
 import { useEffect, useState } from 'react';
 import { HiMinusCircle, HiPlusCircle } from 'react-icons/hi';
-import { ISchedule } from '../SetScheduleModal';
 import { DayList, Time, WeekBox } from './SetWorkSchedule.styled';
-
-type DayId = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+import { ICompanySchedule } from '../SetScheduleModal';
 
 type Props = {
   addSchedule: () => void;
-  updateSchedule: (schedule: ISchedule) => void;
-  removeSchedule: (schedule: ISchedule) => void;
+  updateSchedule: (schedule: ICompanySchedule) => void;
+  removeSchedule: (schedule: ICompanySchedule) => void;
   addDisabled: boolean;
-  currentSchedule: ISchedule;
-  schedules: ISchedule[];
+  currentSchedule: ICompanySchedule;
+  schedules: ICompanySchedule[];
 };
 
 const SetWorkSchedule = ({
@@ -30,7 +29,7 @@ const SetWorkSchedule = ({
   const [from, setFrom] = useState<string>('');
   const [to, setTo] = useState<string>('');
 
-  const handleDaySelect = (id: DayId) =>
+  const handleDaySelect = (id: number) =>
     setSelected(p => (p?.includes(id) ? p?.filter(d => d !== id) : [...p, id]));
 
   useEffect(() => {
@@ -58,14 +57,14 @@ const SetWorkSchedule = ({
   return (
     <WeekBox>
       <DayList>
-        {Array.from({ length: 7 }, (_, i) => i + 1).map(i => (
-          <li key={i}>
+        {weekDays.map(({ name, id }) => (
+          <li key={id}>
             <Button
-              disabled={currentSchedule.disabledDays?.includes(i)}
-              $colors={selected?.includes(i as DayId) ? 'accent' : 'light'}
-              onClick={() => handleDaySelect(i as DayId)}
+              disabled={currentSchedule.disabledDays?.includes(id)}
+              $colors={selected?.includes(id) ? 'accent' : 'light'}
+              onClick={() => handleDaySelect(id)}
             >
-              {translateWorkSchedule(i)}
+              {name}
             </Button>
           </li>
         ))}

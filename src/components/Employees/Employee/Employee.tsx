@@ -2,7 +2,11 @@ import Modal from 'components/Ui/Modal/Modal';
 import translateEmployee from 'helpers/translateEmployee';
 import { useState } from 'react';
 import { HiFaceSmile } from 'react-icons/hi2';
-import { EmployeeRoleEnum, IEmployee } from 'services/types/employee.types';
+import {
+  EmployeeRoleEnum,
+  EmployeeStatusEnum,
+  IEmployee,
+} from 'services/types/employee.types';
 import { ItemLayout } from '../Employees.styled';
 import {
   EmployeeBox,
@@ -12,13 +16,15 @@ import {
   NameBox,
 } from './Employee.styled';
 import EmployeeModal from './EmployeeModal';
+import { StatusBadge } from './EmployeeProfile/EmployeeProfile.styled';
 
 type Props = { employee: IEmployee };
 
 const Employee = ({ employee }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { avatar, user, firstName, lastName, role, jobTitle } = employee;
+  const { avatar, user, firstName, lastName, role, jobTitle, status } =
+    employee;
 
   const fullName =
     (firstName || user.firstName) + ' ' + (lastName || user.lastName);
@@ -49,7 +55,13 @@ const Employee = ({ employee }: Props) => {
 
           <div></div>
 
-          <p>{translateEmployee(status)}</p>
+          <StatusBadge
+            $active={status === EmployeeStatusEnum.WORKING}
+            $size="s"
+          >
+            {status === EmployeeStatusEnum.WORKING && <span>Працює</span>}
+            {status === EmployeeStatusEnum.FIRED && <span>Звільнено</span>}
+          </StatusBadge>
         </ItemLayout>
       </EmployeeBox>
 

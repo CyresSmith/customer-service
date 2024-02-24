@@ -1,7 +1,6 @@
 import CustomForm from 'components/Ui/Form/CustomForm';
 import { useActions } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { State } from 'hooks/useForm';
 import { useEffect } from 'react';
 import { HiCloudUpload } from 'react-icons/hi';
 import { toast } from 'react-toastify';
@@ -18,15 +17,13 @@ const EditPhonesModal = ({ closeModal, phone }: Props) => {
   const [uploadPhone, { isLoading, isSuccess }] =
     useUpdateCompanyProfileMutation();
 
-  const handleSubmit = async ({ phone: newPhone }: State) => {
-    if (newPhone) {
-      const data: { phones: string[] } = { phones: [] };
-
-      if (phone) {
-        data.phones = phones.map(item => (item === phone ? newPhone : item));
-      } else {
-        data.phones = [...phones, newPhone];
-      }
+  const handleSubmit = async (state: { phone: string }) => {
+    if (state.phone) {
+      const data = {
+        phones: phone
+          ? phones.map(item => (item === phone ? state.phone : item))
+          : [...phones, state.phone],
+      };
 
       const { message } = await uploadPhone({
         id,

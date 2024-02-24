@@ -31,6 +31,7 @@ const items = [
     children: [
       { id: 1, to: 'profile', label: 'Профіль' },
       { id: 2, to: 'employees', label: 'Співробітники' },
+      { id: 2, to: 'services', label: 'Послуги' },
     ],
   },
 ];

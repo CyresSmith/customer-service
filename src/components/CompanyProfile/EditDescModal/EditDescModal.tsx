@@ -2,7 +2,7 @@ import Button from 'components/Ui/Buttons/Button';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { useActions } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { State, useForm } from 'hooks/useForm';
+import { useForm } from 'hooks/useForm';
 import { useEffect } from 'react';
 import { HiCloudUpload } from 'react-icons/hi';
 import { toast } from 'react-toastify';
@@ -19,25 +19,24 @@ const EditDescModal = ({ closeModal }: Props) => {
   const [uploadDesc, { isLoading, isSuccess }] =
     useUpdateCompanyProfileMutation();
 
-  const onSubmit = async ({ desc: newDesc }: State) => {
-    if (newDesc) {
-      const data: { desc: string } = { desc: newDesc };
-
+  const onSubmit = async (state: { desc: string }) => {
+    if (state?.desc) {
       const { message } = await uploadDesc({
         id,
-        data,
+        data: state,
       }).unwrap();
 
-      if (message) updateCompanyData(data);
+      if (message) updateCompanyData(state);
 
       closeModal();
     }
   };
 
-  const { handleChange, handleSubmit, state, invalidFields, reset } = useForm({
-    initialState: { desc: desc ? desc : '' },
-    onSubmit,
-  });
+  const initialState = { desc: desc ? desc : '' };
+
+  const { handleChange, handleSubmit, state, invalidFields, reset } = useForm<
+    typeof initialState
+  >(initialState, onSubmit);
 
   const errorMessage = (name: string): string | undefined => {
     const error = invalidFields.find(f => Object.keys(f)[0] === name);

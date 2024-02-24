@@ -1,25 +1,25 @@
-const translateWorkSchedule = (id: number | 'from' | 'to') => {
+const translateWorkSchedule = (id: number | 'from' | 'to', short?: boolean) => {
   switch (id) {
     case 1:
-      return 'Понеділок';
+      return short ? 'Пн' : 'Понеділок';
 
     case 2:
-      return 'Вівторок';
+      return short ? 'Вт' : 'Вівторок';
 
     case 3:
-      return 'Середа';
+      return short ? 'Ср' : 'Середа';
 
     case 4:
-      return 'Четвер';
+      return short ? 'Чт' : 'Четвер';
 
     case 5:
-      return "П'ятниця";
+      return short ? 'Пт' : "П'ятниця";
 
     case 6:
-      return 'Субота';
+      return short ? 'Сб' : 'Субота';
 
-    case 7:
-      return 'Неділя';
+    case 0:
+      return short ? 'Нд' : 'Неділя';
 
     case 'from':
       return 'з';

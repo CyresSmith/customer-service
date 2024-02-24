@@ -30,8 +30,13 @@ export const ScheduleSection = styled.div`
   gap: ${theme.space[3]};
 
   &:not(:first-of-type) {
-    margin-top: ${theme.space[6]};
+    margin-top: ${theme.space[5]};
   }
+`;
+
+export const Title = styled.p`
+  font-size: ${theme.fontSizes.l};
+  font-weight: ${theme.fontWeights.bold};
 `;
 
 export const SelectDaysBox = styled.ul`
@@ -43,6 +48,18 @@ export const SelectDaysBox = styled.ul`
     > button {
       width: 100%;
     }
+  }
+`;
+
+export const CompanyScheduleList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.space[3]};
+
+  > li > p {
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.space[0]};
   }
 `;
 
