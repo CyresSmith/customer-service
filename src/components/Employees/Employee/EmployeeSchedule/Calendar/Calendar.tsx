@@ -100,8 +100,8 @@ const Calendar = ({
         )?.hours;
 
         return (
-          <div>
-            <WeekDay key={name}>
+          <div key={name}>
+            <WeekDay>
               <span>{name}</span>
 
               {hours && <Hours>{`${hours.from} - ${hours.to}`}</Hours>}

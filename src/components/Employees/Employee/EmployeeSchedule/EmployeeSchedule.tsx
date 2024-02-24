@@ -128,18 +128,8 @@ const EmployeeSchedule = ({ employee }: Props) => {
     }
   };
 
-  const disabledDays =
-    workingHours?.find(({ days }) =>
-      days.includes(
-        getDay(
-          new Date(
-            getYear(selectedMonth),
-            getMonth(selectedMonth),
-            selectedDays[0]
-          )
-        )
-      )
-    )?.days || [];
+  const disabledDays = (date: Date): number[] =>
+    workingHours?.find(({ days }) => days.includes(getDay(date)))?.days || [];
 
   const resetState = () => {
     setSelectedDays([]);
@@ -208,29 +198,76 @@ const EmployeeSchedule = ({ employee }: Props) => {
     });
   };
 
-  const eachWeekend = datesArrToDaysArr(eachWeekendOfMonth(selectedMonth));
+  const allDaysDisabledDays = disabledDays(currentMonthStart);
+  const isAllDaysSelectDisabled =
+    allDaysDisabledDays.length > 0
+      ? allDaysDisabledDays.every(day =>
+          eachDayOfInterval({
+            start: currentMonthStart,
+            end: lastDayOfMonth(currentMonthStart),
+          })
+            .map(getDay)
+            .includes(day)
+        )
+      : false;
 
-  const weekdays = datesArrToDaysArr(
-    selectedMonthDays.filter(day => !eachWeekend.includes(getDate(day)))
+  const eachWeekend = eachWeekendOfMonth(selectedMonth);
+  const weekdays = selectedMonthDays.filter(
+    day => !datesArrToDaysArr(eachWeekend).includes(getDate(day))
   );
+  const weekdaysDisabledDays = disabledDays(weekdays[0]);
+  const isWeekdaysSelectDisabled =
+    weekdaysDisabledDays.length > 0
+      ? weekdaysDisabledDays.every(day => weekdays.map(getDay).includes(day))
+      : false;
 
-  const evenDays = datesArrToDaysArr(
-    selectedMonthDays.filter(day => getDate(day) % 2 === 0)
-  );
+  const evenDays = selectedMonthDays.filter(day => getDate(day) % 2 === 0);
+  const evenDaysDisabledDays = disabledDays(evenDays[0]);
+  const isEvenDaysSelectDisabled =
+    evenDaysDisabledDays.length > 0
+      ? evenDaysDisabledDays.every(day => evenDays.map(getDay).includes(day))
+      : false;
 
-  const oddDays = datesArrToDaysArr(
-    selectedMonthDays.filter(day => getDate(day) % 2 !== 0)
-  );
+  const oddDays = selectedMonthDays.filter(day => getDate(day) % 2 !== 0);
+  const oddDaysDisabledDays = disabledDays(oddDays[0]);
+  const isOddDaysSelectDisabled =
+    oddDaysDisabledDays.length > 0
+      ? oddDaysDisabledDays.every(day => oddDays.map(getDay).includes(day))
+      : false;
+
+  const isQuickSelectDisabled = (type: SelectType) => {
+    if (type === SelectType.ALL) {
+      return isAllDaysSelectDisabled;
+    }
+
+    if (type === SelectType.WEEKDAY) {
+      return isWeekdaysSelectDisabled;
+    }
+
+    if (type === SelectType.EVEN) {
+      return isEvenDaysSelectDisabled;
+    }
+
+    if (type === SelectType.ODD) {
+      return isOddDaysSelectDisabled;
+    }
+  };
+
+  const isQuickSelectHidden =
+    isAllDaysSelectDisabled &&
+    isWeekdaysSelectDisabled &&
+    isEvenDaysSelectDisabled &&
+    isOddDaysSelectDisabled;
 
   const handleQuickSelectClick = (type: SelectType) => {
     if (selectType === type) {
       return resetState();
     }
 
-    let selected: number[] = [];
+    let selected: Date[] = [];
 
     if (type === SelectType.ALL) {
-      selected = datesArrToDaysArr(selectedMonthDays);
+      selected = selectedMonthDays;
     }
 
     if (type === SelectType.WEEKDAY) {
@@ -245,11 +282,12 @@ const EmployeeSchedule = ({ employee }: Props) => {
       selected = oddDays;
     }
 
-    setSelectedDays(selected);
+    setSelectedDays(datesArrToDaysArr(selected));
 
     if (employeeSchedule) {
       const schedule = employeeSchedule.schedule.find(
-        ({ day, hours }) => selected.includes(day) && hours.from && hours.to
+        ({ day, hours }) =>
+          datesArrToDaysArr(selected).includes(day) && hours.from && hours.to
       );
 
       if (schedule) {
@@ -516,12 +554,14 @@ const EmployeeSchedule = ({ employee }: Props) => {
     if (arraysAreEqual(selectedDays, datesArrToDaysArr(selectedMonthDays)))
       setSelectType(SelectType.ALL);
 
-    if (arraysAreEqual(selectedDays, weekdays))
+    if (arraysAreEqual(selectedDays, datesArrToDaysArr(weekdays)))
       setSelectType(SelectType.WEEKDAY);
 
-    if (arraysAreEqual(selectedDays, evenDays)) setSelectType(SelectType.EVEN);
+    if (arraysAreEqual(selectedDays, datesArrToDaysArr(evenDays)))
+      setSelectType(SelectType.EVEN);
 
-    if (arraysAreEqual(selectedDays, oddDays)) setSelectType(SelectType.ODD);
+    if (arraysAreEqual(selectedDays, datesArrToDaysArr(oddDays)))
+      setSelectType(SelectType.ODD);
   }, [
     datesArrToDaysArr,
     evenDays,
@@ -571,7 +611,13 @@ const EmployeeSchedule = ({ employee }: Props) => {
               monthSchedule={scheduleState}
               selectedMonth={selectedMonth}
               selectedDays={selectedDays}
-              disabledDays={disabledDays}
+              disabledDays={disabledDays(
+                new Date(
+                  getYear(selectedMonth),
+                  getMonth(selectedMonth),
+                  selectedDays[0]
+                )
+              )}
               handleDayClick={handleDayClick}
               toNextMonth={handleNextMonthClick}
               toPrevMonth={handlePrevMonthClick}
@@ -583,23 +629,27 @@ const EmployeeSchedule = ({ employee }: Props) => {
       {isEditingAllowed && (
         <SelectionSide>
           <div>
-            <ScheduleSection>
-              <Title>Швидкий вибір днів</Title>
+            {!isQuickSelectHidden && (
+              <ScheduleSection>
+                <Title>Швидкий вибір днів</Title>
 
-              <SelectDaysBox>
-                {quickSelectButtons.map(({ type, label }) => (
-                  <li key={type}>
-                    <Button
-                      onClick={() => handleQuickSelectClick(type)}
-                      $colors={selectType === type ? 'accent' : 'light'}
-                      disabled={!isEditingAllowed}
-                    >
-                      {label}
-                    </Button>
-                  </li>
-                ))}
-              </SelectDaysBox>
-            </ScheduleSection>
+                <SelectDaysBox>
+                  {quickSelectButtons.map(({ type, label }) => (
+                    <li key={type}>
+                      <Button
+                        onClick={() => handleQuickSelectClick(type)}
+                        $colors={selectType === type ? 'accent' : 'light'}
+                        disabled={
+                          !isEditingAllowed || isQuickSelectDisabled(type)
+                        }
+                      >
+                        {label}
+                      </Button>
+                    </li>
+                  ))}
+                </SelectDaysBox>
+              </ScheduleSection>
+            )}
 
             {selectedDays.length > 0 && (
               <>
