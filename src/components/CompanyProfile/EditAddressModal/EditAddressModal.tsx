@@ -1,7 +1,6 @@
 import CustomForm from 'components/Ui/Form/CustomForm';
 import { useActions } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { State } from 'hooks/useForm';
 import { useEffect } from 'react';
 import { HiCloudUpload } from 'react-icons/hi';
 import { toast } from 'react-toastify';
@@ -22,7 +21,7 @@ const EditAddressModal = ({ closeModal }: Props) => {
   const [updateAddress, { isLoading, isSuccess }] =
     useUpdateCompanyProfileMutation();
 
-  const handleSubmit = async (state: State) => {
+  const handleSubmit = async (state: { address: string }) => {
     const data = {
       address: Object.values(state).join(', '),
     };

@@ -40,6 +40,16 @@ import EditPhonesModal from './EditPhonesModal';
 import RemovePhoneModal from './RemovePhoneModal';
 import SetScheduleModal from './SetScheduleModal';
 
+enum OpenModal {
+  ADD = 1,
+  ADDRESS = 2,
+  PHONE = 3,
+  REMOVE_PHONE = 4,
+  ACTIVITIES = 5,
+  SCHEDULE = 6,
+  DESC = 7,
+}
+
 const CompanyProfile = () => {
   const { name, avatar, address, phones, activities, id, workingHours, desc } =
     useCompany();
@@ -51,7 +61,7 @@ const CompanyProfile = () => {
     refetchCompanyData: () => void;
   }>();
 
-  const [openModal, setOpenModal] = useState<string | null>(null);
+  const [openModal, setOpenModal] = useState<OpenModal | null>(null);
 
   const { setCompanyLogo } = useActions();
 
@@ -121,7 +131,7 @@ const CompanyProfile = () => {
                       $colors="light"
                       Icon={HiPencil}
                       onClick={() => {
-                        setOpenModal('address');
+                        setOpenModal(OpenModal.ADDRESS);
                       }}
                     ></Button>
                   )}
@@ -150,7 +160,7 @@ const CompanyProfile = () => {
                               Icon={HiPencil}
                               onClick={() => {
                                 setEditedPhone(phone);
-                                setOpenModal('phone');
+                                setOpenModal(OpenModal.PHONE);
                               }}
                             ></Button>
 
@@ -163,7 +173,7 @@ const CompanyProfile = () => {
                                 Icon={HiX}
                                 onClick={() => {
                                   setEditedPhone(phone);
-                                  setOpenModal('removePhone');
+                                  setOpenModal(OpenModal.REMOVE_PHONE);
                                 }}
                               ></Button>
                             )}
@@ -180,7 +190,7 @@ const CompanyProfile = () => {
                       Icon={HiPlus}
                       size="s"
                       $colors="light"
-                      onClick={() => setOpenModal('phone')}
+                      onClick={() => setOpenModal(OpenModal.PHONE)}
                     >
                       Додати телефон
                     </Button>
@@ -208,7 +218,7 @@ const CompanyProfile = () => {
                       Icon={HiQueueList}
                       size="s"
                       $colors="light"
-                      onClick={() => setOpenModal('activities')}
+                      onClick={() => setOpenModal(OpenModal.ACTIVITIES)}
                     >
                       Налаштувати напрямки
                     </Button>
@@ -227,8 +237,11 @@ const CompanyProfile = () => {
                     {workingHours.map(({ days, hours }, i) => (
                       <li key={i}>
                         <p>
-                          {days.map(day => (
-                            <span key={day}>{translateWorkSchedule(day)} </span>
+                          {days.map((day, idx) => (
+                            <span key={day}>
+                              {translateWorkSchedule(day)}
+                              {idx + 1 < days.length && <span>,</span>}{' '}
+                            </span>
                           ))}
 
                           <span>з {hours?.from} </span>
@@ -247,7 +260,7 @@ const CompanyProfile = () => {
                       Icon={HiTableCells}
                       size="s"
                       $colors="light"
-                      onClick={() => setOpenModal('schedule')}
+                      onClick={() => setOpenModal(OpenModal.SCHEDULE)}
                     >
                       Налаштувати графік
                     </Button>
@@ -272,7 +285,7 @@ const CompanyProfile = () => {
                         size="s"
                         $colors="light"
                         Icon={HiPencil}
-                        onClick={() => setOpenModal('desc')}
+                        onClick={() => setOpenModal(OpenModal.DESC)}
                       ></Button>
                     )}
                   </FlexBox>
@@ -281,37 +294,37 @@ const CompanyProfile = () => {
             </Info>
           </Wrapper>
 
-          {openModal === 'address' && (
+          {openModal === OpenModal.ADDRESS && (
             <Modal
               title="Змінити адресу"
               closeModal={handleModalClose}
-              $isOpen={openModal === 'address'}
+              $isOpen={openModal === OpenModal.ADDRESS}
             >
               <EditAddressModal closeModal={handleModalClose} />
             </Modal>
           )}
 
-          {(openModal === 'phone' ||
-            (openModal === 'removePhone' && editedPhone)) && (
+          {(openModal === OpenModal.PHONE ||
+            (openModal === OpenModal.REMOVE_PHONE && editedPhone)) && (
             <Modal
               title={
-                openModal === 'removePhone'
+                openModal === OpenModal.REMOVE_PHONE
                   ? 'Видалити номер'
-                  : openModal === 'phone' && editedPhone
+                  : openModal === OpenModal.PHONE && editedPhone
                   ? 'Змінити номер'
                   : 'Додати номер'
               }
               closeModal={handlePhoneModalClose}
-              $isOpen={openModal === 'phone'}
+              $isOpen={openModal === OpenModal.PHONE}
             >
-              {openModal === 'phone' && (
+              {openModal === OpenModal.PHONE && (
                 <EditPhonesModal
                   phone={editedPhone}
                   closeModal={handlePhoneModalClose}
                 />
               )}
 
-              {openModal === 'removePhone' && editedPhone && (
+              {openModal === OpenModal.REMOVE_PHONE && editedPhone && (
                 <RemovePhoneModal
                   phone={editedPhone}
                   closeModal={handlePhoneModalClose}
@@ -320,31 +333,31 @@ const CompanyProfile = () => {
             </Modal>
           )}
 
-          {openModal === 'activities' && (
+          {openModal === OpenModal.ACTIVITIES && (
             <Modal
               title="Налаштувати напрямки"
               closeModal={handleModalClose}
-              $isOpen={openModal === 'activities'}
+              $isOpen={openModal === OpenModal.ACTIVITIES}
             >
               <EditActivitiesModal closeModal={handleModalClose} />
             </Modal>
           )}
 
-          {openModal === 'schedule' && (
+          {openModal === OpenModal.SCHEDULE && (
             <Modal
               title="Налаштувати графік роботи"
               closeModal={handleModalClose}
-              $isOpen={openModal === 'schedule'}
+              $isOpen={openModal === OpenModal.SCHEDULE}
             >
               <SetScheduleModal closeModal={handleModalClose} />
             </Modal>
           )}
 
-          {openModal === 'desc' && (
+          {openModal === OpenModal.DESC && (
             <Modal
               title="Змінити опис"
               closeModal={handleModalClose}
-              $isOpen={openModal === 'desc'}
+              $isOpen={openModal === OpenModal.DESC}
             >
               <EditDescModal closeModal={handleModalClose} />
             </Modal>

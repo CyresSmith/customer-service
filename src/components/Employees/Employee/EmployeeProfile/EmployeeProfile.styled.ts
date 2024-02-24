@@ -16,13 +16,14 @@ export const AvatarBox = styled.div`
   height: 100%;
 `;
 
-export const StatusBadge = styled.div<{ $active: boolean }>`
-  font-size: ${theme.fontSizes.l};
+export const StatusBadge = styled.div<{ $active: boolean; $size?: 's' | 'l' }>`
+  font-size: ${({ $size }) => theme.fontSizes[$size ? $size : 'l']};
   font-weight: ${theme.fontWeights.bold};
   text-transform: uppercase;
-  width: 100px;
+  width: ${({ $size }) => ($size === 's' ? 'auto' : '100px')};
   text-align: center;
-  padding: ${theme.space[2]};
+  padding: ${({ $size }) =>
+    $size === 's' ? `${theme.space[1]} ${theme.space[2]}` : theme.space[2]};
   border-radius: ${theme.radii.s};
   color: ${theme.colors.bg.main};
   background-color: ${({ $active }) =>
