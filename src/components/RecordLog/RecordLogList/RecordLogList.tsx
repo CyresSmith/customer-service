@@ -28,14 +28,16 @@ type Props = {
 };
 
 const RecordLogList = ({ companySchedule, schedules, date }: Props) => {
-    const chosenDay = new Date(date).getDay();
+    const chosenDay = new Date(date).getDate();
     const chosenMonth = new Date(date).getMonth();
     const chosenYear = new Date(date).getFullYear();
 
-    const chosenSchedule = schedules.length > 0 ?
-        schedules.filter(s => s.year === chosenYear && s.month === chosenMonth + 1)[0].schedule.find(sh => sh.day === chosenDay)?.hours :
-        {from: '', to: ''};
-
+    const chosenSchedule = schedules.filter(s => s.year === chosenYear && s.month === chosenMonth)[0]?.schedule.find(sh => sh.day === chosenDay)?.hours ?
+        schedules.filter(s => s.year === chosenYear && s.month === chosenMonth)[0]?.schedule.find(sh => sh.day === chosenDay)?.hours :
+        { from: '', to: '' };
+    
+    console.log(schedules)
+    
     const getEmployeeSchedule = (): string[]=> {
         const { from, to } = chosenSchedule!;
 

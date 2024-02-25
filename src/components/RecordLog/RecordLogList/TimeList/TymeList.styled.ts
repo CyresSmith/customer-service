@@ -6,7 +6,7 @@ export const List = styled.ul<{ $side: string }>`
     top: 18px;
     left: ${props => props.$side === 'left' ? '0' : null};
     right: ${props => props.$side === 'right' ? '0' : null};
-    width: 50px;
+    width: 60px;
 `
 
 export const ListItem = styled.li<{$quarter: boolean, $half: boolean}>`

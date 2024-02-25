@@ -1,5 +1,5 @@
 import { useCompany } from "hooks/useCompany";
-import { ListsWrapper, RecordContainer } from "./RecordLog.styled";
+import { ListsWrapper, NoSchedule, RecordContainer } from "./RecordLog.styled";
 import RecordLogList from "./RecordLogList/RecordLogList";
 import generateTimeArray, { getSchedule } from "helpers/generateTimeArray";
 import TimeList from "./RecordLogList/TimeList";
@@ -128,9 +128,11 @@ const RecordLog = ({date}: Props) => {
 
     const today = workingHours.find(wh => wh.days.includes(chosenDay));
 
-    if (!today && !today!.hours) {
+    console.log(today)
+
+    if (!today) {
         return (
-            <p>Не встановлено графік роботи для обраного дня!</p>
+            <NoSchedule>Не встановлено графік роботи для обраного дня!</NoSchedule>
         )
     }
 
