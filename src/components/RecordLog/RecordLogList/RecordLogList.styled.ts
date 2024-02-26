@@ -4,21 +4,19 @@ import theme from 'utils/theme';
 export const ListWrapper = styled.div`
     position: relative;
     width: 100%;
-
-    &:not(:last-child) {
-        border-right: ${theme.borders.normal} ${theme.colors.bg.light};
-    }
 `
 
-export const List = styled.ul<{ $wh: number }>`
+export const List = styled.ul<{ $wh: number, $last: boolean }>`
     width: 100%;
     display: grid;
     grid-template-rows: repeat($wh, ${theme.timeStep}px);
     border-top: ${theme.borders.normal} ${theme.colors.secondary.light};
     border-bottom: ${theme.borders.normal} ${theme.colors.secondary.light};
+    border-right: ${props => props.$last ? 'none' : `${theme.borders.normal} ${theme.colors.bg.light}`};
 `
 
 export const ListItem = styled.li<{ $skip: boolean, $isHour: boolean }>`
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;

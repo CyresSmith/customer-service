@@ -1,4 +1,3 @@
-// import { IEmployee } from "services/types/employee.types";
 // import { EmployeeEvent } from "./EmployeeEvent";
 import { List, ListWrapper } from "./RecordLogList.styled"
 import { RecordLogListItem } from "./RecordLogListItem";
@@ -23,11 +22,12 @@ type Props = {
     //     },
     //     events?: EventType[],
     // }
-    schedules: IMonthSchedule[],
+    schedules: IMonthSchedule[];
     date: Date;
+    last: boolean;
 };
 
-const RecordLogList = ({ companySchedule, schedules, date }: Props) => {
+const RecordLogList = ({ companySchedule, schedules, date, last }: Props) => {
     const chosenDay = new Date(date).getDate();
     const chosenMonth = new Date(date).getMonth();
     const chosenYear = new Date(date).getFullYear();
@@ -35,8 +35,6 @@ const RecordLogList = ({ companySchedule, schedules, date }: Props) => {
     const chosenSchedule = schedules.filter(s => s.year === chosenYear && s.month === chosenMonth)[0]?.schedule.find(sh => sh.day === chosenDay)?.hours ?
         schedules.filter(s => s.year === chosenYear && s.month === chosenMonth)[0]?.schedule.find(sh => sh.day === chosenDay)?.hours :
         { from: '', to: '' };
-    
-    console.log(schedules)
     
     const getEmployeeSchedule = (): string[]=> {
         const { from, to } = chosenSchedule!;
@@ -60,7 +58,7 @@ const RecordLogList = ({ companySchedule, schedules, date }: Props) => {
 
     return (
         <ListWrapper>
-            <List $wh={employeeSchedule.length}>
+            <List $wh={employeeSchedule.length} $last={last}>
                 {employeeSchedule.map((hour, i) => <RecordLogListItem key={i} index={i} hour={hour} />)}
             </List>
             {/* {events && events?.length > 0 && events.map((e, i) => <EmployeeEvent key={i} event={e} employeeSchedule={employeeSchedule} />)} */}

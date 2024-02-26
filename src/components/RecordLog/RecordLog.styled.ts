@@ -1,19 +1,34 @@
 import styled from 'styled-components';
 import theme from 'utils/theme';
 
-export const RecordContainer = styled.div<{ $columns: number }>`
-    position: relative;
+export const Container = styled.div`
     width: 100%;
-    overflow: auto;
-    border-radius: ${theme.radii.m};
-    padding: ${theme.space[5]} 60px;
-    background-color: ${theme.colors.bg.main};
+    overflow: hidden;
 `
 
-export const ListsWrapper = styled.div`
+export const SchedulesContainer = styled.div`
+    position: relative;
     width: 100%;
-    display: flex;
-    /* box-shadow: ${theme.shadow.m}; */
+    height: fit-content;
+    min-height: fit-content;
+    max-height: calc(100% - 77px);
+    background-color: ${theme.colors.bg.main};
+    border-radius: ${theme.radii.m};
+    overflow: auto;
+    
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    ::-webkit-scrollbar {
+        display: none;
+    }
+`
+
+export const ListsWrapper = styled.div<{ $columns: number }>`
+    width: 100%;
+    padding: ${theme.space[5]} 60px;
+    display: grid;
+    grid-template-columns: repeat(${props => props.$columns}, 1fr);
+    grid-template-rows: auto;
 `
 
 export const NoSchedule = styled.p`
