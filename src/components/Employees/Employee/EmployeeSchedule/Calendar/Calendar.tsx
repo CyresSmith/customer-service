@@ -92,6 +92,15 @@ const Calendar = ({
     return disabledDays.length > 0 ? !disabledDays.includes(dayIndex) : false;
   };
 
+  const notWorkingDays = () => {
+    const workingDays: number[] =
+      workingHours?.flatMap(({ days }) => days) || [];
+
+    return Array.from({ length: 7 })
+      .map((_, i) => i)
+      .filter(i => !workingDays.includes(i));
+  };
+
   return (
     <CalendarBox>
       {weekDays.map(({ name, id }) => {
@@ -117,14 +126,14 @@ const Calendar = ({
         ))}
       {monthDays.map((date, i) => {
         const dayDate = getDate(date);
+        const day = getDay(date);
 
         const isToday =
           dayDate === getDate(today) &&
           getMonth(selectedMonth) === getMonth(today);
 
         const daySchedule = monthSchedule.find(({ day }) => day === dayDate);
-
-        const isDisabled = isDayDisabled(getDay(date));
+        const isDisabled = notWorkingDays().includes(day) || isDayDisabled(day);
 
         return (
           <Day
