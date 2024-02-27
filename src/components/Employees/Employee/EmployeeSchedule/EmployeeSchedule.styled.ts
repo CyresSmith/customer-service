@@ -3,8 +3,16 @@ import theme from 'utils/theme';
 
 export const EmployeeScheduleBox = styled.div`
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: ${theme.space[5]};
   min-height: 534px;
+`;
+
+export const Message = styled.p`
+  font-size: ${theme.fontSizes.xl};
+  font-weight: ${theme.fontWeights.light};
+  text-align: center;
 `;
 
 export const CalendarSide = styled.div`
@@ -16,7 +24,16 @@ export const SelectionSide = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 100%;
+  min-height: 534px;
   width: 250px;
+  gap: ${theme.space[5]};
+`;
+
+export const SelectionBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.space[5]};
 `;
 
 export const ButtonsBox = styled.div`
@@ -28,10 +45,6 @@ export const ScheduleSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.space[3]};
-
-  &:not(:first-of-type) {
-    margin-top: ${theme.space[5]};
-  }
 `;
 
 export const Title = styled.p`
