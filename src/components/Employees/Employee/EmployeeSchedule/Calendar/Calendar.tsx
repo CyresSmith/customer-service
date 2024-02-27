@@ -33,7 +33,7 @@ type Props = {
   selectedDays: number[];
   disabledDays: number[];
   setSelectedDays?: Dispatch<SetStateAction<string[]>>;
-  handleDayClick: (date: number) => void;
+  handleDayClick: (date: number, dayIdx: number) => void;
   toNextMonth: () => void;
   toPrevMonth: () => void;
 };
@@ -138,7 +138,7 @@ const Calendar = ({
         return (
           <Day
             key={i}
-            onClick={() => !isDisabled && handleDayClick(dayDate)}
+            onClick={() => !isDisabled && handleDayClick(dayDate, day)}
             $today={isToday}
             $selected={selectedDays.includes(dayDate)}
             $isDisabled={isDisabled}

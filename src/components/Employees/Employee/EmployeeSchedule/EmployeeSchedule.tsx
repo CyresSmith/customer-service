@@ -1,5 +1,5 @@
 import Button from 'components/Ui/Buttons/Button';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HiArrowLeft, HiArrowRight, HiTrash } from 'react-icons/hi';
 import { MdToday } from 'react-icons/md';
 import { IEmployee } from 'services/types/employee.types';
@@ -25,20 +25,17 @@ import Loader from 'components/Ui/Loader';
 import Select from 'components/Ui/Select';
 import {
   addMonths,
-  eachDayOfInterval,
-  eachWeekendOfMonth,
   format,
-  getDate,
   getDay,
   getMonth,
   getYear,
+  isPast,
   isThisMonth,
-  lastDayOfMonth,
   setDefaultOptions,
   startOfMonth,
 } from 'date-fns';
 import { uk } from 'date-fns/locale';
-import arraysAreEqual from 'helpers/areArrayEqual';
+// import arraysAreEqual from 'helpers/areArrayEqual';
 import generateTimeArray from 'helpers/generateTimeArray';
 import { useAdminRights, useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
@@ -49,40 +46,20 @@ import {
   useGetEmployeeScheduleQuery,
   useUpdateEmployeeScheduleMutation,
 } from 'services/employee.api';
-import { IDaySchedule, ITime } from 'services/types/schedule.types';
+import { IDaySchedule } from 'services/types/schedule.types';
+import { IWorkingHours } from 'store/company/company.types';
 
 setDefaultOptions({ locale: uk });
-
-enum SelectType {
-  ALL = 1,
-  WEEKDAY = 2,
-  EVEN = 3,
-  ODD = 4,
-}
-
-const quickSelectButtons = [
-  { type: SelectType.ALL, label: 'Всі дні' },
-  { type: SelectType.WEEKDAY, label: 'Будні' },
-  { type: SelectType.EVEN, label: 'Парні' },
-  { type: SelectType.ODD, label: 'Непарні' },
-];
 
 type Props = { employee: IEmployee };
 
 const EmployeeSchedule = ({ employee }: Props) => {
+  const today = new Date(Date.now());
+  const currentMonthStart = startOfMonth(today);
+
   const isAdmin = useAdminRights();
   const { user } = useAuth();
   const { id: companyId, workingHours } = useCompany();
-
-  const isEditingAllowed = isAdmin || user?.id === employee?.user?.id;
-
-  const currentMonthStart = startOfMonth(new Date(Date.now()));
-
-  const datesArrToDaysArr = useCallback(
-    (dates: Date[]) => dates.map(day => getDate(day)),
-    []
-  );
-
   const [selectedMonth, setSelectedMonth] = useState(currentMonthStart);
 
   const {
@@ -100,7 +77,6 @@ const EmployeeSchedule = ({ employee }: Props) => {
   );
 
   const [scheduleState, setScheduleState] = useState<IDaySchedule[]>([]);
-  const [selectType, setSelectType] = useState<SelectType | null>(null);
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
@@ -108,9 +84,18 @@ const EmployeeSchedule = ({ employee }: Props) => {
   const [breakFrom, setBreakFrom] = useState('');
   const [breakTo, setBreakTo] = useState('');
   const [isStateChanged, setIsStateChanged] = useState(false);
+  const [selectedDayCompanySchedule, setSelectedDayCompanySchedule] =
+    useState<IWorkingHours | null>(null);
+
   const [updateSchedule, { isLoading }] = useUpdateEmployeeScheduleMutation();
   const [deleteSchedule, { isLoading: isDeleteLoading }] =
     useDeleteEmployeeScheduleMutation();
+
+  const selectedMonthPassed =
+    getMonth(today) !== getMonth(selectedMonth) && isPast(selectedMonth);
+
+  const isEditingAllowed =
+    !selectedMonthPassed && (isAdmin || user?.id === employee?.user?.id);
 
   const handleScheduleUpdate = async () => {
     const { message } = await updateSchedule({
@@ -130,15 +115,14 @@ const EmployeeSchedule = ({ employee }: Props) => {
     }
   };
 
-  const disabledDays = (date: Date): number[] => {
-    return (
-      workingHours?.find(({ days }) => days.includes(getDay(date)))?.days || []
-    );
-  };
+  const getCompanyScheduleByDay = (dayIdx: number) =>
+    workingHours?.find(({ days }) => days.includes(dayIdx));
+
+  const disabledDays = (date: Date): number[] =>
+    getCompanyScheduleByDay(getDay(date))?.days || [];
 
   const resetState = () => {
     setSelectedDays([]);
-    setSelectType(null);
     setFrom('');
     setTo('');
     setBreakFrom('');
@@ -150,41 +134,49 @@ const EmployeeSchedule = ({ employee }: Props) => {
     resetState();
     setScheduleState([]);
     setSelectedMonth(addMonths(selectedMonth, 1));
+    setIsStateChanged(false);
   };
 
   const handlePrevMonthClick = () => {
     resetState();
     setScheduleState([]);
     setSelectedMonth(addMonths(selectedMonth, -1));
+    setIsStateChanged(false);
   };
-
-  const selectedMonthDays = eachDayOfInterval({
-    start: selectedMonth,
-    end: lastDayOfMonth(selectedMonth),
-  });
 
   const toToday = () => {
     setSelectedMonth(currentMonthStart);
   };
 
-  const handleDayClick = (date: number) => {
-    if (!isEditingAllowed) return;
-    if (selectType) setSelectType(null);
+  const updateScheduleState = (schedule: IDaySchedule) => {
+    setScheduleState(p => {
+      const newState = [...p];
 
-    if (selectedDays.length === 0) {
-      const state = scheduleState.find(({ day }) => day === date);
+      const dayIdx = newState.findIndex(({ day }) => day === schedule.day);
 
-      if (state) {
-        setFrom(state?.hours?.from);
-        setTo(state?.hours?.to);
-
-        if (state.breakHours) {
-          setIsBreak(true);
-          setBreakFrom(state.breakHours.from);
-          setBreakTo(state.breakHours.to);
-        }
+      if (dayIdx !== undefined && dayIdx >= 0) {
+        newState[dayIdx] = { ...newState[dayIdx], ...schedule };
+      } else {
+        newState.push(schedule);
       }
-    }
+
+      return newState;
+    });
+  };
+
+  const handleDayClick = (date: number, dayIdx: number) => {
+    if (!isEditingAllowed) return;
+
+    const currentDateSchedule = scheduleState.find(
+      ({ day: dayDate }) => dayDate === date
+    );
+
+    const currentDayCompanySchedule = workingHours?.find(({ days }) =>
+      days.includes(dayIdx)
+    );
+
+    currentDayCompanySchedule &&
+      setSelectedDayCompanySchedule(currentDayCompanySchedule);
 
     setSelectedDays(p => {
       if (p.includes(date)) {
@@ -196,247 +188,110 @@ const EmployeeSchedule = ({ employee }: Props) => {
           setBreakTo('');
         }
 
-        return p.filter(item => item !== date);
+        const oldSchedule = employeeSchedule?.schedule?.find(
+          ({ day }) => day === date
+        );
+
+        setScheduleState(p =>
+          oldSchedule
+            ? p.map(stateDay => {
+                if (stateDay.day !== date) {
+                  return stateDay;
+                }
+                return oldSchedule;
+              })
+            : p.filter(({ day }) => day !== date)
+        );
+
+        if (p.length === 1) {
+          setIsStateChanged(false);
+        }
+
+        return p.filter(selectedDate => selectedDate !== date);
       } else {
-        return [...p, date].sort((a, b) => a - b);
+        if (p.length === 0) {
+          if (currentDateSchedule) {
+            setFrom(currentDateSchedule.hours.from);
+            setTo(currentDateSchedule.hours.to);
+
+            if (currentDateSchedule.breakHours) {
+              setIsBreak(true);
+              setBreakFrom(currentDateSchedule.breakHours.from);
+              setBreakTo(currentDateSchedule.breakHours.to);
+            }
+          } else if (currentDayCompanySchedule) {
+            setFrom(currentDayCompanySchedule.hours.from);
+            setTo(currentDayCompanySchedule.hours.to);
+
+            updateScheduleState({
+              day: date,
+              hours: currentDayCompanySchedule.hours,
+            });
+
+            setIsStateChanged(true);
+          }
+        } else {
+          let update: {
+            day: number;
+            hours: { from: string; to: string };
+            breakHours?: { from: string; to: string };
+          } = { day: date, hours: { from, to } };
+
+          if (isBreak && breakFrom !== '' && breakTo !== '') {
+            update = Object.assign(update, {
+              breakHours: { from: breakFrom, to: breakTo },
+            });
+          }
+
+          updateScheduleState(update);
+          setIsStateChanged(true);
+        }
+
+        return [...p, date].sort((a, b) => a + b);
       }
     });
-  };
-
-  const allDaysDisabledDays = disabledDays(currentMonthStart);
-  const isAllDaysSelectDisabled =
-    allDaysDisabledDays.length > 0
-      ? allDaysDisabledDays.every(day =>
-          eachDayOfInterval({
-            start: currentMonthStart,
-            end: lastDayOfMonth(currentMonthStart),
-          })
-            .map(getDay)
-            .includes(day)
-        )
-      : false;
-
-  const eachWeekend = eachWeekendOfMonth(selectedMonth);
-  const weekdays = selectedMonthDays.filter(
-    day => !datesArrToDaysArr(eachWeekend).includes(getDate(day))
-  );
-  const weekdaysDisabledDays = disabledDays(weekdays[0]);
-  const isWeekdaysSelectDisabled =
-    weekdaysDisabledDays.length > 0
-      ? weekdaysDisabledDays.every(day => weekdays.map(getDay).includes(day))
-      : false;
-
-  const evenDays = selectedMonthDays.filter(day => getDate(day) % 2 === 0);
-  const evenDaysDisabledDays = disabledDays(evenDays[0]);
-  const isEvenDaysSelectDisabled =
-    evenDaysDisabledDays.length > 0
-      ? evenDaysDisabledDays.every(day => evenDays.map(getDay).includes(day))
-      : false;
-
-  const oddDays = selectedMonthDays.filter(day => getDate(day) % 2 !== 0);
-  const oddDaysDisabledDays = disabledDays(oddDays[0]);
-  const isOddDaysSelectDisabled =
-    oddDaysDisabledDays.length > 0
-      ? oddDaysDisabledDays.every(day => oddDays.map(getDay).includes(day))
-      : false;
-
-  const isQuickSelectDisabled = (type: SelectType) => {
-    if (type === SelectType.ALL) {
-      return isAllDaysSelectDisabled;
-    }
-
-    if (type === SelectType.WEEKDAY) {
-      return isWeekdaysSelectDisabled;
-    }
-
-    if (type === SelectType.EVEN) {
-      return isEvenDaysSelectDisabled;
-    }
-
-    if (type === SelectType.ODD) {
-      return isOddDaysSelectDisabled;
-    }
-  };
-
-  const isQuickSelectHidden =
-    isAllDaysSelectDisabled &&
-    isWeekdaysSelectDisabled &&
-    isEvenDaysSelectDisabled &&
-    isOddDaysSelectDisabled;
-
-  const handleQuickSelectClick = (type: SelectType) => {
-    if (selectType === type) {
-      return resetState();
-    }
-
-    let selected: Date[] = [];
-
-    if (type === SelectType.ALL) {
-      selected = selectedMonthDays;
-    }
-
-    if (type === SelectType.WEEKDAY) {
-      selected = weekdays;
-    }
-
-    if (type === SelectType.EVEN) {
-      selected = evenDays;
-    }
-
-    if (type === SelectType.ODD) {
-      selected = oddDays;
-    }
-
-    setSelectedDays(datesArrToDaysArr(selected));
-
-    if (employeeSchedule) {
-      const schedule = employeeSchedule.schedule.find(
-        ({ day, hours }) =>
-          datesArrToDaysArr(selected).includes(day) && hours.from && hours.to
-      );
-
-      if (schedule) {
-        setFrom(schedule?.hours?.from);
-        setTo(schedule?.hours?.to);
-
-        if (schedule.breakHours) {
-          setIsBreak(true);
-          setBreakFrom(schedule?.breakHours?.from);
-          setBreakTo(schedule?.breakHours?.to);
-        }
-      } else {
-        setFrom('');
-        setTo('');
-        setBreakFrom('');
-        setBreakTo('');
-      }
-    }
   };
 
   const timeArray = generateTimeArray();
 
   const timeArrayFrom = (start: string, end?: string) =>
-    timeArray.filter(time => (end ? time > start && time < end : time > start));
+    timeArray.filter(time =>
+      end ? time >= start && time <= end : time >= start
+    );
 
   const handleTimeSelect = (time: string, id: string) => {
-    const nextTime = () => timeArray[timeArray.indexOf(time) + 1];
-
-    const key = id === 'from' || id === 'to' ? 'hours' : 'breakHours';
-
-    let newData = {
-      [id === 'from' || id === 'breakFrom' ? 'from' : 'to']: time,
-    };
-
-    if (id === 'from') {
-      setFrom(time);
-
-      if (to === '') {
-        setTo(nextTime());
-        newData = { ...newData, to: nextTime() };
-      } else {
-        newData = { ...newData, to };
-      }
-
-      breakFrom === '' && setBreakFrom(nextTime());
-    }
-
-    if (id === 'to') {
-      setTo(time);
-
-      if (from !== '') {
-        isBreak && setBreakTime(from, time);
-        newData = { ...newData, from };
-      }
-    }
-
-    if (id === 'breakFrom') {
-      setBreakFrom(time);
-      setBreakTo(nextTime());
-      newData = { ...newData, to: nextTime() };
-    }
-
+    if (id === 'from') setFrom(time);
+    if (id === 'to') setTo(time);
+    if (id === 'breakFrom') setBreakFrom(time);
     if (id == 'breakTo') setBreakTo(time);
 
-    if (scheduleState.length > 0) {
-      setScheduleState(p => {
-        const newArr: IDaySchedule[] = [...p];
+    const key = id === 'from' || id === 'to' ? 'hours' : 'breakHours';
+    const param = id === 'from' || id === 'breakFrom' ? 'from' : 'to';
 
-        for (const day of selectedDays) {
-          const idx = newArr.findIndex(({ day: existDay }) => day === existDay);
-
-          if (idx >= 0) {
-            newArr[idx] = {
-              ...newArr[idx],
-              [key]: { ...newArr[idx][key], ...newData },
-            };
-          } else {
-            let data: {
-              hours?: Partial<ITime>;
-              breakHours?: Partial<ITime>;
-            } = {};
-
-            if (from) {
-              data = { ...data, hours: { ...data?.hours, from } };
-            }
-
-            if (to) {
-              data = { ...data, hours: { ...data?.hours, to } };
-            }
-
-            if (breakFrom) {
-              data = {
-                ...data,
-                breakHours: { ...data?.breakHours, from: breakFrom },
-              };
-            }
-
-            if (breakTo) {
-              data = {
-                ...data,
-                breakHours: { ...data?.breakHours, to: breakTo },
-              };
-            }
-
-            if (key === 'hours') {
-              data = { ...data, hours: { ...data.hours, ...newData } };
-            }
-
-            if (key === 'breakHours') {
-              data = {
-                ...data,
-                breakHours: { ...data.breakHours, ...newData },
-              };
-            }
-
-            newArr.push({
-              day,
-              ...data,
-            } as unknown as IDaySchedule);
-          }
-        }
-        return newArr;
-      });
-    } else {
-      setScheduleState(
-        selectedDays.map(
-          day => ({ day, [key]: newData } as unknown as IDaySchedule)
-        )
-      );
-    }
-
-    if (!isTimeForBreak) {
-      setIsBreak(false);
-      setBreakFrom('');
-      setBreakTo('');
-    }
+    setScheduleState(p =>
+      p.map(item =>
+        !selectedDays.includes(item.day)
+          ? item
+          : { ...item, [key]: { ...item[key], [param]: time } }
+      )
+    );
 
     setIsStateChanged(true);
   };
 
   const isTimeForBreak =
-    from !== '' &&
-    to !== '' &&
-    to >= timeArray[timeArray.findIndex(item => item === from) + 3];
+    from !== '' && to !== '' && to >= timeArray[timeArray.indexOf(from) + 3];
+
+  const removeSelectedDaysBreakHours = () =>
+    setScheduleState(p =>
+      p.map(item => {
+        if (!selectedDays.includes(item.day)) return item;
+
+        const newItem = { ...item };
+        delete newItem.breakHours;
+        return newItem;
+      })
+    );
 
   const handleAddBreakHoursClick = () => {
     if (!isEditingAllowed) return;
@@ -445,28 +300,17 @@ const EmployeeSchedule = ({ employee }: Props) => {
       setIsBreak(false);
       setBreakFrom('');
       setBreakTo('');
-
-      if (scheduleState.length > 0) {
-        setScheduleState(p => {
-          const newArr: IDaySchedule[] = [...p];
-
-          for (const day of selectedDays) {
-            const idx = newArr.findIndex(
-              ({ day: existDay }) => day === existDay
-            );
-
-            if (idx >= 0) {
-              const newObj = { ...newArr[idx] };
-              delete newObj.breakHours;
-              newArr[idx] = newObj;
-            }
-          }
-          return newArr;
-        });
-      }
+      removeSelectedDaysBreakHours();
     } else {
-      setIsBreak(true);
-      setBreakTime(from, to);
+      const breakHours = setBreakTime(from, to);
+
+      if (breakHours) {
+        setScheduleState(p =>
+          p.map(item =>
+            !selectedDays.includes(item.day) ? item : { ...item, ...breakHours }
+          )
+        );
+      }
     }
 
     setIsStateChanged(true);
@@ -479,31 +323,11 @@ const EmployeeSchedule = ({ employee }: Props) => {
       const breakFrom = breakTime[breakFromIdx];
       const breakTo = breakTime[breakFromIdx + 1];
 
+      setIsBreak(true);
       setBreakFrom(breakFrom);
       setBreakTo(breakTo);
 
-      setScheduleState(p => {
-        const newArr = [...p];
-
-        for (const selectedDay of selectedDays) {
-          const idx = newArr.findIndex(({ day }) => day === selectedDay);
-
-          if (idx > -1) {
-            const newObj = {
-              ...newArr[idx],
-              breakHours: { from: breakFrom, to: breakTo },
-            };
-            newArr[idx] = newObj;
-          } else {
-            newArr.push({
-              day: selectedDay,
-              hours: { from: workingHoursFrom, to: workingHoursTo },
-              breakHours: { from: breakFrom, to: breakTo },
-            });
-          }
-        }
-        return newArr;
-      });
+      return { breakHours: { from: breakFrom, to: breakTo } };
     }
   };
 
@@ -545,10 +369,10 @@ const EmployeeSchedule = ({ employee }: Props) => {
       if (toastMessage !== '') {
         toast.success(toastMessage);
       }
-      setIsStateChanged(false);
       refetch();
       resetState();
     }
+    setIsStateChanged(false);
   };
 
   useEffect(() => {
@@ -556,25 +380,13 @@ const EmployeeSchedule = ({ employee }: Props) => {
   }, [employeeSchedule]);
 
   useEffect(() => {
-    if (arraysAreEqual(selectedDays, datesArrToDaysArr(selectedMonthDays)))
-      setSelectType(SelectType.ALL);
-
-    if (arraysAreEqual(selectedDays, datesArrToDaysArr(weekdays)))
-      setSelectType(SelectType.WEEKDAY);
-
-    if (arraysAreEqual(selectedDays, datesArrToDaysArr(evenDays)))
-      setSelectType(SelectType.EVEN);
-
-    if (arraysAreEqual(selectedDays, datesArrToDaysArr(oddDays)))
-      setSelectType(SelectType.ODD);
-  }, [
-    datesArrToDaysArr,
-    evenDays,
-    oddDays,
-    selectedDays,
-    selectedMonthDays,
-    weekdays,
-  ]);
+    if (!isTimeForBreak) {
+      setIsBreak(false);
+      setBreakFrom('');
+      setBreakTo('');
+      removeSelectedDaysBreakHours();
+    }
+  }, [isTimeForBreak]);
 
   return (
     <EmployeeScheduleBox>
@@ -633,31 +445,9 @@ const EmployeeSchedule = ({ employee }: Props) => {
             )}
           </CalendarSide>
 
-          {isEditingAllowed && (
+          {!selectedMonthPassed && isEditingAllowed && (
             <SelectionSide>
               <SelectionBox>
-                {!isQuickSelectHidden && (
-                  <ScheduleSection>
-                    <Title>Швидкий вибір днів</Title>
-
-                    <SelectDaysBox>
-                      {quickSelectButtons.map(({ type, label }) => (
-                        <li key={type}>
-                          <Button
-                            onClick={() => handleQuickSelectClick(type)}
-                            $colors={selectType === type ? 'accent' : 'light'}
-                            disabled={
-                              !isEditingAllowed || isQuickSelectDisabled(type)
-                            }
-                          >
-                            {label}
-                          </Button>
-                        </li>
-                      ))}
-                    </SelectDaysBox>
-                  </ScheduleSection>
-                )}
-
                 {selectedDays.length > 0 ? (
                   <>
                     <ScheduleSection>
@@ -671,7 +461,14 @@ const EmployeeSchedule = ({ employee }: Props) => {
                             selectedItem={from}
                             onSelect={handleTimeSelect}
                             $colors="light"
-                            items={timeArray}
+                            items={
+                              selectedDayCompanySchedule
+                                ? timeArrayFrom(
+                                    selectedDayCompanySchedule.hours.from,
+                                    selectedDayCompanySchedule.hours.to
+                                  )
+                                : timeArray
+                            }
                             disabled={!isEditingAllowed}
                           />
                         </SelectBox>
@@ -683,7 +480,23 @@ const EmployeeSchedule = ({ employee }: Props) => {
                             selectedItem={to}
                             onSelect={handleTimeSelect}
                             $colors="light"
-                            items={timeArrayFrom(from)}
+                            items={
+                              selectedDayCompanySchedule
+                                ? timeArrayFrom(
+                                    from
+                                      ? timeArray[timeArray.indexOf(from) + 1]
+                                      : timeArray[
+                                          timeArray.indexOf(
+                                            selectedDayCompanySchedule.hours
+                                              .from
+                                          ) + 1
+                                        ],
+                                    selectedDayCompanySchedule.hours.to
+                                  )
+                                : timeArrayFrom(
+                                    timeArray[timeArray.indexOf(from) + 1]
+                                  )
+                            }
                             disabled={!isEditingAllowed || from === ''}
                           />
                         </SelectBox>
@@ -707,7 +520,11 @@ const EmployeeSchedule = ({ employee }: Props) => {
                               selectedItem={breakFrom || ''}
                               onSelect={handleTimeSelect}
                               $colors="light"
-                              items={timeArrayFrom(from, breakTo || to)}
+                              items={timeArrayFrom(
+                                timeArray[timeArray.indexOf(from) + 1],
+                                timeArray[timeArray.indexOf(breakTo) - 1] ||
+                                  timeArray[timeArray.indexOf(to) - 1]
+                              )}
                               disabled={!isEditingAllowed}
                             />
                           </SelectBox>
@@ -720,7 +537,20 @@ const EmployeeSchedule = ({ employee }: Props) => {
                               selectedItem={breakTo || ''}
                               onSelect={handleTimeSelect}
                               $colors="light"
-                              items={timeArrayFrom(breakFrom || '', to || '')}
+                              items={timeArrayFrom(
+                                timeArray[timeArray.indexOf(breakFrom) + 1] ||
+                                  '',
+
+                                to
+                                  ? timeArray[timeArray.indexOf(to) - 1]
+                                  : selectedDayCompanySchedule
+                                  ? timeArray[
+                                      timeArray.indexOf(
+                                        selectedDayCompanySchedule.hours.to
+                                      ) - 1
+                                    ]
+                                  : ''
+                              )}
                               disabled={!isEditingAllowed || breakFrom === ''}
                             />
                           </SelectBox>
