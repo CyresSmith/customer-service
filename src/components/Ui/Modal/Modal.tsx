@@ -1,6 +1,11 @@
 import Button from 'components/Ui/Buttons/Button/Button';
-import { useClickOutside, useEscapeKey } from 'hooks';
-import { ReactNode, useEffect, useState } from 'react';
+import {
+  MouseEventHandler,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { IoMdClose } from 'react-icons/io';
 import { Backdrop, ButtonBox, ModalContainer, Title } from './Modal.styled';
@@ -18,31 +23,62 @@ export type Modal = {
 
 const modalRoot = document.querySelector('#modal-root');
 
-const Modal = ({ children, closeModal, $w, $h, title, $isOpen, closeIconBtn = true, id }: Modal) => {
+const Modal = ({
+  children,
+  closeModal,
+  $w,
+  $h,
+  title,
+  $isOpen,
+  closeIconBtn = true,
+  id = '',
+}: Modal) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    setIsOpen(p => !p);
-  }, [$isOpen]);
-
-  const close = (e: KeyboardEvent | MouseEvent): void => {
-    if ('target' in e && 'id' in e!.target! && e?.target?.id === 'modal') {
-      return;
-    }
-
+  const close = useCallback(() => {
     setIsOpen(false);
     setTimeout(() => {
       closeModal();
     }, 250);
+  }, [closeModal]);
+
+  const backdropClose: MouseEventHandler<HTMLDivElement> = e => {
+    if (e.target === e.currentTarget) close();
   };
 
-  const modalRef = useClickOutside(close);
-  useEscapeKey(close);
+  const modalId = id ? `modal-id${id}` : '';
+
+  useEffect(() => {
+    setIsOpen($isOpen ?? false);
+  }, [$isOpen]);
+
+  useEffect(() => {
+    if (!modalRoot) return;
+
+    const escClose = (e: KeyboardEvent) => {
+      if (id !== '') {
+        if (
+          modalRoot?.lastChild?.isSameNode(
+            document.querySelector(`div[id=${modalId}]`)
+          ) &&
+          e.code === 'Escape'
+        ) {
+          return close();
+        }
+      } else {
+        e.code === 'Escape' && close();
+      }
+    };
+
+    document.addEventListener('keydown', escClose);
+
+    return () => document.removeEventListener('keydown', escClose);
+  }, [close, id, modalId]);
 
   return createPortal(
-    <Backdrop $isOpen={isOpen} id={id}>
-      <ModalContainer $w={$w} $h={$h} ref={modalRef} $isOpen={isOpen} id={id}>
-        {closeIconBtn && 
+    <Backdrop id={modalId} $isOpen={isOpen} onClick={backdropClose}>
+      <ModalContainer $w={$w} $h={$h} $isOpen={isOpen}>
+        {closeIconBtn && (
           <ButtonBox>
             <Button
               Icon={IoMdClose}
@@ -52,7 +88,7 @@ const Modal = ({ children, closeModal, $w, $h, title, $isOpen, closeIconBtn = tr
               $variant="text"
             />
           </ButtonBox>
-        }
+        )}
 
         {title && <Title>{title}</Title>}
         {children}

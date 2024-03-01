@@ -32,8 +32,8 @@ export type Company = {
 
 export interface CreateCompany
   extends Pick<Company, 'name' | 'city' | 'index' | 'address' | 'phones'> {
-  employeesCount: EmployeesCount;
-  branches: Branches;
+  employeesCount: EmployeesCount | '';
+  branches: Branches | '';
   category: string;
   activities: string[];
 }

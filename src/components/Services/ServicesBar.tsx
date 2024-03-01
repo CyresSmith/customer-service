@@ -1,24 +1,29 @@
 import Button from 'components/Ui/Buttons/Button';
 import Modal from 'components/Ui/Modal/Modal';
+import { AddServiceOpenModal } from 'helpers/enums';
 import { useAdminRights } from 'hooks';
 import { useState } from 'react';
 import { HiPlusCircle } from 'react-icons/hi';
+import { useAddNewServiceMutation } from 'services/company.api';
+import AddServiceModal from './AddServiceModal';
 
 type Props = {};
 
-enum OpenModal {
-  ADD = 1,
-}
-
 const ServicesBar = (props: Props) => {
-  const [openModal, setOpenModal] = useState<OpenModal | null>(null);
   const isAdmin = useAdminRights();
+  const [openModal, setOpenModal] = useState<AddServiceOpenModal | null>(null);
+
+  const [addNewService, { isLoading }] = useAddNewServiceMutation();
+
+  const handleModalClose = () => {
+    setOpenModal(null);
+  };
 
   return (
     <>
       {isAdmin && (
         <Button
-          onClick={() => setOpenModal(OpenModal.ADD)}
+          onClick={() => setOpenModal(AddServiceOpenModal.ADD)}
           Icon={HiPlusCircle}
           $colors="light"
         >
@@ -28,11 +33,12 @@ const ServicesBar = (props: Props) => {
 
       {openModal && (
         <Modal
-          title="Додати послугу"
-          $isOpen={openModal === OpenModal.ADD}
-          closeModal={() => setOpenModal(null)}
+          id="addService"
+          title="Створення послуги"
+          $isOpen={openModal !== null}
+          closeModal={handleModalClose}
         >
-          <div> services modal</div>
+          <AddServiceModal setOpenModal={setOpenModal} />
         </Modal>
       )}
     </>

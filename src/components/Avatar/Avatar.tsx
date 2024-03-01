@@ -7,7 +7,7 @@ import { HiCursorArrowRays } from 'react-icons/hi2';
 import { AvatarBox, ButtonsBox, ImageBox } from './Avatar.styled';
 
 type Props = {
-  allowChanges: boolean;
+  allowChanges?: boolean;
   light?: boolean;
   size?: number;
   $round?: boolean;
@@ -18,7 +18,7 @@ type Props = {
 };
 
 const Avatar = ({
-  allowChanges,
+  allowChanges = true,
   light = false,
   size = 250,
   $round = false,
