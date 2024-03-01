@@ -33,7 +33,7 @@ type Props = {
   selectedDays: number[];
   disabledDays: number[];
   setSelectedDays?: Dispatch<SetStateAction<string[]>>;
-  handleDayClick: (date: number) => void;
+  handleDayClick: (date: number, dayIdx: number) => void;
   toNextMonth: () => void;
   toPrevMonth: () => void;
 };
@@ -92,6 +92,15 @@ const Calendar = ({
     return disabledDays.length > 0 ? !disabledDays.includes(dayIndex) : false;
   };
 
+  const notWorkingDays = () => {
+    const workingDays: number[] =
+      workingHours?.flatMap(({ days }) => days) || [];
+
+    return Array.from({ length: 7 })
+      .map((_, i) => i)
+      .filter(i => !workingDays.includes(i));
+  };
+
   return (
     <CalendarBox>
       {weekDays.map(({ name, id }) => {
@@ -100,8 +109,8 @@ const Calendar = ({
         )?.hours;
 
         return (
-          <div>
-            <WeekDay key={name}>
+          <div key={name}>
+            <WeekDay>
               <span>{name}</span>
 
               {hours && <Hours>{`${hours.from} - ${hours.to}`}</Hours>}
@@ -117,19 +126,19 @@ const Calendar = ({
         ))}
       {monthDays.map((date, i) => {
         const dayDate = getDate(date);
+        const day = getDay(date);
 
         const isToday =
           dayDate === getDate(today) &&
           getMonth(selectedMonth) === getMonth(today);
 
         const daySchedule = monthSchedule.find(({ day }) => day === dayDate);
-
-        const isDisabled = isDayDisabled(getDay(date));
+        const isDisabled = notWorkingDays().includes(day) || isDayDisabled(day);
 
         return (
           <Day
             key={i}
-            onClick={() => !isDisabled && handleDayClick(dayDate)}
+            onClick={() => !isDisabled && handleDayClick(dayDate, day)}
             $today={isToday}
             $selected={selectedDays.includes(dayDate)}
             $isDisabled={isDisabled}

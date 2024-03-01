@@ -78,6 +78,8 @@ interface IsOpen extends ISelectStyle {
   $isOpen: boolean;
 }
 
+const visibleItemsCount = 10;
+
 export const List = styled.ul<IsOpen>`
   ${p => {
     const { color, backgroundColor, fontSize, iconSize, padding, hoverColor } =
@@ -110,16 +112,16 @@ export const List = styled.ul<IsOpen>`
     if ($isOpen) {
       switch (size) {
         case 's':
-          return 'calc(25px * 5)';
+          return `calc(25px * ${visibleItemsCount})`;
 
         case 'm':
-          return 'calc(31px * 5)';
+          return `calc(31px * ${visibleItemsCount})`;
 
         case 'l':
-          return 'calc(36px * 5)';
+          return `calc(36px * ${visibleItemsCount})`;
 
         default:
-          return 'calc(31px * 5)';
+          return `calc(31px * ${visibleItemsCount})`;
       }
     } else {
       return 0;
