@@ -120,10 +120,11 @@ export const DoneIcon = styled.svg<{ $complete?: boolean }>`
     props.$complete ? theme.colors.success.light : theme.colors.danger.light};
 `;
 
-export const Select = styled.div<{$open: boolean}>`
+export const Select = styled.div<{$open: boolean, $width: string}>`
   ${baseInputStyles};
   position: relative;
   outline: none;
+  width: ${props => props.$width};
   cursor: pointer;
 
   ${p => p.$open && `
@@ -156,7 +157,7 @@ export const SelectList = styled.ul<{ $open: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: ${theme.space[2]};
+  gap: ${theme.space[0]};
   box-shadow: ${theme.shadow.m};
   background-color: ${theme.colors.bg.main};
   border-radius: ${theme.radii.m};
@@ -166,12 +167,13 @@ export const SelectList = styled.ul<{ $open: boolean }>`
   overflow: hidden;
 `
 
-export const SelectListItem = styled.li`
+export const SelectListItem = styled.li<{$selected: boolean}>`
   width: 100%;
   text-align: center;
   padding: ${theme.space[3]};
   color: ${theme.colors.secondary.light};
   transition: ${theme.transition.primary};
+  background-color: ${props => props.$selected ? `${ theme.colors.bg.dark }` : 'none'};
   outline: none;
 
   &::first-letter {

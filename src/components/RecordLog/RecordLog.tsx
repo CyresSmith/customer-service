@@ -1,62 +1,167 @@
-import { useCompany } from 'hooks/useCompany';
-import { RecordContainer } from './RecordLog.styled';
-import HoursList from './RecordLogList/HoursList';
-import RecordLogList from './RecordLogList/RecordLogList';
+import { Container, ListsWrapper, NoSchedule, SchedulesContainer } from "./RecordLog.styled";
+import RecordLogList from "./RecordLogList/RecordLogList";
+import generateTimeArray, { getSchedule } from "helpers/generateTimeArray";
+import TimeList from "./RecordLogList/TimeList";
+import EmployeesInfoList from "./RecordLogList/EmployeesInfoList/EmployeesInfoList";
+import { IEmployee } from "services/types/employee.types";
+import { IWorkingHours } from "store/company/company.types";
 
-const dayHours: string[] = [
-  '00:00',
-  '01:00',
-  '02:00',
-  '03:00',
-  '04:00',
-  '05:00',
-  '06:00',
-  '07:00',
-  '08:00',
-  '09:00',
-  '10:00',
-  '11:00',
-  '12:00',
-  '13:00',
-  '14:00',
-  '15:00',
-  '16:00',
-  '17:00',
-  '18:00',
-  '19:00',
-  '20:00',
-  '21:00',
-  '22:00',
-  '23:00',
-];
+// const items = [
+//     {
+//         id: 2,
+//         days: [
+//             {
+//                 day: 1,
+//                 hours: {
+//                     from: '10:00',
+//                     to: '16:00'
+//                 },
+//                 events: [
+//                     {
+//                         id: 1,
+//                         time: {
+//                             from: '11:00',
+//                             to: '13:00'
+//                         }
+//                     },
+//                     {
+//                         id: 2,
+//                         time: {
+//                             from: '14:00',
+//                             to: '15:00'
+//                         }
+//                     }
+//                 ]
+//             },
+//             {
+//                 day: 2,
+//                 hours: {
+//                     from: '10:00',
+//                     to: '16:00'
+//                 }
+//             }
+//         ]
+//     },
+//     {
+//         id: 1,
+//         days: [
+//             {
+//                 day: 1,
+//                 hours: {
+//                     from: '09:00',
+//                     to: '18:00'
+//                 },
+//                 events: [
+//                     {
+//                         id: 1,
+//                         time: {
+//                             from: '09:30',
+//                             to: '11:00'
+//                         }
+//                     },
+//                     {
+//                         id: 2,
+//                         time: {
+//                             from: '12:00',
+//                             to: '13:30'
+//                         }
+//                     }
+//                 ]
+//             },
+//             {
+//                 day: 2,
+//                 hours: {
+//                     from: '09:00',
+//                     to: '18:00'
+//                 }
+//             }
+//         ]
+//     },
+//     {
+//         id: 2,
+//         days: [
+//             {
+//                 day: 1,
+//                 hours: {
+//                     from: '12:00',
+//                     to: '20:00'
+//                 },
+//                 events: [
+//                     {
+//                         id: 1,
+//                         time: {
+//                             from: '12:00',
+//                             to: '13:45'
+//                         }
+//                     },
+//                     {
+//                         id: 2,
+//                         time: {
+//                             from: '16:00',
+//                             to: '17:30'
+//                         }
+//                     }
+//                 ]
+//             },
+//             {
+//                 day: 2,
+//                 hours: {
+//                     from: '10:00',
+//                     to: '16:00'
+//                 }
+//             }
+//         ]
+//     }
+//
 
-const RecordLog = () => {
-  const { workingHours } = useCompany();
+type Props = {
+    date: Date;
+    workingHours: IWorkingHours[] | null;
+    employees: IEmployee[];
+}
 
-  if (workingHours === null) {
-    return;
-  }
+const RecordLog = ({date, workingHours, employees}: Props) => {
+    const chosenDay = new Date(date).getDay();
 
-  const getHoursArray = (): string[] => {
-    const { hours } = workingHours[0];
-    const { from, to } = hours;
+    if (!workingHours) {
+        return (
+            <p>Не встановлено графік роботи компанії!</p>
+        )
+    }
 
-    return dayHours.filter(
-      h =>
-        Number(h.split(':')[0]) >= Number(from.split(':')[0]) &&
-        Number(h.split(':')[0]) <= Number(to.split(':')[0])
-    );
-  };
+    const today = workingHours.find(wh => wh.days.includes(chosenDay));
 
-  const schedule = getHoursArray();
-  const timeItems = Array.from({ length: schedule.length * 4 - 4 });
+    if (!today) {
+        return (
+            <NoSchedule>Не встановлено графік роботи для обраного дня!</NoSchedule>
+        )
+    }
 
-  return (
-    <RecordContainer>
-      {schedule.length > 0 && <HoursList workHours={schedule} />}
-      <RecordLogList workHours={timeItems} />
-    </RecordContainer>
-  );
+    const { from, to } = today!.hours;
+
+    const timeArray = generateTimeArray(true);
+
+    const companyDaySchedule = getSchedule(timeArray, from, to);
+
+    return workingHours && (
+        <Container>
+            <EmployeesInfoList $columns={employees.length} date={date} employees={employees} />
+            <SchedulesContainer>
+                <TimeList side="left" workHours={companyDaySchedule} />
+                <ListsWrapper $columns={employees.length}>
+                    {employees.map((provider, i) =>
+                        <RecordLogList
+                            schedules={provider.schedules}
+                            companySchedule={companyDaySchedule}
+                            key={provider.id}
+                            date={date}
+                            last={i === employees.length - 1}
+                    />)}
+                </ListsWrapper>
+                <TimeList side="right" workHours={companyDaySchedule} />
+            </SchedulesContainer>
+        </Container>
+    )
 };
 
 export default RecordLog;

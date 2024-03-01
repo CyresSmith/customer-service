@@ -1,4 +1,6 @@
-import { ITime } from './schedule.types';
+// import { IMonthSchedule, ITime } from './schedule.types';
+
+import { IMonthSchedule } from "./schedule.types";
 
 export interface IEmployeeUser {
   id: string;
@@ -35,6 +37,7 @@ export interface IEmployee {
   lastName: string;
   birthday: string;
   user: IEmployeeUser;
+  schedules: IMonthSchedule[],
 }
 
 export type createEmployeeData = Pick<

@@ -1,10 +1,10 @@
 import { ReactNode, useState } from 'react';
 import { Select, Selected, SelectIcon, SelectList, SelectListItem } from './CustomForm.styled';
-import { SelectProps } from './types';
+import { SelectItem, SelectProps } from './types';
 import { useClickOutside, useEscapeKey } from 'hooks';
 import { HiChevronDown } from 'react-icons/hi';
 
-const CustomFormSelect = <T,>({ selectItems, selectedItem, handleSelect }: SelectProps<T>) => {
+const CustomFormSelect = ({ selectItems, selectedItem, closeOnSelect, width = '100%', handleSelect }: SelectProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     
     const toggleOpen = () => {
@@ -19,15 +19,19 @@ const CustomFormSelect = <T,>({ selectItems, selectedItem, handleSelect }: Selec
         setIsOpen(false);
     };
 
-    const onSelect = (item: T) => {
+    const onSelect = (item: SelectItem) => {
         handleSelect(item);
-        handleClose();
+        if (closeOnSelect) {
+            handleClose();
+        }
     };
 
-    const onEnterSelect = (event: React.KeyboardEvent<HTMLLIElement>, item: T) => {
+    const onEnterSelect = (event: React.KeyboardEvent<HTMLLIElement>, item: SelectItem) => {
         if (event.key === 'Enter') {
             handleSelect(item);
-            handleClose();
+            if (closeOnSelect) {
+                handleClose();
+            }
         }
     };
 
@@ -37,8 +41,8 @@ const CustomFormSelect = <T,>({ selectItems, selectedItem, handleSelect }: Selec
         }
     };
 
-    const translate = (item: T): ReactNode => {
-        switch (item) {
+    const translate = (item: SelectItem): ReactNode => {
+        switch (item.value) {
             case '':
                 return 'не обрано';
             case 'male':
@@ -48,23 +52,40 @@ const CustomFormSelect = <T,>({ selectItems, selectedItem, handleSelect }: Selec
             case 'other':
                 return 'інша'
             default:
-                return item as string;
+                return item.value as string;
         }
     }
 
     useEscapeKey(handleClose);
     const selectRef = useClickOutside(handleClose);
 
+    const isSelected = (item: SelectItem) => {
+        if (Array.isArray(selectedItem)) {
+            return selectedItem.find(i => i.id === item.id) ? true : false;
+        } else {
+            return item.value === selectedItem.value ? true : false;
+        }
+    }
+
     return (
-        <Select onKeyDown={(event) => onEnterToggleOpen(event)} tabIndex={0} onClick={toggleOpen} ref={selectRef} $open={isOpen}>
-            <Selected>{translate(selectedItem)}</Selected>
+        <Select $width={width} onKeyDown={(event) => onEnterToggleOpen(event)} tabIndex={0} onClick={toggleOpen} ref={selectRef} $open={isOpen}>
+            <Selected>
+                {Array.isArray(selectedItem) && selectedItem.find(i => i.id === 'all') ?
+                    `Вибрано всіх працівників: ${selectItems.length}` :
+                    Array.isArray(selectedItem) ?
+                    `Вибрано працівників: ${selectedItem.length}` :
+                    translate(selectedItem)
+                }
+            </Selected>
             <SelectList $open={isOpen}>
                 {isOpen && selectItems.map((item, i) =>
                     <SelectListItem
+                        id={item.id ? item.id as string : undefined}
                         tabIndex={0}
                         onKeyDown={(event) => onEnterSelect(event, item)}
                         onClick={() => onSelect(item)}
                         key={i}
+                        $selected={isSelected(item)}
                     >{translate(item)}</SelectListItem>)}
             </SelectList>
             <SelectIcon as={HiChevronDown} $open={isOpen} />

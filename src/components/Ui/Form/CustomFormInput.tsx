@@ -16,20 +16,22 @@ import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { IoMdClose } from 'react-icons/io';
 import { MdOutlineDone } from 'react-icons/md';
 import CustomFormSelect from './CustomFormSelect';
+import { SelectItem } from './types';
 
 type Props = {
   name: string;
   value: string | number | undefined;
   type: string;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleSelect?: (item: string) => void;
+  handleSelect?: (item: SelectItem) => void;
   isValid?: string;
   disabledIcon?: boolean;
   isRequired?: boolean;
   isReadonly?: boolean;
   label?: boolean;
   placeholder?: string;
-  selectItems?: string[];
+  selectItems?: SelectItem[];
+  selected?: SelectItem;
 };
 
 const CustomFormInput = ({
@@ -45,6 +47,7 @@ const CustomFormInput = ({
   label = true,
   placeholder = '',
   selectItems,
+  selected
 }: Props) => {
   const [hidden, setHidden] = useState(true);
   const valueRef = useRef(value).current;
@@ -58,17 +61,18 @@ const CustomFormInput = ({
         </FormInputLabel>
       )}
       <FormInputBox>
-        {type === 'select' && selectItems && handleSelect ? (
-          <CustomFormSelect<string>
+        {type === 'select' && selectItems && handleSelect && selected ? (
+          <CustomFormSelect
+            width='100%'
             handleSelect={handleSelect}
             selectItems={selectItems}
-            selectedItem={value as string}
+            selectedItem={selected}
           />
         ) : (
           <FormInput
             type={type !== 'password' ? type : hidden ? type : 'text'}
             name={name}
-            value={value}
+            value={value as string}
             as={type === 'textarea' ? 'textarea' : 'input'}
             onChange={handleChange}
             readOnly={isReadonly}
