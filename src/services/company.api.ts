@@ -7,7 +7,7 @@ import {
   IUpdateCompanyProfile,
   UpdateAvatar,
 } from '../store/company/company.types';
-import { Activity, CompanyCategory } from './types/category.types';
+import { Activity, Category, CompanyCategory } from './types/category.types';
 import {
   IEmployee,
   addExistUserEmployeeData,
@@ -108,6 +108,34 @@ export const companyApi = createApi({
       }),
       invalidatesTags: ['companyApi'],
     }),
+
+    addNewService: builder.mutation<any, any>({
+      query: ({ id, data }) => ({
+        url: `/company/${id}/service`,
+        method: 'POST',
+        data,
+      }),
+      invalidatesTags: ['companyApi'],
+    }),
+
+    getServicesCategories: builder.query<Category[], { id: string }>({
+      query: ({ id }) => ({
+        url: `/company/${id}/services-categories`,
+        method: 'GET',
+      }),
+    }),
+
+    addServiceCategory: builder.mutation<
+      Category,
+      { id: string; data: { name: string } }
+    >({
+      query: ({ id, data }) => ({
+        url: `/company/${id}/services-categories`,
+        method: 'POST',
+        data,
+      }),
+      invalidatesTags: ['companyApi'],
+    }),
   }),
 });
 
@@ -122,4 +150,7 @@ export const {
   useFindUserDataMutation,
   useAddExistUserEmployeeMutation,
   useAddNewUserEmployeeMutation,
+  useAddNewServiceMutation,
+  useGetServicesCategoriesQuery,
+  useAddServiceCategoryMutation,
 } = companyApi;

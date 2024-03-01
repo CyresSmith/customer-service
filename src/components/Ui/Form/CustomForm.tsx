@@ -1,12 +1,19 @@
 import { getErrorMessage } from 'helpers/inputsValidation';
 import { useForm } from '../../../hooks';
 import Checkbox from './Checkbox';
-import { Form, FormInputsList, FormInputsListItem, FormTitle } from './CustomForm.styled';
+import {
+  Form,
+  FormInputsList,
+  FormInputsListItem,
+  FormTitle,
+} from './CustomForm.styled';
 import CustomFormButtons from './CustomFormButtons';
 import CustomFormInput from './CustomFormInput';
 import { FormProps } from './types';
 
-const CustomForm = <T extends { [k: string]: string | number | undefined }>({
+const CustomForm = <
+  T extends { [k: string]: string | number | boolean | undefined }
+>({
   buttonWidth,
   isLoading,
   inputs,
@@ -18,7 +25,7 @@ const CustomForm = <T extends { [k: string]: string | number | undefined }>({
   ResetButtonIcon,
   buttonsDirection,
   title,
-  selectItems
+  selectItems,
 }: FormProps<T>) => {
   const { handleChange, handleSubmit, state, invalidFields, reset } =
     useForm<T>(initialState, onSubmit);
@@ -45,12 +52,12 @@ const CustomForm = <T extends { [k: string]: string | number | undefined }>({
 
   return (
     <Form onSubmit={handleSubmit}>
-      {title && <FormTitle>{ title }</FormTitle>}
+      {title && <FormTitle>{title}</FormTitle>}
       <FormInputsList>
         {inputs.map(
-          ({ name, type, isRequired = false, isReadonly = false }, i) =>
+          ({ name, type, isRequired = false, isReadonly = false }, i) => (
             <FormInputsListItem key={i}>
-              {type === 'checkbox' ? (
+              {typeof state[name] === 'boolean' ? (
                 <Checkbox
                   name={name}
                   isRequired={isRequired}
@@ -58,19 +65,20 @@ const CustomForm = <T extends { [k: string]: string | number | undefined }>({
                   handleCheck={handleChange}
                 />
               ) : (
-              <CustomFormInput
-                selectItems={selectItems}
-                type={type}
-                name={name}
-                value={state[name as keyof T]}
-                handleChange={handleChange}
-                isValid={getErrorMessage(name, invalidFields)}
-                disabledIcon={disabledReset}
-                isRequired={isRequired}
-                isReadonly={isReadonly}
-              />
-            )}
+                <CustomFormInput
+                  selectItems={selectItems}
+                  type={type}
+                  name={name}
+                  value={state[name as keyof T]}
+                  handleChange={handleChange}
+                  isValid={getErrorMessage(name, invalidFields)}
+                  disabledIcon={disabledReset}
+                  isRequired={isRequired}
+                  isReadonly={isReadonly}
+                />
+              )}
             </FormInputsListItem>
+          )
         )}
       </FormInputsList>
 

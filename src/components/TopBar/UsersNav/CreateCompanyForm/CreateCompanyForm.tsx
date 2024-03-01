@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Activity } from 'services/types/category.types';
-import { CreateCompanyDto } from 'store/company/company.types';
+import { Activity, CreateCompanyDto } from 'store/company/company.types';
 import { FormContainer } from './CreateCompanyForm.styled';
 import { NextStep, Step } from './CreateCompanyForm.types';
 import FirstStep from './FirstStep';
