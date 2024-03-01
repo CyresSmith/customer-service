@@ -304,32 +304,33 @@ const CompanyProfile = () => {
             </Modal>
           )}
 
-          {(openModal === OpenModal.PHONE ||
-            (openModal === OpenModal.REMOVE_PHONE && editedPhone)) && (
+          {openModal === OpenModal.PHONE && (
             <Modal
               title={
-                openModal === OpenModal.REMOVE_PHONE
-                  ? 'Видалити номер'
-                  : openModal === OpenModal.PHONE && editedPhone
+                openModal === OpenModal.PHONE && editedPhone
                   ? 'Змінити номер'
                   : 'Додати номер'
               }
               closeModal={handlePhoneModalClose}
               $isOpen={openModal === OpenModal.PHONE}
             >
-              {openModal === OpenModal.PHONE && (
-                <EditPhonesModal
-                  phone={editedPhone}
-                  closeModal={handlePhoneModalClose}
-                />
-              )}
+              <EditPhonesModal
+                phone={editedPhone}
+                closeModal={handlePhoneModalClose}
+              />
+            </Modal>
+          )}
 
-              {openModal === OpenModal.REMOVE_PHONE && editedPhone && (
-                <RemovePhoneModal
-                  phone={editedPhone}
-                  closeModal={handlePhoneModalClose}
-                />
-              )}
+          {openModal === OpenModal.REMOVE_PHONE && editedPhone && (
+            <Modal
+              title="Видалити номер"
+              closeModal={handlePhoneModalClose}
+              $isOpen={openModal === OpenModal.REMOVE_PHONE}
+            >
+              <RemovePhoneModal
+                phone={editedPhone}
+                closeModal={handlePhoneModalClose}
+              />
             </Modal>
           )}
 

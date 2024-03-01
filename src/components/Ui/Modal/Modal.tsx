@@ -46,7 +46,7 @@ const Modal = ({
     if (e.target === e.currentTarget) close();
   };
 
-  const modalId = `modal-id-${id}`;
+  const modalId = id ? `modal-id${id}` : '';
 
   useEffect(() => {
     setIsOpen($isOpen ?? false);
