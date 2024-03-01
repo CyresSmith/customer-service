@@ -10,7 +10,7 @@ export const Container = styled.div`
 export const DateWrapper = styled.div`
     text-align: center;
     width: 150px;
-    padding: ${theme.space[3]};
+    padding: ${theme.space[2]} ${theme.space[3]};
     border: ${theme.borders.normal} ${theme.colors.bg.light};
     border-radius: ${theme.radii.s};
 `

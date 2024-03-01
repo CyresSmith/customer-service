@@ -37,8 +37,15 @@ export type ButtonsProps = {
   disabledReset: boolean;
 };
 
-export type SelectProps<T> = {
-  selectItems: T[];
-  selectedItem: T;
-  handleSelect: (item: T) => void;
+export type SelectItem = {
+  id?: string | number,
+  value: string
+}
+
+export type SelectProps = {
+  width: string;
+  selectItems: SelectItem[];
+  selectedItem: SelectItem | SelectItem[];
+  handleSelect: (item: SelectItem) => void;
+  closeOnSelect?: boolean;
 }

@@ -13,7 +13,7 @@ const EmployeesInfoList = ({ employees, date, $columns }: Props) => {
     return (
         <List $columns={$columns}>
             {employees.map((employee, i) =>
-                <EmployeesInfoListItem employee={employee} last={i === employees.length - 1} date={date} />
+                <EmployeesInfoListItem key={i} employee={employee} last={i === employees.length - 1} date={date} />
             )}
         </List>
     )

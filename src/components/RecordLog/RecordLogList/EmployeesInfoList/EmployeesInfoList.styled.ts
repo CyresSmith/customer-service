@@ -5,6 +5,7 @@ export const List = styled.ul<{$columns: number}>`
     display: grid;
     grid-template-columns: repeat(${props => props.$columns}, 1fr);
     padding: 0 60px;
+    margin-bottom: ${theme.space[4]};
 `
 
 export const ListItem = styled.li<{ $last: boolean }>`
@@ -12,7 +13,6 @@ export const ListItem = styled.li<{ $last: boolean }>`
     display: flex;
     gap: ${theme.space[3]};
     padding: ${theme.space[3]};
-    margin-bottom: ${theme.space[4]};
     /* border-bottom: ${theme.borders.normal} ${theme.colors.bg.light}; */
     border-right: ${props => props.$last ? 'none' : `${theme.borders.normal} ${theme.colors.bg.light}`};
     overflow: hidden;
@@ -61,4 +61,5 @@ export const EmployeeName = styled.p`
 
 export const EmployeeDaySchedule = styled.p`
     font-size: ${theme.fontSizes.m};
+    color: ${theme.colors.secondary.main};
 `

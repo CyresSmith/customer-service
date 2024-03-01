@@ -1,6 +1,6 @@
 import Button from 'components/Ui/Buttons/Button';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
-import { InputProps } from 'components/Ui/Form/types';
+import { InputProps, SelectItem } from 'components/Ui/Form/types';
 import { useForm } from 'hooks/useForm';
 import {
   ButtonsBox,
@@ -28,7 +28,7 @@ const inputs: InputProps[] = [
   { name: 'comment', type: 'textarea', placeholder: 'Побажання клієнта, додаткова інформація, примітки адміністратора..' },
 ];
 
-const genderOptions: string[] = ['male', 'female', 'other'];
+const genderOptions: {value: string}[] = [{value: 'male'}, {value: 'female'}, {value: 'other'}];
 
 type Props = {
   initialState: Client;
@@ -59,8 +59,8 @@ const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
       ? true
       : false;
   
-  const handleSelect = (item: string) => {
-    setState({ ...state, gender: item })
+  const handleSelect = (item: SelectItem) => {
+    setState({ ...state, gender: item.value })
   };
 
   return (
@@ -78,6 +78,7 @@ const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
               handleChange={handleChange}
               disabledIcon={true}
               selectItems={genderOptions}
+              selected={{value: state[name as keyof Client] as string}}
               handleSelect={handleSelect}
               placeholder={placeholder}
             />
