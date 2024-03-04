@@ -146,6 +146,10 @@ export const List = styled.ul<IsOpen>`
     width: 100%;
     text-align: center;
     border-radius: ${theme.radii.s};
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: ${theme.space[2]};
 
     &:hover {
       background-color: ${({ $colors }) =>

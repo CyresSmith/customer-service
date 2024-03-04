@@ -1,107 +1,126 @@
+import AddCategoryModal from 'components/AddCategoryModal';
 import Avatar from 'components/Avatar';
-import CustomForm from 'components/Ui/Form/CustomForm';
-import { InputProps } from 'components/Ui/Form/types';
+import CustomFormInput from 'components/Ui/Form/CustomFormInput';
+import { InputValueType, SelectItem } from 'components/Ui/Form/types';
 import Loader from 'components/Ui/Loader';
-import Modal from 'components/Ui/Modal/Modal';
 import RadioSelect, {
   RadioSelectItemType,
 } from 'components/Ui/RadioSelect/RadioSelect';
-import Select from 'components/Ui/Select';
 import { AddServiceOpenModal, ServiceTypeEnum } from 'helpers/enums';
+import { useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useGetServicesCategoriesQuery } from 'services/company.api';
+import { ServiceCategory } from 'services/types/category.types';
 import {
-  useAddServiceCategoryMutation,
-  useGetServicesCategoriesQuery,
-} from 'services/company.api';
-import { AddServiceModalBox } from './AddServiceModal.styled';
+  AddServiceModalBox,
+  FormBox,
+  FormSide,
+} from './AddServiceModal.styled';
 
 type Props = {
   setOpenModal: Dispatch<SetStateAction<AddServiceOpenModal | null>>;
 };
 
-const selectItems = [
-  { id: ServiceTypeEnum.INDIVIDUAL, label: 'Індівідуальна' },
-  { id: ServiceTypeEnum.GROUP, label: 'Групова' },
-];
-
-const initialState = {
+const initialState: {
+  category: null | SelectItem;
+  name: string;
+  desc: string;
+  break: boolean;
+} = {
+  category: null,
   name: '',
   desc: '',
-  category: '',
   break: false,
 };
 
-const inputs: InputProps[] = [
-  { name: 'name', type: 'text' },
-  { name: 'desc', type: 'text' },
-  { name: 'category', type: 'select' },
-  { name: 'break', type: 'checkbox' },
+const addCategoryItem = { id: 'add', value: 'Додати категорію...' };
+
+const selectItems = [
+  {
+    id: ServiceTypeEnum.INDIVIDUAL,
+    label: 'Індівідуальна',
+  },
+  {
+    id: ServiceTypeEnum.GROUP,
+    label: 'Групова',
+  },
 ];
-
-const categoryInitialState = {
-  name: '',
-};
-
-const categoryInputs: InputProps[] = [{ name: 'name', type: 'text' }];
 
 const AddServiceModal = ({ setOpenModal }: Props) => {
   const { id } = useCompany();
+
+  const [serviceType, setServiceType] = useState<ServiceTypeEnum>(
+    ServiceTypeEnum.INDIVIDUAL
+  );
 
   const {
     isLoading: isCategoriesLoading,
     data,
     refetch,
+    isSuccess,
   } = useGetServicesCategoriesQuery({ id });
 
-  const [addServiceCategory, { isSuccess }] = useAddServiceCategoryMutation();
+  const [categories, setCategories] = useState<ServiceCategory[]>([]);
 
-  const [serviceType, setServiceType] = useState<string>(
-    ServiceTypeEnum.INDIVIDUAL
-  );
-
-  const [addCategoryModalOpen, setAddCategoryModalOpen] = useState(false);
-
-  const [categories, setCategories] = useState([
-    { id: 'add', name: 'Додати нову катигорію...' },
-  ]);
-
-  const [selectedCategory, setSelectedCategory] = useState('');
-
-  const handleCategorySelect = (name: string) => {
-    if (name === categories[categories.length - 1].name) {
-      return setAddCategoryModalOpen(true);
-    }
-
-    setSelectedCategory(name);
-  };
-
-  const handleTypeSelectClick = (item: RadioSelectItemType) => {
-    setServiceType(String(item.id));
-  };
-
-  const handleAvatarUpload = () => {};
+  const inputs = [
+    {
+      name: 'category',
+      type: 'select',
+      selectItems: [
+        ...categories
+          .filter(({ type }) => type === serviceType)
+          .map(({ id, name }) => ({ id, value: name })),
+        addCategoryItem,
+      ],
+    },
+    { name: 'name', type: 'text' },
+    { name: 'desc', type: 'textarea' },
+    { name: 'break', type: 'checkbox' },
+  ];
 
   const handleServiceUpload = (state: typeof initialState) => {
     console.log('state: ', state);
   };
 
-  const handleServiceCategoryAdd = async (
-    data: typeof categoryInitialState
-  ) => {
-    const response = await addServiceCategory({ id, data }).unwrap();
+  const {
+    handleChange,
+    handleSubmit,
+    handleSelect,
+    invalidFields,
+    reset,
+    setState,
+    state,
+  } = useForm(initialState, handleServiceUpload);
 
-    if (response) {
-      refetch();
+  const [addCategoryModalOpen, setAddCategoryModalOpen] = useState(false);
+
+  const handleCategorySelect = (selected: SelectItem, fieldName?: string) => {
+    if (selected.id === addCategoryItem.id) {
+      setAddCategoryModalOpen(true);
+    } else if (fieldName) {
+      handleSelect(selected, fieldName);
     }
   };
 
-  useEffect(() => {
-    if (data?.length === 0) return;
+  const handleTypeSelectClick = (item: RadioSelectItemType) => {
+    setServiceType(item.id as ServiceTypeEnum);
+  };
 
-    if (data && data?.length > 0) {
-      setCategories(p => [...data, ...p]);
-    }
+  const handleAvatarUpload = () => {};
+
+  useEffect(() => {
+    console.log('🚀 ~ AddServiceModal ~ state:', state);
+  }, [state]);
+
+  useEffect(() => {
+    setState(p => ({ ...p, category: initialState.category }));
+  }, [serviceType]);
+
+  useEffect(() => {
+    if (!data) return;
+
+    setCategories(data);
   }, [data]);
 
   return (
@@ -118,46 +137,42 @@ const AddServiceModal = ({ setOpenModal }: Props) => {
             handleUpload={handleAvatarUpload}
           />
 
-          <div>
+          <FormSide>
             <RadioSelect
               items={selectItems}
               selectedItemId={serviceType}
               onSelect={handleTypeSelectClick}
             />
 
-            <Select
-              $colors="light"
-              onSelect={handleCategorySelect}
-              selectedItem={selectedCategory}
-              items={categories.map(({ name }) => name)}
-            />
-
-            <CustomForm
-              inputs={categoryInputs}
-              buttonLabel="Додати категорию"
-              onSubmit={handleServiceCategoryAdd}
-              initialState={categoryInitialState}
-            />
-
-            <CustomForm
-              inputs={inputs}
-              buttonLabel="Додати"
-              onSubmit={handleServiceUpload}
-              initialState={initialState}
-            />
-          </div>
+            <FormBox>
+              {inputs.map((item, i) => (
+                <CustomFormInput
+                  key={i}
+                  {...item}
+                  value={state[item.name as keyof InputValueType]}
+                  handleChange={handleChange}
+                  handleSelect={handleCategorySelect}
+                />
+              ))}
+            </FormBox>
+          </FormSide>
         </AddServiceModalBox>
       )}
 
       {addCategoryModalOpen && (
-        <Modal
-          title="Додати нову категорію"
-          $isOpen={addCategoryModalOpen}
+        <AddCategoryModal
+          modalId="addCategory"
+          isOpen={addCategoryModalOpen}
           closeModal={() => setAddCategoryModalOpen(false)}
-          id="addCategory"
-        >
-          <p>Додати категорыю</p>
-        </Modal>
+          type={serviceType}
+          refetch={refetch}
+          onCategoryAdd={({ id, name }) =>
+            setState(p => ({
+              ...p,
+              category: { id, value: name },
+            }))
+          }
+        />
       )}
     </>
   );

@@ -1,10 +1,15 @@
-import { Container, ListsWrapper, NoSchedule, SchedulesContainer } from "./RecordLog.styled";
-import RecordLogList from "./RecordLogList/RecordLogList";
-import generateTimeArray, { getSchedule } from "helpers/generateTimeArray";
-import TimeList from "./RecordLogList/TimeList";
-import EmployeesInfoList from "./RecordLogList/EmployeesInfoList/EmployeesInfoList";
-import { IEmployee } from "services/types/employee.types";
-import { IWorkingHours } from "store/company/company.types";
+import generateTimeArray, { getSchedule } from 'helpers/generateTimeArray';
+import { IEmployee } from 'services/types/employee.types';
+import { IWorkingHours } from 'store/company/company.types';
+import {
+  Container,
+  ListsWrapper,
+  NoSchedule,
+  SchedulesContainer,
+} from './RecordLog.styled';
+import EmployeesInfoList from './RecordLogList/EmployeesInfoList/EmployeesInfoList';
+import RecordLogList from './RecordLogList/RecordLogList';
+import TimeList from './RecordLogList/TimeList';
 
 // const items = [
 //     {
@@ -115,53 +120,58 @@ import { IWorkingHours } from "store/company/company.types";
 //
 
 type Props = {
-    date: Date;
-    workingHours: IWorkingHours[] | null;
-    employees: IEmployee[];
-}
+  date: Date;
+  workingHours: IWorkingHours[] | null;
+  employees: IEmployee[];
+};
 
-const RecordLog = ({date, workingHours, employees}: Props) => {
-    const chosenDay = new Date(date).getDay();
+const RecordLog = ({ date, workingHours, employees }: Props) => {
+  const chosenDay = new Date(date).getDay();
 
-    if (!workingHours) {
-        return (
-            <p>Не встановлено графік роботи компанії!</p>
-        )
-    }
+  if (!workingHours) {
+    return <p>Не встановлено графік роботи компанії!</p>;
+  }
 
-    const today = workingHours.find(wh => wh.days.includes(chosenDay));
+  const today = workingHours.find(wh => wh.days.includes(chosenDay));
 
-    if (!today) {
-        return (
-            <NoSchedule>Не встановлено графік роботи для обраного дня!</NoSchedule>
-        )
-    }
+  if (!today) {
+    return (
+      <NoSchedule>Не встановлено графік роботи для обраного дня!</NoSchedule>
+    );
+  }
 
-    const { from, to } = today!.hours;
+  const { from, to } = today!.hours;
 
-    const timeArray = generateTimeArray(true);
+  const timeArray = generateTimeArray(true);
 
-    const companyDaySchedule = getSchedule(timeArray, from, to);
+  const companyDaySchedule = getSchedule(timeArray, from, to);
 
-    return workingHours && (
-        <Container>
-            <EmployeesInfoList $columns={employees.length} date={date} employees={employees} />
-            <SchedulesContainer>
-                <TimeList side="left" workHours={companyDaySchedule} />
-                <ListsWrapper $columns={employees.length}>
-                    {employees.map((provider, i) =>
-                        <RecordLogList
-                            schedules={provider.schedules}
-                            companySchedule={companyDaySchedule}
-                            key={provider.id}
-                            date={date}
-                            last={i === employees.length - 1}
-                    />)}
-                </ListsWrapper>
-                <TimeList side="right" workHours={companyDaySchedule} />
-            </SchedulesContainer>
-        </Container>
+  return (
+    workingHours && (
+      <Container>
+        <EmployeesInfoList
+          $columns={employees.length}
+          date={date}
+          employees={employees}
+        />
+        <SchedulesContainer>
+          <TimeList side="left" workHours={companyDaySchedule} />
+          <ListsWrapper $columns={employees.length}>
+            {employees.map((provider, i) => (
+              <RecordLogList
+                schedules={provider.schedules}
+                companySchedule={companyDaySchedule}
+                key={provider.id}
+                date={date}
+                last={i === employees.length - 1}
+              />
+            ))}
+          </ListsWrapper>
+          <TimeList side="right" workHours={companyDaySchedule} />
+        </SchedulesContainer>
+      </Container>
     )
+  );
 };
 
 export default RecordLog;

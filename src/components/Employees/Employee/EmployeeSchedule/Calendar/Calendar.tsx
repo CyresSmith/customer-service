@@ -17,6 +17,7 @@ import {
   getDay,
   getMonth,
   isMonday,
+  isPast,
   lastDayOfMonth,
   nextMonday,
   nextSunday,
@@ -59,8 +60,8 @@ const Calendar = ({
   const prevMonthLastDay = lastDayOfMonth(prevMonthStart);
 
   const prevMonthDays = eachDayOfInterval({
-    start: prevMonthLastDay,
-    end: previousMonday(prevMonthLastDay),
+    start: previousMonday(prevMonthLastDay),
+    end: prevMonthLastDay,
   });
 
   const nextMonthFirstDay = startOfMonth(addMonths(selectedMonth, 1));
@@ -121,7 +122,7 @@ const Calendar = ({
       {!isFirstDayMonday &&
         prevMonthDays.map((date, i) => (
           <Day className="other" key={i} onClick={toPrevMonth}>
-            {dateFormat(date)}
+            <DayDate>{dateFormat(date)}</DayDate>
           </Day>
         ))}
       {monthDays.map((date, i) => {
@@ -133,7 +134,8 @@ const Calendar = ({
           getMonth(selectedMonth) === getMonth(today);
 
         const daySchedule = monthSchedule.find(({ day }) => day === dayDate);
-        const isDisabled = notWorkingDays().includes(day) || isDayDisabled(day);
+        const isDisabled =
+          notWorkingDays().includes(day) || isDayDisabled(day) || isPast(date);
 
         return (
           <Day
@@ -165,13 +167,13 @@ const Calendar = ({
       })}
       {nextMonthDays.map((date, i) => (
         <Day className="other" key={i} onClick={toNextMonth}>
-          <span>{dateFormat(date)}</span>
+          <DayDate>{dateFormat(date)}</DayDate>
         </Day>
       ))}
       {daysCount() < 42 &&
         nextMonthExtended.map((date, i) => (
           <Day className="other" key={i} onClick={toNextMonth}>
-            {dateFormat(date)}
+            <DayDate>{dateFormat(date)}</DayDate>
           </Day>
         ))}
     </CalendarBox>

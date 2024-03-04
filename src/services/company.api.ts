@@ -1,4 +1,5 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
+import { ServiceTypeEnum } from 'helpers/enums';
 import { axiosBaseQuery } from 'services/instance';
 import { UserData } from 'store/user/user.types';
 import {
@@ -7,7 +8,12 @@ import {
   IUpdateCompanyProfile,
   UpdateAvatar,
 } from '../store/company/company.types';
-import { Activity, Category, CompanyCategory } from './types/category.types';
+import {
+  Activity,
+  Category,
+  CompanyCategory,
+  ServiceCategory,
+} from './types/category.types';
 import {
   IEmployee,
   addExistUserEmployeeData,
@@ -118,7 +124,7 @@ export const companyApi = createApi({
       invalidatesTags: ['companyApi'],
     }),
 
-    getServicesCategories: builder.query<Category[], { id: string }>({
+    getServicesCategories: builder.query<ServiceCategory[], { id: string }>({
       query: ({ id }) => ({
         url: `/company/${id}/services-categories`,
         method: 'GET',
@@ -127,7 +133,7 @@ export const companyApi = createApi({
 
     addServiceCategory: builder.mutation<
       Category,
-      { id: string; data: { name: string } }
+      { id: string; data: { name: string; type: ServiceTypeEnum } }
     >({
       query: ({ id, data }) => ({
         url: `/company/${id}/services-categories`,

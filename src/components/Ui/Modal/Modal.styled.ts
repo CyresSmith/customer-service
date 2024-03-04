@@ -25,6 +25,7 @@ export const ModalContainer = styled.div<Style>`
   position: relative;
   width: ${props => (props.$w ? props.$w : 'auto')};
   height: ${props => (props.$h ? props.$h : 'auto')};
+  min-width: 360px;
   padding: ${theme.space[5]};
   background-color: ${theme.colors.bg.main};
   border-radius: ${theme.radii.s};

@@ -3,8 +3,9 @@ import { IButton } from '../Buttons/Button/Button.types';
 export interface ISelect
   extends Pick<IButton, 'id' | 'disabled' | 'size' | '$colors' | '$variant'> {
   items: string[];
-  selectedItem: string;
-  onSelect: (item: string, id: string) => void;
+  selectedItem: string | string[];
+  several?: boolean;
+  onSelect: (item: string | string[], id?: string) => void;
 }
 
 export interface ISelectStyle

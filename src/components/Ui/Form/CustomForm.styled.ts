@@ -11,7 +11,7 @@ const baseInputStyles = `
   font-size: ${theme.fontSizes.l};
   width: 100%;
   resize: none;
-`
+`;
 
 export const Form = styled.form`
   display: flex;
@@ -24,7 +24,7 @@ export const Form = styled.form`
 export const FormTitle = styled.p`
   text-align: center;
   font-size: ${theme.fontSizes.heading.xs};
-`
+`;
 
 export const FormInputsList = styled.ul`
   display: flex;
@@ -33,12 +33,12 @@ export const FormInputsList = styled.ul`
   justify-content: center;
 `;
 
-export const FormInputsListItem = styled.div<{$type?: string}>`
+export const FormInputsListItem = styled.div<{ $type?: string }>`
   position: relative;
   display: flex;
   flex-direction: column;
   gap: ${theme.space[1]};
-  grid-column: ${props => props.$type === 'textarea' ? 'span 3' : 'auto'};
+  grid-column: ${props => (props.$type === 'textarea' ? 'span 3' : 'auto')};
 `;
 
 export const FormInputLabel = styled.label`
@@ -120,20 +120,21 @@ export const DoneIcon = styled.svg<{ $complete?: boolean }>`
     props.$complete ? theme.colors.success.light : theme.colors.danger.light};
 `;
 
-export const Select = styled.div<{$open: boolean, $width: string}>`
+export const Select = styled.div<{ $open: boolean; $width: string }>`
   ${baseInputStyles};
   position: relative;
   outline: none;
   width: ${props => props.$width};
   cursor: pointer;
 
-  ${p => p.$open && `
+  ${p =>
+    p.$open &&
+    `
     border-color: ${theme.colors.accent.main};
     box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
     -webkit-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
     -moz-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
-    `
-  }
+    `}
 
   &:focus {
     border-color: ${theme.colors.accent.main};
@@ -141,13 +142,13 @@ export const Select = styled.div<{$open: boolean, $width: string}>`
     -webkit-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
     -moz-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
   }
-`
+`;
 
 export const Selected = styled.p`
   &::first-letter {
     text-transform: uppercase;
   }
-`
+`;
 
 export const SelectList = styled.ul<{ $open: boolean }>`
   position: absolute;
@@ -159,21 +160,22 @@ export const SelectList = styled.ul<{ $open: boolean }>`
   align-items: center;
   gap: ${theme.space[0]};
   box-shadow: ${theme.shadow.m};
-  background-color: ${theme.colors.bg.main};
-  border-radius: ${theme.radii.m};
+  background-color: ${theme.colors.secondary.light};
+  border-radius: ${theme.radii.s};
   width: 100%;
-  max-height: ${props => props.$open ? '500px' : '0'};
+  max-height: ${props => (props.$open ? '500px' : '0')};
   transition: ${theme.transition.primary};
   overflow: hidden;
-`
+`;
 
-export const SelectListItem = styled.li<{$selected: boolean}>`
+export const SelectListItem = styled.li<{ $selected: boolean }>`
   width: 100%;
   text-align: center;
   padding: ${theme.space[3]};
-  color: ${theme.colors.secondary.light};
+  color: ${theme.colors.bg.dark};
   transition: ${theme.transition.primary};
-  background-color: ${props => props.$selected ? `${ theme.colors.bg.dark }` : 'none'};
+  background-color: ${props =>
+    props.$selected ? `${theme.colors.secondary.main};` : 'none'};
   outline: none;
 
   &::first-letter {
@@ -181,15 +183,15 @@ export const SelectListItem = styled.li<{$selected: boolean}>`
   }
 
   &:hover {
-    background-color: ${theme.colors.bg.dark};
+    background-color: ${theme.colors.secondary.main};
   }
 
   &:focus-visible {
-    background-color: ${theme.colors.bg.dark};
+    background-color: ${theme.colors.secondary.main};
   }
-`
+`;
 
-export const SelectIcon = styled.svg<{$open: boolean}>`
+export const SelectIcon = styled.svg<{ $open: boolean }>`
   width: 20px;
   height: 20px;
   position: absolute;
@@ -198,8 +200,10 @@ export const SelectIcon = styled.svg<{$open: boolean}>`
   fill: ${theme.colors.secondary.dark};
   transition: inherit;
 
-  ${props => props.$open && `
+  ${props =>
+    props.$open &&
+    `
     fill: ${theme.colors.accent.main};
     transform: rotate(180deg);
   `};
-`
+`;

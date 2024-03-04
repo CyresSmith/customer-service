@@ -48,7 +48,7 @@ export const Day = styled.div<ICalendarDay>`
   height: 73px;
   cursor: ${({ $isDisabled }) => ($isDisabled ? 'default' : 'pointer')};
   transition: ${theme.transition.primary};
-  opacity: ${({ $isDisabled }) => ($isDisabled ? 0.4 : 1)};
+  opacity: ${({ $isDisabled }) => ($isDisabled ? 0.6 : 1)};
 
   &:hover {
     background-color: ${({ $today, $selected }) =>
@@ -60,7 +60,7 @@ export const Day = styled.div<ICalendarDay>`
   }
 
   &.other {
-    opacity: 0.4;
+    opacity: 0.6;
   }
 `;
 

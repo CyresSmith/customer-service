@@ -1,6 +1,5 @@
 import { getErrorMessage } from 'helpers/inputsValidation';
 import { useForm } from '../../../hooks';
-import Checkbox from './Checkbox';
 import {
   Form,
   FormInputsList,
@@ -9,11 +8,9 @@ import {
 } from './CustomForm.styled';
 import CustomFormButtons from './CustomFormButtons';
 import CustomFormInput from './CustomFormInput';
-import { FormProps } from './types';
+import { FormProps, InputValueType } from './types';
 
-const CustomForm = <
-  T extends { [k: string]: string | number | boolean | undefined }
->({
+const CustomForm = <T extends { [k: string]: InputValueType }>({
   buttonWidth,
   isLoading,
   inputs,
@@ -27,8 +24,14 @@ const CustomForm = <
   title,
   selectItems,
 }: FormProps<T>) => {
-  const { handleChange, handleSubmit, state, invalidFields, reset } =
-    useForm<T>(initialState, onSubmit);
+  const {
+    handleChange,
+    handleSelect,
+    handleSubmit,
+    state,
+    invalidFields,
+    reset,
+  } = useForm<T>(initialState, onSubmit);
 
   const disabledReset: boolean =
     isLoading ||
@@ -57,26 +60,20 @@ const CustomForm = <
         {inputs.map(
           ({ name, type, isRequired = false, isReadonly = false }, i) => (
             <FormInputsListItem key={i}>
-              {typeof state[name] === 'boolean' ? (
-                <Checkbox
-                  name={name}
-                  isRequired={isRequired}
-                  isChecked={Boolean(state[name as keyof T])}
-                  handleCheck={handleChange}
-                />
-              ) : (
+              {
                 <CustomFormInput
                   selectItems={selectItems}
                   type={type}
                   name={name}
-                  value={state[name as keyof T]}
+                  value={state[name] as InputValueType}
                   handleChange={handleChange}
+                  handleSelect={handleSelect}
                   isValid={getErrorMessage(name, invalidFields)}
                   disabledIcon={disabledReset}
                   isRequired={isRequired}
                   isReadonly={isReadonly}
                 />
-              )}
+              }
             </FormInputsListItem>
           )
         )}

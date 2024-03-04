@@ -1,5 +1,5 @@
 import { translateLabels } from 'helpers/translateLabels';
-import { ChangeEvent, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   DoneIcon,
   FormInput,
@@ -15,24 +15,9 @@ import {
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { IoMdClose } from 'react-icons/io';
 import { MdOutlineDone } from 'react-icons/md';
+import Checkbox from './Checkbox';
 import CustomFormSelect from './CustomFormSelect';
-import { SelectItem } from './types';
-
-type Props = {
-  name: string;
-  value: string | number | undefined;
-  type: string;
-  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleSelect?: (item: SelectItem) => void;
-  isValid?: string;
-  disabledIcon?: boolean;
-  isRequired?: boolean;
-  isReadonly?: boolean;
-  label?: boolean;
-  placeholder?: string;
-  selectItems?: SelectItem[];
-  selected?: SelectItem;
-};
+import { InputProps, SelectItem } from './types';
 
 const CustomFormInput = ({
   name,
@@ -47,8 +32,7 @@ const CustomFormInput = ({
   label = true,
   placeholder = '',
   selectItems,
-  selected
-}: Props) => {
+}: InputProps) => {
   const [hidden, setHidden] = useState(true);
   const valueRef = useRef(value).current;
 
@@ -61,12 +45,24 @@ const CustomFormInput = ({
         </FormInputLabel>
       )}
       <FormInputBox>
-        {type === 'select' && selectItems && handleSelect && selected ? (
+        {type === 'checkbox' && typeof value === 'boolean' ? (
+          <Checkbox
+            name={name}
+            isRequired={isRequired}
+            isChecked={value}
+            handleCheck={handleChange}
+          />
+        ) : type === 'select' && selectItems ? (
           <CustomFormSelect
-            width='100%'
+            width="100%"
             handleSelect={handleSelect}
             selectItems={selectItems}
-            selectedItem={selected}
+            fieldName={name}
+            selectedItem={
+              Array.isArray(value)
+                ? (value as SelectItem[])
+                : (value as SelectItem)
+            }
           />
         ) : (
           <FormInput

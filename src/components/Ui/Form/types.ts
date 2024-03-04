@@ -1,12 +1,27 @@
+import { ChangeEvent } from 'react';
 import { IconType } from 'react-icons';
+
+export type InputValueType =
+  | string
+  | number
+  | boolean
+  | SelectItem
+  | SelectItem[];
 
 export type InputProps = {
   name: string;
+  value: InputValueType;
   type: string;
-  id?: string | number;
+  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleSelect: (selected: SelectItem, fieldName?: string) => void;
+  isValid?: string;
+  disabledIcon?: boolean;
   isRequired?: boolean;
   isReadonly?: boolean;
+  label?: boolean;
   placeholder?: string;
+  selectItems?: SelectItem[];
+  selected?: SelectItem;
 };
 
 export type FormProps<T> = {
@@ -21,7 +36,7 @@ export type FormProps<T> = {
   initialState: T;
   isLoading?: boolean;
   buttonsDirection?: string;
-  selectItems?: string[];
+  selectItems?: SelectItem[];
 };
 
 export type ButtonsProps = {
@@ -38,14 +53,15 @@ export type ButtonsProps = {
 };
 
 export type SelectItem = {
-  id?: string | number,
-  value: string
-}
+  id?: string | number;
+  value: string;
+};
 
 export type SelectProps = {
   width: string;
   selectItems: SelectItem[];
   selectedItem: SelectItem | SelectItem[];
-  handleSelect: (item: SelectItem) => void;
+  handleSelect: (item: SelectItem, fieldName?: string) => void;
   closeOnSelect?: boolean;
-}
+  fieldName?: string;
+};
