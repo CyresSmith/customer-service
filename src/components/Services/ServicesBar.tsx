@@ -32,14 +32,10 @@ const ServicesBar = (props: Props) => {
       )}
 
       {openModal && (
-        <Modal
-          id="addService"
-          title="Створення послуги"
-          $isOpen={openModal !== null}
-          closeModal={handleModalClose}
-        >
-          <AddServiceModal setOpenModal={setOpenModal} />
-        </Modal>
+        <AddServiceModal
+          openModal={openModal}
+          handleModalClose={handleModalClose}
+        />
       )}
     </>
   );

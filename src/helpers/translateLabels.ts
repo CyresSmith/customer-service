@@ -58,10 +58,12 @@ export const translateLabels = (name: string): string | undefined => {
       return 'Обмежена місткість';
     case 'places':
       return 'Кількість місць для одного клієнта';
-    case 'placesLimit':
+    case 'placeLimit':
       return 'Обмеження місць';
     case 'breakDuration':
       return 'Тривалість перерви';
+    case 'duration':
+      return 'Тривалість';
 
     default:
       break;

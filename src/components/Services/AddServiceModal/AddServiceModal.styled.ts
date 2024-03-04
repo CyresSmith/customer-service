@@ -29,3 +29,8 @@ export const StepButtonsBox = styled.div<{ $IsOneButton: boolean }>`
   width: 100%;
   margin-top: ${theme.space[5]};
 `;
+
+export const ButtonBox = styled.div`
+  display: flex;
+  justify-content: end;
+`;
