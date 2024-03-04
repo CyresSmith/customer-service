@@ -9,18 +9,18 @@ import {
   Selected,
 } from './CustomForm.styled';
 import { SelectItem, SelectProps } from './types';
+import { translateSelect } from 'helpers/translateSelect';
 
 const CustomFormSelect = ({
   selectItems,
   selectedItem,
-  closeOnSelect,
   width = '100%',
   handleSelect,
   fieldName,
 }: SelectProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const toggleOpen = () => setIsOpen(p => !p);
+    const toggleOpen = () => setIsOpen(p => !p);
 
   const handleClose = () => setIsOpen(false);
 
@@ -45,19 +45,18 @@ const CustomFormSelect = ({
   };
 
   useEscapeKey(handleClose);
-  const selectRef = useClickOutside(handleClose);
+    const selectRef = useClickOutside(handleClose);
 
-  const isSelected = (item: SelectItem) => {
+    const isSelected = (item: SelectItem) => {
     if (Array.isArray(selectedItem)) {
       return (
         selectedItem.findIndex(
-          selected => item?.id === selected?.id || item.value === selected.value
+          selected => item?.id ? item?.id === selected?.id : item.value === selected.value
         ) !== -1
       );
     } else {
       return (
-        item?.id === selectedItem?.id || item?.value === selectedItem?.value
-      );
+        item?.id ? item?.id === selectedItem?.id : item?.value === selectedItem?.value);
     }
   };
 
@@ -71,15 +70,15 @@ const CustomFormSelect = ({
       $open={isOpen}
     >
       <Selected>
-        {!selectedItem
+        {!Array.isArray(selectedItem) && !selectedItem?.value || !selectedItem
           ? 'Не обрано'
           : Array.isArray(selectedItem)
           ? selectedItem.length === 0
             ? 'Не обрано'
             : selectedItem.length > 1
             ? `${selectedItem[0].value} + ${selectedItem.length - 1}`
-            : selectedItem[0].value
-          : selectedItem.value}
+            : translateSelect(selectedItem[0].value)
+          : translateSelect(selectedItem.value)}
       </Selected>
 
       <SelectList $open={isOpen}>
@@ -93,7 +92,7 @@ const CustomFormSelect = ({
               key={i}
               $selected={isSelected(item)}
             >
-              {item.value}
+              {translateSelect(item.value)}
             </SelectListItem>
           ))}
       </SelectList>

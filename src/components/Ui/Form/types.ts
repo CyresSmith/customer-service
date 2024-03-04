@@ -31,7 +31,7 @@ export type FormProps<T> = {
   buttonLabel: string;
   resetButtonLabel?: string;
   buttonWidth?: string;
-  inputs: InputProps[];
+  inputs: Partial <InputProps>[];
   onSubmit: (state: T) => void;
   initialState: T;
   isLoading?: boolean;

@@ -20,6 +20,7 @@ export function useForm<
   }
 >(initialState: Type, onSubmit: (state: Type) => void): ReturnType<Type> {
   const [state, setState] = useState<Type>(initialState);
+
   const [invalidFields, setInvalidFields] = useState<ValidationReturn>([]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -37,10 +38,10 @@ export function useForm<
   };
 
   const handleSelect = (selected: SelectItem, fieldName?: string): void => {
-    fieldName &&
-      setState(p => {
-        let newState = { ...p };
+    setState(p => {
+      let newState = { ...p };
 
+      if (fieldName) {
         const currentState = Array.isArray(newState[fieldName])
           ? (newState[fieldName] as SelectItem[])
           : (newState[fieldName] as SelectItem);
@@ -71,9 +72,10 @@ export function useForm<
               : selected,
           };
         }
+      }
 
-        return newState;
-      });
+      return newState;
+    });
   };
 
   const handleSubmit = (event: FormEvent): void => {
