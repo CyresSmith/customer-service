@@ -38,21 +38,21 @@ const CustomFormInput = ({
 
   return (
     <FormInputsListItem $type={type}>
-      {label && (
+      {type !== 'checkbox' && label && (
         <FormInputLabel>
           {translateLabels(name)}
           {isRequired && <Required>{' (!)'}</Required>}
         </FormInputLabel>
       )}
       <FormInputBox>
-        {type === 'checkbox' && typeof value === 'boolean' ? (
+        {type === 'checkbox' && typeof value === 'boolean' && handleChange ? (
           <Checkbox
             name={name}
             isRequired={isRequired}
             isChecked={value}
             handleCheck={handleChange}
           />
-        ) : type === 'select' && selectItems ? (
+        ) : type === 'select' && selectItems && handleSelect ? (
           <CustomFormSelect
             width="100%"
             handleSelect={handleSelect}

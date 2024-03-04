@@ -3,6 +3,7 @@ import { Form, FormInputsList } from 'components/Ui/Form/CustomForm.styled';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import areAllFieldsFilled from 'helpers/areAllFieldsFilled';
 import handleError from 'helpers/errorHandler';
+import { getErrorMessage } from 'helpers/inputsValidation';
 import { useActions } from 'hooks';
 import { useForm } from 'hooks/useForm';
 import { useEffect } from 'react';
@@ -71,13 +72,6 @@ const FourthStep = ({
   const { handleChange, handleSubmit, state, invalidFields, reset } =
     useForm<InitialState>(initialState, onSubmit);
 
-  const errorMessage = (name: string): string | undefined => {
-    const error = invalidFields.find(f => Object.keys(f)[0] === name);
-    if (error) {
-      return Object.values(error)[0];
-    }
-  };
-
   useEffect(() => {
     setCompanyData(p => ({ ...p, ...state }));
   }, [setCompanyData, state]);
@@ -107,7 +101,7 @@ const FourthStep = ({
               name={name}
               value={state[name as keyof InitialState]}
               handleChange={handleChange}
-              isValid={errorMessage(name)}
+              isValid={getErrorMessage(name, invalidFields)}
               disabledIcon
             />
           ))}

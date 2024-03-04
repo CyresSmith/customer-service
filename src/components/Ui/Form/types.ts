@@ -12,8 +12,8 @@ export type InputProps = {
   name: string;
   value: InputValueType;
   type: string;
-  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleSelect: (selected: SelectItem, fieldName?: string) => void;
+  handleChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleSelect?: (selected: SelectItem, fieldName?: string) => void;
   isValid?: string;
   disabledIcon?: boolean;
   isRequired?: boolean;

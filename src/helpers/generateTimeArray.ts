@@ -16,8 +16,12 @@ const generateTimeArray = (quarters: boolean = false) => {
   return times;
 };
 
-export const getSchedule = (timeArray: string[], from: string, to: string): string[] => {
-        return timeArray.slice(timeArray.indexOf(from), timeArray.indexOf(to) + 1);
-    };
+export const getSchedule = (
+  timeArray: string[],
+  from: string,
+  to: string
+): string[] => {
+  return timeArray.slice(timeArray.indexOf(from), timeArray.indexOf(to) + 1);
+};
 
 export default generateTimeArray;

@@ -45,11 +45,23 @@ export const translateLabels = (name: string): string | undefined => {
     case 'info':
       return 'Додаткова інформація';
     case 'break':
-      return 'Перерва';
+      return 'Перерва після запису';
     case 'desc':
       return 'Опис';
     case 'category':
       return 'Категорія';
+    case 'employees':
+      return 'Співробітники';
+    case 'capacity':
+      return 'Місткість';
+    case 'capacityLimit':
+      return 'Обмежена місткість';
+    case 'places':
+      return 'Кількість місць для одного клієнта';
+    case 'placesLimit':
+      return 'Обмеження місць';
+    case 'breakDuration':
+      return 'Тривалість перерви';
 
     default:
       break;

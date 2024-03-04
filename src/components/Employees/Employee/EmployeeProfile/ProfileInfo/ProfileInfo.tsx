@@ -1,5 +1,4 @@
 import Button from 'components/Ui/Buttons/Button';
-import Checkbox from 'components/Ui/Form/Checkbox';
 import { Form } from 'components/Ui/Form/CustomForm.styled';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { InputProps } from 'components/Ui/Form/types';
@@ -22,7 +21,7 @@ import {
 
 type Props = { employee: IEmployee };
 
-const inputs: InputProps[] = [
+const inputs: Partial<InputProps>[] = [
   { name: 'firstName', type: 'text' },
   { name: 'lastName', type: 'text' },
   { name: 'phone', type: 'text' },
@@ -105,29 +104,15 @@ const ProfileInfo = ({ employee }: Props) => {
     <ProfileInfoBox>
       <Form onSubmit={handleSubmit}>
         <FormInputsList>
-          {inputs.map(({ name, type, isRequired = false }, i) =>
-            type === 'checkbox' ? (
-              <Checkbox
-                key={i}
-                isReadonly={!isAdmin}
-                name={name}
-                isRequired={isRequired}
-                isChecked={Boolean(state[name as keyof typeof initialState])}
-                handleCheck={handleChange}
-              />
-            ) : (
-              <CustomFormInput
-                isReadonly={name === 'jobTitle' ? !isAdmin : !isEditingAllowed}
-                key={i}
-                type={type}
-                name={name}
-                value={String(state[name as keyof typeof initialState])}
-                handleChange={handleChange}
-                isValid={getErrorMessage(name, invalidFields)}
-                isRequired={isRequired}
-              />
-            )
-          )}
+          {(inputs as InputProps[]).map((item, i) => (
+            <CustomFormInput
+              key={i}
+              {...item}
+              value={state[item.name as keyof typeof initialState]}
+              handleChange={handleChange}
+              isValid={getErrorMessage(item.name, invalidFields)}
+            />
+          ))}
         </FormInputsList>
 
         {isEditingAllowed && (
