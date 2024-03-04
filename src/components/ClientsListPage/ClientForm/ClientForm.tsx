@@ -1,6 +1,6 @@
 import Button from 'components/Ui/Buttons/Button';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
-import { InputProps, SelectItem } from 'components/Ui/Form/types';
+import { InputProps, InputValueType, SelectItem } from 'components/Ui/Form/types';
 import { useForm } from 'hooks/useForm';
 import {
   ButtonsBox,
@@ -15,7 +15,7 @@ import {
 import { Client } from 'store/clients/clients.types';
 import { IoMdSave } from 'react-icons/io';
 
-const inputs: InputProps[] = [
+const inputs: Partial <InputProps>[] = [
   { name: 'firstName', type: 'text', isRequired: true },
   { name: 'lastName', type: 'text' },
   { name: 'birthday', type: 'date' },
@@ -28,7 +28,7 @@ const inputs: InputProps[] = [
   { name: 'comment', type: 'textarea', placeholder: 'Побажання клієнта, додаткова інформація, примітки адміністратора..' },
 ];
 
-const genderOptions: {value: string}[] = [{value: 'male'}, {value: 'female'}, {value: 'other'}];
+const genderOptions: SelectItem[] = [{value: 'male'}, {value: 'female'}, {value: 'other'}];
 
 type Props = {
   initialState: Client;
@@ -38,7 +38,7 @@ type Props = {
 };
 
 const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
-  const { state, setState, handleChange, handleSubmit, invalidFields } = useForm<Client>(
+  const { state, handleChange, handleSubmit, invalidFields, setState } = useForm<Client>(
     initialState,
     onSubmit,
   );
@@ -71,14 +71,13 @@ const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
           {inputs.map(({ name, type, isRequired, placeholder }, i) => (
             <CustomFormInput
               key={i}
-              name={name}
-              type={type}
+              name={name!}
+              type={type!}
               isRequired={isRequired}
-              value={state[name as keyof Client]}
+              value={type === 'select' ? {value: state[name as keyof InputValueType]} : state[name as keyof InputValueType]}
               handleChange={handleChange}
               disabledIcon={true}
               selectItems={genderOptions}
-              selected={{value: state[name as keyof Client] as string}}
               handleSelect={handleSelect}
               placeholder={placeholder}
             />
@@ -86,7 +85,6 @@ const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
         </FormInputsList>
       </FormSidesWrapper>
       <ButtonsBox>
-        {/* <Button children='Видалити' type="button" $colors="light" /> */}
         <SubmitBtnWrapper>
           <Button
             disabled={disabledSubmit}

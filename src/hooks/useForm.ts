@@ -6,7 +6,7 @@ type ReturnType<Type> = {
   state: Type;
   setState: React.Dispatch<React.SetStateAction<Type>>;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleSelect: (selected: SelectItem, fieldName: string) => void;
+  handleSelect: (selected: SelectItem, fieldName?: string) => void;
   handleSubmit: (event: FormEvent) => void;
   invalidFields: ValidationReturn;
   reset: () => void;
@@ -20,6 +20,7 @@ export function useForm<
   }
 >(initialState: Type, onSubmit: (state: Type) => void): ReturnType<Type> {
   const [state, setState] = useState<Type>(initialState);
+
   const [invalidFields, setInvalidFields] = useState<ValidationReturn>([]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -36,11 +37,12 @@ export function useForm<
     });
   };
 
-  const handleSelect = (selected: SelectItem, fieldName: string): void => {
+  const handleSelect = (selected: SelectItem, fieldName?: string): void => {
     setState(p => {
       let newState = { ...p };
 
-      const currentState = Array.isArray(newState[fieldName])
+      if (fieldName) {
+        const currentState = Array.isArray(newState[fieldName])
         ? (newState[fieldName] as SelectItem[])
         : (newState[fieldName] as SelectItem);
 
@@ -58,16 +60,17 @@ export function useForm<
               : [...currentState, selected],
         };
       } else {
-        newState = {
-          ...newState,
-          [fieldName]: currentState?.id
-            ? currentState?.id === selected?.id
+          newState = {
+            ...newState,
+            [fieldName]: currentState?.id
+              ? currentState?.id === selected?.id
+                ? null
+                : selected
+              : currentState?.value === selected.value
               ? null
-              : selected
-            : currentState?.value === selected.value
-            ? null
-            : selected,
-        };
+              : selected,
+          };
+        }
       }
 
       return newState;

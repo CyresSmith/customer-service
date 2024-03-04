@@ -5,12 +5,13 @@ import { toast } from 'react-toastify';
 import { useRegisterMutation } from 'services/auth.api';
 import { FormBox } from '../TopBar.styled';
 import { UserRegister } from 'store/user/user.types';
+import { InputProps } from 'components/Ui/Form/types';
 
 type Props = {
   closeModal: () => void;
 };
 
-const registerInputs = [
+const registerInputs: Partial <InputProps>[] = [
   { name: 'firstName', type: 'text' },
   { name: 'lastName', type: 'text' },
   { name: 'phone', type: 'text' },
