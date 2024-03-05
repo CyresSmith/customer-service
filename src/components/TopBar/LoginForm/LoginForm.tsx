@@ -7,12 +7,13 @@ import { toast } from 'react-toastify';
 import { useLogInMutation } from 'services/auth.api';
 import { FormBox } from '../TopBar.styled';
 import { UserLogin } from 'store/user/user.types';
+import { InputProps } from 'components/Ui/Form/types';
 
 type Props = {
   closeModal: () => void;
 };
 
-const loginInputs = [
+const loginInputs:  Partial <InputProps>[] = [
   { name: 'email', type: 'email' },
   { name: 'password', type: 'password' },
 ];

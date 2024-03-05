@@ -63,12 +63,12 @@ const CustomForm = <T extends { [k: string]: InputValueType }>({
               {
                 <CustomFormInput
                   selectItems={selectItems}
-                  type={type}
-                  name={name}
-                  value={state[name] as InputValueType}
+                  type={type!}
+                  name={name!}
+                  value={state[name!] as InputValueType}
                   handleChange={handleChange}
                   handleSelect={handleSelect}
-                  isValid={getErrorMessage(name, invalidFields)}
+                  isValid={getErrorMessage(name!, invalidFields)}
                   disabledIcon={disabledReset}
                   isRequired={isRequired}
                   isReadonly={isReadonly}

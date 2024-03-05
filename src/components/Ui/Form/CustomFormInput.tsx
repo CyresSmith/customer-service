@@ -32,27 +32,30 @@ const CustomFormInput = ({
   label = true,
   placeholder = '',
   selectItems,
+  min,
+  max,
+  step,
 }: InputProps) => {
   const [hidden, setHidden] = useState(true);
   const valueRef = useRef(value).current;
 
   return (
     <FormInputsListItem $type={type}>
-      {label && (
+      {type !== 'checkbox' && label && (
         <FormInputLabel>
           {translateLabels(name)}
           {isRequired && <Required>{' (!)'}</Required>}
         </FormInputLabel>
       )}
       <FormInputBox>
-        {type === 'checkbox' && typeof value === 'boolean' ? (
+        {type === 'checkbox' && typeof value === 'boolean' && handleChange ? (
           <Checkbox
             name={name}
             isRequired={isRequired}
             isChecked={value}
             handleCheck={handleChange}
           />
-        ) : type === 'select' && selectItems ? (
+        ) : type === 'select' && selectItems && handleSelect ? (
           <CustomFormSelect
             width="100%"
             handleSelect={handleSelect}
@@ -66,9 +69,14 @@ const CustomFormInput = ({
           />
         ) : (
           <FormInput
+            step={step}
+            min={min}
+            max={max}
             type={type !== 'password' ? type : hidden ? type : 'text'}
             name={name}
-            value={value as string}
+            value={
+              typeof value === 'string' ? (value as string) : (value as number)
+            }
             as={type === 'textarea' ? 'textarea' : 'input'}
             onChange={handleChange}
             readOnly={isReadonly}

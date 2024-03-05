@@ -6,7 +6,7 @@ type ReturnType<Type> = {
   state: Type;
   setState: React.Dispatch<React.SetStateAction<Type>>;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleSelect: (selected: SelectItem, fieldName: string) => void;
+  handleSelect: (selected: SelectItem, fieldName?: string) => void;
   handleSubmit: (event: FormEvent) => void;
   invalidFields: ValidationReturn;
   reset: () => void;
@@ -20,6 +20,7 @@ export function useForm<
   }
 >(initialState: Type, onSubmit: (state: Type) => void): ReturnType<Type> {
   const [state, setState] = useState<Type>(initialState);
+
   const [invalidFields, setInvalidFields] = useState<ValidationReturn>([]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -28,46 +29,70 @@ export function useForm<
     inputsValidation<Type>(name, value, state, invalidFields, setInvalidFields);
 
     setState(prevState => {
-      return type === 'checkbox'
-        ? { ...prevState, [name]: !prevState[name] }
-        : name === 'discount'
-        ? { ...prevState, [name]: +value }
-        : { ...prevState, [name]: value };
+      let newState = { ...prevState };
+
+      if (type === 'checkbox') {
+        newState = { ...newState, [name]: !prevState[name] };
+      } else if (name === 'discount') {
+        newState = { ...newState, [name]: +value };
+      } else if (name === 'durationHours') {
+        newState = {
+          ...newState,
+          [name]: +value >= 23 ? 23 : +value <= 0 ? 0 : +value,
+        };
+      } else if (name === 'durationMinutes') {
+        newState = {
+          ...newState,
+          [name]: +value >= 55 ? 55 : +value <= 0 ? 0 : +value,
+        };
+      } else if (name === 'breakDuration') {
+        newState = {
+          ...newState,
+          [name]: +value >= 60 ? 60 : +value <= 0 ? 0 : +value,
+        };
+      } else {
+        newState = { ...newState, [name]: value };
+      }
+
+      return newState;
     });
   };
 
-  const handleSelect = (selected: SelectItem, fieldName: string): void => {
+  const handleSelect = (selected: SelectItem, fieldName?: string): void => {
     setState(p => {
       let newState = { ...p };
 
-      const currentState = Array.isArray(newState[fieldName])
-        ? (newState[fieldName] as SelectItem[])
-        : (newState[fieldName] as SelectItem);
+      if (fieldName) {
+        const currentState = Array.isArray(newState[fieldName])
+          ? (newState[fieldName] as SelectItem[])
+          : (newState[fieldName] as SelectItem);
 
-      if (Array.isArray(currentState)) {
-        newState = {
-          ...newState,
-          [fieldName]:
-            currentState.findIndex(
-              item => item?.id === selected?.id || item.value === selected.value
-            ) !== -1
-              ? currentState.filter(
-                  ({ id, value }) =>
-                    id !== selected.id || value !== selected.value
-                )
-              : [...currentState, selected],
-        };
-      } else {
-        newState = {
-          ...newState,
-          [fieldName]: currentState?.id
-            ? currentState?.id === selected?.id
+        if (Array.isArray(currentState)) {
+          newState = {
+            ...newState,
+            [fieldName]:
+              currentState.findIndex(
+                item =>
+                  item?.id === selected?.id || item.value === selected.value
+              ) !== -1
+                ? currentState.filter(
+                    ({ id, value }) =>
+                      id !== selected.id || value !== selected.value
+                  )
+                : [...currentState, selected],
+          };
+        } else {
+          newState = {
+            ...newState,
+            [fieldName]: currentState?.id
+              ? currentState?.id === selected?.id
+                ? null
+                : selected
+              : currentState?.value === selected.value
               ? null
-              : selected
-            : currentState?.value === selected.value
-            ? null
-            : selected,
-        };
+              : selected,
+          };
+        }
       }
 
       return newState;

@@ -120,9 +120,13 @@ export const DoneIcon = styled.svg<{ $complete?: boolean }>`
     props.$complete ? theme.colors.success.light : theme.colors.danger.light};
 `;
 
+export const SelectBox = styled.div`
+  position: relative;
+`;
+
 export const Select = styled.div<{ $open: boolean; $width: string }>`
   ${baseInputStyles};
-  position: relative;
+
   outline: none;
   width: ${props => props.$width};
   cursor: pointer;
@@ -150,6 +154,8 @@ export const Selected = styled.p`
   }
 `;
 
+const LIST_ITEM_HIGHT = '37px';
+
 export const SelectList = styled.ul<{ $open: boolean }>`
   position: absolute;
   top: calc(100% + ${theme.space[2]});
@@ -163,7 +169,7 @@ export const SelectList = styled.ul<{ $open: boolean }>`
   background-color: ${theme.colors.secondary.light};
   border-radius: ${theme.radii.s};
   width: 100%;
-  max-height: ${props => (props.$open ? '500px' : '0')};
+  max-height: ${props => (props.$open ? `calc(${LIST_ITEM_HIGHT} * 5)` : '0')};
   transition: ${theme.transition.primary};
   overflow: hidden;
 `;
@@ -177,6 +183,8 @@ export const SelectListItem = styled.li<{ $selected: boolean }>`
   background-color: ${props =>
     props.$selected ? `${theme.colors.secondary.main};` : 'none'};
   outline: none;
+  cursor: pointer;
+  height: ${LIST_ITEM_HIGHT};
 
   &::first-letter {
     text-transform: uppercase;

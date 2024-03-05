@@ -12,8 +12,8 @@ export type InputProps = {
   name: string;
   value: InputValueType;
   type: string;
-  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleSelect: (selected: SelectItem, fieldName?: string) => void;
+  handleChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleSelect?: (selected: SelectItem, fieldName?: string) => void;
   isValid?: string;
   disabledIcon?: boolean;
   isRequired?: boolean;
@@ -22,6 +22,9 @@ export type InputProps = {
   placeholder?: string;
   selectItems?: SelectItem[];
   selected?: SelectItem;
+  min?: number;
+  max?: number;
+  step?: number;
 };
 
 export type FormProps<T> = {
@@ -31,7 +34,7 @@ export type FormProps<T> = {
   buttonLabel: string;
   resetButtonLabel?: string;
   buttonWidth?: string;
-  inputs: InputProps[];
+  inputs: Partial<InputProps>[];
   onSubmit: (state: T) => void;
   initialState: T;
   isLoading?: boolean;

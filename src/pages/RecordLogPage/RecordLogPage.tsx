@@ -3,7 +3,7 @@ import RecordLogBar from 'components/RecordLog/RecordLogBar';
 import { SelectItem } from 'components/Ui/Form/types';
 import PageContentLayout from 'components/Ui/PageContentLayout';
 import { useCompany } from 'hooks/useCompany';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const RecordLogPage = () => {
   const { employees, workingHours } = useCompany();
@@ -20,10 +20,8 @@ const RecordLogPage = () => {
     id: 'all',
     value: `Всі працівники: ${providersForSelect.length}`,
   };
-  const initialSelection = [selectAll];
 
-  const [selectedEmployees, setSelectedEmployees] =
-    useState<SelectItem[]>(providersForSelect);
+  const initialSelection = [selectAll];
 
   const [selectedItem, setSelectedItem] =
     useState<SelectItem[]>(initialSelection);
@@ -31,7 +29,6 @@ const RecordLogPage = () => {
   const handleSelect = (item: SelectItem) => {
     if (item.id === selectAll.id) {
       setSelectedItem(initialSelection);
-      setSelectedEmployees(providersForSelect);
     } else {
       setSelectedItem(p => {
         const newState = p.filter(({ id }) => id !== selectAll.id);
@@ -42,30 +39,13 @@ const RecordLogPage = () => {
           ? [...newState, item]
           : newState.filter(({ id }) => id !== item.id);
       });
-
-      setSelectedEmployees(p => {
-        if (
-          selectedItem.length === 1 &&
-          selectedItem.findIndex(({ id }) => id === selectAll.id) !== -1
-        ) {
-          return [item];
-        } else {
-          const itemIdx = p.findIndex(({ id }) => id === item.id);
-
-          return itemIdx === -1
-            ? [...p, item]
-            : p.filter(({ id }) => id !== item.id);
-        }
-      });
     }
   };
 
-  useEffect(() => {
-    if (selectedItem.length === 0) {
-      setSelectedItem(initialSelection);
-      setSelectedEmployees(providersForSelect);
-    }
-  }, [selectedItem.length]);
+  const filteredProvidersList =
+    selectedItem[0]?.id !== 'all'
+      ? providers.filter(p => selectedItem.find(s => s.id === p.id))
+      : providers;
 
   return (
     <PageContentLayout
@@ -82,7 +62,7 @@ const RecordLogPage = () => {
         <RecordLog
           date={date}
           workingHours={workingHours}
-          employees={providers}
+          employees={filteredProvidersList}
         />
       }
     />

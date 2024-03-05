@@ -55,21 +55,19 @@ const FindUserForm = ({ existUser, setExistUser, handleBackClick }: Props) => {
     MessageEnum.FIND
   );
 
-  const onSubmit = async (state: State) => {
-    if (state.email) {
-      const data = await findUserData({
-        id,
-        email: state.email,
-      }).unwrap();
+  const onSubmit = async (state: typeof initialState) => {
+    const data = await findUserData({
+      id,
+      email: state.email,
+    }).unwrap();
 
-      if (data) {
-        setExistUser(data);
-      }
+    if (data) {
+      setExistUser(data);
     }
   };
 
   const { state, setState, handleChange, handleSubmit, invalidFields, reset } =
-    useForm<typeof initialState>(initialState, onSubmit);
+    useForm(initialState, onSubmit);
 
   const handleClick = () => {
     reset();
@@ -94,51 +92,44 @@ const FindUserForm = ({ existUser, setExistUser, handleBackClick }: Props) => {
     <>
       <Form onSubmit={handleSubmit}>
         <FormInputsList>
-          {inputs.map(
-            ({ name, type, isRequired = false }, i) =>
-              type !== 'checkbox' && (
-                <InputWrapper key={i}>
-                  <CustomFormInput
-                    type={type}
-                    name={name}
-                    value={state[name as keyof typeof initialState]}
-                    handleChange={handleChange}
-                    isValid={getErrorMessage(name, invalidFields)}
-                    isRequired={isRequired}
-                  />
+          {inputs.map((item, i) => (
+            <InputWrapper key={i}>
+              <CustomFormInput
+                {...item}
+                value={state[item.name as keyof typeof initialState]}
+                handleChange={handleChange}
+                isValid={getErrorMessage(item.name, invalidFields)}
+              />
 
-                  {(existUser || message !== MessageEnum.FIND) && (
-                    <Button
-                      id="search"
-                      Icon={HiX}
-                      $variant="text"
-                      size="l"
-                      $round
-                      $colors="danger"
-                      onClick={handleClick}
-                    />
-                  )}
+              {(existUser || message !== MessageEnum.FIND) && (
+                <Button
+                  id="search"
+                  Icon={HiX}
+                  $variant="text"
+                  size="l"
+                  $round
+                  $colors="danger"
+                  onClick={handleClick}
+                />
+              )}
 
-                  {!existUser && message === MessageEnum.FIND && (
-                    <Button
-                      disabled={
-                        isLoading ||
-                        state.email === '' ||
-                        invalidFields.length > 0
-                      }
-                      isLoading={isLoading}
-                      id="search"
-                      Icon={HiSearch}
-                      type="submit"
-                      $variant="text"
-                      size="l"
-                      $round
-                      $colors="accent"
-                    />
-                  )}
-                </InputWrapper>
-              )
-          )}
+              {!existUser && message === MessageEnum.FIND && (
+                <Button
+                  disabled={
+                    isLoading || state.email === '' || invalidFields.length > 0
+                  }
+                  isLoading={isLoading}
+                  id="search"
+                  Icon={HiSearch}
+                  type="submit"
+                  $variant="text"
+                  size="l"
+                  $round
+                  $colors="accent"
+                />
+              )}
+            </InputWrapper>
+          ))}
         </FormInputsList>
       </Form>
 
