@@ -42,7 +42,10 @@ const RecordLogPage = () => {
     }
   };
 
-  const filteredProvidersList = selectedItem[0].id !== 'all' ? providers.filter(p => selectedItem.find(s => s.id === p.id)) : providers;
+  const filteredProvidersList =
+    selectedItem[0]?.id !== 'all'
+      ? providers.filter(p => selectedItem.find(s => s.id === p.id))
+      : providers;
 
   return (
     <PageContentLayout

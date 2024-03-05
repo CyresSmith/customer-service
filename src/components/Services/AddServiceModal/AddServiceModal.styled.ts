@@ -2,8 +2,7 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const AddServiceModalBox = styled.div`
-  display: grid;
-  grid-template-columns: 150px 400px;
+  display: flex;
   gap: ${theme.space[5]};
   align-items: start;
 `;
@@ -18,6 +17,7 @@ export const FormBox = styled.form`
   display: flex;
   flex-direction: column;
   gap: ${theme.space[4]};
+  width: 400px;
 `;
 
 export const SelectBox = styled.div``;
@@ -33,4 +33,21 @@ export const StepButtonsBox = styled.div<{ $IsOneButton: boolean }>`
 export const ButtonBox = styled.div`
   display: flex;
   justify-content: end;
+`;
+
+export const DurationBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.space[4]};
+`;
+
+export const TimeBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.space[2]};
+  width: 115px;
+
+  input {
+    width: 65px;
+  }
 `;

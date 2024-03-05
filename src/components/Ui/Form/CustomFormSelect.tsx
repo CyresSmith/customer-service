@@ -1,15 +1,16 @@
+import { translateSelect } from 'helpers/translateSelect';
 import { useClickOutside, useEscapeKey } from 'hooks';
 import { useState } from 'react';
 import { HiChevronDown } from 'react-icons/hi';
 import {
   Select,
+  SelectBox,
   SelectIcon,
   SelectList,
   SelectListItem,
   Selected,
 } from './CustomForm.styled';
 import { SelectItem, SelectProps } from './types';
-import { translateSelect } from 'helpers/translateSelect';
 
 const CustomFormSelect = ({
   selectItems,
@@ -18,17 +19,15 @@ const CustomFormSelect = ({
   handleSelect,
   fieldName,
 }: SelectProps) => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-    const toggleOpen = () => setIsOpen(p => !p);
-
+  const toggleOpen = () => setIsOpen(p => !p);
   const handleClose = () => setIsOpen(false);
 
   const onSelect = (item: SelectItem) => {
     handleSelect(item, fieldName);
-    // if (!Array.isArray(selectedItem) || closeOnSelect) {
-    //   handleClose();
-    // }
+
+    if (!Array.isArray(selectedItem)) handleClose();
   };
 
   const onEnterSelect = (
@@ -40,64 +39,67 @@ const CustomFormSelect = ({
     }
   };
 
-  const onEnterToggleOpen = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Enter') toggleOpen();
+  const onEnterToggleOpen = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter') toggleOpen(e);
   };
 
   useEscapeKey(handleClose);
-    const selectRef = useClickOutside(handleClose);
+  const selectRef = useClickOutside(handleClose);
 
-    const isSelected = (item: SelectItem) => {
+  const isSelected = (item: SelectItem) => {
     if (Array.isArray(selectedItem)) {
       return (
-        selectedItem.findIndex(
-          selected => item?.id ? item?.id === selected?.id : item.value === selected.value
+        selectedItem.findIndex(selected =>
+          item?.id ? item?.id === selected?.id : item.value === selected.value
         ) !== -1
       );
     } else {
-      return (
-        item?.id ? item?.id === selectedItem?.id : item?.value === selectedItem?.value);
+      return item?.id
+        ? item?.id === selectedItem?.id
+        : item?.value === selectedItem?.value;
     }
   };
 
   return (
-    <Select
-      $width={width}
-      onKeyDown={event => onEnterToggleOpen(event)}
-      tabIndex={0}
-      onClick={toggleOpen}
-      ref={selectRef}
-      $open={isOpen}
-    >
-      <Selected>
-        {!Array.isArray(selectedItem) && !selectedItem?.value || !selectedItem
-          ? 'Не обрано'
-          : Array.isArray(selectedItem)
-          ? selectedItem.length === 0
+    <SelectBox ref={selectRef}>
+      <Select
+        $width={width}
+        onKeyDown={event => onEnterToggleOpen(event)}
+        tabIndex={0}
+        $open={isOpen}
+        onClick={toggleOpen}
+      >
+        <Selected>
+          {(!Array.isArray(selectedItem) && !selectedItem?.value) ||
+          !selectedItem
             ? 'Не обрано'
-            : selectedItem.length > 1
-            ? `${selectedItem[0].value} + ${selectedItem.length - 1}`
-            : translateSelect(selectedItem[0].value)
-          : translateSelect(selectedItem.value)}
-      </Selected>
+            : Array.isArray(selectedItem)
+            ? selectedItem.length === 0
+              ? 'Не обрано'
+              : selectedItem.length > 1
+              ? `${selectedItem[0].value} + ${selectedItem.length - 1}`
+              : translateSelect(selectedItem[0].value)
+            : translateSelect(selectedItem.value)}
+        </Selected>
+
+        <SelectIcon as={HiChevronDown} $open={isOpen} />
+      </Select>
 
       <SelectList $open={isOpen}>
-        {isOpen &&
-          selectItems.map((item, i) => (
-            <SelectListItem
-              id={String(item?.id || i)}
-              tabIndex={0}
-              onKeyDown={event => onEnterSelect(event, item)}
-              onClick={() => onSelect(item)}
-              key={i}
-              $selected={isSelected(item)}
-            >
-              {translateSelect(item.value)}
-            </SelectListItem>
-          ))}
+        {selectItems.map((item, i) => (
+          <SelectListItem
+            id={String(item?.id || i)}
+            tabIndex={0}
+            onKeyDown={event => onEnterSelect(event, item)}
+            onClick={() => onSelect(item)}
+            key={i}
+            $selected={isSelected(item)}
+          >
+            {translateSelect(item.value)}
+          </SelectListItem>
+        ))}
       </SelectList>
-      <SelectIcon as={HiChevronDown} $open={isOpen} />
-    </Select>
+    </SelectBox>
   );
 };
 

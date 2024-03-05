@@ -1,9 +1,10 @@
 import Modal from 'components/Ui/Modal/Modal';
-import { AddServiceOpenModal } from 'helpers/enums';
+import { AddServiceOpenModal, ServiceTypeEnum } from 'helpers/enums';
 import { useState } from 'react';
 import { ServiceDataType } from 'services/types/service.type';
 import FirstStep from './FirstStep/FirstStep';
 import SecondStep from './SecondStep';
+import ThirdStep from './ThirdStep';
 
 type Props = {
   openModal: AddServiceOpenModal;
@@ -12,9 +13,9 @@ type Props = {
 
 const AddServiceModal = ({ openModal, handleModalClose }: Props) => {
   const [step, setStep] = useState(1);
-  console.log('🚀 ~ AddServiceModal ~ step:', step);
-  const [serviceData, setServiceData] = useState<Partial<ServiceDataType>>({});
-  console.log('🚀 ~ AddServiceModal ~ serviceData:', serviceData);
+  const [serviceData, setServiceData] = useState<Partial<ServiceDataType>>({
+    type: ServiceTypeEnum.INDIVIDUAL,
+  });
 
   const title = () => {
     switch (step) {
@@ -22,7 +23,7 @@ const AddServiceModal = ({ openModal, handleModalClose }: Props) => {
         return 'Основні налаштування';
 
       case 2:
-        return 'Робітники, час, вартість ';
+        return 'Вибір працівників';
 
       default:
         break;
@@ -37,11 +38,23 @@ const AddServiceModal = ({ openModal, handleModalClose }: Props) => {
       closeModal={handleModalClose}
     >
       {step === 1 && (
-        <FirstStep setStep={setStep} setServiceData={setServiceData} />
+        <FirstStep
+          setStep={setStep}
+          serviceData={serviceData}
+          setServiceData={setServiceData}
+        />
       )}
 
       {step === 2 && (
         <SecondStep
+          setStep={setStep}
+          serviceData={serviceData}
+          setServiceData={setServiceData}
+        />
+      )}
+
+      {step === 3 && (
+        <ThirdStep
           setStep={setStep}
           serviceData={serviceData}
           setServiceData={setServiceData}

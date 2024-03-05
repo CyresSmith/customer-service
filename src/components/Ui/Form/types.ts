@@ -22,6 +22,9 @@ export type InputProps = {
   placeholder?: string;
   selectItems?: SelectItem[];
   selected?: SelectItem;
+  min?: number;
+  max?: number;
+  step?: number;
 };
 
 export type FormProps<T> = {
@@ -31,7 +34,7 @@ export type FormProps<T> = {
   buttonLabel: string;
   resetButtonLabel?: string;
   buttonWidth?: string;
-  inputs: Partial <InputProps>[];
+  inputs: Partial<InputProps>[];
   onSubmit: (state: T) => void;
   initialState: T;
   isLoading?: boolean;

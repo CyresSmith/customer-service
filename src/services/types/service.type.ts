@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from 'react';
+
 export type EmployeeSettings = {
   employeeId: number;
   duration: number;
@@ -19,4 +21,10 @@ export type ServiceDataType = {
   places?: number;
   employeesSettings?: EmployeeSettings[];
   images?: string[];
+};
+
+export type AddServiceStepProps = {
+  setStep: Dispatch<SetStateAction<number>>;
+  serviceData: Partial<ServiceDataType> | null;
+  setServiceData: Dispatch<SetStateAction<Partial<ServiceDataType>>>;
 };

@@ -32,6 +32,9 @@ const CustomFormInput = ({
   label = true,
   placeholder = '',
   selectItems,
+  min,
+  max,
+  step,
 }: InputProps) => {
   const [hidden, setHidden] = useState(true);
   const valueRef = useRef(value).current;
@@ -66,9 +69,14 @@ const CustomFormInput = ({
           />
         ) : (
           <FormInput
+            step={step}
+            min={min}
+            max={max}
             type={type !== 'password' ? type : hidden ? type : 'text'}
             name={name}
-            value={value as string}
+            value={
+              typeof value === 'string' ? (value as string) : (value as number)
+            }
             as={type === 'textarea' ? 'textarea' : 'input'}
             onChange={handleChange}
             readOnly={isReadonly}

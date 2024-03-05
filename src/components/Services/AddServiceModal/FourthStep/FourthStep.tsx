@@ -1,5 +1,6 @@
 import AddCategoryModal from 'components/AddCategoryModal';
 import Avatar from 'components/Avatar';
+import FourthStep from 'components/TopBar/UsersNav/CreateCompanyForm/FourthStep';
 import Button from 'components/Ui/Buttons/Button';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import {
@@ -12,20 +13,30 @@ import RadioSelect, {
   RadioSelectItemType,
 } from 'components/Ui/RadioSelect/RadioSelect';
 import { ServiceTypeEnum } from 'helpers/enums';
+import generateBreakTimeArray from 'helpers/generateBreakTimeArray';
 import { getErrorMessage } from 'helpers/inputsValidation';
 import { useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { useEffect, useState } from 'react';
-import { HiArrowRight } from 'react-icons/hi2';
-import { useGetServicesCategoriesQuery } from 'services/company.api';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { HiCloudUpload } from 'react-icons/hi';
+import {
+  useAddNewServiceMutation,
+  useGetServicesCategoriesQuery,
+} from 'services/company.api';
 import { ServiceCategory } from 'services/types/category.types';
-import { AddServiceStepProps } from 'services/types/service.type';
+import { ServiceDataType } from 'services/types/service.type';
 import {
   AddServiceModalBox,
   ButtonBox,
   FormBox,
   FormSide,
 } from '../AddServiceModal.styled';
+
+type Props = {
+  setStep: Dispatch<SetStateAction<number>>;
+  serviceData: ServiceDataType | null;
+  setServiceData: Dispatch<SetStateAction<ServiceDataType | null>>;
+};
 
 const addCategoryItem = { id: 'add', value: 'Додати категорію...' };
 
@@ -44,14 +55,42 @@ type InitialStateType = {
   category: null | SelectItem;
   name: string;
   desc: string;
+  employees: [] | SelectItem[];
+  duration: string;
+  break: boolean;
+  breakDuration: SelectItem;
+  capacityLimit?: boolean;
+  capacity?: number;
+  placeLimit?: boolean;
+  places?: number;
 };
 
-const FirstStep = ({
-  setStep,
-  serviceData,
-  setServiceData,
-}: AddServiceStepProps) => {
-  const { id } = useCompany();
+const breakTimeArray = generateBreakTimeArray().map((value, i) => ({
+  id: i,
+  value,
+}));
+
+const initialState: InitialStateType = {
+  category: null,
+  name: '',
+  desc: '',
+  employees: [],
+  duration: '',
+  break: false,
+  breakDuration: breakTimeArray[0],
+  capacityLimit: false,
+  capacity: 0,
+  placeLimit: false,
+  places: 2,
+};
+
+const FourthStep = ({ setStep, serviceData }: Props) => {
+  console.log('🚀 ~ SecondStep ~ serviceData:', serviceData);
+  const { id, employees } = useCompany();
+
+  const [serviceType, setServiceType] = useState<ServiceTypeEnum>(
+    ServiceTypeEnum.INDIVIDUAL
+  );
 
   const {
     isLoading: isCategoriesLoading,
@@ -60,17 +99,17 @@ const FirstStep = ({
     isSuccess,
   } = useGetServicesCategoriesQuery({ id });
 
+  const [uploadService, {}] = useAddNewServiceMutation();
+
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
 
-  const initialState: InitialStateType = {
-    category: null,
-    name: serviceData?.name || '',
-    desc: serviceData?.desc || '',
+  const handleServiceUpload = (state: typeof initialState) => {
+    console.log('🚀 ~ handleServiceUpload ~ state:', state);
+
+    // uploadService();
   };
 
-  const [serviceType, setServiceType] = useState<ServiceTypeEnum>(
-    (serviceData?.type as ServiceTypeEnum) || ServiceTypeEnum.INDIVIDUAL
-  );
+  const filter = ['capacityLimit', 'capacity', 'placeLimit', 'places'];
 
   const inputs: Partial<InputProps>[] = [
     {
@@ -85,19 +124,34 @@ const FirstStep = ({
     },
     { name: 'name', type: 'text' },
     { name: 'desc', type: 'textarea' },
+    {
+      name: 'employees',
+      type: 'select',
+      selectItems: employees
+        .filter(({ provider }) => provider)
+        .map(({ id, firstName, lastName }) => ({
+          id,
+          value: lastName ? firstName + ' ' + lastName : firstName,
+        })),
+    },
+    {
+      name: 'duration',
+      type: 'select',
+      selectItems: breakTimeArray,
+      selected: breakTimeArray[0],
+    },
+    { name: 'break', type: 'checkbox', label: false },
+    {
+      name: 'breakDuration',
+      type: 'select',
+      selectItems: breakTimeArray,
+      selected: breakTimeArray[0],
+    },
+    { name: 'capacityLimit', type: 'checkbox', label: false },
+    { name: 'capacity', type: 'number' },
+    { name: 'placeLimit', type: 'checkbox', label: false },
+    { name: 'places', type: 'number' },
   ];
-
-  const onSubmit = (state: InitialStateType) => {
-    if (state?.category?.id) {
-      setServiceData(p => ({
-        ...p,
-        ...state,
-        category: String(state.category?.id),
-      }));
-    }
-
-    setStep(2);
-  };
 
   const {
     handleChange,
@@ -107,7 +161,7 @@ const FirstStep = ({
     reset,
     setState,
     state,
-  } = useForm(initialState, onSubmit);
+  } = useForm(initialState, handleServiceUpload);
 
   const [addCategoryModalOpen, setAddCategoryModalOpen] = useState(false);
 
@@ -120,14 +174,16 @@ const FirstStep = ({
   };
 
   const handleTypeSelectClick = (item: RadioSelectItemType) => {
-    setServiceData(p => ({ ...p, type: item.id }));
     setServiceType(item.id as ServiceTypeEnum);
   };
 
   const handleAvatarUpload = () => {};
 
-  const isSubmitDisabled =
-    state.name === '' || state.category === null || invalidFields.length > 0;
+  const isUploadDisabled =
+    Object.values(state).includes('') ||
+    state.employees.length === 0 ||
+    state.category === null ||
+    invalidFields.length > 0;
 
   useEffect(() => {
     setState(p => ({ ...p, category: initialState.category }));
@@ -161,26 +217,41 @@ const FirstStep = ({
             />
 
             <FormBox onSubmit={handleSubmit}>
-              {(inputs as InputProps[]).map((item, i) => (
-                <CustomFormInput
-                  key={i}
-                  {...item}
-                  value={state[item.name as keyof InputValueType]}
-                  handleChange={handleChange}
-                  handleSelect={handleCategorySelect}
-                  isValid={getErrorMessage(item.name, invalidFields)}
-                />
-              ))}
+              {(inputs as InputProps[]).map((item, i) => {
+                if (
+                  item.name &&
+                  serviceType === ServiceTypeEnum.INDIVIDUAL &&
+                  filter.includes(item.name)
+                ) {
+                  return;
+                }
+
+                if (!state.break && item.name === 'breakDuration') return;
+
+                if (!state.capacityLimit && item.name === 'capacity') return;
+
+                if (!state.placeLimit && item.name === 'places') return;
+
+                return (
+                  <CustomFormInput
+                    key={i}
+                    {...item}
+                    value={state[item.name as keyof InputValueType]}
+                    handleChange={handleChange}
+                    handleSelect={handleCategorySelect}
+                    isValid={getErrorMessage(item.name, invalidFields)}
+                  />
+                );
+              })}
 
               <ButtonBox>
                 <Button
-                  disabled={isSubmitDisabled}
+                  disabled={isUploadDisabled}
                   type="submit"
-                  Icon={HiArrowRight}
+                  Icon={HiCloudUpload}
                   $colors="accent"
-                  $iconPosition="r"
                 >
-                  Далі
+                  Додати
                 </Button>
               </ButtonBox>
             </FormBox>
@@ -207,4 +278,4 @@ const FirstStep = ({
   );
 };
 
-export default FirstStep;
+export default FourthStep;

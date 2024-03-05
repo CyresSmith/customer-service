@@ -29,11 +29,32 @@ export function useForm<
     inputsValidation<Type>(name, value, state, invalidFields, setInvalidFields);
 
     setState(prevState => {
-      return type === 'checkbox'
-        ? { ...prevState, [name]: !prevState[name] }
-        : name === 'discount'
-        ? { ...prevState, [name]: +value }
-        : { ...prevState, [name]: value };
+      let newState = { ...prevState };
+
+      if (type === 'checkbox') {
+        newState = { ...newState, [name]: !prevState[name] };
+      } else if (name === 'discount') {
+        newState = { ...newState, [name]: +value };
+      } else if (name === 'durationHours') {
+        newState = {
+          ...newState,
+          [name]: +value >= 23 ? 23 : +value <= 0 ? 0 : +value,
+        };
+      } else if (name === 'durationMinutes') {
+        newState = {
+          ...newState,
+          [name]: +value >= 55 ? 55 : +value <= 0 ? 0 : +value,
+        };
+      } else if (name === 'breakDuration') {
+        newState = {
+          ...newState,
+          [name]: +value >= 60 ? 60 : +value <= 0 ? 0 : +value,
+        };
+      } else {
+        newState = { ...newState, [name]: value };
+      }
+
+      return newState;
     });
   };
 
