@@ -5,7 +5,6 @@ export const List = styled.ul<{$columns: number}>`
     display: grid;
     grid-template-columns: repeat(${props => props.$columns}, 1fr);
     padding: 0 60px;
-    margin-bottom: ${theme.space[4]};
 `
 
 export const ListItem = styled.li<{ $last: boolean }>`

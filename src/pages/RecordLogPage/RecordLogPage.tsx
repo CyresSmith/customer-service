@@ -61,6 +61,7 @@ const RecordLogPage = () => {
       content={
         <RecordLog
           date={date}
+          setDate={setDate}
           workingHours={workingHours}
           employees={filteredProvidersList}
         />

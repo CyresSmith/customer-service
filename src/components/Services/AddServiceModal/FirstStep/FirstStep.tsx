@@ -57,7 +57,6 @@ const FirstStep = ({
     isLoading: isCategoriesLoading,
     data,
     refetch,
-    isSuccess,
   } = useGetServicesCategoriesQuery({ id });
 
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
@@ -104,7 +103,6 @@ const FirstStep = ({
     handleSubmit,
     handleSelect,
     invalidFields,
-    reset,
     setState,
     state,
   } = useForm(initialState, onSubmit);
@@ -131,7 +129,7 @@ const FirstStep = ({
 
   useEffect(() => {
     setState(p => ({ ...p, category: initialState.category }));
-  }, [serviceType]);
+  }, [initialState.category, serviceType, setState]);
 
   useEffect(() => {
     if (!data) return;

@@ -7,3 +7,13 @@ export const weekDays = [
   { name: 'Субота', id: 6 },
   { name: 'Неділя', id: 0 },
 ];
+
+export const shortWeekDays = [
+  { name: 'Пн', id: 1 },
+  { name: 'Вт', id: 2 },
+  { name: 'Ср', id: 3 },
+  { name: 'Чт', id: 4 },
+  { name: 'Пт', id: 5 },
+  { name: 'Сб', id: 6 },
+  { name: 'Нд', id: 0 },
+]

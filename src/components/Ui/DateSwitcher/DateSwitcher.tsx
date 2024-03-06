@@ -23,13 +23,13 @@ const DateSwitcher = ({ date, setDate }: Props) => {
 
     return (
         <Container>
-            <Button onClick={() => handleDayChange('-')} Icon={HiArrowLeft} $round={true} $colors="light" />
+            <Button onClick={() => handleDayChange('-')} Icon={HiArrowLeft} $round={true} $colors="dark" />
             <DateWrapper>
-                <DateValue>{ chosenDate }</DateValue>
+                <DateValue>{chosenDate}</DateValue>
             </DateWrapper>
-            <Button onClick={() => handleDayChange('+')} Icon={HiArrowRight} $round={true} $colors="light" />
+            <Button onClick={() => handleDayChange('+')} Icon={HiArrowRight} $round={true} $colors="dark" />
         </Container>
     )
-};
+}
 
 export default DateSwitcher;

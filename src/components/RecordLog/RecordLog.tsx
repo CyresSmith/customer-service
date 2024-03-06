@@ -3,13 +3,16 @@ import { IEmployee } from 'services/types/employee.types';
 import { IWorkingHours } from 'store/company/company.types';
 import {
   Container,
+  LeftWrapper,
   ListsWrapper,
   NoSchedule,
+  RigthWrapper,
   SchedulesContainer,
 } from './RecordLog.styled';
 import EmployeesInfoList from './RecordLogList/EmployeesInfoList/EmployeesInfoList';
 import RecordLogList from './RecordLogList/RecordLogList';
 import TimeList from './RecordLogList/TimeList';
+import Calendar from 'components/Ui/Calendar/Calendar';
 
 // const items = [
 //     {
@@ -123,9 +126,10 @@ type Props = {
   date: Date;
   workingHours: IWorkingHours[] | null;
   employees: IEmployee[];
+  setDate: React.Dispatch<React.SetStateAction<Date>>;
 };
 
-const RecordLog = ({ date, workingHours, employees }: Props) => {
+const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
   const chosenDay = new Date(date).getDay();
 
   if (!workingHours) {
@@ -149,26 +153,31 @@ const RecordLog = ({ date, workingHours, employees }: Props) => {
   return (
     workingHours && (
       <Container>
-        <EmployeesInfoList
-          $columns={employees.length}
-          date={date}
-          employees={employees}
-        />
-        <SchedulesContainer>
-          <TimeList side="left" workHours={companyDaySchedule} />
-          <ListsWrapper $columns={employees.length}>
-            {employees.map((provider, i) => (
-              <RecordLogList
-                schedules={provider.schedules}
-                companySchedule={companyDaySchedule}
-                key={provider.id}
-                date={date}
-                last={i === employees.length - 1}
-              />
-            ))}
-          </ListsWrapper>
-          <TimeList side="right" workHours={companyDaySchedule} />
-        </SchedulesContainer>
+        <LeftWrapper>
+          <EmployeesInfoList
+            $columns={employees.length}
+            date={date}
+            employees={employees}
+          />
+          <SchedulesContainer>
+            <TimeList side="left" workHours={companyDaySchedule} />
+            <ListsWrapper $columns={employees.length}>
+              {employees.map((provider, i) => (
+                <RecordLogList
+                  schedules={provider.schedules}
+                  companySchedule={companyDaySchedule}
+                  key={provider.id}
+                  date={date}
+                  last={i === employees.length - 1}
+                />
+              ))}
+            </ListsWrapper>
+            <TimeList side="right" workHours={companyDaySchedule} />
+          </SchedulesContainer>
+        </LeftWrapper>
+        <RigthWrapper>
+          <Calendar date={date} setDate={setDate} />
+        </RigthWrapper>
       </Container>
     )
   );

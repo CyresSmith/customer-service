@@ -11,10 +11,11 @@ const validators: IndexType = {
   lastName: new RegExp(/^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ']{3,30}$/),
   firstName: new RegExp(/^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ']{3,30}$/),
   index: new RegExp(/^\d{5}$/),
-  desc: new RegExp(/^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ']{30,1000}$/),
+  desc: new RegExp(/^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ']{30,30}$/),
 };
 
 const validateInputs = (name: string, value: Value): Result<Value> => {
+
   if (!Object.keys(validators).includes(name)) {
     return { ok: true, value };
   } else {

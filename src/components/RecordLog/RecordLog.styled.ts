@@ -4,6 +4,22 @@ import theme from 'utils/theme';
 export const Container = styled.div`
     width: 100%;
     overflow: hidden;
+    display: flex;
+    gap: ${theme.space[5]};
+    height: 100%;
+`
+
+export const LeftWrapper = styled.div`
+    width: 100%;
+    padding-top: ${theme.space[3]};
+    background-color: ${theme.colors.bg.main};
+    border-radius: ${theme.radii.m};
+`
+
+export const RigthWrapper = styled.div`
+    width: 400px;
+    height: 100%;
+    /* padding-top: ${theme.space[4]}; */
 `
 
 export const SchedulesContainer = styled.div`
@@ -11,9 +27,7 @@ export const SchedulesContainer = styled.div`
     width: 100%;
     height: fit-content;
     min-height: fit-content;
-    max-height: calc(100% - 77px);
-    background-color: ${theme.colors.bg.main};
-    border-radius: ${theme.radii.m};
+    max-height: calc(100% - 60px);
     overflow: auto;
     
     -ms-overflow-style: none;

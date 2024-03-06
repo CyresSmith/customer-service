@@ -1,0 +1,80 @@
+import styled from 'styled-components';
+import theme from 'utils/theme';
+
+type CalendarDay = {
+  $today: boolean;
+  $selected: boolean;
+  $anotherMonth: boolean;
+}
+
+export const CalendarBox = styled.div`
+  width: 100%;
+  background-color: ${theme.colors.bg.main};
+  border-radius: ${theme.radii.m};
+  padding: ${theme.space[3]};
+`;
+
+export const CalendarGrid = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: ${theme.space[2]};
+`;
+
+export const MonthSwitcher = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: ${theme.space[4]};
+  margin-bottom: ${theme.space[4]}
+`
+
+export const MonthBox = styled.div`
+
+`
+
+export const MonthName = styled.p`
+  font-size: ${theme.fontSizes.xxl};
+
+  &::first-letter {
+    text-transform: uppercase;
+  }
+`
+
+export const WeekDay = styled.p`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${theme.space[0]};
+  text-transform: capitalize;
+  font-size: ${theme.fontSizes.l};
+  font-weight: ${theme.fontWeights.regular};
+`;
+
+export const Day = styled.div<CalendarDay>`
+  background-color: ${({ $today, $selected }) =>
+    $selected
+      ? theme.colors.secondary.light
+      : $today
+      ? theme.colors.accent.main
+      : theme.colors.bg.light};
+  color: ${({ $today, $selected }) =>
+    $selected
+      ? theme.colors.bg.main
+      : $today
+      ? theme.colors.bg.dark
+      : theme.colors.white};
+  border-radius: ${theme.radii.xs};
+  padding: ${theme.space[2]};
+  width: 100%;
+  height: 100%;
+  opacity: ${({ $anotherMonth }) => ($anotherMonth ? 0.6 : 1)};
+  transition: ${theme.transition.primary};
+  cursor: pointer;
+`;
+
+export const DayDate = styled.p<Pick<CalendarDay, '$today'>>`
+  font-size: ${theme.fontSizes.xxl};
+  font-weight: ${({ $today }) => $today ? `${theme.fontWeights.bold}` : `${theme.fontWeights.regular}`};
+  text-align: center;
+`;
