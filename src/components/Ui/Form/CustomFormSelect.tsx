@@ -40,7 +40,7 @@ const CustomFormSelect = ({
   };
 
   const onEnterToggleOpen = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter') toggleOpen(e);
+    if (e.key === 'Enter') toggleOpen();
   };
 
   useEscapeKey(handleClose);
@@ -61,9 +61,8 @@ const CustomFormSelect = ({
   };
 
   return (
-    <SelectBox ref={selectRef}>
+    <SelectBox ref={selectRef} $width={width}>
       <Select
-        $width={width}
         onKeyDown={event => onEnterToggleOpen(event)}
         tabIndex={0}
         $open={isOpen}

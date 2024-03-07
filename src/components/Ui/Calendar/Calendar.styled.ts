@@ -19,27 +19,8 @@ export const CalendarGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: ${theme.space[2]};
+  margin-top: ${theme.space[3]};
 `;
-
-export const MonthSwitcher = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: ${theme.space[4]};
-  margin-bottom: ${theme.space[4]}
-`
-
-export const MonthBox = styled.div`
-
-`
-
-export const MonthName = styled.p`
-  font-size: ${theme.fontSizes.xxl};
-
-  &::first-letter {
-    text-transform: uppercase;
-  }
-`
 
 export const WeekDay = styled.p`
   display: flex;
@@ -49,6 +30,11 @@ export const WeekDay = styled.p`
   text-transform: capitalize;
   font-size: ${theme.fontSizes.l};
   font-weight: ${theme.fontWeights.regular};
+`;
+
+export const SwitcherWrapper = styled.div`
+  width: fit-content;
+  margin: 0 auto;
 `;
 
 export const Day = styled.div<CalendarDay>`

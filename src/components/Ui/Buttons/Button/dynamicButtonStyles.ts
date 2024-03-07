@@ -41,6 +41,11 @@ const buttonStyle = ({
         return $variant === 'solid'
           ? theme.colors.bg.dark
           : theme.colors.danger.light;
+      
+      case 'transparent':
+        return $variant === 'solid'
+          ? theme.colors.accent.light
+          : theme.colors.accent.dark;
 
       default:
         return theme.colors.primary.dark;
@@ -78,6 +83,11 @@ const buttonStyle = ({
         return $variant === 'solid'
           ? theme.colors.bg.dark
           : theme.colors.danger.main;
+      
+      case 'transparent':
+        return $variant === 'solid'
+          ? theme.colors.accent.main
+          : theme.colors.accent.light;
 
       default:
         return theme.colors.secondary.main;
@@ -104,6 +114,9 @@ const buttonStyle = ({
 
         case 'danger':
           return theme.colors.danger.light;
+        
+        case 'transparent':
+          return theme.colors.transparent;
 
         default:
           return theme.colors.secondary.light;
@@ -133,6 +146,9 @@ const buttonStyle = ({
 
         case 'danger':
           return theme.colors.danger.main;
+        
+        case 'transparent':
+          return theme.colors.transparent;
 
         default:
           return theme.colors.secondary.main;

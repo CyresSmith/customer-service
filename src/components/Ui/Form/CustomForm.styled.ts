@@ -120,15 +120,15 @@ export const DoneIcon = styled.svg<{ $complete?: boolean }>`
     props.$complete ? theme.colors.success.light : theme.colors.danger.light};
 `;
 
-export const SelectBox = styled.div`
+export const SelectBox = styled.div<{ $width: string }>`
+  width: ${props => props.$width};
   position: relative;
 `;
 
-export const Select = styled.div<{ $open: boolean; $width: string }>`
+export const Select = styled.div<{ $open: boolean}>`
   ${baseInputStyles};
 
   outline: none;
-  width: ${props => props.$width};
   cursor: pointer;
 
   ${p =>

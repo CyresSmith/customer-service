@@ -7,14 +7,11 @@ import {
   subDays,
   addDays,
   isSameDay,
-  addMonths,
-  subMonths,
 } from 'date-fns';
-import { CalendarBox, CalendarGrid, MonthBox, MonthName, MonthSwitcher, WeekDay } from './Calendar.styled';
+import { CalendarBox, CalendarGrid, SwitcherWrapper, WeekDay } from './Calendar.styled';
 import { shortWeekDays } from 'helpers/constants';
 import { CalendarDay } from './CalendarDay';
-import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
-import Button from '../Buttons/Button';
+import DateSwitcher from '../DateSwitcher';
 
 type Props = {
   date: Date;
@@ -51,23 +48,11 @@ const Calendar = ({
 
   const fullMonthArrayForRender = getFullMonthArrayForRender();
 
-  const handleMonthSwitch = (type: string) => {
-    if (type === '+') {
-      setDate(addMonths(date, 1));
-    } else {
-      setDate(subMonths(date, 1));
-    }
-  };
-
   return (
     <CalendarBox>
-      <MonthSwitcher>
-        <Button onClick={() => handleMonthSwitch('-')} Icon={HiArrowLeft} $round={true} $colors='accent' />
-        <MonthBox>
-          <MonthName>{date.toLocaleDateString('uk-UK', {month: 'long'})}</MonthName>
-        </MonthBox>
-        <Button onClick={() => handleMonthSwitch('+')} Icon={HiArrowRight} $round={true} $colors="accent" />
-      </MonthSwitcher>
+      <SwitcherWrapper>
+        <DateSwitcher dateType='month' setDate={setDate} date={date} />
+      </SwitcherWrapper>
       <CalendarGrid>
         {shortWeekDays.map(({ name }, i) => <WeekDay key={i}><span>{name}</span></WeekDay>)}
         {fullMonthArrayForRender.map((day, i) =>

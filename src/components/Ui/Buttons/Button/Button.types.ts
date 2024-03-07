@@ -18,6 +18,7 @@ export interface IButton {
     | 'accent'
     | 'success'
     | 'danger'
+    | 'transparent'
     | undefined;
   $variant?: 'solid' | 'text' | undefined;
   $round?: boolean;

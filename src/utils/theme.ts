@@ -45,6 +45,7 @@ const theme = {
       dark: '#00ad15',
     },
     backdrop: 'rgba(23, 24, 33, 0.5)',
+    transparent: 'transparent'
   },
 
   fonts: {
