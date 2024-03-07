@@ -16,7 +16,7 @@ const validators: IndexType = {
   lastName: new RegExp(/^[A-zА-Яа-яЁёЇїІіЄєҐґ']{3,30}$/),
   firstName: new RegExp(/^[A-zА-Яа-яЁёЇїІіЄєҐґ']{3,30}$/),
   index: new RegExp(/^\d{5}$/),
-  desc: new RegExp(/^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ'.,!?;:(){}[\]\s]{30,1000}$/),
+  desc: new RegExp(/^[\s\S]{30,1000}$/),
 };
 
 const validateInputs = (name: string, value: Value): Result<Value> => {

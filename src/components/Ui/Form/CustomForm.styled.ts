@@ -129,7 +129,11 @@ export const Select = styled.div<{ $open: boolean; $width: string }>`
 
   outline: none;
   width: ${props => props.$width};
+  min-width: 120px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   ${p =>
     p.$open &&
@@ -155,6 +159,7 @@ export const Selected = styled.p`
 `;
 
 const LIST_ITEM_HIGHT = '37px';
+const LIST_ITEMS_COUNT = 5;
 
 export const SelectList = styled.ul<{ $open: boolean }>`
   position: absolute;
@@ -169,9 +174,12 @@ export const SelectList = styled.ul<{ $open: boolean }>`
   background-color: ${theme.colors.secondary.light};
   border-radius: ${theme.radii.s};
   width: 100%;
-  max-height: ${props => (props.$open ? `calc(${LIST_ITEM_HIGHT} * 5)` : '0')};
+  max-height: ${props =>
+    props.$open
+      ? `calc((${LIST_ITEM_HIGHT} * ${LIST_ITEMS_COUNT}) + (${theme.space[0]} * (${LIST_ITEMS_COUNT} - 1)))`
+      : '0'};
   transition: ${theme.transition.primary};
-  overflow: hidden;
+  overflow: auto;
 `;
 
 export const SelectListItem = styled.li<{ $selected: boolean }>`
@@ -202,9 +210,6 @@ export const SelectListItem = styled.li<{ $selected: boolean }>`
 export const SelectIcon = styled.svg<{ $open: boolean }>`
   width: 20px;
   height: 20px;
-  position: absolute;
-  right: ${theme.space[3]};
-  top: 25%;
   fill: ${theme.colors.secondary.dark};
   transition: inherit;
 

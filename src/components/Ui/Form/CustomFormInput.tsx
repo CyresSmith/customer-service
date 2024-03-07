@@ -32,9 +32,6 @@ const CustomFormInput = ({
   label = true,
   placeholder = '',
   selectItems,
-  min,
-  max,
-  step,
 }: InputProps) => {
   const [hidden, setHidden] = useState(true);
   const valueRef = useRef(value).current;
@@ -57,6 +54,7 @@ const CustomFormInput = ({
           />
         ) : type === 'select' && selectItems && handleSelect ? (
           <CustomFormSelect
+            isRequired={isRequired}
             width="100%"
             handleSelect={handleSelect}
             selectItems={selectItems}
@@ -69,9 +67,6 @@ const CustomFormInput = ({
           />
         ) : (
           <FormInput
-            step={step}
-            min={min}
-            max={max}
             type={type !== 'password' ? type : hidden ? type : 'text'}
             name={name}
             value={
@@ -81,6 +76,7 @@ const CustomFormInput = ({
             onChange={handleChange}
             readOnly={isReadonly}
             placeholder={placeholder}
+
             // autoComplete='off'
           />
         )}

@@ -1,44 +1,35 @@
+import AddEmployeeModal from 'components/Employees/AddEmployeeModal';
 import { Message } from 'components/Employees/AddEmployeeModal/AddEmployeeModal.styled';
 import Button from 'components/Ui/Buttons/Button';
-import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
-import { HiUserAdd } from 'react-icons/hi';
-import {
-  HiArrowLeft,
-  HiArrowRight,
-  HiCheckCircle,
-  HiPhoto,
-} from 'react-icons/hi2';
-import { EmployeeStatusEnum } from 'services/types/employee.types';
+import { HiCheckCircle, HiUserAdd } from 'react-icons/hi';
+import { HiArrowLeft, HiArrowRight } from 'react-icons/hi2';
 import { AddServiceStepProps } from 'services/types/service.type';
-import { FormBox } from '../AddServiceModal.styled';
+import { FormSide, ModalBox } from '../AddServiceModal.styled';
+import EmployeeData, { IEmployeeData } from '../EmployeeData';
 import {
   ButtonBox,
   CHECK_SIZE,
   Employee,
-  EmployeeImg,
   EmployeesList,
-  Name,
 } from './SecondStep.styled';
 
 const SecondStep = ({
   setStep,
   serviceData,
   setServiceData,
+  providers,
 }: AddServiceStepProps) => {
-  console.log('🚀 ~ serviceData:', serviceData);
-  const { employees } = useCompany();
+  const [addEmployeeOpen, setAddEmployeeOpen] = useState(false);
 
-  const [selected, setSelected] = useState<string[]>([]);
-
-  const providers = employees.filter(
-    ({ provider, status }) => provider && status === EmployeeStatusEnum.WORKING
-  );
-
-  const handleSelect = (id: string) =>
-    setSelected(p =>
-      p.includes(id) ? p.filter(item => item !== id) : [...p, id]
-    );
+  const handleSelect = (id: string) => {
+    setServiceData(p => ({
+      ...p,
+      employees: p.employees.includes(id)
+        ? p.employees.filter(item => item !== id)
+        : [...p.employees, id],
+    }));
+  };
 
   const handleBackClick = () => {
     setStep(1);
@@ -46,68 +37,73 @@ const SecondStep = ({
 
   const handleNextClick = () => {
     setStep(3);
-    setServiceData(p => ({ ...p, employees: selected.map(e => +e) }));
+  };
+
+  const handleAddEmployeeClose = () => {
+    setAddEmployeeOpen(false);
   };
 
   return (
-    <FormBox as="div">
-      {providers.length < 1 ? (
-        <Message>Немає працівників що надають послуги</Message>
-      ) : (
-        <EmployeesList>
-          {providers.map(({ id, avatar, firstName, lastName }) => (
-            <li key={id}>
-              <Employee
-                onClick={() => handleSelect(id)}
-                $selected={selected.includes(id)}
-              >
-                <EmployeeImg>
-                  {avatar ? (
-                    <img
-                      src={avatar}
-                      alt={`photo of ${firstName} ${lastName}`}
-                    />
-                  ) : (
-                    <HiPhoto />
-                  )}
-                </EmployeeImg>
+    <>
+      <ModalBox>
+        <FormSide>
+          {providers &&
+            (providers.length < 1 ? (
+              <Message>Немає працівників що надають послуги</Message>
+            ) : (
+              <EmployeesList>
+                {providers.map(item => (
+                  <li key={item.id}>
+                    <Employee
+                      onClick={() => handleSelect(item.id)}
+                      $selected={serviceData.employees.includes(item.id)}
+                    >
+                      <EmployeeData {...(item as IEmployeeData)} />
+                      <HiCheckCircle size={CHECK_SIZE} />
+                    </Employee>
+                  </li>
+                ))}
+              </EmployeesList>
+            ))}
+        </FormSide>
 
-                <Name>
-                  {firstName} {lastName && lastName}
-                </Name>
+        <ButtonBox>
+          <Button
+            $colors="light"
+            Icon={HiArrowLeft}
+            $iconPosition="l"
+            onClick={handleBackClick}
+          >
+            Назад
+          </Button>
 
-                <HiCheckCircle size={CHECK_SIZE} />
-              </Employee>
-            </li>
-          ))}
-        </EmployeesList>
+          <Button
+            $colors="light"
+            Icon={HiUserAdd}
+            onClick={() => setAddEmployeeOpen(true)}
+          >
+            Додати нового
+          </Button>
+
+          <Button
+            $colors="accent"
+            disabled={serviceData.employees.length === 0}
+            Icon={HiArrowRight}
+            $iconPosition="r"
+            onClick={handleNextClick}
+          >
+            Далі
+          </Button>
+        </ButtonBox>
+      </ModalBox>
+
+      {addEmployeeOpen && (
+        <AddEmployeeModal
+          isOpen={addEmployeeOpen}
+          closeModal={handleAddEmployeeClose}
+        />
       )}
-
-      <ButtonBox>
-        <Button
-          $colors="light"
-          Icon={HiArrowLeft}
-          $iconPosition="l"
-          onClick={handleBackClick}
-        >
-          Назад
-        </Button>
-
-        <Button $colors="light" Icon={HiUserAdd}>
-          Додати нового
-        </Button>
-
-        <Button
-          $colors="accent"
-          disabled={selected.length === 0}
-          Icon={HiArrowRight}
-          $iconPosition="r"
-          onClick={handleNextClick}
-        >
-          Далі
-        </Button>
-      </ButtonBox>
-    </FormBox>
+    </>
   );
 };
 

@@ -22,9 +22,6 @@ export type InputProps = {
   placeholder?: string;
   selectItems?: SelectItem[];
   selected?: SelectItem;
-  min?: number;
-  max?: number;
-  step?: number;
 };
 
 export type FormProps<T> = {

@@ -1,30 +1,36 @@
+import { SelectItem } from 'components/Ui/Form/types';
 import { Dispatch, SetStateAction } from 'react';
+import { IEmployee } from './employee.types';
 
 export type EmployeeSettings = {
-  employeeId: number;
-  duration: number;
-  price: number;
+  employeeId: string;
+  durationHours: SelectItem;
+  durationMinutes: SelectItem;
+  price?: number;
 };
 
 export type ServiceDataType = {
   avatar?: string;
-  category: string;
+  category: SelectItem | null;
   name: string;
   desc: string;
-  employees: number[];
-  resources?: number[];
+  employees: string[];
+  resources?: string[];
   type: string;
-  duration: number;
+  durationHours: SelectItem | null;
+  durationMinutes: SelectItem | null;
   price: number;
-  break?: number;
+  break: boolean;
+  breakDuration?: SelectItem | null;
   capacity?: number;
   places?: number;
-  employeesSettings?: EmployeeSettings[];
+  employeesSettings: Partial<EmployeeSettings>[] | [];
   images?: string[];
 };
 
 export type AddServiceStepProps = {
+  providers?: IEmployee[];
   setStep: Dispatch<SetStateAction<number>>;
-  serviceData: Partial<ServiceDataType> | null;
-  setServiceData: Dispatch<SetStateAction<Partial<ServiceDataType>>>;
+  serviceData: ServiceDataType;
+  setServiceData: Dispatch<SetStateAction<ServiceDataType>>;
 };
