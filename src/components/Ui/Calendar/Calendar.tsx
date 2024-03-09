@@ -7,6 +7,7 @@ import {
   subDays,
   addDays,
   isSameDay,
+  subMonths,
 } from 'date-fns';
 import { CalendarBox, CalendarGrid, SwitcherWrapper, WeekDay } from './Calendar.styled';
 import { shortWeekDays } from 'helpers/constants';
@@ -17,14 +18,16 @@ type Props = {
   date: Date;
   setDate: React.Dispatch<React.SetStateAction<Date>>;
   cellSize?: number;
+  monthSize?: string;
 };
 
-const Calendar = ({ date, setDate, cellSize = 30 }: Props) => {
+const Calendar = ({ date, setDate, cellSize = 30, monthSize = '18px' }: Props) => {
   const today = new Date(Date.now());
 
   const thisMonthStart = startOfMonth(date);
   const thisMonthEnd = lastDayOfMonth(date);
   const isMondayFirstDay = isMonday(startOfMonth(date));
+  const isSundayFirstDay = thisMonthStart.getDay() === 0;
   const isSundayLastDay = thisMonthEnd.getDay() === 0;
   const thisMonthDaysArray = eachDayOfInterval({ start: startOfMonth(date), end: lastDayOfMonth(date) });
 
@@ -32,7 +35,10 @@ const Calendar = ({ date, setDate, cellSize = 30 }: Props) => {
     let daysArray: Date[] = [];
 
     if (!isMondayFirstDay) {
-      daysArray = eachDayOfInterval({ start: subDays(thisMonthStart, thisMonthStart.getDay() - 1), end: subDays(thisMonthStart, 1) });
+      daysArray = eachDayOfInterval({
+        start: subDays(thisMonthStart, isSundayFirstDay ? 6 : thisMonthStart.getDay() - 1),
+        end: subDays(thisMonthStart, 1)
+      });
     }
 
     daysArray = [...daysArray, ...thisMonthDaysArray];
@@ -49,7 +55,7 @@ const Calendar = ({ date, setDate, cellSize = 30 }: Props) => {
   return (
     <CalendarBox>
       <SwitcherWrapper>
-        <DateSwitcher dateType='month' setDate={setDate} date={date} />
+        <DateSwitcher fontSize={monthSize} dateType='month' setDate={setDate} date={date} />
       </SwitcherWrapper>
       <CalendarGrid>
         {shortWeekDays.map(({ name }, i) => <WeekDay key={i}><span>{name}</span></WeekDay>)}
