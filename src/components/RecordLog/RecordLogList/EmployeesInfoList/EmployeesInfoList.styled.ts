@@ -12,11 +12,8 @@ export const ListItem = styled.li<{ $last: boolean }>`
     display: flex;
     gap: ${theme.space[3]};
     padding: ${theme.space[3]};
-    /* border-bottom: ${theme.borders.normal} ${theme.colors.bg.light}; */
     border-right: ${props => props.$last ? 'none' : `${theme.borders.normal} ${theme.colors.bg.light}`};
     overflow: hidden;
-    /* white-space: nowrap;
-    text-overflow: ellipsis; */
 `
 
 export const AvatarWrapper = styled.div`
@@ -47,18 +44,22 @@ export const NoAvatar = styled.p`
 
 export const InfoBox = styled.div`
     display: flex;
+    max-width: calc(100% - 70px);
     flex-direction: column;
     justify-content: center;
-    overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis; 
 `
 
 export const EmployeeName = styled.p`
+    max-width: 100%;
     font-size: ${theme.fontSizes.l};
+    overflow: hidden;
+    text-overflow: ellipsis;
 `
 
 export const EmployeeDaySchedule = styled.p`
     font-size: ${theme.fontSizes.m};
     color: ${theme.colors.secondary.main};
+    overflow: hidden;
+    text-overflow: ellipsis;
 `

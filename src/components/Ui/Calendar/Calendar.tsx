@@ -16,12 +16,10 @@ import DateSwitcher from '../DateSwitcher';
 type Props = {
   date: Date;
   setDate: React.Dispatch<React.SetStateAction<Date>>;
+  cellSize?: number;
 };
 
-const Calendar = ({
-    date,
-    setDate,
-}: Props) => {
+const Calendar = ({ date, setDate, cellSize = 30 }: Props) => {
   const today = new Date(Date.now());
 
   const thisMonthStart = startOfMonth(date);
@@ -57,6 +55,7 @@ const Calendar = ({
         {shortWeekDays.map(({ name }, i) => <WeekDay key={i}><span>{name}</span></WeekDay>)}
         {fullMonthArrayForRender.map((day, i) =>
           <CalendarDay
+            cellSize={cellSize}
             handleClick={() => setDate(day)}
             isToday={isSameDay(day, today)}
             key={i}

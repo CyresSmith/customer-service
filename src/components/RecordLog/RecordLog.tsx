@@ -155,7 +155,7 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
       <Container>
         <LeftWrapper>
           <EmployeesInfoList
-            $columns={employees.length}
+            columns={employees.length}
             date={date}
             employees={employees}
           />
@@ -176,7 +176,7 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
           </SchedulesContainer>
         </LeftWrapper>
         <RigthWrapper>
-          <Calendar date={date} setDate={setDate} />
+          <Calendar cellSize={30} date={date} setDate={setDate} />
         </RigthWrapper>
       </Container>
     )

@@ -23,6 +23,7 @@ const RecordLogBar = ({
   return (
     <Container>
       <LeftWrapper>
+        <DateSwitcher border='light' dateType='day' date={date} setDate={setDate} />
         <CustomFormSelect
           width="300px"
           selectItems={selectItems}
@@ -30,7 +31,6 @@ const RecordLogBar = ({
           selectedItem={selected}
           closeOnSelect={false}
         />
-        <DateSwitcher border='light' dateType='day' date={date} setDate={setDate} />
       </LeftWrapper>
       <Button children="Кнопка" />
     </Container>

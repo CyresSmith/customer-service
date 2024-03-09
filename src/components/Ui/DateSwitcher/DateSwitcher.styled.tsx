@@ -18,7 +18,7 @@ export const Container = styled.div<SwitcherType>`
 
 export const DateWrapper = styled.div<Pick<SwitcherType, '$border' | '$type'>>`
     text-align: center;
-    padding: ${theme.space[1]} ${theme.space[3]};
+    padding: ${theme.space[2]} ${theme.space[3]};
     border-left: ${props => props.$border ? `${theme.borders.normal}` : 'none'} ${props => props.$border === 'light' ? `${theme.colors.secondary.dark}` : props.$border === 'dark' ? `${theme.colors.bg.main}` : null};
     border-right: ${props => props.$border ? `${theme.borders.normal}` : 'none'} ${props => props.$border === 'light' ? `${theme.colors.secondary.dark}` : props.$border === 'dark' ? `${theme.colors.bg.main}` : null};
     width: ${props => props.$type === 'month' ? '100px' : props.$type === 'year' ? '50px' : '150px'};

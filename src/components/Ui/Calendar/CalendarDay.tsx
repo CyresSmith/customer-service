@@ -6,13 +6,14 @@ type Props = {
     selected: boolean;
     anotherMonth: boolean;
     handleClick: () => void;
+    cellSize: number;
 };
 
-export const CalendarDay = ({ anotherMonth, date, isToday, selected, handleClick }: Props) => {
+export const CalendarDay = ({ anotherMonth, date, isToday, selected, handleClick, cellSize }: Props) => {
 
     return (
-        <Day onClick={handleClick} $today={isToday} $selected={selected} $anotherMonth={anotherMonth}>
-            <DayDate $today={isToday}>
+        <Day $cellSize={cellSize} onClick={handleClick} $today={isToday} $selected={selected} $anotherMonth={anotherMonth}>
+            <DayDate $today={isToday} $cellSize={cellSize}>
                 {date}
             </DayDate>
         </Day>

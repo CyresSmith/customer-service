@@ -5,6 +5,7 @@ type CalendarDay = {
   $today: boolean;
   $selected: boolean;
   $anotherMonth: boolean;
+  $cellSize: number
 }
 
 export const CalendarBox = styled.div`
@@ -38,6 +39,9 @@ export const SwitcherWrapper = styled.div`
 `;
 
 export const Day = styled.div<CalendarDay>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: ${({ $today, $selected }) =>
     $selected
       ? theme.colors.secondary.light
@@ -52,15 +56,15 @@ export const Day = styled.div<CalendarDay>`
       : theme.colors.white};
   border-radius: ${theme.radii.xs};
   padding: ${theme.space[2]};
-  width: 100%;
-  height: 100%;
+  width: ${props => props.$cellSize}px;
+  height: ${props => props.$cellSize}px;
   opacity: ${({ $anotherMonth }) => ($anotherMonth ? 0.6 : 1)};
   transition: ${theme.transition.primary};
   cursor: pointer;
 `;
 
-export const DayDate = styled.p<Pick<CalendarDay, '$today'>>`
-  font-size: ${theme.fontSizes.xxl};
+export const DayDate = styled.p<Pick<CalendarDay, '$today' | '$cellSize'>>`
+  font-size: ${props => props.$cellSize / 2}px;
   font-weight: ${({ $today }) => $today ? `${theme.fontWeights.bold}` : `${theme.fontWeights.regular}`};
   text-align: center;
 `;

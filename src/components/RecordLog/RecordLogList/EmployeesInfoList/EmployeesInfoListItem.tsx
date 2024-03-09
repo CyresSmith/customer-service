@@ -4,7 +4,7 @@ import { Avatar, AvatarWrapper, EmployeeDaySchedule, ListItem, EmployeeName, Inf
 type Props = {
     employee: IEmployee;
     last: boolean;
-    date: Date
+    date: Date;
 }
 
 export const EmployeesInfoListItem = ({ employee, last, date }: Props) => {

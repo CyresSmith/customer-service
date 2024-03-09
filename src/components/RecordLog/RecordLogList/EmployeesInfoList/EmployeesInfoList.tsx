@@ -5,13 +5,13 @@ import { EmployeesInfoListItem } from './EmployeesInfoListItem';
 type Props = {
     employees: IEmployee[];
     date: Date;
-    $columns: number;
+    columns: number;
 }
 
-const EmployeesInfoList = ({ employees, date, $columns }: Props) => {
+const EmployeesInfoList = ({ employees, date, columns }: Props) => {
 
     return (
-        <List $columns={$columns}>
+        <List $columns={columns}>
             {employees.map((employee, i) =>
                 <EmployeesInfoListItem key={i} employee={employee} last={i === employees.length - 1} date={date} />
             )}

@@ -17,7 +17,6 @@ export const LeftWrapper = styled.div`
 `
 
 export const RigthWrapper = styled.div`
-    width: 400px;
     height: 100%;
     /* padding-top: ${theme.space[4]}; */
 `
@@ -39,7 +38,7 @@ export const SchedulesContainer = styled.div`
 
 export const ListsWrapper = styled.div<{ $columns: number }>`
     width: 100%;
-    padding: ${theme.space[5]} 60px;
+    padding: ${theme.space[4]} 60px;
     display: grid;
     grid-template-columns: repeat(${props => props.$columns}, 1fr);
     grid-template-rows: auto;
