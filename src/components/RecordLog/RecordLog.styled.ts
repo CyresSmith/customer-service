@@ -31,6 +31,18 @@ export const ScrollWrapper = styled.div`
     }
 `
 
+export const EmployeesListWrapper = styled.div`
+    position: relative;
+`
+
+export const BtnWrapper = styled.div<{ $left?: string, $right?: string }>`
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    left: ${props => props.$left ? props.$left : null};
+    right: ${props => props.$right ? props.$right : null};
+`
+
 export const SchedulesContainer = styled.div`
     position: relative;
     width: 100%;

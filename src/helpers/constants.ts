@@ -16,4 +16,6 @@ export const shortWeekDays = [
   { name: 'Пт', id: 5 },
   { name: 'Сб', id: 6 },
   { name: 'Нд', id: 0 },
-]
+];
+
+export const SCHEDULES_PERPAGE = 2;

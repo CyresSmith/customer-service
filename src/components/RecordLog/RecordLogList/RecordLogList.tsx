@@ -58,12 +58,12 @@ const RecordLogList = ({ companySchedule, schedules, date, last }: Props) => {
     return fullSchedule;
   };
 
-  const employeeSchedule = getEmployeeSchedule();
+  const employeesSchedule = getEmployeeSchedule();
 
   return (
     <ListWrapper>
-      <List $wh={employeeSchedule.length} $last={last}>
-        {employeeSchedule.map((hour, i) => (
+      <List $wh={employeesSchedule.length} $last={last}>
+        {employeesSchedule.map((hour, i) => (
           <RecordLogListItem key={i} index={i} hour={hour} />
         ))}
       </List>

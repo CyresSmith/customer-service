@@ -7,7 +7,6 @@ import {
   subDays,
   addDays,
   isSameDay,
-  subMonths,
 } from 'date-fns';
 import { CalendarBox, CalendarGrid, SwitcherWrapper, WeekDay } from './Calendar.styled';
 import { shortWeekDays } from 'helpers/constants';

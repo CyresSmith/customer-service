@@ -2,7 +2,9 @@ import generateTimeArray, { getSchedule } from 'helpers/generateTimeArray';
 import { IEmployee } from 'services/types/employee.types';
 import { IWorkingHours } from 'store/company/company.types';
 import {
+  BtnWrapper,
   Container,
+  EmployeesListWrapper,
   LeftWrapper,
   ListsWrapper,
   NoSchedule,
@@ -14,6 +16,10 @@ import EmployeesInfoList from './RecordLogList/EmployeesInfoList/EmployeesInfoLi
 import RecordLogList from './RecordLogList/RecordLogList';
 import TimeList from './RecordLogList/TimeList';
 import Calendar from 'components/Ui/Calendar/Calendar';
+import { useState } from 'react';
+import { SCHEDULES_PERPAGE } from 'helpers/constants';
+import Button from 'components/Ui/Buttons/Button';
+import { HiArrowCircleLeft, HiArrowCircleRight } from "react-icons/hi";
 
 // const items = [
 //     {
@@ -132,6 +138,7 @@ type Props = {
 
 const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
   const chosenDay = new Date(date).getDay();
+  const [startIndex, setStartIndex] = useState<number>(0);
 
   if (!workingHours) {
     return <p>Не встановлено графік роботи компанії!</p>;
@@ -151,26 +158,40 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
 
   const companyDaySchedule = getSchedule(timeArray, from, to);
 
+  const toRender = employees.length > SCHEDULES_PERPAGE ? employees.slice(startIndex, startIndex + SCHEDULES_PERPAGE) : employees;
+
   return (
     workingHours && (
       <Container>
         <LeftWrapper>
-          <EmployeesInfoList
-            columns={employees.length}
-            date={date}
-            employees={employees}
-          />
+          <EmployeesListWrapper>
+            {startIndex !== 0 && employees.length > SCHEDULES_PERPAGE &&
+              <BtnWrapper $left='10px'>
+                <Button onClick={() => setStartIndex(s => s - 1)} size='l' $round={true} $colors='transparent' Icon={HiArrowCircleLeft} />
+              </BtnWrapper>
+            }
+            <EmployeesInfoList
+              columns={toRender.length}
+              date={date}
+              employees={toRender}
+            />
+            {employees.length > SCHEDULES_PERPAGE && employees[employees.length - 1] !== toRender[toRender.length - 1] && 
+              <BtnWrapper $right='10px'>
+                <Button onClick={() => setStartIndex(s => s + 1)} size='l' $round={true} $colors='transparent' Icon={HiArrowCircleRight} />
+              </BtnWrapper>
+            }
+          </EmployeesListWrapper>
           <ScrollWrapper>
             <SchedulesContainer>
               <TimeList side="left" workHours={companyDaySchedule} />
-              <ListsWrapper $columns={employees.length}>
-                {employees.map((provider, i) => (
+              <ListsWrapper $columns={toRender.length}>
+                {toRender.map((provider, i) => (
                   <RecordLogList
                     schedules={provider.schedules}
                     companySchedule={companyDaySchedule}
                     key={provider.id}
                     date={date}
-                    last={i === employees.length - 1}
+                    last={i === toRender.length - 1}
                   />
                 ))}
               </ListsWrapper>
