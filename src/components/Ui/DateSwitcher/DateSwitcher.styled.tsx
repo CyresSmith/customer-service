@@ -25,8 +25,8 @@ export const DateWrapper = styled.div<Pick<SwitcherType, '$border' | '$type'>>`
     white-space: nowrap;
 `
 
-export const DateValue = styled.p`
-    font-size: ${theme.fontSizes.xl};
+export const DateValue = styled.p<{$fontSize: string}>`
+    font-size: ${props => props.$fontSize};
     overflow: hidden;
     text-overflow: ellipsis;
 

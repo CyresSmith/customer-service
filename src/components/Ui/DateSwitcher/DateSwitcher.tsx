@@ -12,9 +12,10 @@ type Props = {
     roundBtns?: boolean,
     borderRadius?: 'xs' | 's' | 'm',
     border?: 'light' | 'dark',
+    fontSize?: string;
 }
 
-const DateSwitcher = ({ date, setDate, dateType = 'day', buttonsColor = 'transparent', roundBtns = true, border, borderRadius = 's' }: Props) => {
+const DateSwitcher = ({ date, setDate, dateType = 'day', buttonsColor = 'transparent', roundBtns = true, border, borderRadius = 's', fontSize = '16px' }: Props) => {
 
     const chosenDate = new Date(date).toLocaleDateString('uk-UK', {
         weekday: dateType === 'day' ? 'short' : undefined,
@@ -47,7 +48,7 @@ const DateSwitcher = ({ date, setDate, dateType = 'day', buttonsColor = 'transpa
         <Container $border={border} $borderRadius={borderRadius} $type={dateType} >
             <Button onClick={() => handleDateChange('-')} Icon={HiArrowLeft} $round={roundBtns} $colors={buttonsColor} />
             <DateWrapper $border={border} $type={dateType}>
-                <DateValue>{chosenDate}</DateValue>
+                <DateValue $fontSize={fontSize}>{chosenDate}</DateValue>
             </DateWrapper>
             <Button onClick={() => handleDateChange('+')} Icon={HiArrowRight} $round={roundBtns} $colors={buttonsColor} />
         </Container>
