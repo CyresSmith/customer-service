@@ -16,8 +16,6 @@ const UsersLayout = () => {
     skip: !companyId || !user,
   });
 
-  console.log(user?.id, isSuccess);
-
   useEffect(() => {
     if (!match) return;
 

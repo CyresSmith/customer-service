@@ -25,7 +25,7 @@ export const AvatarWrapper = styled.div`
     height: 40px;
     border-radius: ${theme.radii.round};
     overflow: hidden;
-    background-color: ${theme.colors.bg.main};
+    background-color: ${theme.colors.bg.dark};
 `
 
 export const Avatar = styled.img`

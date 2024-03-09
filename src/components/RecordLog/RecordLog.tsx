@@ -8,6 +8,7 @@ import {
   NoSchedule,
   RigthWrapper,
   SchedulesContainer,
+  ScrollWrapper,
 } from './RecordLog.styled';
 import EmployeesInfoList from './RecordLogList/EmployeesInfoList/EmployeesInfoList';
 import RecordLogList from './RecordLogList/RecordLogList';
@@ -159,21 +160,23 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
             date={date}
             employees={employees}
           />
-          <SchedulesContainer>
-            <TimeList side="left" workHours={companyDaySchedule} />
-            <ListsWrapper $columns={employees.length}>
-              {employees.map((provider, i) => (
-                <RecordLogList
-                  schedules={provider.schedules}
-                  companySchedule={companyDaySchedule}
-                  key={provider.id}
-                  date={date}
-                  last={i === employees.length - 1}
-                />
-              ))}
-            </ListsWrapper>
-            <TimeList side="right" workHours={companyDaySchedule} />
-          </SchedulesContainer>
+          <ScrollWrapper>
+            <SchedulesContainer>
+              <TimeList side="left" workHours={companyDaySchedule} />
+              <ListsWrapper $columns={employees.length}>
+                {employees.map((provider, i) => (
+                  <RecordLogList
+                    schedules={provider.schedules}
+                    companySchedule={companyDaySchedule}
+                    key={provider.id}
+                    date={date}
+                    last={i === employees.length - 1}
+                  />
+                ))}
+              </ListsWrapper>
+              <TimeList side="right" workHours={companyDaySchedule} />
+            </SchedulesContainer>
+          </ScrollWrapper>
         </LeftWrapper>
         <RigthWrapper>
           <Calendar cellSize={30} date={date} setDate={setDate} />
