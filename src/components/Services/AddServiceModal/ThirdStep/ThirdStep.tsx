@@ -51,11 +51,7 @@ const ThirdStep = ({
 }: AddServiceStepProps) => {
   const [addNewService, { isLoading }] = useAddNewServiceMutation();
 
-  const handleSubmit = () => {
-
-    const data = 
-
-  };
+  const handleSubmit = () => {};
 
   const stateChange = (e: ChangeEvent<HTMLInputElement>, id?: string) => {
     const { name, value, type } = e.target;
