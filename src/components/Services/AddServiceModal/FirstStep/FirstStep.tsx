@@ -23,8 +23,9 @@ import { AddServiceStepProps } from 'services/types/service.type';
 import {
   AddServiceModalBox,
   ButtonBox,
-  FormBox,
+  Form,
   FormSide,
+  ModalBox,
 } from '../AddServiceModal.styled';
 
 const addCategoryItem = { id: 'add', value: 'Додати категорію...' };
@@ -62,14 +63,10 @@ const FirstStep = ({
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
 
   const initialState: InitialStateType = {
-    category: null,
+    category: serviceData?.category || null,
     name: serviceData?.name || '',
     desc: serviceData?.desc || '',
   };
-
-  const [serviceType, setServiceType] = useState<ServiceTypeEnum>(
-    (serviceData?.type as ServiceTypeEnum) || ServiceTypeEnum.INDIVIDUAL
-  );
 
   const inputs: Partial<InputProps>[] = [
     {
@@ -77,7 +74,7 @@ const FirstStep = ({
       type: 'select',
       selectItems: [
         ...categories
-          .filter(({ type }) => type === serviceType)
+          .filter(({ type }) => type === serviceData.type)
           .map(({ id, name }) => ({ id, value: name })),
         addCategoryItem,
       ],
@@ -87,11 +84,11 @@ const FirstStep = ({
   ];
 
   const onSubmit = (state: InitialStateType) => {
-    if (state?.category?.id) {
+    if (state?.category && state.category !== null) {
       setServiceData(p => ({
         ...p,
         ...state,
-        category: String(state.category?.id),
+        category: state.category as SelectItem,
       }));
     }
 
@@ -118,8 +115,7 @@ const FirstStep = ({
   };
 
   const handleTypeSelectClick = (item: RadioSelectItemType) => {
-    setServiceData(p => ({ ...p, type: item.id }));
-    setServiceType(item.id as ServiceTypeEnum);
+    setServiceData(p => ({ ...p, type: item.id, category: null }));
   };
 
   const handleAvatarUpload = () => {};
@@ -129,7 +125,7 @@ const FirstStep = ({
 
   useEffect(() => {
     setState(p => ({ ...p, category: initialState.category }));
-  }, [initialState.category, serviceType, setState]);
+  }, [serviceData.type]);
 
   useEffect(() => {
     if (!data) return;
@@ -139,52 +135,57 @@ const FirstStep = ({
 
   return (
     <>
-      {isCategoriesLoading ? (
-        <Loader />
-      ) : (
-        <AddServiceModalBox>
-          <Avatar
-            currentImageUrl={''}
-            isLoading={false}
-            size={150}
-            alt="employee image"
-            handleUpload={handleAvatarUpload}
-          />
-
-          <FormSide>
-            <RadioSelect
-              items={selectItems}
-              selectedItemId={serviceType}
-              onSelect={handleTypeSelectClick}
+      <ModalBox>
+        {isCategoriesLoading ? (
+          <Loader />
+        ) : (
+          <AddServiceModalBox>
+            <Avatar
+              currentImageUrl={''}
+              isLoading={false}
+              size={150}
+              alt="employee image"
+              handleUpload={handleAvatarUpload}
             />
 
-            <FormBox onSubmit={handleSubmit}>
-              {(inputs as InputProps[]).map((item, i) => (
-                <CustomFormInput
-                  key={i}
-                  {...item}
-                  value={state[item.name as keyof InputValueType]}
-                  handleChange={handleChange}
-                  handleSelect={handleCategorySelect}
-                  isValid={getErrorMessage(item.name, invalidFields)}
-                />
-              ))}
+            <FormSide>
+              <RadioSelect
+                items={selectItems}
+                selectedItemId={serviceData.type}
+                onSelect={handleTypeSelectClick}
+              />
 
-              <ButtonBox>
-                <Button
-                  disabled={isSubmitDisabled}
-                  type="submit"
-                  Icon={HiArrowRight}
-                  $colors="accent"
-                  $iconPosition="r"
-                >
-                  Далі
-                </Button>
-              </ButtonBox>
-            </FormBox>
-          </FormSide>
-        </AddServiceModalBox>
-      )}
+              <Form onSubmit={handleSubmit}>
+                <FormSide>
+                  {(inputs as InputProps[]).map((item, i) => (
+                    <CustomFormInput
+                      key={i}
+                      {...item}
+                      value={state[item.name as keyof InputValueType]}
+                      handleChange={handleChange}
+                      handleSelect={handleCategorySelect}
+                      isValid={getErrorMessage(item.name, invalidFields)}
+                      disabledIcon={item.name === 'category' ? true : false}
+                    />
+                  ))}
+                </FormSide>
+
+                <ButtonBox>
+                  <Button
+                    disabled={isSubmitDisabled}
+                    type="submit"
+                    Icon={HiArrowRight}
+                    $colors="accent"
+                    $iconPosition="r"
+                  >
+                    Далі
+                  </Button>
+                </ButtonBox>
+              </Form>
+            </FormSide>
+          </AddServiceModalBox>
+        )}
+      </ModalBox>
 
       {addCategoryModalOpen && (
         <AddCategoryModal

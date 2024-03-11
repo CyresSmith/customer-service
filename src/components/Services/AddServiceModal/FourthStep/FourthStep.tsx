@@ -13,7 +13,7 @@ import RadioSelect, {
   RadioSelectItemType,
 } from 'components/Ui/RadioSelect/RadioSelect';
 import { ServiceTypeEnum } from 'helpers/enums';
-import generateBreakTimeArray from 'helpers/generateBreakTimeArray';
+import generateSelectTimeArray from 'helpers/generateSelectTimeArray';
 import { getErrorMessage } from 'helpers/inputsValidation';
 import { useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
@@ -65,10 +65,7 @@ type InitialStateType = {
   places?: number;
 };
 
-const breakTimeArray = generateBreakTimeArray().map((value, i) => ({
-  id: i,
-  value,
-}));
+const breakTimeArray = generateSelectTimeArray(5, 55, 'хв');
 
 const initialState: InitialStateType = {
   category: null,

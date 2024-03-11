@@ -2,12 +2,16 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 const EMPLOYEE_HIGHT = 62;
+const VISIBLE_EMPLOYEES = 5;
 
 export const EmployeesList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: ${theme.space[0]};
-  max-height: calc((${EMPLOYEE_HIGHT}px * 5) + (${theme.space[0]} * 4));
+  max-height: calc(
+    (${EMPLOYEE_HIGHT}px * ${VISIBLE_EMPLOYEES}) +
+      (${theme.space[0]} * (${VISIBLE_EMPLOYEES} - 1))
+  );
   overflow-x: hidden;
 `;
 
@@ -40,6 +44,14 @@ export const Employee = styled.button<{ $selected: boolean }>`
   }
 `;
 
+export const EmployeeDataBox = styled.div<{ $checkIcon: boolean }>`
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  gap: ${theme.space[4]};
+  width: 100%;
+  text-overflow: ellipsis;
+`;
+
 export const EmployeeImg = styled.div`
   width: ${IMAGE_SIZE}px;
   height: ${IMAGE_SIZE}px;
@@ -47,6 +59,9 @@ export const EmployeeImg = styled.div`
   overflow: hidden;
   position: relative;
   background-color: ${theme.colors.secondary.main};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   > img {
     width: 100%;
@@ -54,23 +69,32 @@ export const EmployeeImg = styled.div`
     object-fit: cover;
   }
 
-  > svg {
-    fill: ${theme.colors.secondary.dark};
+  > p {
+    font-size: calc(${IMAGE_SIZE}px * 0.6);
   }
 `;
 
 export const CHECK_SIZE = 30;
+export const SPACE = theme.space[4];
 
 export const Name = styled.p`
   font-size: ${theme.fontSizes.l};
   font-weight: ${theme.fontWeights.light};
-  width: calc(
-    100% - ${IMAGE_SIZE}px - (${theme.space[4]} * 2) - ${CHECK_SIZE}px
-  );
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: left;
+`;
+
+export const JobTitle = styled.span`
+  font-size: ${theme.fontSizes.m};
+  font-weight: ${theme.fontWeights.light};
+  color: ${theme.colors.secondary.light};
+
+  &:first-letter {
+    text-transform: uppercase;
+  }
 `;
 
 export const ButtonBox = styled.div`
@@ -78,4 +102,5 @@ export const ButtonBox = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  margin-top: ${theme.space[6]};
 `;
