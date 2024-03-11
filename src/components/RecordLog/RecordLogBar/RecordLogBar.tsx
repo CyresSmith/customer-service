@@ -4,6 +4,7 @@ import CustomFormSelect from 'components/Ui/Form/CustomFormSelect';
 import { SelectItem } from 'components/Ui/Form/types';
 import { Dispatch, SetStateAction } from 'react';
 import { Container, LeftWrapper } from './RecordLogBar.styled';
+import { HiPlus } from "react-icons/hi";
 
 type Props = {
   date: Date;
@@ -32,7 +33,7 @@ const RecordLogBar = ({
           closeOnSelect={false}
         />
       </LeftWrapper>
-      <Button children="Кнопка" />
+      <Button Icon={HiPlus} children="Додати запис" $colors='accent' />
     </Container>
   );
 };
