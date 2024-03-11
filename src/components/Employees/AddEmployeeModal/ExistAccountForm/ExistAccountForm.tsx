@@ -83,7 +83,7 @@ const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
             <CustomFormInput
               {...item}
               key={i}
-              value={String(state[item.name as keyof typeof initialState])}
+              value={state[item.name as keyof typeof initialState]}
               handleChange={handleChange}
               isValid={getErrorMessage(item.name, invalidFields)}
             />

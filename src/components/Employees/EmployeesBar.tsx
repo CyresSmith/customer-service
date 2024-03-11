@@ -1,5 +1,4 @@
 import Button from 'components/Ui/Buttons/Button';
-import Modal from 'components/Ui/Modal/Modal';
 import { useAdminRights } from 'hooks';
 import { useState } from 'react';
 import { HiPlusCircle } from 'react-icons/hi';
@@ -26,13 +25,10 @@ const EmployeesBar = () => {
       )}
 
       {openModal && (
-        <Modal
-          title="Додати співробітника"
-          $isOpen={openModal === OpenModal.ADD}
+        <AddEmployeeModal
+          isOpen={openModal === OpenModal.ADD}
           closeModal={() => setOpenModal(null)}
-        >
-          <AddEmployeeModal closeModal={() => setOpenModal(null)} />
-        </Modal>
+        />
       )}
     </>
   );

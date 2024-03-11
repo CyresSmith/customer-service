@@ -35,21 +35,8 @@ export function useForm<
         newState = { ...newState, [name]: !prevState[name] };
       } else if (name === 'discount') {
         newState = { ...newState, [name]: +value };
-      } else if (name === 'durationHours') {
-        newState = {
-          ...newState,
-          [name]: +value >= 23 ? 23 : +value <= 0 ? 0 : +value,
-        };
-      } else if (name === 'durationMinutes') {
-        newState = {
-          ...newState,
-          [name]: +value >= 55 ? 55 : +value <= 0 ? 0 : +value,
-        };
-      } else if (name === 'breakDuration') {
-        newState = {
-          ...newState,
-          [name]: +value >= 60 ? 60 : +value <= 0 ? 0 : +value,
-        };
+      } else if (name === 'price') {
+        newState = { ...newState, [name]: Number.isNaN(+value) ? 0 : +value };
       } else {
         newState = { ...newState, [name]: value };
       }
