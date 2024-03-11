@@ -6,8 +6,9 @@ import { useAuth } from 'hooks/useAuth';
 import { Suspense, lazy, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Bounce, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
 import { useCurrentQuery } from 'services/auth.api';
+import { useLoading } from 'hooks';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 const HomePage = lazy(() => import('pages/Home'));
 const ServicesPage = lazy(() => import('pages/ServicesPage'));
@@ -24,6 +25,7 @@ const EmployeesPage = lazy(() => import('pages/EmployeesPage'));
 function App() {
   const { accessToken, user } = useAuth();
   const { setCurrentUser } = useActions();
+  const { isGlobalLoading } = useLoading();
 
   const { data, isSuccess } = useCurrentQuery(accessToken, {
     skip: Boolean(user || !accessToken),
@@ -39,6 +41,7 @@ function App() {
 
   return (
     <>
+      {isGlobalLoading && <Loader />}
       <ToastContainer
         position="bottom-right"
         stacked

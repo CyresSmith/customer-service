@@ -9,8 +9,8 @@ export const TopBarWrapper = styled.div`
   width: 100%;
   min-height: 72px;
   background-color: ${theme.colors.bg.dark};
-  padding: ${theme.space[4]} ${theme.space[5]};
   border-radius: ${theme.radii.m};
+  padding: ${theme.space[4]} ${theme.space[5]};
   box-shadow: ${theme.shadow.m};
 `;
 

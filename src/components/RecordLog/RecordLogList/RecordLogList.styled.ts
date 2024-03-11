@@ -15,15 +15,15 @@ export const List = styled.ul<{ $wh: number, $last: boolean }>`
     border-right: ${props => props.$last ? 'none' : `${theme.borders.normal} ${theme.colors.bg.light}`};
 `
 
-export const ListItem = styled.li<{ $skip: boolean, $isHour: boolean }>`
+export const ListItem = styled.li<{ $skip: boolean, $isHour: boolean, $break: boolean }>`
     box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: ${theme.timeStep}px;
-    background-color: ${props => props.$skip ? 'rgba(17, 17, 20, 0.5)' : 'none'};
-    pointer-events: ${props => props.$skip ? 'none' : 'all'};
+    background-color: ${props => props.$skip || props.$break ? 'rgba(17, 17, 20, 0.5)' : 'none'};
+    pointer-events: ${props => props.$skip || props.$break ? 'none' : 'all'};
     transition: ${theme.transition.primary};
     cursor: ${props => props.$skip ? 'not-allowed' : 'pointer'};
 
@@ -36,10 +36,10 @@ export const ListItem = styled.li<{ $skip: boolean, $isHour: boolean }>`
     }
 `
 
-export const Time = styled.p`
+export const Time = styled.p<{ $break: boolean }>`
     font-size: ${theme.fontSizes.l};
-    color: ${theme.colors.bg.dark};
-    opacity: 0;
+    color: ${props => props.$break ? theme.colors.secondary.light : theme.colors.bg.dark};
+    opacity: ${props => props.$break ? 1 : 0};
     transition: ${theme.transition.primary};
 
     ${ListItem}:hover & {
