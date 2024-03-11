@@ -16,7 +16,7 @@ import EmployeesInfoList from './RecordLogList/EmployeesInfoList/EmployeesInfoLi
 import RecordLogList from './RecordLogList/RecordLogList';
 import TimeList from './RecordLogList/TimeList';
 import Calendar from 'components/Ui/Calendar/Calendar';
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { SCHEDULES_PERPAGE } from 'helpers/constants';
 import Button from 'components/Ui/Buttons/Button';
 import { HiArrowCircleLeft, HiArrowCircleRight } from "react-icons/hi";
@@ -139,6 +139,18 @@ type Props = {
 const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
   const chosenDay = new Date(date).getDay();
   const [startIndex, setStartIndex] = useState<number>(0);
+  const [isScroll, setIsScroll] = useState<boolean>(false);
+
+  useLayoutEffect(() => {
+    const schedulesListElementHeight = document.getElementById('schedulesList')?.offsetHeight;
+    const schedulesContainerElementHeight = document.getElementById('schedulesContainer')?.offsetHeight;
+
+    if (schedulesListElementHeight === undefined || schedulesContainerElementHeight === undefined) {
+      return;
+    }
+
+    setIsScroll(schedulesListElementHeight > schedulesContainerElementHeight);
+  }, [employees]);
 
   if (!workingHours) {
     return <p>Не встановлено графік роботи компанії!</p>;
@@ -170,7 +182,7 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
                 <Button onClick={() => setStartIndex(s => s - 1)} size='l' $round={true} $colors='transparent' Icon={HiArrowCircleLeft} />
               </BtnWrapper>
             }
-            <EmployeesInfoList
+            <EmployeesInfoList isScroll={isScroll}
               columns={toRender.length}
               date={date}
               employees={toRender}
@@ -181,10 +193,10 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
               </BtnWrapper>
             }
           </EmployeesListWrapper>
-          <ScrollWrapper>
+          <ScrollWrapper id='schedulesContainer'>
             <SchedulesContainer>
               <TimeList side="left" workHours={companyDaySchedule} />
-              <ListsWrapper $columns={toRender.length}>
+              <ListsWrapper id='schedulesList' $columns={toRender.length}>
                 {toRender.map((provider, i) => (
                   <RecordLogList
                     schedules={provider.schedules}

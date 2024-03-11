@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import theme from 'utils/theme';
 
-export const List = styled.ul<{$columns: number}>`
+export const List = styled.ul<{ $columns: number, $isScroll: boolean}>`
     display: grid;
     grid-template-columns: repeat(${props => props.$columns}, 1fr);
     padding: 0 60px;
+    margin-right: ${props => props.$isScroll ? '5px' : 0};
 `
 
 export const ListItem = styled.li<{ $last: boolean }>`

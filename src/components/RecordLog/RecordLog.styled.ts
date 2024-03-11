@@ -23,12 +23,6 @@ export const RigthWrapper = styled.div`
 export const ScrollWrapper = styled.div`
     overflow: auto;
     height: calc(100% - 55px);
-
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    ::-webkit-scrollbar {
-        display: none;
-    }
 `
 
 export const EmployeesListWrapper = styled.div`

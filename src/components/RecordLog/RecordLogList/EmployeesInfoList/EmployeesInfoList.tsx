@@ -6,12 +6,13 @@ type Props = {
     employees: IEmployee[];
     date: Date;
     columns: number;
+    isScroll: boolean;
 }
 
-const EmployeesInfoList = ({ employees, date, columns }: Props) => {
+const EmployeesInfoList = ({ employees, date, columns, isScroll }: Props) => {
 
     return (
-        <List $columns={columns}>
+        <List $columns={columns}  $isScroll={isScroll}>
             {employees.map((employee, i) =>
                 <EmployeesInfoListItem key={i} employee={employee} last={i === employees.length - 1} date={date} />
             )}
