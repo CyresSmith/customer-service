@@ -86,6 +86,7 @@ const AddServiceModal = ({ openModal, handleModalClose }: Props) => {
             setStep={setStep}
             serviceData={serviceData}
             setServiceData={setServiceData}
+            closeModal={handleModalClose}
           />
         )}
       </Modal>

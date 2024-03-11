@@ -192,7 +192,7 @@ const FirstStep = ({
           modalId="addCategory"
           isOpen={addCategoryModalOpen}
           closeModal={() => setAddCategoryModalOpen(false)}
-          type={serviceType}
+          type={serviceData.type as ServiceTypeEnum}
           refetch={refetch}
           onCategoryAdd={({ id, name }) =>
             setState(p => ({

@@ -1,13 +1,20 @@
 import Button from 'components/Ui/Buttons/Button';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { SelectItem } from 'components/Ui/Form/types';
+import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import { ServiceTypeEnum } from 'helpers/enums';
 import generateSelectTimeArray from 'helpers/generateSelectTimeArray';
-import { ChangeEvent } from 'react';
+import { useCompany } from 'hooks/useCompany';
+import { ChangeEvent, FormEvent } from 'react';
 import { HiArrowLeft, HiCloudUpload } from 'react-icons/hi';
+import { toast } from 'react-toastify';
 import { useAddNewServiceMutation } from 'services/company.api';
 import { IEmployee } from 'services/types/employee.types';
-import { AddServiceStepProps } from 'services/types/service.type';
+import {
+  AddServiceStepProps,
+  IEmployeeSettingsDto,
+  INewServiceDtoType,
+} from 'services/types/service.type';
 import { DurationBox } from '../AddServiceModal.styled';
 import EmployeeData from '../EmployeeData';
 import { ButtonBox } from '../SecondStep/SecondStep.styled';
@@ -43,20 +50,116 @@ const breakArray = generateSelectTimeArray({
   units: 'хв.',
 });
 
+interface Props extends AddServiceStepProps {
+  closeModal: () => void;
+}
+
 const ThirdStep = ({
   setStep,
   serviceData,
   setServiceData,
   providers,
-}: AddServiceStepProps) => {
+  closeModal,
+}: Props) => {
+  const { id: companyId } = useCompany();
+
   const [addNewService, { isLoading }] = useAddNewServiceMutation();
 
-  const handleSubmit = () => {};
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    const data: Partial<INewServiceDtoType> = Object.fromEntries(
+      Object.entries(serviceData).filter(
+        ([key]) =>
+          key !== 'category' &&
+          key !== 'durationHours' &&
+          key !== 'durationMinutes' &&
+          key !== 'break' &&
+          key !== 'breakDuration' &&
+          key !== 'employeesSettings' &&
+          key !== 'placesLimit' &&
+          key !== 'capacityLimit'
+      )
+    );
+
+    if (serviceData.category?.id) {
+      data.category = +serviceData.category?.id;
+    }
+
+    let duration = 0;
+
+    if (serviceData.durationHours?.id) {
+      duration = duration + hoursToMilliseconds(+serviceData.durationHours?.id);
+    }
+
+    if (serviceData.durationMinutes?.id) {
+      duration =
+        duration + minutesToMilliseconds(+serviceData.durationMinutes.id);
+    }
+
+    if (duration > 0) data.duration = duration;
+
+    if (serviceData.break && serviceData.breakDuration?.id) {
+      data.break = minutesToMilliseconds(+serviceData.breakDuration.id);
+    }
+
+    if (serviceData.employeesSettings.length > 0) {
+      data.employeesSettings = serviceData.employeesSettings.map(item => {
+        const settings: IEmployeeSettingsDto = {
+          employeeId: item.employeeId,
+        };
+
+        if (item.price) {
+          settings.price = item.price;
+        }
+
+        let duration = 0;
+
+        if (item.durationHours?.id) {
+          duration = duration + hoursToMilliseconds(+item.durationHours?.id);
+        }
+
+        if (item.durationMinutes?.id) {
+          duration = duration + minutesToMilliseconds(+item.durationMinutes.id);
+        }
+
+        if (duration > 0) settings.duration = duration;
+
+        return settings;
+      });
+    }
+
+    if (serviceData.capacityLimit && serviceData.capacity > 0) {
+      data.capacity = serviceData.capacity;
+    }
+
+    if (serviceData.placesLimit && serviceData.placeLimit > 0) {
+      data.placeLimit = serviceData.placeLimit;
+    }
+
+    if (data.desc === '') {
+      delete data.desc;
+    }
+
+    const service = await addNewService({
+      companyId,
+      data: data as INewServiceDtoType,
+    }).unwrap();
+
+    if (service && service.id) {
+      toast.success(`Сервіс "${service.name}" додано`);
+      closeModal();
+    }
+  };
 
   const stateChange = (e: ChangeEvent<HTMLInputElement>, id?: string) => {
     const { name, value, type } = e.target;
 
     if (type === 'checkbox') {
+      if (name === 'break' && !serviceData.break) {
+        setServiceData(p => ({ ...p, breakDuration: breakArray[0] }));
+      }
+
       return setServiceData(p => ({
         ...p,
         [name]: !p?.[name as keyof typeof p],
@@ -155,7 +258,7 @@ const ThirdStep = ({
     isEmployeesSettingsChecked;
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <FormBox>
         <SettingsBlockBox as="ul">
           <Parameter>Призначення</Parameter>
@@ -318,8 +421,9 @@ const ThirdStep = ({
         <Button
           type="submit"
           $colors="accent"
-          disabled={Boolean(isNextDisabled)}
+          disabled={Boolean(isNextDisabled) || isLoading}
           Icon={HiCloudUpload}
+          isLoading={isLoading}
         >
           Додати
         </Button>

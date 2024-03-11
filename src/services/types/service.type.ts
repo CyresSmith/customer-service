@@ -4,8 +4,8 @@ import { IEmployee } from './employee.types';
 
 export type EmployeeSettings = {
   employeeId: string;
-  durationHours: SelectItem;
-  durationMinutes: SelectItem;
+  durationHours?: SelectItem;
+  durationMinutes?: SelectItem;
   price?: number;
 };
 
@@ -27,7 +27,7 @@ export type ServiceDataType = {
   price: number;
   break: boolean;
   breakDuration?: SelectItem | null;
-  employeesSettings: Partial<EmployeeSettings>[] | [];
+  employeesSettings: EmployeeSettings[] | [];
   images?: string[];
   capacityLimit: boolean;
   capacity: number;
@@ -49,7 +49,7 @@ export interface INewServiceDtoType
     | 'placesLimit'
     | 'placeLimit'
   > {
-  category: string;
+  category: number;
   duration: number;
   break: number;
   employeesSettings?: IEmployeeSettingsDto[];
@@ -58,7 +58,8 @@ export interface INewServiceDtoType
 }
 
 export interface IAddNewServiceDto {
-  companyId: nu;
+  companyId: string;
+  data: INewServiceDtoType;
 }
 
 export type AddServiceStepProps = {
@@ -66,4 +67,14 @@ export type AddServiceStepProps = {
   setStep: Dispatch<SetStateAction<number>>;
   serviceData: ServiceDataType;
   setServiceData: Dispatch<SetStateAction<ServiceDataType>>;
+};
+
+export type ServiceBasicInfo = {
+  id: number;
+  name: string;
+  avatar: string | null;
+  duration: number;
+  price: number;
+  type: string;
+  category: string;
 };
