@@ -41,16 +41,22 @@ export const GeneralSettings = styled.p`
   align-items: center;
 `;
 
-export const Parameter = styled.p`
+export const Parameter = styled.li`
   font-size: ${theme.fontSizes.l};
   font-weight: ${theme.fontWeights.light};
 `;
 
-export const BreakBox = styled.li`
-  display: grid;
-  grid-template-columns: 200px max-content;
+export const CheckboxBox = styled.ul`
+  display: flex;
+  flex-direction: column;
   gap: ${theme.space[4]};
   margin-top: ${theme.space[6]};
-  min-height: 34px;
-  align-items: center;
+
+  > li {
+    display: grid;
+    grid-template-columns: 200px 120px;
+    min-height: 34px;
+    align-items: center;
+    gap: ${theme.space[4]};
+  }
 `;

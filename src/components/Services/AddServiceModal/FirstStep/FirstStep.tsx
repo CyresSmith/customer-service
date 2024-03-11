@@ -69,17 +69,13 @@ const FirstStep = ({
     desc: serviceData?.desc || '',
   };
 
-  const [serviceType, setServiceType] = useState<ServiceTypeEnum>(
-    (serviceData?.type as ServiceTypeEnum) || ServiceTypeEnum.INDIVIDUAL
-  );
-
   const inputs: Partial<InputProps>[] = [
     {
       name: 'category',
       type: 'select',
       selectItems: [
         ...categories
-          .filter(({ type }) => type === serviceType)
+          .filter(({ type }) => type === serviceData.type)
           .map(({ id, name }) => ({ id, value: name })),
         addCategoryItem,
       ],
@@ -121,8 +117,7 @@ const FirstStep = ({
   };
 
   const handleTypeSelectClick = (item: RadioSelectItemType) => {
-    setServiceData(p => ({ ...p, type: item.id }));
-    setServiceType(item.id as ServiceTypeEnum);
+    setServiceData(p => ({ ...p, type: item.id, category: null }));
   };
 
   const handleAvatarUpload = () => {};
@@ -132,7 +127,7 @@ const FirstStep = ({
 
   useEffect(() => {
     setState(p => ({ ...p, category: initialState.category }));
-  }, [serviceType]);
+  }, [serviceData.type]);
 
   useEffect(() => {
     if (!data) return;
@@ -158,7 +153,7 @@ const FirstStep = ({
             <FormSide>
               <RadioSelect
                 items={selectItems}
-                selectedItemId={serviceType}
+                selectedItemId={serviceData.type}
                 onSelect={handleTypeSelectClick}
               />
 
@@ -172,6 +167,7 @@ const FirstStep = ({
                       handleChange={handleChange}
                       handleSelect={handleCategorySelect}
                       isValid={getErrorMessage(item.name, invalidFields)}
+                      disabledIcon={item.name === 'category' ? true : false}
                     />
                   ))}
                 </FormSide>

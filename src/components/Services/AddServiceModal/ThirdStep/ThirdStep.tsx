@@ -1,9 +1,11 @@
 import Button from 'components/Ui/Buttons/Button';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { SelectItem } from 'components/Ui/Form/types';
+import { ServiceTypeEnum } from 'helpers/enums';
 import generateSelectTimeArray from 'helpers/generateSelectTimeArray';
 import { ChangeEvent } from 'react';
-import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
+import { HiArrowLeft, HiCloudUpload } from 'react-icons/hi';
+import { useAddNewServiceMutation } from 'services/company.api';
 import { IEmployee } from 'services/types/employee.types';
 import { AddServiceStepProps } from 'services/types/service.type';
 import { DurationBox } from '../AddServiceModal.styled';
@@ -11,7 +13,7 @@ import EmployeeData from '../EmployeeData';
 import { ButtonBox } from '../SecondStep/SecondStep.styled';
 import SettingsBlock from './SettingsBlock';
 import {
-  BreakBox,
+  CheckboxBox,
   Employee,
   FormBox,
   GeneralSettings,
@@ -19,23 +21,6 @@ import {
   Parameter,
   SettingsBlockBox,
 } from './ThirdStep.styled';
-
-type SettingsType = {
-  price: number;
-  durationHours: SelectItem;
-  durationMinutes: SelectItem;
-  break: boolean;
-  breakDuration: SelectItem;
-};
-
-interface IEmployeeSettings
-  extends Pick<SettingsType, 'price' | 'durationHours' | 'durationMinutes'> {
-  employeeId: number;
-}
-
-interface IInitialState extends SettingsType {
-  employeesSettings: IEmployeeSettings[];
-}
 
 const hoursArray = generateSelectTimeArray({
   min: 0,
@@ -64,11 +49,22 @@ const ThirdStep = ({
   setServiceData,
   providers,
 }: AddServiceStepProps) => {
-  const stateChange = (e: ChangeEvent<HTMLInputElement>, id?: string) => {
-    const { name, value } = e.target;
+  const [addNewService, { isLoading }] = useAddNewServiceMutation();
 
-    if (name === 'break') {
-      return setServiceData(p => ({ ...p, break: !p.break }));
+  const handleSubmit = () => {
+
+    const data = 
+
+  };
+
+  const stateChange = (e: ChangeEvent<HTMLInputElement>, id?: string) => {
+    const { name, value, type } = e.target;
+
+    if (type === 'checkbox') {
+      return setServiceData(p => ({
+        ...p,
+        [name]: !p?.[name as keyof typeof p],
+      }));
     }
 
     const newValue = Number.isNaN(+value)
@@ -163,9 +159,9 @@ const ThirdStep = ({
     isEmployeesSettingsChecked;
 
   return (
-    <div>
+    <form>
       <FormBox>
-        <SettingsBlockBox>
+        <SettingsBlockBox as="ul">
           <Parameter>Призначення</Parameter>
           <Parameter>Ціна, грн</Parameter>
           <Parameter>Час</Parameter>
@@ -192,8 +188,6 @@ const ThirdStep = ({
               const settings = serviceData.employeesSettings?.find(
                 ({ employeeId }) => employeeId === id
               );
-
-              console.log('🚀 ~ settings.price:', settings?.price);
 
               const userData = providers?.find(
                 ({ id: employeeId }) => +employeeId === +id
@@ -237,31 +231,83 @@ const ThirdStep = ({
         </List>
       </FormBox>
 
-      <BreakBox>
-        <CustomFormInput
-          name="break"
-          type="checkbox"
-          value={serviceData.break}
-          handleChange={stateChange}
-          disabledIcon
-        />
+      <CheckboxBox>
+        <li>
+          <CustomFormInput
+            name="break"
+            type="checkbox"
+            value={serviceData.break}
+            handleChange={stateChange}
+            disabledIcon
+          />
 
-        {serviceData.break && (
-          <DurationBox>
-            <CustomFormInput
-              name="breakDuration"
-              label={false}
-              type="select"
-              value={serviceData.breakDuration || breakArray[0]}
-              selectItems={breakArray}
-              handleSelect={(selected, fieldName) =>
-                stateSelect(selected, fieldName)
-              }
-              disabledIcon
-            />
-          </DurationBox>
+          {serviceData.break && (
+            <DurationBox>
+              <CustomFormInput
+                name="breakDuration"
+                label={false}
+                type="select"
+                value={serviceData.breakDuration || breakArray[0]}
+                selectItems={breakArray}
+                handleSelect={(selected, fieldName) =>
+                  stateSelect(selected, fieldName)
+                }
+                disabledIcon
+              />
+            </DurationBox>
+          )}
+        </li>
+
+        {serviceData.type === ServiceTypeEnum.GROUP && (
+          <>
+            <li>
+              <CustomFormInput
+                name="capacityLimit"
+                type="checkbox"
+                value={serviceData.capacityLimit}
+                handleChange={stateChange}
+                disabledIcon
+              />
+
+              {serviceData.capacityLimit && (
+                <DurationBox>
+                  <CustomFormInput
+                    name="capacity"
+                    label={false}
+                    type="text"
+                    value={serviceData.capacity || 0}
+                    handleChange={stateChange}
+                    disabledIcon
+                  />
+                </DurationBox>
+              )}
+            </li>
+
+            <li>
+              <CustomFormInput
+                name="placesLimit"
+                type="checkbox"
+                value={serviceData.placesLimit}
+                handleChange={stateChange}
+                disabledIcon
+              />
+
+              {serviceData.placesLimit && (
+                <DurationBox>
+                  <CustomFormInput
+                    name="placeLimit"
+                    label={false}
+                    type="text"
+                    value={serviceData.placeLimit || 1}
+                    handleChange={stateChange}
+                    disabledIcon
+                  />
+                </DurationBox>
+              )}
+            </li>
+          </>
         )}
-      </BreakBox>
+      </CheckboxBox>
 
       <ButtonBox>
         <Button
@@ -277,13 +323,12 @@ const ThirdStep = ({
           type="submit"
           $colors="accent"
           disabled={Boolean(isNextDisabled)}
-          Icon={HiArrowRight}
-          $iconPosition="r"
+          Icon={HiCloudUpload}
         >
-          Далі
+          Додати
         </Button>
       </ButtonBox>
-    </div>
+    </form>
   );
 };
 

@@ -9,6 +9,11 @@ export type EmployeeSettings = {
   price?: number;
 };
 
+export interface IEmployeeSettingsDto
+  extends Pick<EmployeeSettings, 'employeeId' | 'price'> {
+  duration?: number;
+}
+
 export type ServiceDataType = {
   avatar?: string;
   category: SelectItem | null;
@@ -22,11 +27,39 @@ export type ServiceDataType = {
   price: number;
   break: boolean;
   breakDuration?: SelectItem | null;
-  capacity?: number;
-  places?: number;
   employeesSettings: Partial<EmployeeSettings>[] | [];
   images?: string[];
+  capacityLimit: boolean;
+  capacity: number;
+  placesLimit: boolean;
+  placeLimit: number;
 };
+
+export interface INewServiceDtoType
+  extends Omit<
+    ServiceDataType,
+    | 'category'
+    | 'durationHours'
+    | 'durationMinutes'
+    | 'break'
+    | 'breakDuration'
+    | 'employeesSettings'
+    | 'capacityLimit'
+    | 'capacity'
+    | 'placesLimit'
+    | 'placeLimit'
+  > {
+  category: string;
+  duration: number;
+  break: number;
+  employeesSettings?: IEmployeeSettingsDto[];
+  capacity?: number;
+  placeLimit?: number;
+}
+
+export interface IAddNewServiceDto {
+  companyId: nu;
+}
 
 export type AddServiceStepProps = {
   providers?: IEmployee[];

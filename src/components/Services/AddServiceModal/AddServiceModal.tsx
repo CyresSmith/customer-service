@@ -24,13 +24,16 @@ const initialState: ServiceDataType = {
   price: 0,
   break: false,
   employeesSettings: [],
+  capacityLimit: false,
+  capacity: 0,
+  placesLimit: false,
+  placeLimit: 1,
 };
 
 const AddServiceModal = ({ openModal, handleModalClose }: Props) => {
   const { employees } = useCompany();
   const [step, setStep] = useState(1);
   const [serviceData, setServiceData] = useState(initialState);
-  console.log('🚀 ~ AddServiceModal ~ serviceData:', serviceData);
 
   const providers = employees.filter(
     ({ provider, status }) => provider && status === EmployeeStatusEnum.WORKING
@@ -48,7 +51,7 @@ const AddServiceModal = ({ openModal, handleModalClose }: Props) => {
         return 'Час та вартість';
 
       default:
-        break;
+        return 'Створення послуги';
     }
   };
 

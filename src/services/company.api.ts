@@ -19,6 +19,7 @@ import {
   addExistUserEmployeeData,
   addNewUserEmployeeData,
 } from './types/employee.types';
+import { INewServiceDtoType } from './types/service.type';
 
 export const companyApi = createApi({
   reducerPath: 'companyApi',
@@ -115,7 +116,7 @@ export const companyApi = createApi({
       invalidatesTags: ['companyApi'],
     }),
 
-    addNewService: builder.mutation<any, any>({
+    addNewService: builder.mutation<unknown, INewServiceDtoType>({
       query: ({ id, data }) => ({
         url: `/company/${id}/service`,
         method: 'POST',
