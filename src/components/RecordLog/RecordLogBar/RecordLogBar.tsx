@@ -12,6 +12,7 @@ type Props = {
   selectItems: SelectItem[];
   selected: SelectItem[];
   handleSelect: (item: SelectItem) => void;
+  openEventModal: (step: number) => void;
 };
 
 const RecordLogBar = ({
@@ -20,6 +21,7 @@ const RecordLogBar = ({
   handleSelect,
   selected,
   selectItems,
+  openEventModal,
 }: Props) => {
   return (
     <Container>
@@ -33,7 +35,7 @@ const RecordLogBar = ({
           closeOnSelect={false}
         />
       </LeftWrapper>
-      <Button Icon={HiPlus} children="Додати запис" $colors='accent' />
+      <Button onClick={() => openEventModal(1)} Icon={HiPlus} children="Додати запис" $colors='accent' />
     </Container>
   );
 };

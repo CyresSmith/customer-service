@@ -45,9 +45,10 @@ export const NoAvatar = styled.p`
 
 export const InfoBox = styled.div`
     display: flex;
-    max-width: calc(100% - 70px);
     flex-direction: column;
     justify-content: center;
+    gap: ${theme.space[2]};
+    max-width: calc(100% - 70px);
     white-space: nowrap;
 `
 

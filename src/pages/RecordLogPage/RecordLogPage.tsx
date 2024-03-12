@@ -1,6 +1,8 @@
+import CreateEvent from 'components/CreateEvent';
 import RecordLog from 'components/RecordLog';
 import RecordLogBar from 'components/RecordLog/RecordLogBar';
 import { SelectItem } from 'components/Ui/Form/types';
+import Modal from 'components/Ui/Modal/Modal';
 import PageContentLayout from 'components/Ui/PageContentLayout';
 import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
@@ -8,6 +10,16 @@ import { useState } from 'react';
 const RecordLogPage = () => {
   const { employees, workingHours } = useCompany();
   const providers = employees.filter(e => e.provider);
+  const [eventStep, setEventStep] = useState<number | null>(null);
+
+  const handleEventStep = (step: number) => {
+    setEventStep(step);
+  };
+
+  const closeEventModal = () => {
+    setEventStep(null);
+  };
+
   const providersForSelect = providers.map(p => {
     return {
       id: p.id,
@@ -48,25 +60,41 @@ const RecordLogPage = () => {
       : providers;
 
   return (
-    <PageContentLayout
-      bar={
-        <RecordLogBar
-          date={date}
-          selectItems={[selectAll, ...providersForSelect]}
-          selected={selectedItem}
-          setDate={setDate}
-          handleSelect={handleSelect}
+    <>
+      <PageContentLayout
+        bar={
+          <RecordLogBar
+            date={date}
+            selectItems={[selectAll, ...providersForSelect]}
+            selected={selectedItem}
+            setDate={setDate}
+            handleSelect={handleSelect}
+            openEventModal={handleEventStep}
+          />
+        }
+        content={
+          <RecordLog
+            date={date}
+            setDate={setDate}
+            workingHours={workingHours}
+            employees={filteredProvidersList}
+          />
+        }
+      />
+      {eventStep !== null && 
+        <Modal
+          closeModal={closeEventModal}
+          $isOpen={eventStep !== null}
+          title='Створення запису'
+          children={
+            <CreateEvent
+              step={eventStep}
+              handleEventStep={handleEventStep}
+            />
+          }
         />
       }
-      content={
-        <RecordLog
-          date={date}
-          setDate={setDate}
-          workingHours={workingHours}
-          employees={filteredProvidersList}
-        />
-      }
-    />
+    </>
   );
 };
 
