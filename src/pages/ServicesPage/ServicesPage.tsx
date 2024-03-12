@@ -2,9 +2,7 @@ import Services from 'components/Services/Services';
 import ServicesBar from 'components/Services/ServicesBar';
 import PageContentLayout from 'components/Ui/PageContentLayout';
 
-type Props = {};
-
-const ServicesPage = (props: Props) => {
+const ServicesPage = () => {
   return <PageContentLayout bar={<ServicesBar />} content={<Services />} />;
 };
 

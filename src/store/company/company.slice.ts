@@ -21,6 +21,7 @@ const initialState: ICompanyInitialState = {
     images: [],
     activities: [],
     employees: [],
+    services: [],
   },
   userRole: EmployeeRoleEnum.USER,
 };

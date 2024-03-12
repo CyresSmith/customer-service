@@ -1,5 +1,6 @@
 import { ICompanySchedule } from 'components/CompanyProfile/SetScheduleModal/SetScheduleModal';
 import { IEmployee } from 'services/types/employee.types';
+import { ServiceBasicInfo } from 'services/types/service.type';
 
 export interface IWorkTime {
   from: number;
@@ -19,7 +20,7 @@ export type Company = {
   id: string;
   name: string;
   phones: string[];
-  city: string;   
+  city: string;
   address: string;
   index: string;
   workingHours: IWorkingHours[] | null;
@@ -28,6 +29,7 @@ export type Company = {
   images: string[];
   activities: Activity[];
   employees: IEmployee[];
+  services: ServiceBasicInfo[];
 };
 
 export interface CreateCompany

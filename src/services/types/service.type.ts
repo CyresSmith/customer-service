@@ -76,5 +76,5 @@ export type ServiceBasicInfo = {
   duration: number;
   price: number;
   type: string;
-  category: string;
+  category: { id: number; name: string };
 };
