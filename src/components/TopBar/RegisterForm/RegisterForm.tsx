@@ -67,7 +67,7 @@ const RegisterForm = ({ closeModal }: Props) => {
         onSubmit={handleSubmit}
         initialState={initialRegState}
         inputs={registerInputs}
-        title='Реєстрація'
+        // title='Реєстрація'
       />
     </FormBox>
   );

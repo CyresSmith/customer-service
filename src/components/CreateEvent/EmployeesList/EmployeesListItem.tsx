@@ -1,23 +1,26 @@
 import { IEmployee } from "services/types/employee.types"
-import { Avatar, AvatarWrapper, ListItem, Name, NoAvatarIcon } from "./EmployeesList.styled";
-import { RxAvatar } from "react-icons/rx";
+import { Avatar, AvatarWrapper, ListItem, Name, NoAvatarIcon, Position, TextBox } from "./EmployeesList.styled";
+import { HiFaceSmile } from "react-icons/hi2";
 
 type Props = {
     employee: IEmployee;
 };
 
 export const EmployeesListItem = ({ employee }: Props) => {
-    const { avatar, firstName, lastName } = employee;
+    const { avatar, firstName, lastName, jobTitle } = employee;
     
     return (
         <ListItem>
             <AvatarWrapper>
                 {avatar ? 
                     <Avatar src={avatar} alt='Employee photo' /> :
-                    <NoAvatarIcon as={RxAvatar} />
+                    <NoAvatarIcon as={HiFaceSmile} />
                 }
             </AvatarWrapper>
-            <Name>{ lastName ? firstName + ' ' + lastName : firstName }</Name>
+            <TextBox>
+                <Name>{lastName ? firstName + ' ' + lastName : firstName}</Name>
+                <Position>{ jobTitle }</Position>   
+            </TextBox>
         </ListItem>
     )
 }

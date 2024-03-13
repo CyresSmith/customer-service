@@ -1,6 +1,7 @@
 // import { IMonthSchedule, ITime } from './schedule.types';
 
 import { IMonthSchedule } from "./schedule.types";
+import { ServiceDataType } from "./service.type";
 
 export interface IEmployeeUser {
   id: string;
@@ -37,7 +38,8 @@ export interface IEmployee {
   lastName: string;
   birthday: string;
   user: IEmployeeUser;
-  schedules: IMonthSchedule[],
+  schedules: IMonthSchedule[];
+  services: Partial<ServiceDataType>[];
 }
 
 export type createEmployeeData = Pick<

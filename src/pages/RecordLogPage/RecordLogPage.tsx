@@ -10,9 +10,9 @@ import { useState } from 'react';
 const RecordLogPage = () => {
   const { employees, workingHours } = useCompany();
   const providers = employees.filter(e => e.provider);
-  const [eventStep, setEventStep] = useState<number | null>(null);
+  const [eventStep, setEventStep] = useState<string | null>(null);
 
-  const handleEventStep = (step: number) => {
+  const handleEventStep = (step: string) => {
     setEventStep(step);
   };
 
@@ -85,7 +85,10 @@ const RecordLogPage = () => {
         <Modal
           closeModal={closeEventModal}
           $isOpen={eventStep !== null}
-          title='Створення запису'
+        title={eventStep === 'employees' ?
+          'Оберіть працівника' :
+          'Створення запису'
+        }
           children={
             <CreateEvent
               step={eventStep}

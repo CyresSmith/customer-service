@@ -116,13 +116,6 @@ export const companyApi = createApi({
       invalidatesTags: ['companyApi'],
     }),
 
-    getServices: builder.query<ServiceBasicInfo[], { id: string }>({
-      query: ({ id }) => ({
-        url: `/company/${id}/services`,
-        method: 'GET',
-      }),
-    }),
-
     addNewService: builder.mutation<ServiceBasicInfo, IAddNewServiceDto>({
       query: ({ companyId, data }) => ({
         url: `/company/${companyId}/service`,
@@ -135,6 +128,13 @@ export const companyApi = createApi({
     getServicesCategories: builder.query<ServiceCategory[], { id: string }>({
       query: ({ id }) => ({
         url: `/company/${id}/services-categories`,
+        method: 'GET',
+      }),
+    }),
+
+    getServices: builder.query<ServiceBasicInfo[], { id: string }>({
+      query: ({ id }) => ({
+        url: `/company/${id}/services`,
         method: 'GET',
       }),
     }),

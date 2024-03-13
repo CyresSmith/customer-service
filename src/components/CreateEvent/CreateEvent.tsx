@@ -5,25 +5,26 @@ import EmployeesList from "./EmployeesList";
 import { useCompany } from "hooks/useCompany";
 
 type Props = {
-    step: number;
-    handleEventStep: (step: number) => void;
+    step: string;
+    handleEventStep: (step: string) => void;
 }
 
 const CreateEvent = ({ step, handleEventStep }: Props) => {
     const { employees } = useCompany();
+    const providersWithServices = employees.filter(e => e.provider && e.services?.length > 0);
 
     return (
         <Container>
             <ContentBox>
-                {step === 1 && <FirstStep setStep={handleEventStep} />}
-                {step === 2 && <EmployeesList employees={employees} />}
+                {step === 'create' && <FirstStep setStep={handleEventStep} />}
+                {step === 'employees' && <EmployeesList employees={providersWithServices} />}
             </ContentBox>
-            <BtnsBox $step={step}>
-                {step !== 1 &&
-                    <Button onClick={() => handleEventStep(step - 1)} children='Назад' $colors="light" />
-                }
-                <Button onClick={() => handleEventStep(step + 1)} children='Далі' $colors="accent" />
-            </BtnsBox>
+            {step !== 'create' &&
+                <BtnsBox $step={step}>
+                    <Button onClick={() => handleEventStep('create')} children='Назад' $colors="light" />
+                    <Button onClick={() => handleEventStep('employees')} children='Далі' $colors="accent" />
+                </BtnsBox>
+            }
         </Container>
     )
 };

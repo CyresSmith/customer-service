@@ -2,20 +2,20 @@ import { Container, FirstStepChoose, FirstStepChooseDesc, FirstStepChooseIcon, F
 import { GrDocumentUser, GrServicePlay } from "react-icons/gr";
 
 type Props = {
-    setStep: (step: number) => void;
+    setStep: (step: string) => void;
 }
 
 export const FirstStep = ({setStep}: Props) => {
     return (
         <Container>
-            <FirstStepChoose onClick={() => setStep(2)}>
+            <FirstStepChoose onClick={() => setStep('employees')}>
                 <FirstStepChooseIcon as={GrDocumentUser} />
                 <FirstStepChooseText>
                     <FirstStepChooseTitle>Обрати працівника</FirstStepChooseTitle>
                     <FirstStepChooseDesc>Якщо клієнт хоче записатись до конкретного працівника</FirstStepChooseDesc>
                 </FirstStepChooseText>
             </FirstStepChoose>
-            <FirstStepChoose onClick={() => setStep(3)}>
+            <FirstStepChoose onClick={() => setStep('services')}>
                 <FirstStepChooseIcon as={GrServicePlay } />
                 <FirstStepChooseText>
                     <FirstStepChooseTitle>Обрати послугу</FirstStepChooseTitle>
