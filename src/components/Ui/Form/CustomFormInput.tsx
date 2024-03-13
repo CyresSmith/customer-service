@@ -27,11 +27,12 @@ const CustomFormInput = ({
   handleSelect,
   isValid,
   disabledIcon,
-  isRequired,
+  isRequired = false,
   isReadonly = false,
   label = true,
   placeholder = '',
   selectItems,
+  disabled = false,
 }: InputProps) => {
   const [hidden, setHidden] = useState(true);
   const valueRef = useRef(value).current;
@@ -47,6 +48,7 @@ const CustomFormInput = ({
       <FormInputBox>
         {type === 'checkbox' && typeof value === 'boolean' && handleChange ? (
           <Checkbox
+            disabled={disabled}
             name={name}
             isRequired={isRequired}
             isChecked={value}
@@ -54,7 +56,7 @@ const CustomFormInput = ({
           />
         ) : type === 'select' && selectItems && handleSelect ? (
           <CustomFormSelect
-            isRequired={isRequired}
+            disabled={disabled}
             width="100%"
             handleSelect={handleSelect}
             selectItems={selectItems}
@@ -67,6 +69,7 @@ const CustomFormInput = ({
           />
         ) : (
           <FormInput
+            disabled={disabled}
             type={type !== 'password' ? type : hidden ? type : 'text'}
             name={name}
             value={

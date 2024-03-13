@@ -7,6 +7,7 @@ import generateSelectTimeArray from 'helpers/generateSelectTimeArray';
 import { useCompany } from 'hooks/useCompany';
 import { ChangeEvent, FormEvent } from 'react';
 import { HiArrowLeft, HiCloudUpload } from 'react-icons/hi';
+import { useOutletContext } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAddNewServiceMutation } from 'services/company.api';
 import { IEmployee } from 'services/types/employee.types';
@@ -15,9 +16,9 @@ import {
   IEmployeeSettingsDto,
   INewServiceDtoType,
 } from 'services/types/service.type';
-import { DurationBox } from '../AddServiceModal.styled';
 import EmployeeData from '../EmployeeData';
 import { ButtonBox } from '../SecondStep/SecondStep.styled';
+import { DurationBox } from '../ServiceModal.styled';
 import SettingsBlock from './SettingsBlock';
 import {
   CheckboxBox,
@@ -63,6 +64,9 @@ const ThirdStep = ({
 }: Props) => {
   const { id: companyId } = useCompany();
 
+  const { refetchCompanyData } = useOutletContext<{
+    refetchCompanyData: () => void;
+  }>();
   const [addNewService, { isLoading }] = useAddNewServiceMutation();
 
   const handleSubmit = async (e: FormEvent) => {
@@ -147,6 +151,7 @@ const ThirdStep = ({
     }).unwrap();
 
     if (service && service.id) {
+      refetchCompanyData();
       toast.success(`Сервіс "${service.name}" додано`);
       closeModal();
     }

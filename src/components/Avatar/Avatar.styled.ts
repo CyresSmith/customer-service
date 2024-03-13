@@ -30,7 +30,7 @@ export const ImageBox = styled.div<IImageBox>`
   transition: ${theme.transition.modal};
 
   &:hover,
-    :focus {
+  :focus {
     border-color: ${theme.colors.accent.main};
     box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
     -webkit-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
@@ -80,16 +80,17 @@ export const ImageBox = styled.div<IImageBox>`
   }
 `;
 
-export const ButtonsBox = styled.div<{width: number}>`
+export const ButtonsBox = styled.div<{ width: number }>`
   position: absolute;
-  left: 0; 
-  right: 0;
-  bottom: -${props => props.width === 300 ? props.width * 0.1 : props.width * 0.15}px;
-  margin-left: auto; 
-  margin-right: auto; 
-  width: 100px;
+  padding: ${theme.space[1]};
+  bottom: ${theme.space[3]};
+  min-width: 80px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: ${theme.space[2]};
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-radius: ${theme.radii.m};
+  background-color: rgba(0, 0, 0, 0.5);
 `;

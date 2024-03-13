@@ -2,7 +2,7 @@ import { FormInputsListItem } from 'components/Ui/Form/CustomForm.styled';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { SelectItem } from 'components/Ui/Form/types';
 import { ChangeEvent, ReactNode } from 'react';
-import { DurationBox } from '../AddServiceModal.styled';
+import { DurationBox } from '../ServiceModal.styled';
 import { SettingsBlockBox } from './ThirdStep.styled';
 
 type Props = {
@@ -57,6 +57,7 @@ const SettingsBlock = ({
           />
 
           <CustomFormInput
+            disabled={durationHoursValue.id === 24}
             name="durationMinutes"
             type="select"
             label={false}

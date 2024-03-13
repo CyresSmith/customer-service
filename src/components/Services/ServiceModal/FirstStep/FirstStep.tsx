@@ -1,6 +1,9 @@
 import AddCategoryModal from 'components/AddCategoryModal';
-import Avatar from 'components/Avatar';
 import Button from 'components/Ui/Buttons/Button';
+import {
+  FormInputLabel,
+  FormInputsListItem,
+} from 'components/Ui/Form/CustomForm.styled';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import {
   InputProps,
@@ -26,7 +29,7 @@ import {
   Form,
   FormSide,
   ModalBox,
-} from '../AddServiceModal.styled';
+} from '../ServiceModal.styled';
 
 const addCategoryItem = { id: 'add', value: 'Додати категорію...' };
 
@@ -118,14 +121,17 @@ const FirstStep = ({
     setServiceData(p => ({ ...p, type: item.id, category: null }));
   };
 
-  const handleAvatarUpload = () => {};
-
   const isSubmitDisabled =
     state.name === '' || state.category === null || invalidFields.length > 0;
 
   useEffect(() => {
-    setState(p => ({ ...p, category: initialState.category }));
-  }, [serviceData.type]);
+    setState(p => ({
+      ...p,
+      category: serviceData?.category || initialState.category,
+      name: serviceData?.name,
+      desc: serviceData?.desc,
+    }));
+  }, [serviceData]);
 
   useEffect(() => {
     if (!data) return;
@@ -140,20 +146,15 @@ const FirstStep = ({
           <Loader />
         ) : (
           <AddServiceModalBox>
-            <Avatar
-              currentImageUrl={''}
-              isLoading={false}
-              size={150}
-              alt="employee image"
-              handleUpload={handleAvatarUpload}
-            />
-
             <FormSide>
-              <RadioSelect
-                items={selectItems}
-                selectedItemId={serviceData.type}
-                onSelect={handleTypeSelectClick}
-              />
+              <FormInputsListItem as="div">
+                <FormInputLabel>Тип</FormInputLabel>
+                <RadioSelect
+                  items={selectItems}
+                  selectedItemId={serviceData.type}
+                  onSelect={handleTypeSelectClick}
+                />
+              </FormInputsListItem>
 
               <Form onSubmit={handleSubmit}>
                 <FormSide>

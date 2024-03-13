@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { HiCheckCircle, HiUserAdd } from 'react-icons/hi';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi2';
 import { AddServiceStepProps } from 'services/types/service.type';
-import { FormSide, ModalBox } from '../AddServiceModal.styled';
 import EmployeeData, { IEmployeeData } from '../EmployeeData';
+import { FormSide, ModalBox } from '../ServiceModal.styled';
 import {
   ButtonBox,
   CHECK_SIZE,

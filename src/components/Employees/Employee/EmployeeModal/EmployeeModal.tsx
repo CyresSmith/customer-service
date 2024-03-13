@@ -1,21 +1,13 @@
-import Button from 'components/Ui/Buttons/Button';
+import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
+import ModalSectionsList from 'components/Ui/Modal/ModalSectionsList';
 import translateEmployee from 'helpers/translateEmployee';
 import { useState } from 'react';
 import { HiCurrencyDollar } from 'react-icons/hi';
-import {
-  HiCalendarDays,
-  HiFaceSmile,
-  HiMiniIdentification,
-} from 'react-icons/hi2';
-import { EmployeeRoleEnum, IEmployee } from 'services/types/employee.types';
-import { EmployeeImg, JobTitle, Name, NameBox } from '../Employee.styled';
+import { HiCalendarDays, HiMiniIdentification } from 'react-icons/hi2';
+import { IEmployee } from 'services/types/employee.types';
 import EmployeeProfile from '../EmployeeProfile';
-import {
-  EmployeeModalContent,
-  EmployeeModalHeader,
-  SectionsButtonList,
-} from './EmployeeModal.styled';
 import EmployeeSchedule from '../EmployeeSchedule';
+import { EmployeeModalContent } from './EmployeeModal.styled';
 
 type Props = { employee: IEmployee };
 
@@ -37,40 +29,17 @@ const EmployeeModal = ({ employee }: Props) => {
 
   return (
     <EmployeeModalContent>
-      <EmployeeModalHeader>
-        <EmployeeImg>
-          {avatar !== '' || user.avatar !== '' ? (
-            <img src={avatar || user.avatar} alt={`${fullName} image`} />
-          ) : (
-            <HiFaceSmile />
-          )}
-        </EmployeeImg>
+      <ModalHeaderWithAvatar
+        avatar={avatar || user.avatar}
+        title={fullName}
+        subtitle={translateEmployee(role) || jobTitle}
+      />
 
-        <NameBox>
-          <Name>{fullName}</Name>
-          <JobTitle>
-            {role === EmployeeRoleEnum.OWNER
-              ? translateEmployee(role)
-              : jobTitle}
-          </JobTitle>
-        </NameBox>
-      </EmployeeModalHeader>
-
-      <SectionsButtonList>
-        {sectionButtons.map(({ label, id, Icon }) => (
-          <li key={label}>
-            <Button
-              size="s"
-              $colors={activeSection === id ? 'accent' : 'light'}
-              $variant={activeSection === id ? 'solid' : 'text'}
-              onClick={() => setActiveSection(id)}
-              Icon={Icon}
-            >
-              {label}
-            </Button>
-          </li>
-        ))}
-      </SectionsButtonList>
+      <ModalSectionsList
+        sectionButtons={sectionButtons}
+        currentSection={activeSection}
+        handleSectionSelect={setActiveSection}
+      />
 
       {activeSection === 1 && <EmployeeProfile employee={employee} />}
       {activeSection === 2 && <EmployeeSchedule employee={employee} />}

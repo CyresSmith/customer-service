@@ -30,7 +30,7 @@ import {
   ButtonBox,
   FormBox,
   FormSide,
-} from '../AddServiceModal.styled';
+} from '../ServiceModal.styled';
 
 type Props = {
   setStep: Dispatch<SetStateAction<number>>;

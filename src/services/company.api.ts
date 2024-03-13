@@ -19,7 +19,11 @@ import {
   addExistUserEmployeeData,
   addNewUserEmployeeData,
 } from './types/employee.types';
-import { IAddNewServiceDto, ServiceBasicInfo } from './types/service.type';
+import {
+  IAddNewServiceDto,
+  IService,
+  ServiceBasicInfo,
+} from './types/service.type';
 
 export const companyApi = createApi({
   reducerPath: 'companyApi',
@@ -123,6 +127,18 @@ export const companyApi = createApi({
       }),
     }),
 
+    uploadServiceAvatar: builder.mutation<
+      { url: string },
+      { companyId: number; serviceId: number; data: FormData }
+    >({
+      query: ({ companyId, serviceId, data }) => ({
+        url: `company/${companyId}/service/${serviceId}/avatar`,
+        method: 'PATCH',
+        data,
+      }),
+      invalidatesTags: ['companyApi'],
+    }),
+
     addNewService: builder.mutation<ServiceBasicInfo, IAddNewServiceDto>({
       query: ({ companyId, data }) => ({
         url: `/company/${companyId}/service`,
@@ -150,6 +166,16 @@ export const companyApi = createApi({
       }),
       invalidatesTags: ['companyApi'],
     }),
+
+    getServiceData: builder.query<
+      IService,
+      { companyId: number; serviceId: number }
+    >({
+      query: ({ companyId, serviceId }) => ({
+        url: `/company/${companyId}/service/${serviceId}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -168,4 +194,6 @@ export const {
   useGetServicesCategoriesQuery,
   useAddServiceCategoryMutation,
   useGetServicesQuery,
+  useUploadServiceAvatarMutation,
+  useGetServiceDataQuery,
 } = companyApi;

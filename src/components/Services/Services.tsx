@@ -1,20 +1,31 @@
+import { ServiceOpenModal } from 'helpers/enums';
 import { useCompany } from 'hooks/useCompany';
+import { ItemBox, List, Name } from './Services.styled';
 
-type Props = {};
+type Props = {
+  handleModalOpen: (type: ServiceOpenModal | null, serviceId?: number) => void;
+};
 
-const Services = (props: Props) => {
+const Services = ({ handleModalOpen }: Props) => {
   const { services } = useCompany();
 
   return (
-    <div>
-      {services && services?.length > 0 && (
-        <ul>
-          {services?.map(item => (
-            <li key={item.id}>{item.name}</li>
+    <>
+      {services && services.length > 0 && (
+        <List>
+          {services.map(item => (
+            <ItemBox
+              key={item.id}
+              onClick={() =>
+                handleModalOpen(ServiceOpenModal.EDIT_SERVICE, item.id)
+              }
+            >
+              <Name>{item.name}</Name>
+            </ItemBox>
           ))}
-        </ul>
+        </List>
       )}
-    </div>
+    </>
   );
 };
 

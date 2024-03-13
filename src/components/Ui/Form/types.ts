@@ -22,6 +22,7 @@ export type InputProps = {
   placeholder?: string;
   selectItems?: SelectItem[];
   selected?: SelectItem;
+  disabled?: boolean;
 };
 
 export type FormProps<T> = {

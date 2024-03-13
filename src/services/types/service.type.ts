@@ -1,4 +1,5 @@
 import { SelectItem } from 'components/Ui/Form/types';
+import { ServiceTypeEnum } from 'helpers/enums';
 import { Dispatch, SetStateAction } from 'react';
 import { IEmployee } from './employee.types';
 
@@ -69,12 +70,31 @@ export type AddServiceStepProps = {
   setServiceData: Dispatch<SetStateAction<ServiceDataType>>;
 };
 
-export type ServiceBasicInfo = {
+export type EmployeesServiceSettings = {
+  employeeId: number;
+  price?: number;
+  duration?: number;
+};
+
+export interface IService {
   id: number;
   name: string;
   avatar: string | null;
   duration: number;
+  break: number | null;
   price: number;
-  type: string;
-  category: { id: number; name: string };
-};
+  desc: string | null;
+  employeesSettings: EmployeesServiceSettings[];
+  images: string[];
+  category: { id: number; name: string; type: string };
+  employees: IEmployee[];
+  resources?: unknown;
+  type: ServiceTypeEnum;
+  capacity: number;
+  placeLimit: number;
+}
+
+export type ServiceBasicInfo = Pick<
+  IService,
+  'id' | 'name' | 'avatar' | 'duration' | 'price' | 'type' | 'category'
+>;

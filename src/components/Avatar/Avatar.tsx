@@ -2,8 +2,9 @@ import Button from 'components/Ui/Buttons/Button';
 import Loader from 'components/Ui/Loader';
 import VisuallyHidden from 'components/Ui/VisuallyHidden';
 import useFileUpload from 'hooks/useFileUpload';
-import { HiCamera, HiCloudUpload, HiX } from 'react-icons/hi';
+import { HiCamera, HiX } from 'react-icons/hi';
 import { HiCursorArrowRays } from 'react-icons/hi2';
+import { IoIosSave } from 'react-icons/io';
 import { AvatarBox, ButtonsBox, ImageBox } from './Avatar.styled';
 
 type Props = {
@@ -98,20 +99,22 @@ const Avatar = ({
                   handleUpload(currentFile);
                   reset();
                 }}
-                $colors="light"
-                $variant="text"
-                Icon={HiCloudUpload}
+                $colors="success"
+                // $variant="text"
+                Icon={IoIosSave}
+                $round
               >
-                Оновити
+                {/* Оновити */}
               </Button>
 
               <Button
                 onClick={reset}
-                $colors="light"
-                $variant="text"
+                $colors="danger"
+                // $variant="text"
                 Icon={HiX}
+                $round
               >
-                Видалити
+                {/* Видалити */}
               </Button>
             </ButtonsBox>
           )}
