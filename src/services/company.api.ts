@@ -3,22 +3,24 @@ import { ServiceTypeEnum } from 'helpers/enums';
 import { axiosBaseQuery } from 'services/instance';
 import { UserData } from 'store/user/user.types';
 import {
+  Activity,
   Company,
   CreateCompany,
   IUpdateCompanyProfile,
   UpdateAvatar,
 } from '../store/company/company.types';
 import {
-  Activity,
   Category,
   CompanyCategory,
   ServiceCategory,
 } from './types/category.types';
+
 import {
   IEmployee,
   addExistUserEmployeeData,
   addNewUserEmployeeData,
 } from './types/employee.types';
+
 import {
   IAddNewServiceDto,
   IService,
@@ -120,13 +122,6 @@ export const companyApi = createApi({
       invalidatesTags: ['companyApi'],
     }),
 
-    getServices: builder.query<ServiceBasicInfo[], { id: string }>({
-      query: ({ id }) => ({
-        url: `/company/${id}/services`,
-        method: 'GET',
-      }),
-    }),
-
     uploadServiceAvatar: builder.mutation<
       { url: string },
       { companyId: number; serviceId: number; data: FormData }
@@ -151,6 +146,13 @@ export const companyApi = createApi({
     getServicesCategories: builder.query<ServiceCategory[], { id: string }>({
       query: ({ id }) => ({
         url: `/company/${id}/services-categories`,
+        method: 'GET',
+      }),
+    }),
+
+    getServices: builder.query<ServiceBasicInfo[], { id: string }>({
+      query: ({ id }) => ({
+        url: `/company/${id}/services`,
         method: 'GET',
       }),
     }),

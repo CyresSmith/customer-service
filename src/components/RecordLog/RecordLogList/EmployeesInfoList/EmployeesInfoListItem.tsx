@@ -25,7 +25,7 @@ export const EmployeesInfoListItem = ({ employee, last, date }: Props) => {
             </AvatarWrapper>
             <InfoBox>
                 <EmployeeName>{lastName ? firstName + ' ' + lastName : firstName}</EmployeeName>
-                <EmployeeDaySchedule>{`${chosenSchedule?.from && chosenSchedule?.to ? chosenSchedule.from + '-' + chosenSchedule.to : 'Не встановлено'}`}</EmployeeDaySchedule>
+                <EmployeeDaySchedule>{`${chosenSchedule?.from && chosenSchedule?.to ? chosenSchedule.from + ' - ' + chosenSchedule.to : 'Не встановлено'}`}</EmployeeDaySchedule>
             </InfoBox>
         </ListItem>
     )

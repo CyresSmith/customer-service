@@ -55,7 +55,7 @@ const LoginForm = ({ closeModal }: Props) => {
         onSubmit={handleSubmit}
         initialState={initialLoginState}
         inputs={loginInputs}
-        title='Авторизація'
+        // title='Авторизація'
       />
     </FormBox>
   );
