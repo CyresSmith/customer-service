@@ -83,6 +83,7 @@ const RecordLogPage = () => {
       />
       {eventStep !== null && 
         <Modal
+          titleMargin='10px'
           closeModal={closeEventModal}
           $isOpen={eventStep !== null}
         title={eventStep === 'employees' ?

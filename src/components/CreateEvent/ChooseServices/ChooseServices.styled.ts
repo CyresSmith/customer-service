@@ -2,38 +2,26 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const Container = styled.div`
-
-`
-
-export const List = styled.ul`
+    height: 100%;
     width: 100%;
 `
 
-export const ListItem = styled.li`
-    width: 100%;
-    padding: ${theme.space[2]};
+export const TopContainer = styled.div`
     display: flex;
-    justify-content: space-between;
     align-items: center;
-
-    &:not(:last-child) {
-        margin-bottom: ${theme.space[3]};
-    }
+    justify-content: space-between;
+    gap: ${theme.space[4]};
+    padding: ${theme.space[3]} ${theme.space[0]};
+    border-bottom: ${theme.borders.normal} ${theme.colors.white};
+    margin-bottom: ${theme.space[4]};
 `
 
-export const ServiceName = styled.p`
-
+export const SearchBox = styled.div`
+    width: calc(100% - 200px);
 `
 
-export const RightWrapper = styled.div`
-    display: flex;
-    gap: ${theme.space[5]};
-`
-
-export const ServiceTime = styled.p`
-
-`
-
-export const ServicePrice = styled.p`
-    font-weight: ${theme.fontWeights.bold};
+export const ScrollWrapper = styled.div`
+    width: 100%;
+    height: calc(100% - 70px);
+    overflow: auto;
 `
