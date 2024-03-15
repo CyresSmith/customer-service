@@ -3,6 +3,8 @@ import { BtnsBox, Container, ContentBox } from "./CreateEvent.styled";
 import { FirstStep } from "./Steps/FirstStep";
 import EmployeesList from "./EmployeesList";
 import { useCompany } from "hooks/useCompany";
+import ChooseServices from "./ChooseServices";
+import { HiArrowLeft, HiArrowRight } from "react-icons/hi";
 
 type Props = {
     step: string;
@@ -18,11 +20,12 @@ const CreateEvent = ({ step, handleEventStep }: Props) => {
             <ContentBox>
                 {step === 'create' && <FirstStep setStep={handleEventStep} />}
                 {step === 'employees' && <EmployeesList employees={providersWithServices} />}
+                {step === 'services' && <ChooseServices />}
             </ContentBox>
             {step !== 'create' &&
                 <BtnsBox $step={step}>
-                    <Button onClick={() => handleEventStep('create')} children='Назад' $colors="light" />
-                    <Button onClick={() => handleEventStep('employees')} children='Далі' $colors="accent" />
+                    <Button Icon={HiArrowLeft} onClick={() => handleEventStep('create')} children='Назад' $colors="light" />
+                    <Button Icon={HiArrowRight} $iconPosition="r" onClick={() => handleEventStep('employees')} children='Далі' $colors="accent" />
                 </BtnsBox>
             }
         </Container>

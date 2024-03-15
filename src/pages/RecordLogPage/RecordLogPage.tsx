@@ -87,6 +87,8 @@ const RecordLogPage = () => {
           $isOpen={eventStep !== null}
         title={eventStep === 'employees' ?
           'Оберіть працівника' :
+          eventStep === 'services' ?
+          'Оберіть послугу' :
           'Створення запису'
         }
           children={
