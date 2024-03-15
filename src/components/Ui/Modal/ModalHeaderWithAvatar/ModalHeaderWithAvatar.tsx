@@ -14,7 +14,13 @@ const ModalHeaderWithAvatar = ({ avatar, title, subtitle }: Props) => {
     <ModalHeaderBox>
       {
         <AvatarBox>
-          {avatar ? <img src={avatar} alt={`${title} image`} /> : <HiPhoto />}
+          {avatar ? (
+            <img src={avatar} alt={`${title} image`} />
+          ) : title ? (
+            <span>{title.slice(0, 1)}</span>
+          ) : (
+            <HiPhoto />
+          )}
         </AvatarBox>
       }
 

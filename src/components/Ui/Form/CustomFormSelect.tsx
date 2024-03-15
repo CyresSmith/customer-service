@@ -18,13 +18,21 @@ const CustomFormSelect = ({
   width = '100%',
   handleSelect,
   fieldName,
+  disabled = false,
 }: SelectProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const toggleOpen = () => setIsOpen(p => !p);
+  const toggleOpen = () => {
+    if (disabled) return;
+
+    setIsOpen(p => !p);
+  };
+
   const handleClose = () => setIsOpen(false);
 
   const onSelect = (item: SelectItem) => {
+    if (disabled) return;
+
     handleSelect(item, fieldName);
 
     if (!Array.isArray(selectedItem)) handleClose();
@@ -61,7 +69,7 @@ const CustomFormSelect = ({
   };
 
   return (
-    <SelectBox ref={selectRef} $width={width}>
+    <SelectBox ref={selectRef} $width={width} disabled={disabled}>
       <Select
         onKeyDown={event => onEnterToggleOpen(event)}
         tabIndex={0}

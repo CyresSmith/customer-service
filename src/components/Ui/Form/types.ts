@@ -65,4 +65,5 @@ export type SelectProps = {
   handleSelect: (item: SelectItem, fieldName?: string) => void;
   closeOnSelect?: boolean;
   fieldName?: string;
+  disabled?: boolean;
 };

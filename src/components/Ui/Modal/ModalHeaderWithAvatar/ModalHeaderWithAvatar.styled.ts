@@ -30,12 +30,19 @@ export const AvatarBox = styled.div`
     height: 100%;
     object-fit: cover;
   }
+
+  > span {
+    font-size: 30px;
+    font-weight: ${theme.fontWeights.light};
+    text-transform: uppercase;
+  }
 `;
 
 export const TitleBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.space[1]};
+  min-height: 40px;
 `;
 
 export const Title = styled.h5`

@@ -11,15 +11,17 @@ import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
 import { HiCurrencyDollar } from 'react-icons/hi';
 import { HiCalendarDays, HiMiniIdentification } from 'react-icons/hi2';
+import { useOutletContext } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import {
   useGetServiceDataQuery,
-  useUploadServiceAvatarMutation,
+  useUpdateServiceDataMutation,
 } from 'services/company.api';
 import { EmployeeStatusEnum } from 'services/types/employee.types';
-import { ServiceDataType } from 'services/types/service.type';
+import { IServiceUpdate, ServiceDataType } from 'services/types/service.type';
 import FirstStep from './FirstStep/FirstStep';
 import SecondStep from './SecondStep';
-import { Step, StepBox, StepNumber } from './ServiceModal.styled';
+import { ModalBox, Step, StepBox, StepNumber } from './ServiceModal.styled';
 import ThirdStep from './ThirdStep';
 
 type Props = {
@@ -55,6 +57,9 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
   const { id, employees } = useCompany();
   const [step, setStep] = useState(1);
   const [serviceData, setServiceData] = useState(initialState);
+  const [stateToCheck, setStateToCheck] = useState<ServiceDataType | null>(
+    null
+  );
 
   const providers = employees.filter(
     ({ provider, status }) => provider && status === EmployeeStatusEnum.WORKING
@@ -85,24 +90,28 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
       companyId: +id,
       serviceId: Number(serviceId),
     },
-    { skip: serviceId === undefined || id === undefined }
+    { skip: id === undefined || serviceId === undefined }
   );
 
-  const [uploadImg, { isLoading: isAvatarLoading }] =
-    useUploadServiceAvatarMutation();
+  const [updateService, { isLoading: isServiceUpdateLoading }] =
+    useUpdateServiceDataMutation();
 
-  const handleUpload = async (file: File) => {
-    const data = new FormData();
-    data.append('avatar', file);
+  const { refetchCompanyData } = useOutletContext<{
+    refetchCompanyData: () => void;
+  }>();
 
+  const handleServiceUpdate = async (data: Partial<IServiceUpdate>) => {
     if (serviceId) {
-      const { url } = await uploadImg({
+      const { message } = await updateService({
         companyId: +id,
         serviceId,
         data,
       }).unwrap();
 
-      if (url) refetch();
+      if (message) {
+        refetchCompanyData();
+        toast.success(message);
+      }
     }
   };
 
@@ -170,75 +179,90 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
         });
       }
 
-      setServiceData(state as unknown as ServiceDataType);
+      const newState = state as unknown as ServiceDataType;
+
+      setServiceData(newState);
+      setStateToCheck(newState);
     }
   }, [data, openModal]);
 
   return (
-    <>
-      <Modal
-        id="addService"
-        title={
-          openModal === ServiceOpenModal.ADD ? 'Створення послуги' : undefined
-        }
-        $isOpen={openModal !== null}
-        closeModal={handleModalClose}
-      >
-        {openModal === ServiceOpenModal.ADD && (
-          <StepBox>
-            {Array.from({ length: 3 }).map((_, i) => (
-              <Step $current={i + 1 === step} $color={i + 1 <= step} key={i}>
-                <StepNumber $current={i + 1 <= step}>{i + 1}</StepNumber>
-                <p>{title()}</p>
-              </Step>
-            ))}
-          </StepBox>
-        )}
+    <Modal
+      id="addService"
+      title={
+        openModal === ServiceOpenModal.ADD ? 'Створення послуги' : undefined
+      }
+      $isOpen={openModal !== null}
+      closeModal={handleModalClose}
+    >
+      <ModalBox>
+        <div>
+          {openModal === ServiceOpenModal.ADD && (
+            <StepBox>
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Step $current={i + 1 === step} $color={i + 1 <= step} key={i}>
+                  <StepNumber $current={i + 1 <= step}>{i + 1}</StepNumber>
+                  <p>{title()}</p>
+                </Step>
+              ))}
+            </StepBox>
+          )}
 
-        {openModal === ServiceOpenModal.EDIT_SERVICE && (
-          <>
-            <ModalHeaderWithAvatar
-              avatar={serviceData.avatar || data?.avatar || ''}
-              title={serviceData.name}
-              subtitle={serviceData.category?.value || ''}
-            />
+          {openModal === ServiceOpenModal.EDIT_SERVICE && (
+            <>
+              <ModalHeaderWithAvatar
+                avatar={serviceData.avatar || data?.avatar || ''}
+                title={serviceData.name}
+                subtitle={serviceData.category?.value || ''}
+              />
 
-            <ModalSectionsList
-              sectionButtons={sectionButtons}
-              currentSection={step}
-              handleSectionSelect={setStep}
-            />
-          </>
-        )}
+              <ModalSectionsList
+                sectionButtons={sectionButtons}
+                currentSection={step}
+                handleSectionSelect={setStep}
+              />
+            </>
+          )}
+        </div>
 
         {step === 1 && (
           <FirstStep
+            openModal={openModal}
             setStep={setStep}
             serviceData={serviceData}
             setServiceData={setServiceData}
+            stateToCheck={stateToCheck}
+            serviceId={serviceId}
+            handleServiceUpdate={handleServiceUpdate}
           />
         )}
 
         {step === 2 && (
           <SecondStep
+            openModal={openModal}
             providers={providers}
             setStep={setStep}
             serviceData={serviceData}
             setServiceData={setServiceData}
+            stateToCheck={stateToCheck}
+            handleServiceUpdate={handleServiceUpdate}
           />
         )}
 
         {step === 3 && (
           <ThirdStep
+            openModal={openModal}
             providers={providers}
             setStep={setStep}
             serviceData={serviceData}
             setServiceData={setServiceData}
             closeModal={handleModalClose}
+            stateToCheck={stateToCheck}
+            handleServiceUpdate={handleServiceUpdate}
           />
         )}
-      </Modal>
-    </>
+      </ModalBox>
+    </Modal>
   );
 };
 

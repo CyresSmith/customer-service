@@ -22,7 +22,7 @@ const RadioSelect = ({ width, items, selectedItemId, onSelect }: Props) => {
           $itemsCount={items.length}
           onClick={() => onSelect(item)}
         >
-          <button>{item.label}</button>
+          <button type="button">{item.label}</button>
         </RadioSelectItem>
       ))}
     </RadioSelectList>

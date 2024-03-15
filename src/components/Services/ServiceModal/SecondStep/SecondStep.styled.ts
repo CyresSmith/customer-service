@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 const EMPLOYEE_HIGHT = 62;
-const VISIBLE_EMPLOYEES = 5;
+const VISIBLE_EMPLOYEES = 6;
 
 export const EmployeesList = styled.ul`
   display: flex;
