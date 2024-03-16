@@ -72,16 +72,15 @@ const FirstStep = ({
   const { id } = useCompany();
   const isAdmin = useAdminRights();
 
+  const skip = serviceId
+    ? Boolean(!accessToken || !user || !id || !serviceId)
+    : Boolean(!accessToken || !user || !id);
+
   const {
     isLoading: isCategoriesLoading,
     data,
     refetch,
-  } = useGetServicesCategoriesQuery(
-    { id },
-    {
-      skip: Boolean(!accessToken || !user || !id),
-    }
-  );
+  } = useGetServicesCategoriesQuery({ id }, { skip });
 
   const [uploadImg, { isLoading: isAvatarLoading }] =
     useUploadServiceAvatarMutation();
