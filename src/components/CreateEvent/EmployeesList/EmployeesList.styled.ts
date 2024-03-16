@@ -8,6 +8,7 @@ export const List = styled.ul`
     grid-template-rows: auto;
     gap: ${theme.space[4]};
     flex-wrap: wrap;
+    margin-top: ${theme.space[4]};
 `
 
 export const ListItem = styled.li`

@@ -5,9 +5,10 @@ import CustomFormInput from "../Form/CustomFormInput";
 type Props = {
     value: string;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    placeholder?: string;
 }
 
-const Search = ({value, onChange}: Props) => {
+const Search = ({value, onChange, placeholder}: Props) => {
 
     return (
         <CustomFormInput
@@ -16,7 +17,7 @@ const Search = ({value, onChange}: Props) => {
             type='text'
             value={value}
             handleChange={onChange}
-            placeholder="Введіть номер телефону"
+            placeholder={placeholder ? placeholder : "Введіть номер телефону"}
             disabledIcon={true}
         />
     )

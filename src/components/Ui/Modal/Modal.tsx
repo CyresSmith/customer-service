@@ -19,6 +19,7 @@ export type Modal = {
   closeModal: () => void;
   closeIconBtn?: boolean;
   id?: string;
+  titleMargin?: string;
 };
 
 const modalRoot = document.querySelector('#modal-root');
@@ -32,6 +33,7 @@ const Modal = ({
   $isOpen,
   closeIconBtn = true,
   id = '',
+  titleMargin,
 }: Modal) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -90,7 +92,7 @@ const Modal = ({
           </ButtonBox>
         )}
 
-        {title && <Title>{title}</Title>}
+        {title && <Title $titleMargin={titleMargin}>{title}</Title>}
         {children}
       </ModalContainer>
     </Backdrop>,

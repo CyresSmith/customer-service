@@ -11,6 +11,7 @@ const baseInputStyles = `
   font-size: ${theme.fontSizes.l};
   width: 100%;
   resize: none;
+  outline: none;
 `;
 
 export const Form = styled.form`
@@ -129,7 +130,6 @@ export const SelectBox = styled.div<{ $width: string; disabled: boolean }>`
 export const Select = styled.div<{ $open: boolean; $width?: string }>`
   ${baseInputStyles};
 
-  outline: none;
   width: ${props => props?.$width};
   min-width: 120px;
   cursor: pointer;
@@ -155,6 +155,8 @@ export const Select = styled.div<{ $open: boolean; $width?: string }>`
 `;
 
 export const Selected = styled.p`
+  font-size: inherit;
+
   &::first-letter {
     text-transform: uppercase;
   }
@@ -210,8 +212,8 @@ export const SelectListItem = styled.li<{ $selected: boolean }>`
 `;
 
 export const SelectIcon = styled.svg<{ $open: boolean }>`
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 19px;
   fill: ${theme.colors.secondary.dark};
   transition: inherit;
 
