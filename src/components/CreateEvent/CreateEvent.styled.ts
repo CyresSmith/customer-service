@@ -22,3 +22,7 @@ export const BtnsBox = styled.div<{$step: string | null}>`
     align-items: center;
     justify-content: ${props => props.$step !== 'create' ? 'space-between' : 'end'};
 `
+
+export const ChosenServices = styled.p`
+    border-bottom: ${theme.borders.normal} ${theme.colors.white};
+`

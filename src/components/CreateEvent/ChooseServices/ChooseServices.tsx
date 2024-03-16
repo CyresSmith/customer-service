@@ -8,12 +8,15 @@ import { useCompany } from "hooks/useCompany";
 import Loader from "components/Ui/Loader";
 import { SelectItem } from "components/Ui/Form/types";
 import { IEmployee } from "services/types/employee.types";
+import { IService } from "services/types/service.type";
 
 type Props = {
     chosenEmployee: IEmployee | null;
+    setServices: React.Dispatch<React.SetStateAction<Partial<IService>[] | undefined>>;
+    chosenServices: Partial<IService>[] | undefined;
 };
 
-const ChooseServices = ({chosenEmployee}: Props) => {
+const ChooseServices = ({chosenEmployee, setServices, chosenServices}: Props) => {
     const { id } = useCompany();
     const [searchQuery, setSearchQuery] = useState<string>('');
     const {isLoading: isCategoriesLoading, data} = useGetServicesCategoriesQuery({ id }, { skip: id === undefined });
@@ -55,9 +58,11 @@ const ChooseServices = ({chosenEmployee}: Props) => {
             </TopContainer>
             <ScrollWrapper>
                 <ServicesList
+                    setServices={setServices}
                     chosenEmployee={chosenEmployee}
                     searchQuery={searchQuery}
                     chosenCategory={chosenCategory}
+                    chosenServices={chosenServices}
                 />
             </ScrollWrapper>
         </Container>)
