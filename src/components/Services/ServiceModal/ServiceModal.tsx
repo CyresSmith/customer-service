@@ -7,6 +7,7 @@ import {
   millisecondsToMinutes,
 } from 'date-fns';
 import { ServiceOpenModal, ServiceTypeEnum } from 'helpers/enums';
+import { useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
 import { HiCurrencyDollar } from 'react-icons/hi';
@@ -42,7 +43,7 @@ const initialState: ServiceDataType = {
   break: false,
   employeesSettings: [],
   capacityLimit: false,
-  capacity: 0,
+  capacity: 1,
   placesLimit: false,
   placeLimit: 1,
 };
@@ -54,6 +55,7 @@ const sectionButtons = [
 ];
 
 const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
+  const { accessToken, user } = useAuth();
   const { id, employees } = useCompany();
   const [step, setStep] = useState(1);
   const [serviceData, setServiceData] = useState(initialState);
@@ -81,16 +83,19 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
     }
   };
 
-  const {
-    data,
-    isLoading: IsServiceDataLoading,
-    refetch,
-  } = useGetServiceDataQuery(
+  const { data, isLoading: IsServiceDataLoading } = useGetServiceDataQuery(
     {
       companyId: +id,
       serviceId: Number(serviceId),
     },
-    { skip: id === undefined || serviceId === undefined }
+    {
+      skip:
+        accessToken === undefined ||
+        user === undefined ||
+        id === undefined ||
+        serviceId === undefined,
+      refetchOnMountOrArgChange: true,
+    }
   );
 
   const [updateService, { isLoading: isServiceUpdateLoading }] =
@@ -109,6 +114,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
       }).unwrap();
 
       if (message) {
+        setStateToCheck(serviceData);
         refetchCompanyData();
         toast.success(message);
       }
@@ -234,6 +240,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
             stateToCheck={stateToCheck}
             serviceId={serviceId}
             handleServiceUpdate={handleServiceUpdate}
+            isServiceUpdateLoading={isServiceUpdateLoading}
           />
         )}
 
@@ -246,6 +253,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
             setServiceData={setServiceData}
             stateToCheck={stateToCheck}
             handleServiceUpdate={handleServiceUpdate}
+            isServiceUpdateLoading={isServiceUpdateLoading}
           />
         )}
 
@@ -259,6 +267,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
             closeModal={handleModalClose}
             stateToCheck={stateToCheck}
             handleServiceUpdate={handleServiceUpdate}
+            isServiceUpdateLoading={isServiceUpdateLoading}
           />
         )}
       </ModalBox>

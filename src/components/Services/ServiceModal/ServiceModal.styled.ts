@@ -49,8 +49,9 @@ export const StepNumber = styled.span<{ $current: boolean }>`
 
 export const FirstStepBox = styled.div`
   display: flex;
-  align-items: start;
+  /* align-items: start; */
   gap: ${theme.space[5]};
+  flex-grow: 1;
 `;
 
 export const StepFormBox = styled.form`

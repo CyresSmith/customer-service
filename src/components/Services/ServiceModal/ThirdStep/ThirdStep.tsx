@@ -13,8 +13,10 @@ import { toast } from 'react-toastify';
 import { useAddNewServiceMutation } from 'services/company.api';
 import { IEmployee } from 'services/types/employee.types';
 import {
+  EmployeesServiceSettings,
   IEmployeeSettingsDto,
   INewServiceDtoType,
+  IServiceUpdate,
   ServiceDataType,
   ServiceStepProps,
 } from 'services/types/service.type';
@@ -66,6 +68,8 @@ const ThirdStep = ({
   providers,
   closeModal,
   stateToCheck,
+  handleServiceUpdate,
+  isServiceUpdateLoading,
 }: Props) => {
   const { id: companyId } = useCompany();
 
@@ -305,7 +309,7 @@ const ThirdStep = ({
     capacityLimit: stateToCheck?.capacityLimit,
   });
 
-  const stateString = JSON.stringify({
+  const updateObj = {
     price: serviceData.price,
     durationHours: serviceData.durationHours,
     durationMinutes: serviceData.durationMinutes,
@@ -316,7 +320,77 @@ const ThirdStep = ({
     placeLimit: serviceData.placeLimit,
     capacity: serviceData.capacity,
     capacityLimit: serviceData.capacityLimit,
-  });
+  };
+
+  const serviceUpdate = async () => {
+    const data: Partial<IServiceUpdate> = Object.fromEntries(
+      Object.entries(updateObj).filter(
+        ([key]) =>
+          key !== 'durationHours' &&
+          key !== 'durationMinutes' &&
+          key !== 'break' &&
+          key !== 'breakDuration' &&
+          key !== 'employeesSettings' &&
+          key !== 'placesLimit' &&
+          key !== 'capacityLimit'
+      )
+    );
+
+    let duration = 0;
+
+    if (updateObj.durationHours?.id) {
+      duration = duration + hoursToMilliseconds(+updateObj.durationHours?.id);
+    }
+
+    if (updateObj.durationMinutes?.id) {
+      duration =
+        duration + minutesToMilliseconds(+updateObj.durationMinutes.id);
+    }
+
+    if (duration > 0) data.duration = duration;
+
+    if (updateObj.break && updateObj.breakDuration?.id) {
+      data.break = minutesToMilliseconds(+updateObj.breakDuration.id);
+    }
+
+    if (updateObj.employeesSettings.length > 0) {
+      data.employeesSettings = updateObj.employeesSettings.map(item => {
+        const settings: EmployeesServiceSettings = {
+          employeeId: +item.employeeId,
+        };
+
+        if (item.price) {
+          settings.price = item.price;
+        }
+
+        let duration = 0;
+
+        if (item.durationHours?.id) {
+          duration = duration + hoursToMilliseconds(+item.durationHours?.id);
+        }
+
+        if (item.durationMinutes?.id) {
+          duration = duration + minutesToMilliseconds(+item.durationMinutes.id);
+        }
+
+        if (duration > 0) settings.duration = duration;
+
+        return settings;
+      });
+    }
+
+    if (updateObj.capacityLimit && updateObj.capacity > 0) {
+      data.capacity = updateObj.capacity;
+    }
+
+    if (updateObj.placesLimit && updateObj.placeLimit > 0) {
+      data.placeLimit = updateObj.placeLimit;
+    }
+
+    handleServiceUpdate(data);
+  };
+
+  const stateString = JSON.stringify(updateObj);
 
   const saveDisabled =
     checkString === stateString ||
@@ -484,9 +558,11 @@ const ThirdStep = ({
       {openModal === ServiceOpenModal.EDIT_SERVICE && (
         <SaveButtonBox>
           <Button
-            disabled={Boolean(saveDisabled)}
+            onClick={serviceUpdate}
+            disabled={Boolean(saveDisabled) || isServiceUpdateLoading}
             Icon={IoIosSave}
             $colors="accent"
+            isLoading={isServiceUpdateLoading}
           >
             Зберегти
           </Button>

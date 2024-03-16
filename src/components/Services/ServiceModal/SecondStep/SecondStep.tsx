@@ -27,6 +27,7 @@ const SecondStep = ({
   providers,
   stateToCheck,
   handleServiceUpdate,
+  isServiceUpdateLoading,
 }: ServiceStepProps) => {
   const [addEmployeeOpen, setAddEmployeeOpen] = useState(false);
 
@@ -86,9 +87,10 @@ const SecondStep = ({
           <SaveButtonBox>
             <Button
               onClick={serviceUpdate}
-              disabled={saveDisabled}
+              disabled={saveDisabled || isServiceUpdateLoading}
               Icon={IoIosSave}
               $colors="accent"
+              isLoading={isServiceUpdateLoading}
             >
               Зберегти
             </Button>

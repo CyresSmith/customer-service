@@ -55,7 +55,7 @@ type InitialStateType = {
 };
 
 interface Props extends ServiceStepProps {
-  serviceId: number;
+  serviceId?: number;
 }
 
 const FirstStep = ({
@@ -66,6 +66,7 @@ const FirstStep = ({
   stateToCheck,
   serviceId,
   handleServiceUpdate,
+  isServiceUpdateLoading,
 }: Props) => {
   const { accessToken, user } = useAuth();
   const { id } = useCompany();
@@ -77,7 +78,9 @@ const FirstStep = ({
     refetch,
   } = useGetServicesCategoriesQuery(
     { id },
-    { skip: !accessToken || !user || id === undefined }
+    {
+      skip: Boolean(!accessToken || !user || !id),
+    }
   );
 
   const [uploadImg, { isLoading: isAvatarLoading }] =
@@ -94,7 +97,7 @@ const FirstStep = ({
         data,
       }).unwrap();
 
-      if (url) refetch();
+      if (url) setServiceData(p => ({ ...p, avatar: url }));
     }
   };
 
@@ -148,13 +151,16 @@ const FirstStep = ({
   };
 
   const serviceUpdate = async () => {
-    if (updateObj.category && updateObj.category.id) {
-      const data = {
-        ...updateObj,
-        category: +updateObj.category.id,
-      };
+    if (updateObj.category && updateObj.category.id !== undefined) {
+      const { desc, category, ...rest } = updateObj;
 
-      handleServiceUpdate(data);
+      if (category.id) {
+        const data = !desc
+          ? { ...rest, category: +category.id }
+          : { ...rest, category: +category.id, desc };
+
+        handleServiceUpdate(data);
+      }
     }
   };
 
@@ -259,9 +265,10 @@ const FirstStep = ({
                 <ButtonBox>
                   <Button
                     onClick={serviceUpdate}
-                    disabled={saveDisabled}
+                    disabled={saveDisabled || isServiceUpdateLoading}
                     Icon={IoIosSave}
                     $colors="accent"
+                    isLoading={isServiceUpdateLoading}
                   >
                     Зберегти
                   </Button>

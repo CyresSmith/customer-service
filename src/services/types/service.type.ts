@@ -69,8 +69,9 @@ export type ServiceStepProps = {
   setStep: Dispatch<SetStateAction<number>>;
   serviceData: ServiceDataType;
   setServiceData: Dispatch<SetStateAction<ServiceDataType>>;
-  stateToCheck: ServiceDataType;
+  stateToCheck: ServiceDataType | null;
   handleServiceUpdate: (data: Partial<IServiceUpdate>) => void;
+  isServiceUpdateLoading: boolean;
 };
 
 export type EmployeesServiceSettings = {
