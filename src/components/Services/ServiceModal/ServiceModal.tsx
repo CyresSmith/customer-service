@@ -10,8 +10,8 @@ import { ServiceOpenModal, ServiceTypeEnum } from 'helpers/enums';
 import { useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
-import { HiCurrencyDollar } from 'react-icons/hi';
-import { HiCalendarDays, HiMiniIdentification } from 'react-icons/hi2';
+import { HiCurrencyDollar, HiUserGroup } from 'react-icons/hi';
+import { HiMiniIdentification } from 'react-icons/hi2';
 import { useOutletContext } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
@@ -50,7 +50,7 @@ const initialState: ServiceDataType = {
 
 const sectionButtons = [
   { id: 1, label: 'Інформація', Icon: HiMiniIdentification },
-  { id: 2, label: 'Працівники', Icon: HiCalendarDays },
+  { id: 2, label: 'Працівники', Icon: HiUserGroup },
   { id: 3, label: 'Час та вартість', Icon: HiCurrencyDollar },
 ];
 
