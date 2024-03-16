@@ -35,6 +35,7 @@ export const ServiceName = styled.p`
 
 export const RightWrapper = styled.div`
     display: grid;
+    text-align: right;
     grid-template-columns: 1fr 1fr;
 `
 
