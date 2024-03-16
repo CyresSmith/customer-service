@@ -4,13 +4,14 @@ import { HiFaceSmile } from "react-icons/hi2";
 
 type Props = {
     employee: IEmployee;
+    handleClick: (e: IEmployee) => void;
 };
 
-export const EmployeesListItem = ({ employee }: Props) => {
+export const EmployeesListItem = ({ employee, handleClick }: Props) => {
     const { avatar, firstName, lastName, jobTitle } = employee;
     
     return (
-        <ListItem>
+        <ListItem onClick={() => handleClick(employee)}>
             <AvatarWrapper>
                 {avatar ? 
                     <Avatar src={avatar} alt='Employee photo' /> :

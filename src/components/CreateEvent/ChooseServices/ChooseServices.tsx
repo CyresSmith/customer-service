@@ -7,8 +7,13 @@ import { useGetServicesCategoriesQuery } from "services/company.api";
 import { useCompany } from "hooks/useCompany";
 import Loader from "components/Ui/Loader";
 import { SelectItem } from "components/Ui/Form/types";
+import { IEmployee } from "services/types/employee.types";
 
-const ChooseServices = () => {
+type Props = {
+    chosenEmployee: IEmployee | null;
+};
+
+const ChooseServices = ({chosenEmployee}: Props) => {
     const { id } = useCompany();
     const [searchQuery, setSearchQuery] = useState<string>('');
     const {isLoading: isCategoriesLoading, data} = useGetServicesCategoriesQuery({ id }, { skip: id === undefined });
@@ -26,15 +31,19 @@ const ChooseServices = () => {
         return { value: c.name, id: c.id };
     });
 
+    const filteredByEmployeeCategories = chosenEmployee ?
+        categoriesForSelect?.filter(c => chosenEmployee.services.find(es => es.category!.id === c.id)) :
+        categoriesForSelect;
+
     const selectAll = { value: 'Всі категорії', id: 'all' };
 
     return isCategoriesLoading ?
         <Loader /> :
         (<Container>
             <TopContainer>
-                    {categoriesForSelect &&
+                    {filteredByEmployeeCategories &&
                         <CustomFormSelect
-                            selectItems={[selectAll, ...categoriesForSelect]}
+                            selectItems={[selectAll, ...filteredByEmployeeCategories]}
                             selectedItem={chosenCategory}
                             handleSelect={handleCategorySelect}
                             width="200px"
@@ -45,7 +54,11 @@ const ChooseServices = () => {
                 </SearchBox>
             </TopContainer>
             <ScrollWrapper>
-                <ServicesList searchQuery={searchQuery} chosenCategory={chosenCategory} />
+                <ServicesList
+                    chosenEmployee={chosenEmployee}
+                    searchQuery={searchQuery}
+                    chosenCategory={chosenCategory}
+                />
             </ScrollWrapper>
         </Container>)
 };
