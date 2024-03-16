@@ -36,10 +36,10 @@ export const ModalContainer = styled.div<Style>`
   box-shadow: ${theme.shadow.m};
 `;
 
-export const Title = styled.h2`
+export const Title = styled.h2<{$titleMargin: string | undefined}>`
   font-size: ${theme.fontSizes.xxl};
   font-weight: ${theme.fontWeights.light};
-  margin-bottom: ${theme.space[6]};
+  margin-bottom: ${props => props.$titleMargin ? props.$titleMargin : theme.space[6]};
   position: relative;
 
   &:after {
