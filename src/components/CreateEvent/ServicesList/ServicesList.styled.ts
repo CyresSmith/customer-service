@@ -6,19 +6,19 @@ export const List = styled.ul`
     padding: 0 ${theme.space[2]};
 `
 
-export const ListItem = styled.li<{$chosen: boolean}>`
+export const ListItem = styled.li<{ $chosen: boolean }>`
     width: 100%;
     padding: ${theme.space[2]} ${theme.space[3]};
     display: grid;
     grid-template-columns: 60% 40%;
     border-radius: ${theme.radii.m};
     transition: ${theme.transition.primary};
-    background-color: ${props => props.$chosen ? theme.colors.bg.dark : 'transparent'};
+    background-color: ${props => props.$chosen ? theme.colors.bg.light : 'transparent'};
     cursor: pointer;
 
     &:hover,
     :focus-visible {
-        background-color: ${theme.colors.bg.dark};
+        background-color: ${theme.colors.bg.light};
     }
 
     &:not(:last-child) {

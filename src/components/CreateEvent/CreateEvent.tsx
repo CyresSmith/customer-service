@@ -40,7 +40,7 @@ const CreateEvent = ({ step, handleEventStep }: Props) => {
             const count = chosenServices.length;
             const totalPrice = chosenServices.reduce((acc, cs) => cs.price ? acc + +cs.price : acc, 0);
 
-            return `Обрано: ${count} ${count === 1 ? 'послугу' : count > 1 && count < 5 ? 'послуги' : 'послуг'} на суму ${totalPrice} грн.`
+            return `Обрано послуг: ${count} на суму ${totalPrice} грн.`
         }
     }
 
