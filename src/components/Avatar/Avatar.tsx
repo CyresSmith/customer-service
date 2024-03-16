@@ -40,7 +40,7 @@ const Avatar = ({
   } = useFileUpload();
 
   return (
-    <AvatarBox width={size}>
+    <AvatarBox size={size}>
       {!allowChanges ? (
         <ImageBox
           $allowChanges={allowChanges}

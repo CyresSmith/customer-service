@@ -121,9 +121,10 @@ export const DoneIcon = styled.svg<{ $complete?: boolean }>`
     props.$complete ? theme.colors.success.light : theme.colors.danger.light};
 `;
 
-export const SelectBox = styled.div<{ $width: string }>`
+export const SelectBox = styled.div<{ $width: string; disabled: boolean }>`
   width: ${props => props.$width};
   position: relative;
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `;
 
 export const Select = styled.div<{ $open: boolean; $width?: string }>`

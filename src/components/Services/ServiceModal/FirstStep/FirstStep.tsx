@@ -1,4 +1,5 @@
 import AddCategoryModal from 'components/AddCategoryModal';
+import Avatar from 'components/Avatar';
 import Button from 'components/Ui/Buttons/Button';
 import {
   FormInputLabel,
@@ -14,21 +15,24 @@ import Loader from 'components/Ui/Loader';
 import RadioSelect, {
   RadioSelectItemType,
 } from 'components/Ui/RadioSelect/RadioSelect';
-import { ServiceTypeEnum } from 'helpers/enums';
+import { ServiceOpenModal, ServiceTypeEnum } from 'helpers/enums';
 import { getErrorMessage } from 'helpers/inputsValidation';
-import { useForm } from 'hooks';
+import { useAdminRights, useAuth, useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { HiArrowRight } from 'react-icons/hi2';
-import { useGetServicesCategoriesQuery } from 'services/company.api';
-import { ServiceCategory } from 'services/types/category.types';
-import { AddServiceStepProps } from 'services/types/service.type';
+import { IoIosSave } from 'react-icons/io';
 import {
-  AddServiceModalBox,
+  useGetServicesCategoriesQuery,
+  useUploadServiceAvatarMutation,
+} from 'services/company.api';
+import { ServiceCategory } from 'services/types/category.types';
+import { ServiceStepProps } from 'services/types/service.type';
+import {
   ButtonBox,
-  Form,
+  FirstStepBox,
   FormSide,
-  ModalBox,
+  StepFormBox,
 } from '../ServiceModal.styled';
 
 const addCategoryItem = { id: 'add', value: 'Додати категорію...' };
@@ -50,18 +54,52 @@ type InitialStateType = {
   desc: string;
 };
 
+interface Props extends ServiceStepProps {
+  serviceId?: number;
+}
+
 const FirstStep = ({
+  openModal,
   setStep,
   serviceData,
   setServiceData,
-}: AddServiceStepProps) => {
+  stateToCheck,
+  serviceId,
+  handleServiceUpdate,
+  isServiceUpdateLoading,
+}: Props) => {
+  const { accessToken, user } = useAuth();
   const { id } = useCompany();
+  const isAdmin = useAdminRights();
 
   const {
     isLoading: isCategoriesLoading,
     data,
     refetch,
-  } = useGetServicesCategoriesQuery({ id });
+  } = useGetServicesCategoriesQuery(
+    { id },
+    {
+      skip: Boolean(!accessToken || !user || !id),
+    }
+  );
+
+  const [uploadImg, { isLoading: isAvatarLoading }] =
+    useUploadServiceAvatarMutation();
+
+  const handleAvatarUpload = async (file: File) => {
+    const data = new FormData();
+    data.append('avatar', file);
+
+    if (serviceId) {
+      const { url } = await uploadImg({
+        companyId: +id,
+        serviceId,
+        data,
+      }).unwrap();
+
+      if (url) setServiceData(p => ({ ...p, avatar: url }));
+    }
+  };
 
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
 
@@ -107,18 +145,45 @@ const FirstStep = ({
     state,
   } = useForm(initialState, onSubmit);
 
+  const updateObj = {
+    type: serviceData?.type,
+    ...state,
+  };
+
+  const serviceUpdate = async () => {
+    if (updateObj.category && updateObj.category.id !== undefined) {
+      const { desc, category, ...rest } = updateObj;
+
+      if (category.id) {
+        const data = !desc
+          ? { ...rest, category: +category.id }
+          : { ...rest, category: +category.id, desc };
+
+        handleServiceUpdate(data);
+      }
+    }
+  };
+
   const [addCategoryModalOpen, setAddCategoryModalOpen] = useState(false);
 
   const handleCategorySelect = (selected: SelectItem, fieldName?: string) => {
     if (selected.id === addCategoryItem.id) {
       setAddCategoryModalOpen(true);
     } else if (fieldName) {
+      setServiceData(p => ({ ...p, category: selected }));
       handleSelect(selected, fieldName);
     }
   };
 
   const handleTypeSelectClick = (item: RadioSelectItemType) => {
     setServiceData(p => ({ ...p, type: item.id, category: null }));
+  };
+
+  const handleStateChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setServiceData(p => ({ ...p, [name]: value }));
+    handleChange(e);
   };
 
   const isSubmitDisabled =
@@ -139,38 +204,78 @@ const FirstStep = ({
     setCategories(data);
   }, [data]);
 
+  const checkString = JSON.stringify({
+    type: stateToCheck?.type,
+    category: stateToCheck?.category,
+    name: stateToCheck?.name,
+    desc: stateToCheck?.desc,
+  });
+
+  const stateString = JSON.stringify(updateObj);
+
+  const saveDisabled =
+    invalidFields.length > 0 ||
+    checkString === stateString ||
+    !state.name ||
+    !state.category;
+
   return (
     <>
-      <ModalBox>
+      <>
         {isCategoriesLoading ? (
           <Loader />
         ) : (
-          <AddServiceModalBox>
-            <FormSide>
-              <FormInputsListItem as="div">
-                <FormInputLabel>Тип</FormInputLabel>
-                <RadioSelect
-                  items={selectItems}
-                  selectedItemId={serviceData.type}
-                  onSelect={handleTypeSelectClick}
-                />
-              </FormInputsListItem>
+          <FirstStepBox>
+            {openModal === ServiceOpenModal.EDIT_SERVICE && (
+              <Avatar
+                currentImageUrl={serviceData.avatar || ''}
+                isLoading={isAvatarLoading}
+                allowChanges={isAdmin}
+                size={150}
+                alt="service image"
+                handleUpload={handleAvatarUpload}
+              />
+            )}
 
-              <Form onSubmit={handleSubmit}>
-                <FormSide>
-                  {(inputs as InputProps[]).map((item, i) => (
-                    <CustomFormInput
-                      key={i}
-                      {...item}
-                      value={state[item.name as keyof InputValueType]}
-                      handleChange={handleChange}
-                      handleSelect={handleCategorySelect}
-                      isValid={getErrorMessage(item.name, invalidFields)}
-                      disabledIcon={item.name === 'category' ? true : false}
-                    />
-                  ))}
-                </FormSide>
+            <StepFormBox onSubmit={handleSubmit}>
+              <FormSide>
+                <FormInputsListItem>
+                  <FormInputLabel>Тип</FormInputLabel>
+                  <RadioSelect
+                    items={selectItems}
+                    selectedItemId={serviceData.type}
+                    onSelect={handleTypeSelectClick}
+                  />
+                </FormInputsListItem>
 
+                {(inputs as InputProps[]).map((item, i) => (
+                  <CustomFormInput
+                    key={i}
+                    {...item}
+                    value={state[item.name as keyof InputValueType]}
+                    handleChange={handleStateChange}
+                    handleSelect={handleCategorySelect}
+                    isValid={getErrorMessage(item.name, invalidFields)}
+                    disabledIcon={item.name === 'category' ? true : false}
+                  />
+                ))}
+              </FormSide>
+
+              {openModal === ServiceOpenModal.EDIT_SERVICE && (
+                <ButtonBox>
+                  <Button
+                    onClick={serviceUpdate}
+                    disabled={saveDisabled || isServiceUpdateLoading}
+                    Icon={IoIosSave}
+                    $colors="accent"
+                    isLoading={isServiceUpdateLoading}
+                  >
+                    Зберегти
+                  </Button>
+                </ButtonBox>
+              )}
+
+              {openModal === ServiceOpenModal.ADD && (
                 <ButtonBox>
                   <Button
                     disabled={isSubmitDisabled}
@@ -182,11 +287,11 @@ const FirstStep = ({
                     Далі
                   </Button>
                 </ButtonBox>
-              </Form>
-            </FormSide>
-          </AddServiceModalBox>
+              )}
+            </StepFormBox>
+          </FirstStepBox>
         )}
-      </ModalBox>
+      </>
 
       {addCategoryModalOpen && (
         <AddCategoryModal

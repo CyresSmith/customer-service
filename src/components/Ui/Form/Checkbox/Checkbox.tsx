@@ -10,6 +10,7 @@ type Props = {
   isChecked: boolean;
   isRequired?: boolean;
   isReadonly?: boolean;
+  disabled?: boolean;
   handleCheck: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -19,13 +20,14 @@ const Checkbox = ({
   isReadonly = false,
   isChecked = false,
   handleCheck,
+  disabled = false,
 }: Props) => {
   return (
-    <StyledLabel $isChecked={isChecked} $isDisabled={isReadonly}>
+    <StyledLabel $isChecked={isChecked} $isDisabled={isReadonly || disabled}>
       <StyledIcon
         as={isChecked ? HiCheckCircle : HiMinusCircle}
         $isChecked={isChecked}
-        $isDisabled={isReadonly}
+        $isDisabled={isReadonly || disabled}
       />
       <Name>
         {translateLabels(name)} {isRequired && <Required>{'(!)'}</Required>}
@@ -37,7 +39,10 @@ const Checkbox = ({
           type="checkbox"
           name={name}
           checked={isChecked}
-          onChange={handleCheck}
+          onChange={e => {
+            if (disabled) return;
+            handleCheck(e);
+          }}
         />
       </VisuallyHidden>
     </StyledLabel>

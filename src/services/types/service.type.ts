@@ -1,5 +1,5 @@
 import { SelectItem } from 'components/Ui/Form/types';
-import { ServiceTypeEnum } from 'helpers/enums';
+import { ServiceOpenModal, ServiceTypeEnum } from 'helpers/enums';
 import { Dispatch, SetStateAction } from 'react';
 import { IEmployee } from './employee.types';
 
@@ -63,11 +63,15 @@ export interface IAddNewServiceDto {
   data: INewServiceDtoType;
 }
 
-export type AddServiceStepProps = {
+export type ServiceStepProps = {
+  openModal: ServiceOpenModal;
   providers?: IEmployee[];
   setStep: Dispatch<SetStateAction<number>>;
   serviceData: ServiceDataType;
   setServiceData: Dispatch<SetStateAction<ServiceDataType>>;
+  stateToCheck: ServiceDataType | null;
+  handleServiceUpdate: (data: Partial<IServiceUpdate>) => void;
+  isServiceUpdateLoading: boolean;
 };
 
 export type EmployeesServiceSettings = {
@@ -79,11 +83,11 @@ export type EmployeesServiceSettings = {
 export interface IService {
   id: number;
   name: string;
-  avatar: string | null;
+  avatar: string;
   duration: number;
   break: number | null;
   price: number;
-  desc: string | null;
+  desc: string;
   employeesSettings: EmployeesServiceSettings[];
   images: string[];
   category: { id: number; name: string; type: string };
@@ -92,6 +96,13 @@ export interface IService {
   type: ServiceTypeEnum;
   capacity: number;
   placeLimit: number;
+}
+
+export interface IServiceUpdate
+  extends Omit<IService, 'category' | 'employees' | 'type'> {
+  category: number;
+  employees: string[];
+  type: string;
 }
 
 export type ServiceBasicInfo = Pick<

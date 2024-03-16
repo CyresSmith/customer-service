@@ -1,12 +1,17 @@
 import AddEmployeeModal from 'components/Employees/AddEmployeeModal';
 import { Message } from 'components/Employees/AddEmployeeModal/AddEmployeeModal.styled';
 import Button from 'components/Ui/Buttons/Button';
+import { ServiceOpenModal } from 'helpers/enums';
 import { useState } from 'react';
 import { HiCheckCircle, HiUserAdd } from 'react-icons/hi';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi2';
-import { AddServiceStepProps } from 'services/types/service.type';
+import { IoIosSave } from 'react-icons/io';
+import { ServiceStepProps } from 'services/types/service.type';
 import EmployeeData, { IEmployeeData } from '../EmployeeData';
-import { FormSide, ModalBox } from '../ServiceModal.styled';
+import {
+  ButtonBox as SaveButtonBox,
+  StepFormBox,
+} from '../ServiceModal.styled';
 import {
   ButtonBox,
   CHECK_SIZE,
@@ -15,11 +20,15 @@ import {
 } from './SecondStep.styled';
 
 const SecondStep = ({
+  openModal,
   setStep,
   serviceData,
   setServiceData,
   providers,
-}: AddServiceStepProps) => {
+  stateToCheck,
+  handleServiceUpdate,
+  isServiceUpdateLoading,
+}: ServiceStepProps) => {
   const [addEmployeeOpen, setAddEmployeeOpen] = useState(false);
 
   const handleSelect = (id: string) => {
@@ -43,59 +52,82 @@ const SecondStep = ({
     setAddEmployeeOpen(false);
   };
 
+  const serviceUpdate = async () => {
+    handleServiceUpdate({ employees: serviceData.employees });
+  };
+
+  const saveDisabled =
+    JSON.stringify(stateToCheck?.employees) ===
+      JSON.stringify(serviceData?.employees) ||
+    serviceData.employees?.length === 0;
+
   return (
     <>
-      <ModalBox>
-        <FormSide>
-          {providers &&
-            (providers.length < 1 ? (
-              <Message>Немає працівників що надають послуги</Message>
-            ) : (
-              <EmployeesList>
-                {providers.map(item => (
-                  <li key={item.id}>
-                    <Employee
-                      onClick={() => handleSelect(item.id)}
-                      $selected={serviceData.employees.includes(item.id)}
-                    >
-                      <EmployeeData {...(item as IEmployeeData)} />
-                      <HiCheckCircle size={CHECK_SIZE} />
-                    </Employee>
-                  </li>
-                ))}
-              </EmployeesList>
-            ))}
-        </FormSide>
+      <StepFormBox as="div">
+        {providers &&
+          (providers.length < 1 ? (
+            <Message>Немає працівників що надають послуги</Message>
+          ) : (
+            <EmployeesList>
+              {providers.map(item => (
+                <li key={item.id}>
+                  <Employee
+                    onClick={() => handleSelect(item.id)}
+                    $selected={serviceData.employees.includes(item.id)}
+                  >
+                    <EmployeeData {...(item as IEmployeeData)} />
+                    <HiCheckCircle size={CHECK_SIZE} />
+                  </Employee>
+                </li>
+              ))}
+            </EmployeesList>
+          ))}
 
-        <ButtonBox>
-          <Button
-            $colors="light"
-            Icon={HiArrowLeft}
-            $iconPosition="l"
-            onClick={handleBackClick}
-          >
-            Назад
-          </Button>
+        {openModal === ServiceOpenModal.EDIT_SERVICE && (
+          <SaveButtonBox>
+            <Button
+              onClick={serviceUpdate}
+              disabled={saveDisabled || isServiceUpdateLoading}
+              Icon={IoIosSave}
+              $colors="accent"
+              isLoading={isServiceUpdateLoading}
+            >
+              Зберегти
+            </Button>
+          </SaveButtonBox>
+        )}
 
-          <Button
-            $colors="light"
-            Icon={HiUserAdd}
-            onClick={() => setAddEmployeeOpen(true)}
-          >
-            Додати нового
-          </Button>
+        {openModal === ServiceOpenModal.ADD && (
+          <ButtonBox>
+            <Button
+              $colors="light"
+              Icon={HiArrowLeft}
+              $iconPosition="l"
+              onClick={handleBackClick}
+            >
+              Назад
+            </Button>
 
-          <Button
-            $colors="accent"
-            disabled={serviceData.employees.length === 0}
-            Icon={HiArrowRight}
-            $iconPosition="r"
-            onClick={handleNextClick}
-          >
-            Далі
-          </Button>
-        </ButtonBox>
-      </ModalBox>
+            <Button
+              $colors="light"
+              Icon={HiUserAdd}
+              onClick={() => setAddEmployeeOpen(true)}
+            >
+              Додати нового
+            </Button>
+
+            <Button
+              $colors="accent"
+              disabled={serviceData.employees.length === 0}
+              Icon={HiArrowRight}
+              $iconPosition="r"
+              onClick={handleNextClick}
+            >
+              Далі
+            </Button>
+          </ButtonBox>
+        )}
+      </StepFormBox>
 
       {addEmployeeOpen && (
         <AddEmployeeModal

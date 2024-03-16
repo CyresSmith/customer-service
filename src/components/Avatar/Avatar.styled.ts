@@ -8,9 +8,10 @@ interface IImageBox {
   $allowChanges: boolean;
 }
 
-export const AvatarBox = styled.div<{ width: number }>`
+export const AvatarBox = styled.div<{ size: number }>`
   position: relative;
-  width: ${({ width }) => (width ? `${width}px` : '250px')};
+  width: ${({ size }) => (size ? `${size}px` : '250px')};
+  height: ${({ size }) => (size ? `${size}px` : '250px')};
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const ModalBox = styled.div`
-  min-width: 400px;
-  min-height: 340px;
+  min-width: 570px;
+  min-height: 500px;
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 `;
 
 export const StepBox = styled.div`
@@ -47,11 +47,19 @@ export const StepNumber = styled.span<{ $current: boolean }>`
     $current ? theme.colors.accent.light : theme.colors.bg.light};
 `;
 
-export const AddServiceModalBox = styled.div`
+export const FirstStepBox = styled.div`
   display: flex;
+  /* align-items: start; */
   gap: ${theme.space[5]};
-  align-items: start;
-  min-height: 340px;
+  flex-grow: 1;
+`;
+
+export const StepFormBox = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+  min-height: 363px;
 `;
 
 export const FormSide = styled.div`

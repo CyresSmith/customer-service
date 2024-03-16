@@ -24,6 +24,7 @@ import {
 import {
   IAddNewServiceDto,
   IService,
+  IServiceUpdate,
   ServiceBasicInfo,
 } from './types/service.type';
 
@@ -178,6 +179,18 @@ export const companyApi = createApi({
         method: 'GET',
       }),
     }),
+
+    updateServiceData: builder.mutation<
+      { message: string },
+      { companyId: number; serviceId: number; data: Partial<IServiceUpdate> }
+    >({
+      query: ({ companyId, serviceId, data }) => ({
+        url: `/company/${companyId}/service/${serviceId}`,
+        method: 'PATCH',
+        data,
+      }),
+      invalidatesTags: ['companyApi'],
+    }),
   }),
 });
 
@@ -198,4 +211,5 @@ export const {
   useGetServicesQuery,
   useUploadServiceAvatarMutation,
   useGetServiceDataQuery,
+  useUpdateServiceDataMutation,
 } = companyApi;

@@ -36,7 +36,7 @@ const SettingsBlock = ({
           <CustomFormInput
             name="price"
             label={false}
-            type="text"
+            type="price"
             value={priceValue}
             handleChange={handleChange}
             disabledIcon
