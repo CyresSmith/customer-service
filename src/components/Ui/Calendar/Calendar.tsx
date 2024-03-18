@@ -18,9 +18,10 @@ type Props = {
   setDate: React.Dispatch<React.SetStateAction<Date>>;
   cellSize?: number;
   monthSize?: string;
+  enableDays?: Date[];
 };
 
-const Calendar = ({ date, setDate, cellSize = 30, monthSize = '18px' }: Props) => {
+const Calendar = ({ date, setDate, cellSize = 30, monthSize = '18px', enableDays }: Props) => {
   const today = new Date(Date.now());
 
   const thisMonthStart = startOfMonth(date);
@@ -51,6 +52,10 @@ const Calendar = ({ date, setDate, cellSize = 30, monthSize = '18px' }: Props) =
 
   const fullMonthArrayForRender = getFullMonthArrayForRender();
 
+  const isDayDisabled = (day: Date): boolean => {
+    return enableDays ? !JSON.stringify(enableDays).includes(JSON.stringify(day)) && !isSameDay(today, day) : false;
+  }
+
   return (
     <CalendarBox>
       <SwitcherWrapper>
@@ -60,6 +65,7 @@ const Calendar = ({ date, setDate, cellSize = 30, monthSize = '18px' }: Props) =
         {shortWeekDays.map(({ name }, i) => <WeekDay key={i}><span>{name}</span></WeekDay>)}
         {fullMonthArrayForRender.map((day, i) =>
           <CalendarDay
+            disabled={isDayDisabled(day)}
             cellSize={cellSize}
             handleClick={() => setDate(day)}
             isToday={isSameDay(day, today)}

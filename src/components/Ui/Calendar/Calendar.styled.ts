@@ -5,7 +5,8 @@ type CalendarDay = {
   $today: boolean;
   $selected: boolean;
   $anotherMonth: boolean;
-  $cellSize: number
+  $cellSize: number;
+  $disabled: boolean;
 }
 
 export const CalendarBox = styled.div`
@@ -58,9 +59,11 @@ export const Day = styled.div<CalendarDay>`
   padding: ${theme.space[2]};
   width: ${props => props.$cellSize}px;
   height: ${props => props.$cellSize}px;
-  opacity: ${({ $anotherMonth }) => ($anotherMonth ? 0.6 : 1)};
+  opacity: ${({ $anotherMonth }) => ($anotherMonth ? 0.8 : 1)};
   transition: ${theme.transition.primary};
-  cursor: pointer;
+  cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
+  opacity: ${({ $disabled, $anotherMonth }) => ($disabled ? 0.5 : $anotherMonth ? 0.7 : 1)};
+  pointer-events: ${props => props.$disabled ? 'none' : 'all'};
 `;
 
 export const DayDate = styled.p<Pick<CalendarDay, '$today' | '$cellSize'>>`

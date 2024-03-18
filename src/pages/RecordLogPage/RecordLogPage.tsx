@@ -11,6 +11,7 @@ const RecordLogPage = () => {
   const { employees, workingHours } = useCompany();
   const providers = employees.filter(e => e.provider);
   const [eventStep, setEventStep] = useState<string | null>(null);
+  const [date, setDate] = useState<Date>(new Date());
 
   const handleEventStep = (step: string) => {
     setEventStep(step);
@@ -26,7 +27,6 @@ const RecordLogPage = () => {
       value: p.lastName ? p.firstName + ' ' + p.lastName : p.firstName,
     };
   });
-  const [date, setDate] = useState<Date>(new Date());
 
   const selectAll = {
     id: 'all',
@@ -35,8 +35,7 @@ const RecordLogPage = () => {
 
   const initialSelection = [selectAll];
 
-  const [selectedItem, setSelectedItem] =
-    useState<SelectItem[]>(initialSelection);
+  const [selectedItem, setSelectedItem] = useState<SelectItem[]>(initialSelection);
 
   const handleSelect = (item: SelectItem) => {
     if (item.id === selectAll.id) {
@@ -90,6 +89,8 @@ const RecordLogPage = () => {
           'Оберіть працівника' :
           eventStep === 'services' ?
           'Оберіть послугу' :
+          eventStep === 'date' ?
+          'Оберіть дату та час' :
           'Створення запису'
         }
           children={
