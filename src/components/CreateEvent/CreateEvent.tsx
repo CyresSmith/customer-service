@@ -60,6 +60,20 @@ const CreateEvent = ({ step, handleEventStep }: Props) => {
         }
     }
 
+    const calculateEventDuration = (): number => {
+        let duration: number = 0;
+
+        if (chosenServices) {
+            chosenServices.forEach(service => {
+                if (service.duration) {
+                    duration += service.duration
+                }
+            })
+        }
+
+        return duration;
+    }
+
     return (
         <Container>
             <ContentBox>
@@ -83,6 +97,7 @@ const CreateEvent = ({ step, handleEventStep }: Props) => {
                         eventTime={eventTime}
                         setEventDate={setEventDate}
                         setEventTime={setEventTime}
+                        eventDuration={calculateEventDuration()}
                     />}
             </ContentBox>
             {step !== 'create' &&
