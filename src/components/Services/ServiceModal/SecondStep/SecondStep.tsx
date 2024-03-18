@@ -2,6 +2,7 @@ import AddEmployeeModal from 'components/Employees/AddEmployeeModal';
 import { Message } from 'components/Employees/AddEmployeeModal/AddEmployeeModal.styled';
 import Button from 'components/Ui/Buttons/Button';
 import { ServiceOpenModal } from 'helpers/enums';
+import { useAdminRights } from 'hooks';
 import { useState } from 'react';
 import { HiCheckCircle, HiUserAdd } from 'react-icons/hi';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi2';
@@ -29,9 +30,12 @@ const SecondStep = ({
   handleServiceUpdate,
   isServiceUpdateLoading,
 }: ServiceStepProps) => {
+  const isAdmin = useAdminRights();
   const [addEmployeeOpen, setAddEmployeeOpen] = useState(false);
 
   const handleSelect = (id: string) => {
+    if (!isAdmin) return;
+
     setServiceData(p => ({
       ...p,
       employees: p.employees.includes(id)
@@ -83,7 +87,7 @@ const SecondStep = ({
             </EmployeesList>
           ))}
 
-        {openModal === ServiceOpenModal.EDIT_SERVICE && (
+        {openModal === ServiceOpenModal.EDIT_SERVICE && isAdmin && (
           <SaveButtonBox>
             <Button
               onClick={serviceUpdate}

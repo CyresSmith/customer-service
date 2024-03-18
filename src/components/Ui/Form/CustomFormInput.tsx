@@ -53,6 +53,7 @@ const CustomFormInput = ({
             isRequired={isRequired}
             isChecked={value}
             handleCheck={handleChange}
+            isReadonly={isReadonly}
           />
         ) : type === 'select' && selectItems && handleSelect ? (
           <CustomFormSelect
@@ -61,6 +62,7 @@ const CustomFormInput = ({
             handleSelect={handleSelect}
             selectItems={selectItems}
             fieldName={name}
+            isReadonly={isReadonly}
             selectedItem={
               Array.isArray(value)
                 ? (value as SelectItem[])

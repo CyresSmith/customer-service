@@ -9,6 +9,7 @@ export interface IButtonStyle
     '$colors' | 'size' | '$round' | '$variant' | '$isIcon' | '$iconPosition'
   > {
   $isIconThere: boolean;
+  $shake?: boolean;
 }
 
 export const BTN_DISABLED_OPACITY = 0.65;
@@ -54,6 +55,9 @@ export const Btn = styled.button<IButtonStyle>`
       }
     `;
   }}
+
+  animation: ${({ $shake }) => ($shake ? theme.animation.shaking : 'none')} 2s
+      ease-in-out infinite;
 
   display: inline-flex;
   align-items: center;

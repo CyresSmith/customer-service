@@ -16,6 +16,7 @@ const Button = ({
   $variant = 'solid',
   $round = false,
   $isIcon = false,
+  shake = false,
 }: IButton) => {
   return (
     <Btn
@@ -29,6 +30,7 @@ const Button = ({
       $round={$round}
       $isIconThere={Boolean(Icon)}
       $iconPosition={$iconPosition}
+      $shake={shake}
     >
       {$iconPosition === 'l' &&
         Icon &&

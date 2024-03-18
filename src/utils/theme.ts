@@ -1,3 +1,5 @@
+import { keyframes } from 'styled-components';
+
 const theme = {
   colors: {
     white: '#fff',
@@ -45,7 +47,7 @@ const theme = {
       dark: '#00ad15',
     },
     backdrop: 'rgba(23, 24, 33, 0.5)',
-    transparent: 'transparent'
+    transparent: 'transparent',
   },
 
   fonts: {
@@ -124,6 +126,26 @@ const theme = {
     drop: 'all 500ms linear',
   },
 
+  animation: {
+    appear: keyframes`
+    0% { transform: translate(0, 200%); opacity: 0 }
+    100% { transform: translate(0, 0); opacity: 1 }`,
+    shaking: keyframes`
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    5% { transform: translate(-1px, -2px) rotate(-1deg); }
+    10% { transform: translate(-3px, 0px) rotate(1deg); }
+    15% { transform: translate(3px, 2px) rotate(0deg); }
+    20% { transform: translate(1px, -1px) rotate(1deg); }
+    25% { transform: translate(-1px, 2px) rotate(-1deg); }
+    30% { transform: translate(-3px, 1px) rotate(0deg); }
+    35% { transform: translate(3px, 1px) rotate(-1deg); }
+    40% { transform: translate(-1px, -1px) rotate(1deg); }
+    45% { transform: translate(1px, 2px) rotate(0deg); }
+    50% { transform: translate(1px, -2px) rotate(-1deg); }
+    60% { transform: translate(0px, 0px) rotate(0deg); }    
+    `,
+  },
+
   shadow: {
     s: ``,
     m: `1px 3px 13px 2px rgba(0, 0, 0, 0.37);
@@ -131,7 +153,7 @@ const theme = {
         -moz-box-shadow: 1px 3px 13px 2px rgba(0, 0, 0, 0.37);`,
     l: ``,
   },
-  timeStep: 30
+  timeStep: 30,
 };
 
 export default theme;

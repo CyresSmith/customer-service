@@ -45,7 +45,7 @@ export const translateLabels = (name: string): string | undefined => {
     case 'info':
       return 'Додаткова інформація';
     case 'break':
-      return 'Перерва після запису';
+      return 'Перерва';
     case 'desc':
       return 'Опис';
     case 'category':

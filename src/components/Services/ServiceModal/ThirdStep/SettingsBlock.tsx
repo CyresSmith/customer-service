@@ -1,6 +1,7 @@
 import { FormInputsListItem } from 'components/Ui/Form/CustomForm.styled';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { SelectItem } from 'components/Ui/Form/types';
+import { useAdminRights } from 'hooks';
 import { ChangeEvent, ReactNode } from 'react';
 import { DurationBox } from '../ServiceModal.styled';
 import { SettingsBlockBox } from './ThirdStep.styled';
@@ -27,6 +28,8 @@ const SettingsBlock = ({
   durationMinutesItems,
   children,
 }: Props) => {
+  const isAdmin = useAdminRights();
+
   return (
     <SettingsBlockBox>
       {children}
@@ -40,6 +43,7 @@ const SettingsBlock = ({
             value={priceValue}
             handleChange={handleChange}
             disabledIcon
+            isReadonly={!isAdmin}
           />
         </DurationBox>
       </FormInputsListItem>
@@ -54,6 +58,7 @@ const SettingsBlock = ({
             selectItems={durationHoursItems}
             handleSelect={handleSelect}
             disabledIcon
+            isReadonly={!isAdmin}
           />
 
           <CustomFormInput
@@ -65,6 +70,7 @@ const SettingsBlock = ({
             selectItems={durationMinutesItems}
             handleSelect={handleSelect}
             disabledIcon
+            isReadonly={!isAdmin}
           />
         </DurationBox>
       </FormInputsListItem>

@@ -175,6 +175,8 @@ const FirstStep = ({
   };
 
   const handleTypeSelectClick = (item: RadioSelectItemType) => {
+    if (!isAdmin) return;
+
     setServiceData(p => ({ ...p, type: item.id, category: null }));
   };
 
@@ -256,11 +258,12 @@ const FirstStep = ({
                     handleSelect={handleCategorySelect}
                     isValid={getErrorMessage(item.name, invalidFields)}
                     disabledIcon={item.name === 'category' ? true : false}
+                    isReadonly={!isAdmin}
                   />
                 ))}
               </FormSide>
 
-              {openModal === ServiceOpenModal.EDIT_SERVICE && (
+              {openModal === ServiceOpenModal.EDIT_SERVICE && isAdmin && (
                 <ButtonBox>
                   <Button
                     onClick={serviceUpdate}

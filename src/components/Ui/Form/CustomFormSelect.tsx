@@ -19,11 +19,12 @@ const CustomFormSelect = ({
   handleSelect,
   fieldName,
   disabled = false,
+  isReadonly = false,
 }: SelectProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggleOpen = () => {
-    if (disabled) return;
+    if (disabled || isReadonly) return;
 
     setIsOpen(p => !p);
   };
@@ -31,7 +32,7 @@ const CustomFormSelect = ({
   const handleClose = () => setIsOpen(false);
 
   const onSelect = (item: SelectItem) => {
-    if (disabled) return;
+    if (disabled || isReadonly) return;
 
     handleSelect(item, fieldName);
 
@@ -84,7 +85,7 @@ const CustomFormSelect = ({
             ? selectedItem.length === 0
               ? 'Не обрано'
               : selectedItem.length > 1
-              ? `${selectedItem[0].value} + ${selectedItem.length - 1}`
+              ? `Обрано: ${selectedItem.length}`
               : translateSelect(selectedItem[0].value)
             : translateSelect(selectedItem.value)}
         </Selected>

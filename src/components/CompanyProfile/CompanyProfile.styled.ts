@@ -6,6 +6,12 @@ export const Wrapper = styled.section`
   grid-template-columns: max-content 1fr;
   gap: ${theme.space[5]};
   align-items: start;
+  overflow-y: auto;
+`;
+
+export const AvatarBox = styled.div`
+  position: sticky;
+  top: 0;
 `;
 
 export const Info = styled.div`
@@ -14,6 +20,7 @@ export const Info = styled.div`
   gap: ${theme.space[5]};
   font-size: ${theme.fontSizes.l};
   max-width: 600px;
+  overflow-y: auto;
 `;
 
 export const Name = styled.h1`

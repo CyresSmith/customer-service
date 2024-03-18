@@ -10,6 +10,7 @@ export const PageBar = styled.div`
   gap: ${theme.space[4]};
   padding-bottom: ${theme.space[4]};
   flex-wrap: wrap;
+  min-height: 31px;
 `;
 
 export const PageLayoutBox = styled.div`
@@ -17,5 +18,5 @@ export const PageLayoutBox = styled.div`
   flex-direction: column;
   gap: ${theme.space[4]};
   height: 100%;
-  overflow-y: auto;
+  /* overflow-y: auto; */
 `;
