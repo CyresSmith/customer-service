@@ -96,34 +96,30 @@ const Services = ({
   };
 
   const sort = () => {
-    const nullSorting = Object.values(sortState).findIndex(item => item) === -1;
-
     setVisibleServices(p =>
-      nullSorting
-        ? services
-        : [...p].sort((a, b) => {
-            let first = '';
-            let second = '';
+      [...p].sort((a, b) => {
+        let first = '';
+        let second = '';
 
-            const sorting = Object.entries(sortState).filter(item => item[1]);
+        const sorting = Object.entries(sortState).filter(item => item[1]);
 
-            for (const [key, sort] of sorting) {
-              first += compare(
-                a,
-                b,
-                key as keyof typeof sortState,
-                sort === SortTypeEnum.DESC
-              );
-              second += compare(
-                b,
-                a,
-                key as keyof typeof sortState,
-                sort === SortTypeEnum.DESC
-              );
-            }
+        for (const [key, sort] of sorting) {
+          first += compare(
+            a,
+            b,
+            key as keyof typeof sortState,
+            sort === SortTypeEnum.DESC
+          );
+          second += compare(
+            b,
+            a,
+            key as keyof typeof sortState,
+            sort === SortTypeEnum.DESC
+          );
+        }
 
-            return first < second ? -1 : first > second ? 1 : 0;
-          })
+        return first < second ? -1 : first > second ? 1 : 0;
+      })
     );
   };
 

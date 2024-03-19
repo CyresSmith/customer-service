@@ -10,8 +10,8 @@ import { ServiceOpenModal, ServiceTypeEnum } from 'helpers/enums';
 import { useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
+import { FaInfoCircle } from 'react-icons/fa';
 import { HiCurrencyDollar, HiUserGroup } from 'react-icons/hi';
-import { HiMiniIdentification } from 'react-icons/hi2';
 import { useOutletContext } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
@@ -49,7 +49,7 @@ const initialState: ServiceDataType = {
 };
 
 const sectionButtons = [
-  { id: 1, label: 'Інформація', Icon: HiMiniIdentification },
+  { id: 1, label: 'Інформація', Icon: FaInfoCircle },
   { id: 2, label: 'Працівники', Icon: HiUserGroup },
   { id: 3, label: 'Час та вартість', Icon: HiCurrencyDollar },
 ];
@@ -83,17 +83,15 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
     }
   };
 
+  const skip = Boolean(!accessToken || !user || !id || !serviceId);
+
   const { data, isLoading: IsServiceDataLoading } = useGetServiceDataQuery(
     {
       companyId: +id,
       serviceId: Number(serviceId),
     },
     {
-      skip:
-        accessToken === undefined ||
-        user === undefined ||
-        id === undefined ||
-        serviceId === undefined,
+      skip,
       refetchOnMountOrArgChange: true,
     }
   );

@@ -1,4 +1,3 @@
-import Breadcrumbs from 'components/Ui/Breadcrumbs';
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import TopBar from '../../TopBar';
@@ -9,7 +8,7 @@ const MainLayout = () => {
     <Container>
       <div>
         <TopBar />
-        <Breadcrumbs />
+        {/* <Breadcrumbs /> */}
       </div>
       <OutletWrapper>
         <Suspense fallback={null}>

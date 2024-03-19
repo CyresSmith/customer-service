@@ -7,6 +7,7 @@ import { HiCalendarDays, HiMiniIdentification } from 'react-icons/hi2';
 import { IEmployee } from 'services/types/employee.types';
 import EmployeeProfile from '../EmployeeProfile';
 import EmployeeSchedule from '../EmployeeSchedule';
+import EmployeeServices from '../EmployeeServices';
 import { EmployeeModalContent } from './EmployeeModal.styled';
 
 type Props = { employee: IEmployee };
@@ -18,7 +19,8 @@ const sectionButtons = [
 ];
 
 const EmployeeModal = ({ employee }: Props) => {
-  const { avatar, user, firstName, lastName, role, jobTitle } = employee;
+  const { avatar, user, firstName, lastName, role, jobTitle, services } =
+    employee;
 
   const [activeSection, setActiveSection] = useState<number>(
     sectionButtons[0].id
@@ -43,6 +45,9 @@ const EmployeeModal = ({ employee }: Props) => {
 
       {activeSection === 1 && <EmployeeProfile employee={employee} />}
       {activeSection === 2 && <EmployeeSchedule employee={employee} />}
+      {activeSection === 3 && (
+        <EmployeeServices employeeId={employee.id} services={services} />
+      )}
     </EmployeeModalContent>
   );
 };
