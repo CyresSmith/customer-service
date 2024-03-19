@@ -13,7 +13,7 @@ export const clientsApi = createApi({
         return ({
             createClient: builder.mutation<Client, AddClient>({
                 query: ({ data, companyId }) => ({
-                    url: `clients/${companyId}/create`,
+                    url: `clients/create?companyId=${companyId}`,
                     method: 'POST',
                     data,
                 }),
@@ -22,21 +22,21 @@ export const clientsApi = createApi({
 
             getAll: builder.query<Client[], unknown>({
                 query: (companyId: number) => ({
-                    url: `clients/${companyId}/get-all`,
+                    url: `clients/get-all?companyId=${companyId}`,
                     method: 'GET',
                 }),
             }),
 
             getById: builder.query<Client, { companyId: number, id: number }>({
                 query: ({ companyId, id }) => ({
-                    url: `clients/${companyId}/${id}`,
+                    url: `clients/${id}?companyId=${companyId}`,
                     method: 'GET'
                 })
             }),
 
             updateClient: builder.mutation<Client, UpdateClient>({
                 query: ({ companyId, id, data }) => ({
-                    url: `clients/${companyId}/${id}/update`,
+                    url: `clients/${id}/update?companyId=${companyId}`,
                     method: 'PATCH',
                     data,
                 }),
@@ -45,16 +45,16 @@ export const clientsApi = createApi({
 
             uploadAvatar: builder.mutation<{ url: string }, UploadAvatar>({
                 query: ({ companyId, id, data }) => ({
-                    url: `clients/${companyId}/${id}/update/avatar`,
+                    url: `clients/${id}/update/avatar?companyId=${companyId}`,
                     method: 'POST',
                     data,
                 }),
                 invalidatesTags: ['clientsApi'],
             }),
-            
+
             delete: builder.mutation<{message: string}, { companyId: number, id: number }>({
                 query: ({ companyId, id }) => ({
-                    url: `clients/${companyId}/${id}/delete`,
+                    url: `clients/${id}/delete?companyId=${companyId}`,
                     method: 'DELETE'
                 }),
                 invalidatesTags: ['clientsApi'],
