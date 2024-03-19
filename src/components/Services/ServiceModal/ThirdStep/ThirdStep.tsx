@@ -33,6 +33,7 @@ import {
   SettingsBlockBox,
 } from './ThirdStep.styled';
 
+import { useAdminRights } from 'hooks';
 import { ButtonBox as SaveButtonBox } from '../ServiceModal.styled';
 
 const hoursArray = generateSelectTimeArray({
@@ -72,6 +73,7 @@ const ThirdStep = ({
   isServiceUpdateLoading,
 }: Props) => {
   const { id: companyId } = useCompany();
+  const isAdmin = useAdminRights();
 
   const { refetchCompanyData } = useOutletContext<{
     refetchCompanyData: () => void;
@@ -167,6 +169,8 @@ const ThirdStep = ({
   };
 
   const stateChange = (e: ChangeEvent<HTMLInputElement>, id?: string) => {
+    if (!isAdmin) return;
+
     const { name, value, type } = e.target;
 
     if (type === 'checkbox') {
@@ -220,6 +224,8 @@ const ThirdStep = ({
     fieldName?: string,
     id?: string
   ) => {
+    if (!isAdmin) return;
+
     fieldName &&
       setServiceData(p => {
         if (id === undefined) {
@@ -498,6 +504,7 @@ const ThirdStep = ({
                     stateSelect(selected, fieldName)
                   }
                   disabledIcon
+                  isReadonly={!isAdmin}
                 />
               </DurationBox>
             )}
@@ -546,6 +553,7 @@ const ThirdStep = ({
                       value={serviceData.placeLimit || 1}
                       handleChange={stateChange}
                       disabledIcon
+                      isReadonly={!isAdmin}
                     />
                   </DurationBox>
                 )}
@@ -555,7 +563,7 @@ const ThirdStep = ({
         </CheckboxBox>
       </div>
 
-      {openModal === ServiceOpenModal.EDIT_SERVICE && (
+      {openModal === ServiceOpenModal.EDIT_SERVICE && isAdmin && (
         <SaveButtonBox>
           <Button
             onClick={serviceUpdate}

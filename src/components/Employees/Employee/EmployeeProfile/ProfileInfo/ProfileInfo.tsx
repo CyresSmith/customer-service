@@ -111,6 +111,7 @@ const ProfileInfo = ({ employee }: Props) => {
               value={state[item.name as keyof typeof initialState]}
               handleChange={handleChange}
               isValid={getErrorMessage(item.name, invalidFields)}
+              isReadonly={!isEditingAllowed}
             />
           ))}
         </FormInputsList>

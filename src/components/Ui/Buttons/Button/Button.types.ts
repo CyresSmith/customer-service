@@ -5,8 +5,7 @@ export interface IButton {
   isLoading?: boolean;
   disabled?: boolean;
   children?: ReactNode | undefined;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onClick?: (e: any | undefined) => void;
+  onClick?: (e: unknown | undefined) => void;
   Icon?: React.ElementType | undefined;
   $iconPosition?: 'l' | 'r' | undefined;
   type?: 'submit' | 'button';
@@ -23,4 +22,5 @@ export interface IButton {
   $variant?: 'solid' | 'text' | undefined;
   $round?: boolean;
   $isIcon?: boolean;
+  shake?: boolean;
 }

@@ -38,7 +38,7 @@ export function useForm<
       } else if (name === 'price') {
         newState = { ...newState, [name]: Number.isNaN(+value) ? 0 : +value };
       } else {
-        newState = { ...newState, [name]: value };
+        newState = { ...newState, [name]: value.trim() };
       }
 
       return newState;

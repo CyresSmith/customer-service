@@ -59,11 +59,12 @@ export type SelectItem = {
 };
 
 export type SelectProps = {
-  width: string;
+  width?: string;
   selectItems: SelectItem[];
   selectedItem: SelectItem | SelectItem[];
   handleSelect: (item: SelectItem, fieldName?: string) => void;
   closeOnSelect?: boolean;
   fieldName?: string;
   disabled?: boolean;
+  isReadonly?: boolean;
 };

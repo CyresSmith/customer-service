@@ -35,7 +35,6 @@ import {
   startOfMonth,
 } from 'date-fns';
 import { uk } from 'date-fns/locale';
-// import arraysAreEqual from 'helpers/areArrayEqual';
 import generateTimeArray from 'helpers/generateTimeArray';
 import { useAdminRights, useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';

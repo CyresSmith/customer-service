@@ -122,7 +122,7 @@ export const DoneIcon = styled.svg<{ $complete?: boolean }>`
 `;
 
 export const SelectBox = styled.div<{ $width: string; disabled: boolean }>`
-  width: ${props => props.$width};
+  width: ${({ $width }) => $width};
   position: relative;
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `;
@@ -156,6 +156,10 @@ export const Select = styled.div<{ $open: boolean; $width?: string }>`
 
 export const Selected = styled.p`
   font-size: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
 
   &::first-letter {
     text-transform: uppercase;

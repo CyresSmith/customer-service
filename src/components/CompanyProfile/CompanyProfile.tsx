@@ -22,6 +22,7 @@ import { useOutletContext } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useUploadCompanyAvatarMutation } from 'services/company.api';
 import {
+  AvatarBox,
   ButtonBox,
   FlexBox,
   Info,
@@ -98,15 +99,17 @@ const CompanyProfile = () => {
       ) : (
         <>
           <Wrapper>
-            <Avatar
-              allowChanges={isAdmin}
-              light
-              size={250}
-              alt={`${name} logo`}
-              isLoading={isLoading}
-              currentImageUrl={avatar}
-              handleUpload={handleUpload}
-            />
+            <AvatarBox>
+              <Avatar
+                allowChanges={isAdmin}
+                light
+                size={250}
+                alt={`${name} logo`}
+                isLoading={isLoading}
+                currentImageUrl={avatar}
+                handleUpload={handleUpload}
+              />
+            </AvatarBox>
 
             <Info>
               <InfoBlock>
