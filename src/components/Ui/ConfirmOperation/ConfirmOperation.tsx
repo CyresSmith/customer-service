@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { HiCheck, HiX } from 'react-icons/hi';
 import Button from '../Buttons/Button';
 import Modal from '../Modal/Modal';
 import {
@@ -33,18 +34,13 @@ const ConfirmOperation = ({
           <ConfirmText>{children}</ConfirmText>
 
           <ConfirmBtnsWrapper>
-            <Button
-              id="modal"
-              children="Відмінити"
-              onClick={closeConfirm}
-              $colors="light"
-            />
-            <Button
-              id="modal"
-              children="Підтвердити"
-              onClick={callback}
-              $colors="accent"
-            />
+            <Button Icon={HiCheck} $colors="success" onClick={callback}>
+              Так
+            </Button>
+
+            <Button Icon={HiX} $colors="danger" onClick={closeConfirm}>
+              Ні
+            </Button>
           </ConfirmBtnsWrapper>
         </ConfirmContainer>
       }

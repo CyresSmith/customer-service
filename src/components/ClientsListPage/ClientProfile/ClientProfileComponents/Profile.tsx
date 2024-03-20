@@ -5,6 +5,7 @@ import ConfirmOperation from 'components/Ui/ConfirmOperation';
 import { useActions } from 'hooks';
 import { useClients } from 'hooks/useClients';
 import { useState } from 'react';
+import { HiUserRemove } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import {
   useDeleteMutation,
@@ -120,6 +121,7 @@ export const Profile = ({
 
           <BtnWrapper>
             <Button
+              Icon={HiUserRemove}
               onClick={confirmToggle}
               isLoading={deleteLoading}
               type="button"
