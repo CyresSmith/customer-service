@@ -1,10 +1,10 @@
 import { useCompany } from 'hooks/useCompany';
 import Employee from './Employee/Employee';
 import {
-  EmployeesCount,
-  EmployeesList,
-  HeaderItem,
   ItemLayout,
+  EmployeesCount,
+  HeaderItem,
+  EmployeesList,
 } from './Employees.styled';
 
 type Props = {};
@@ -29,6 +29,22 @@ const Employees = (props: Props) => {
       </EmployeesList>
     </>
   );
+
+  // return (
+  //   <ItemsList
+  //     items={employees.map(
+  //       ({ id, avatar, firstName, lastName, status, jobTitle, services }) => ({
+  //         id,
+  //         avatar,
+  //         name: lastName ? firstName + ' ' + lastName : firstName,
+  //         jobTitle,
+  //         servicesCount: services.length,
+  //         status,
+  //       })
+  //     )}
+  //     onItemClick={id => console.log(id)}
+  //   />
+  // );
 };
 
 export default Employees;

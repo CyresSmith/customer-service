@@ -16,7 +16,7 @@ export const AvatarBox = styled.div`
   height: 100%;
 `;
 
-export const StatusBadge = styled.div<{ $active: boolean; $size?: 's' | 'l' }>`
+export const StatusBadge = styled.span<{ $active: boolean; $size?: 's' | 'l' }>`
   font-size: ${({ $size }) => theme.fontSizes[$size ? $size : 'l']};
   font-weight: ${theme.fontWeights.bold};
   text-transform: uppercase;

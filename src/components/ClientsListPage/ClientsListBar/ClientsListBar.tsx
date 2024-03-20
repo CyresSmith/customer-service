@@ -22,7 +22,7 @@ const addInitialState: Client = {
   card: '',
   source: '',
   comment: '',
-  gender: ''
+  gender: '',
 };
 
 type Props = {
@@ -31,30 +31,35 @@ type Props = {
   refetchData: () => void;
 };
 
-const ClientsListBar = ({searchQuery, handleSearch, refetchData}: Props) => {
+const ClientsListBar = ({ searchQuery, handleSearch, refetchData }: Props) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [createClientMutatuin, { isLoading }] = useCreateClientMutation();
   const { addNewClient } = useActions();
 
-  const {companyId} = useParams();
+  const { companyId } = useParams();
 
   const handleAddClient = async (state: Client) => {
     if (!companyId) {
       return;
     }
 
-    const data = Object.fromEntries(Object.entries(state).filter(i => i[1] !== ''));
+    const data = Object.fromEntries(
+      Object.entries(state).filter(i => i[1] !== '')
+    );
 
-    const result = await createClientMutatuin({data, companyId: +companyId}).unwrap();
-    
+    const result = await createClientMutatuin({
+      data,
+      companyId: +companyId,
+    }).unwrap();
+
     if (result) {
       addNewClient(result);
       toggleModal();
-      toast.success('Нового клієнта успішно збережено')
+      toast.success('Нового клієнта успішно збережено');
     }
   };
 
-  function toggleModal () {
+  function toggleModal() {
     if (modalOpen) {
       refetchData();
       setModalOpen(false);
@@ -66,11 +71,9 @@ const ClientsListBar = ({searchQuery, handleSearch, refetchData}: Props) => {
   return (
     <BarWrapper>
       <SearchWrapper>
-        <Search
-          value={searchQuery}
-          onChange={handleSearch}
-        />
+        <Search value={searchQuery} onChange={handleSearch} />
       </SearchWrapper>
+
       <Button
         type="button"
         onClick={toggleModal}
@@ -83,11 +86,12 @@ const ClientsListBar = ({searchQuery, handleSearch, refetchData}: Props) => {
         <Modal
           children={
             <ClientForm
-              type='add'
+              type="add"
               initialState={addInitialState}
               onSubmit={handleAddClient}
               isLoading={isLoading}
-            />}
+            />
+          }
           $isOpen={modalOpen}
           closeModal={toggleModal}
         />

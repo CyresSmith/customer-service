@@ -12,6 +12,7 @@ export type Client = {
   gender?: string;
   card?: string;
   companyId?: number;
+  createdAt?: string;
   // socialLinks?: string[];
 };
 
@@ -26,8 +27,8 @@ export type ClientsState = {
 };
 
 export type AddClient = {
-  data: Partial<Client>,
-  companyId: number
+  data: Partial<Client>;
+  companyId: number;
 };
 
 export type UpdateClient = {

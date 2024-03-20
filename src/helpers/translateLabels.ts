@@ -64,6 +64,16 @@ export const translateLabels = (name: string): string | undefined => {
       return 'Тривалість перерви';
     case 'duration':
       return 'Тривалість';
+    case 'price':
+      return 'Вартість';
+    case 'type':
+      return 'Тип';
+    case 'status':
+      return 'Статус';
+    case 'servicesCount':
+      return 'Кількість послуг';
+    case 'register':
+      return 'Реєстрація';
 
     default:
       break;

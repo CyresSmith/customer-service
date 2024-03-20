@@ -5,10 +5,10 @@ import { useState } from 'react';
 import { HiCurrencyDollar } from 'react-icons/hi';
 import { HiCalendarDays, HiMiniIdentification } from 'react-icons/hi2';
 import { IEmployee } from 'services/types/employee.types';
-import EmployeeProfile from '../EmployeeProfile';
-import EmployeeSchedule from '../EmployeeSchedule';
-import EmployeeServices from '../EmployeeServices';
 import { EmployeeModalContent } from './EmployeeModal.styled';
+import EmployeeProfile from './EmployeeProfile';
+import EmployeeSchedule from './EmployeeSchedule';
+import EmployeeServices from './EmployeeServices';
 
 type Props = { employee: IEmployee };
 

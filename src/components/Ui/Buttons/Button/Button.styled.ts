@@ -37,7 +37,6 @@ export const Btn = styled.button<IButtonStyle>`
       :focus:not(:disabled) {
           color: ${hoverColor()};
           background-color: ${hoverBackgroundColor()};
-
           svg {
           fill: ${hoverColor()};
         }
@@ -58,7 +57,6 @@ export const Btn = styled.button<IButtonStyle>`
 
   animation: ${({ $shake }) => ($shake ? theme.animation.shaking : 'none')} 2s
       ease-in-out infinite;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -76,6 +74,10 @@ export const Btn = styled.button<IButtonStyle>`
   span {
     color: inherit;
     pointer-events: none;
+  }
+
+  &:hover {
+    animation: none;
   }
 
   &:disabled {
