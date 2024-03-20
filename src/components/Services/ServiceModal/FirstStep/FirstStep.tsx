@@ -11,21 +11,17 @@ import {
   InputValueType,
   SelectItem,
 } from 'components/Ui/Form/types';
-import Loader from 'components/Ui/Loader';
 import RadioSelect, {
   RadioSelectItemType,
 } from 'components/Ui/RadioSelect/RadioSelect';
 import { ServiceOpenModal, ServiceTypeEnum } from 'helpers/enums';
 import { getErrorMessage } from 'helpers/inputsValidation';
-import { useAdminRights, useAuth, useForm } from 'hooks';
+import { useAdminRights, useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { HiArrowRight } from 'react-icons/hi2';
 import { IoIosSave } from 'react-icons/io';
-import {
-  useGetServicesCategoriesQuery,
-  useUploadServiceAvatarMutation,
-} from 'services/company.api';
+import { useUploadServiceAvatarMutation } from 'services/company.api';
 import { ServiceCategory } from 'services/types/category.types';
 import { ServiceStepProps } from 'services/types/service.type';
 import {
@@ -56,6 +52,8 @@ type InitialStateType = {
 
 interface Props extends ServiceStepProps {
   serviceId?: number;
+  categories: ServiceCategory[];
+  refetchCategories: () => void;
 }
 
 const FirstStep = ({
@@ -67,20 +65,11 @@ const FirstStep = ({
   serviceId,
   handleServiceUpdate,
   isServiceUpdateLoading,
+  categories,
+  refetchCategories,
 }: Props) => {
-  const { accessToken, user } = useAuth();
   const { id } = useCompany();
   const isAdmin = useAdminRights();
-
-  const skip = serviceId
-    ? Boolean(!accessToken || !user || !id || !serviceId)
-    : Boolean(!accessToken || !user || !id);
-
-  const {
-    isLoading: isCategoriesLoading,
-    data,
-    refetch,
-  } = useGetServicesCategoriesQuery({ id }, { skip });
 
   const [uploadImg, { isLoading: isAvatarLoading }] =
     useUploadServiceAvatarMutation();
@@ -99,8 +88,6 @@ const FirstStep = ({
       if (url) setServiceData(p => ({ ...p, avatar: url }));
     }
   };
-
-  const [categories, setCategories] = useState<ServiceCategory[]>([]);
 
   const initialState: InitialStateType = {
     category: serviceData?.category || null,
@@ -199,12 +186,6 @@ const FirstStep = ({
     }));
   }, [serviceData]);
 
-  useEffect(() => {
-    if (!data) return;
-
-    setCategories(data);
-  }, [data]);
-
   const checkString = JSON.stringify({
     type: stateToCheck?.type,
     category: stateToCheck?.category,
@@ -222,78 +203,72 @@ const FirstStep = ({
 
   return (
     <>
-      <>
-        {isCategoriesLoading ? (
-          <Loader />
-        ) : (
-          <FirstStepBox>
-            {openModal === ServiceOpenModal.EDIT_SERVICE && (
-              <Avatar
-                currentImageUrl={serviceData.avatar || ''}
-                isLoading={isAvatarLoading}
-                allowChanges={isAdmin}
-                size={150}
-                alt="service image"
-                handleUpload={handleAvatarUpload}
-              />
-            )}
-
-            <StepFormBox onSubmit={handleSubmit}>
-              <FormSide>
-                <FormInputsListItem>
-                  <FormInputLabel>Тип</FormInputLabel>
-                  <RadioSelect
-                    items={selectItems}
-                    selectedItemId={serviceData.type}
-                    onSelect={handleTypeSelectClick}
-                  />
-                </FormInputsListItem>
-
-                {(inputs as InputProps[]).map((item, i) => (
-                  <CustomFormInput
-                    key={i}
-                    {...item}
-                    value={state[item.name as keyof InputValueType]}
-                    handleChange={handleStateChange}
-                    handleSelect={handleCategorySelect}
-                    isValid={getErrorMessage(item.name, invalidFields)}
-                    disabledIcon={item.name === 'category' ? true : false}
-                    isReadonly={!isAdmin}
-                  />
-                ))}
-              </FormSide>
-
-              {openModal === ServiceOpenModal.EDIT_SERVICE && isAdmin && (
-                <ButtonBox>
-                  <Button
-                    onClick={serviceUpdate}
-                    disabled={saveDisabled || isServiceUpdateLoading}
-                    Icon={IoIosSave}
-                    $colors="accent"
-                    isLoading={isServiceUpdateLoading}
-                  >
-                    Зберегти
-                  </Button>
-                </ButtonBox>
-              )}
-
-              {openModal === ServiceOpenModal.ADD && (
-                <ButtonBox>
-                  <Button
-                    disabled={isSubmitDisabled}
-                    type="submit"
-                    Icon={HiArrowRight}
-                    $colors="accent"
-                    $iconPosition="r"
-                  >
-                    Далі
-                  </Button>
-                </ButtonBox>
-              )}
-            </StepFormBox>
-          </FirstStepBox>
+      <FirstStepBox>
+        {openModal === ServiceOpenModal.EDIT_SERVICE && (
+          <Avatar
+            currentImageUrl={serviceData.avatar || ''}
+            isLoading={isAvatarLoading}
+            allowChanges={isAdmin}
+            size={150}
+            alt="service image"
+            handleUpload={handleAvatarUpload}
+          />
         )}
-      </>
+
+        <StepFormBox onSubmit={handleSubmit}>
+          <FormSide>
+            <FormInputsListItem>
+              <FormInputLabel>Тип</FormInputLabel>
+              <RadioSelect
+                items={selectItems}
+                selectedItemId={serviceData.type}
+                onSelect={handleTypeSelectClick}
+              />
+            </FormInputsListItem>
+
+            {(inputs as InputProps[]).map((item, i) => (
+              <CustomFormInput
+                key={i}
+                {...item}
+                value={state[item.name as keyof InputValueType]}
+                handleChange={handleStateChange}
+                handleSelect={handleCategorySelect}
+                isValid={getErrorMessage(item.name, invalidFields)}
+                disabledIcon={item.name === 'category' ? true : false}
+                isReadonly={!isAdmin}
+              />
+            ))}
+          </FormSide>
+
+          {openModal === ServiceOpenModal.EDIT_SERVICE && isAdmin && (
+            <ButtonBox>
+              <Button
+                onClick={serviceUpdate}
+                disabled={saveDisabled || isServiceUpdateLoading}
+                Icon={IoIosSave}
+                $colors="accent"
+                isLoading={isServiceUpdateLoading}
+              >
+                Зберегти
+              </Button>
+            </ButtonBox>
+          )}
+
+          {openModal === ServiceOpenModal.ADD && (
+            <ButtonBox>
+              <Button
+                disabled={isSubmitDisabled}
+                type="submit"
+                Icon={HiArrowRight}
+                $colors="accent"
+                $iconPosition="r"
+              >
+                Далі
+              </Button>
+            </ButtonBox>
+          )}
+        </StepFormBox>
+      </FirstStepBox>
 
       {addCategoryModalOpen && (
         <AddCategoryModal
@@ -301,7 +276,7 @@ const FirstStep = ({
           isOpen={addCategoryModalOpen}
           closeModal={() => setAddCategoryModalOpen(false)}
           type={serviceData.type as ServiceTypeEnum}
-          refetch={refetch}
+          refetch={refetchCategories}
           onCategoryAdd={({ id, name }) =>
             setState(p => ({
               ...p,

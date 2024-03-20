@@ -8,6 +8,7 @@ import { millisecondsToTime } from 'helpers/millisecondsToTime';
 import { translateLabels } from 'helpers/translateLabels';
 import { useAdminRights } from 'hooks';
 import { ChangeEvent, useEffect, useState } from 'react';
+import { FaGenderless, FaMars, FaVenus } from 'react-icons/fa6';
 import {
   HiPlusCircle,
   HiSortAscending,
@@ -43,6 +44,7 @@ type ItemType<T extends StringRecord> = {
 type Props<T extends StringRecord> = {
   items: ItemType<T>[];
   keyForSelect?: keyof Omit<ItemType<T>, 'id' | 'avatar'>;
+  notSortedKeys?: Array<keyof Omit<ItemType<T>, 'id' | 'avatar'>>;
   onItemClick: (id: string | number) => void;
   onAddClick: () => void;
   addButtonTitle: string;
@@ -54,18 +56,21 @@ enum SortTypeEnum {
   NULL = 0,
 }
 
+const NOT_SORT_KEYS = ['id', 'avatar'];
+
 const ItemsList = <T extends StringRecord>({
   items,
   onItemClick,
   keyForSelect,
+  notSortedKeys = [],
   addButtonTitle,
   onAddClick,
 }: Props<T>) => {
   const isAdmin = useAdminRights();
   const [itemsState, setItemsState] = useState<ItemType<T>[]>([]);
-  const [initialSortState, setInitialSortState] = useState({
-    name: SortTypeEnum.NULL,
-  });
+  const [initialSortState, setInitialSortState] = useState<
+    Record<string, SortTypeEnum>
+  >({});
   const [sortState, setSortState] = useState(initialSortState);
   const [filter, setFilter] = useState<string>('');
 
@@ -127,6 +132,8 @@ const ItemsList = <T extends StringRecord>({
   };
 
   const handleSort = (sortKey: keyof typeof initialSortState) => {
+    if ((notSortedKeys as Array<string>).includes(sortKey)) return;
+
     setSortState(p => {
       let newState = { ...p };
 
@@ -176,13 +183,20 @@ const ItemsList = <T extends StringRecord>({
       ...items.reduce((acc: SelectItem[], item, i) => {
         const idx = acc.findIndex(
           ({ value }) =>
-            value === capitalizeFirstLetter(String(item[keyForSelect]))
+            value ===
+            capitalizeFirstLetter(
+              translateLabels(String(item[keyForSelect])) ||
+                String(item[keyForSelect])
+            )
         );
 
         if (idx === -1) {
           acc.push({
             id: i,
-            value: capitalizeFirstLetter(String(item[keyForSelect])),
+            value: capitalizeFirstLetter(
+              translateLabels(String(item[keyForSelect])) ||
+                String(item[keyForSelect])
+            ),
           });
         }
 
@@ -205,10 +219,13 @@ const ItemsList = <T extends StringRecord>({
     );
 
     if (items.length > 0) {
-      let sortState = { name: SortTypeEnum.NULL };
+      let sortState = {};
 
       for (const key of Object.keys(items[0])) {
-        if (key !== 'id' && key !== 'avatar') {
+        if (
+          !NOT_SORT_KEYS.includes(key) &&
+          !(notSortedKeys as Array<string>).includes(key)
+        ) {
           sortState = Object.assign(sortState, { [key]: SortTypeEnum.NULL });
         }
       }
@@ -251,7 +268,7 @@ const ItemsList = <T extends StringRecord>({
 
   const columnsCount =
     itemsState && itemsState.length > 0
-      ? Object.keys(itemsState[0]).length - 2
+      ? Object.keys(itemsState[0]).length - NOT_SORT_KEYS.length
       : 0;
 
   return (
@@ -309,7 +326,7 @@ const ItemsList = <T extends StringRecord>({
             <>
               <ListHeader $columnsCount={columnsCount}>
                 {Object.keys(itemsState[0]).map(key => {
-                  if (key !== 'id' && key !== 'avatar') {
+                  if (!NOT_SORT_KEYS.includes(key)) {
                     return (
                       <ListHeaderItem key={key}>
                         <Button
@@ -320,8 +337,10 @@ const ItemsList = <T extends StringRecord>({
                           size="s"
                           $colors="light"
                           Icon={
-                            sortState[key as keyof typeof sortState] ===
-                            SortTypeEnum.ASC
+                            (notSortedKeys as Array<string>).includes(key)
+                              ? undefined
+                              : sortState[key as keyof typeof sortState] ===
+                                SortTypeEnum.ASC
                               ? HiSortAscending
                               : sortState[key as keyof typeof sortState] ===
                                 SortTypeEnum.DESC
@@ -337,6 +356,7 @@ const ItemsList = <T extends StringRecord>({
                   }
                 })}
               </ListHeader>
+
               <List>
                 {filteredItems.map(item => (
                   <ItemBox
@@ -367,6 +387,20 @@ const ItemsList = <T extends StringRecord>({
                             >
                               {value === 'Working' ? 'Працює' : 'Звільнено'}
                             </StatusBadge>
+                          </ItemParam>
+                        );
+                      }
+
+                      if (key === 'gender') {
+                        return (
+                          <ItemParam key={key}>
+                            {value === 'Male' ? (
+                              <FaMars size={25} />
+                            ) : value === 'Female' ? (
+                              <FaVenus size={25} />
+                            ) : (
+                              <FaGenderless size={25} />
+                            )}
                           </ItemParam>
                         );
                       }

@@ -1,13 +1,21 @@
 import ServiceModal from 'components/Services/ServiceModal';
 import ItemsList from 'components/Ui/ItemsList';
+import Loader from 'components/Ui/Loader';
 import { ServiceOpenModal } from 'helpers/enums';
 import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
+import { useGetServicesCategoriesQuery } from 'services/company.api';
 
 const ServicesPage = () => {
-  const { services } = useCompany();
+  const { id, services } = useCompany();
   const [openModal, setOpenModal] = useState<ServiceOpenModal | null>(null);
   const [serviceId, setServiceId] = useState<number | undefined>(undefined);
+
+  const {
+    isLoading: categoriesLoading,
+    data: categories,
+    refetch: refetchCategories,
+  } = useGetServicesCategoriesQuery({ id }, { skip: !id });
 
   const handleModalOpen = (
     type: ServiceOpenModal | null,
@@ -22,7 +30,9 @@ const ServicesPage = () => {
     setOpenModal(null);
   };
 
-  return (
+  return categoriesLoading ? (
+    <Loader />
+  ) : (
     <>
       <ItemsList
         items={services.map(
@@ -42,11 +52,13 @@ const ServicesPage = () => {
         onAddClick={() => handleModalOpen(ServiceOpenModal.ADD)}
       />
 
-      {openModal && (
+      {openModal && categories && (
         <ServiceModal
+          categories={categories}
           openModal={openModal}
           serviceId={serviceId}
           handleModalClose={handleModalClose}
+          refetchCategories={() => refetchCategories()}
         />
       )}
     </>

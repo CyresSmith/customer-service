@@ -3,14 +3,10 @@ import ClientProfile from 'components/ClientsListPage/ClientProfile';
 import ItemsList from 'components/Ui/ItemsList';
 import Modal from 'components/Ui/Modal/Modal';
 import { useActions } from 'hooks';
+import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
 import { toast } from 'react-toastify';
-import {
-  useCreateClientMutation,
-  useDeleteMutation,
-  useGetAllQuery,
-} from 'services/clients.api';
+import { useCreateClientMutation, useGetAllQuery } from 'services/clients.api';
 import { Client } from 'store/clients/clients.types';
 
 const addInitialState: Client = {
@@ -27,46 +23,34 @@ const addInitialState: Client = {
   gender: '',
 };
 
-const ClientsListPage = () => {
-  const { companyId } = useParams();
-  const { setClients, addNewClient, deleteClient } = useActions();
-  const [modalOpen, setModalOpen] = useState<boolean | number>(false);
+enum OpenModal {
+  ADD = 1,
+  EDIT = 2,
+}
 
-  const { data, isSuccess, refetch, isLoading } = useGetAllQuery(companyId, {
-    skip: Boolean(!companyId),
+const ClientsListPage = () => {
+  const { id: companyId } = useCompany();
+  const { setClients, addNewClient, deleteClient } = useActions();
+  const [modalOpen, setModalOpen] = useState<OpenModal | null>(null);
+  const [chosenClientId, setChosenClientId] = useState<number | null>(null);
+
+  const {
+    data,
+    isSuccess,
+    refetch: refetchClients,
+    isLoading,
+  } = useGetAllQuery(companyId, {
+    skip: !companyId,
   });
+
   const [createClientMutation, { isLoading: addClientLoading }] =
     useCreateClientMutation();
 
-  const [
-    deleteClientMutation,
-    { isLoading: deleteLoading, isSuccess: deleteSuccess },
-  ] = useDeleteMutation();
-
-  function toggleModal() {
-    if (modalOpen) {
-      refetch();
-      setModalOpen(false);
-    } else {
-      setModalOpen(true);
-    }
-  }
+  const clientsRefetch = () => refetchClients();
 
   const handleItemClick = (id: string | number) => {
-    setModalOpen(+id);
-  };
-
-  const handleClientDelete = async (id: number) => {
-    if (companyId && id) {
-      const { message } = await deleteClientMutation({
-        companyId: +companyId,
-        id,
-      }).unwrap();
-      if (message) {
-        setModalOpen(false);
-        deleteClient({ id });
-      }
-    }
+    setChosenClientId(+id);
+    setModalOpen(OpenModal.EDIT);
   };
 
   const handleAddClient = async (state: Client) => {
@@ -84,8 +68,9 @@ const ClientsListPage = () => {
     }).unwrap();
 
     if (result) {
+      setModalOpen(null);
+      refetchClients();
       addNewClient(result);
-      toggleModal();
       toast.success('Нового клієнта успішно збережено');
     }
   };
@@ -95,13 +80,6 @@ const ClientsListPage = () => {
       setClients(data);
     }
   }, [data, isSuccess, setClients]);
-
-  useEffect(() => {
-    if (deleteSuccess) {
-      refetch();
-      toast.success('Клієнта видалено');
-    }
-  }, [deleteSuccess, refetch]);
 
   return (
     <>
@@ -131,40 +109,40 @@ const ClientsListPage = () => {
           )}
           onItemClick={handleItemClick}
           addButtonTitle="Додати клієнта"
-          onAddClick={toggleModal}
+          onAddClick={() => setModalOpen(OpenModal.ADD)}
           keyForSelect="gender"
+          notSortedKeys={['phone', 'email']}
         />
       )}
 
-      {modalOpen && typeof modalOpen === 'boolean' && (
+      {modalOpen === OpenModal.ADD && (
         <Modal
-          id="add"
-          children={
-            <ClientForm
-              type="add"
-              initialState={addInitialState}
-              onSubmit={handleAddClient}
-              isLoading={isLoading}
-            />
-          }
-          $isOpen={Boolean(modalOpen)}
-          closeModal={toggleModal}
-        />
+          id="newClient"
+          $isOpen={modalOpen === OpenModal.ADD}
+          closeModal={() => setModalOpen(null)}
+        >
+          <ClientForm
+            type="add"
+            initialState={addInitialState}
+            onSubmit={handleAddClient}
+            isLoading={isLoading}
+          />
+        </Modal>
       )}
 
-      {typeof modalOpen === 'number' && companyId && (
+      {modalOpen === OpenModal.EDIT && companyId && chosenClientId && (
         <Modal
-          children={
-            <ClientProfile
-              deleteLoading={deleteLoading}
-              deleteClient={handleClientDelete}
-              companyId={+companyId}
-              id={modalOpen}
-            />
-          }
-          $isOpen={Boolean(modalOpen)}
-          closeModal={() => setModalOpen(false)}
-        />
+          id="clientProfile"
+          $isOpen={modalOpen === OpenModal.EDIT}
+          closeModal={() => setModalOpen(null)}
+        >
+          <ClientProfile
+            companyId={+companyId}
+            clientId={chosenClientId}
+            refetchClients={clientsRefetch}
+            closeModal={() => setModalOpen(null)}
+          />
+        </Modal>
       )}
     </>
   );

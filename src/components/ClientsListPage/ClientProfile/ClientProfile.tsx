@@ -1,45 +1,79 @@
-import { useClients } from "hooks/useClients";
-import { ClientName, Container, Skeleton } from "./ClientProfile.styled";
-import { useGetByIdQuery } from "services/clients.api";
-import { useEffect, useState } from "react";
-import { useActions } from "hooks";
-import Loader from "components/Ui/Loader";
-import { ClientProfileBar } from "./ClientProfileBar";
-import { Profile } from "./ClientProfileComponents/Profile";
+import Loader from 'components/Ui/Loader';
+import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
+import ModalSectionsList from 'components/Ui/Modal/ModalSectionsList';
+import { useActions } from 'hooks';
+import { useClients } from 'hooks/useClients';
+import { useEffect, useState } from 'react';
+import { HiIdentification } from 'react-icons/hi2';
+import { useGetByIdQuery } from 'services/clients.api';
+import { Container, Skeleton } from './ClientProfile.styled';
+import { Profile } from './ClientProfileComponents/Profile';
 
 type Props = {
-    companyId: number;
-    id: number;
-    deleteClient: (id: number) => void;
-    deleteLoading: boolean;
+  companyId: number;
+  clientId: number;
+  refetchClients: () => void;
+  closeModal: () => void;
+};
+
+enum Sections {
+  PROFILE = 1,
 }
 
-const ClientProfile = ({ companyId, id, deleteClient, deleteLoading }: Props) => {
-    const { data, isLoading, refetch } = useGetByIdQuery({ companyId, id });
-    const { setChoosenClient } = useActions();
-    const { choosen } = useClients();
-    const [section, setSection] = useState<string>('profile');
+const sectionButtons = [
+  { id: Sections.PROFILE, label: 'Інформація', Icon: HiIdentification },
+];
 
-    useEffect(() => {
-        if (data) {
-            setChoosenClient(data);
-        }
-    }, [data, setChoosenClient])
+const ClientProfile = ({
+  companyId,
+  clientId,
+  refetchClients,
+  closeModal,
+}: Props) => {
+  const { data, isLoading, refetch } = useGetByIdQuery({ companyId, clientId });
+  const { setChosenClient } = useActions();
+  const { chosen } = useClients();
+  const [section, setSection] = useState<Sections>(Sections.PROFILE);
 
-    const handleBarClick = (id: string): void => {
-        setSection(id)
+  useEffect(() => {
+    if (data) {
+      setChosenClient(data);
     }
+  }, [data, setChosenClient]);
 
-    return isLoading || id != choosen.id ?
-        <Skeleton><Loader /></Skeleton> : (
-        <Container>
-            <ClientName>{ choosen.firstName + ' ' + choosen.lastName }</ClientName>
-            <ClientProfileBar handleClick={handleBarClick} isActiveSection={section} />
-            {section === 'profile' ?
-                <Profile deleteLoading={deleteLoading} deleteClient={deleteClient} companyId={companyId} clientRefetch={refetch} /> : <Skeleton />
-            }
-        </Container>
-    )
+  return isLoading || clientId !== chosen.id || !chosen ? (
+    <Skeleton>
+      <Loader />
+    </Skeleton>
+  ) : (
+    <Container>
+      <ModalHeaderWithAvatar
+        avatar={chosen.avatar || ''}
+        title={
+          chosen.lastName
+            ? chosen.firstName + ' ' + chosen.lastName
+            : chosen.firstName || ''
+        }
+      />
+
+      <ModalSectionsList
+        sectionButtons={sectionButtons}
+        currentSection={section}
+        handleSectionSelect={id => setSection(id)}
+      />
+
+      {section === Sections.PROFILE ? (
+        <Profile
+          companyId={companyId}
+          clientRefetch={refetchClients}
+          closeModal={closeModal}
+          refetchChosen={refetch}
+        />
+      ) : (
+        <Skeleton />
+      )}
+    </Container>
+  );
 };
 
 export default ClientProfile;

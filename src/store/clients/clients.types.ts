@@ -22,7 +22,7 @@ export type Company = {
 };
 
 export type ClientsState = {
-  choosen: Client;
+  chosen: Client;
   allClients: Client[];
 };
 

@@ -122,8 +122,8 @@ const theme = {
 
   transition: {
     primary: 'all 250ms ease-in-out',
-    modal: 'all 350ms linear',
-    drop: 'all 500ms linear',
+    modal: 'all 350ms ease-in-out',
+    drop: 'all 500ms ease-in-out',
   },
 
   animation: {

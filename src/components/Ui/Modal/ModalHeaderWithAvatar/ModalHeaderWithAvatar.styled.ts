@@ -41,6 +41,7 @@ export const AvatarBox = styled.div`
 export const TitleBox = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: ${theme.space[1]};
   min-height: 40px;
 `;
@@ -52,6 +53,10 @@ export const Title = styled.h5`
   text-overflow: ellipsis;
   word-wrap: break-word;
   white-space: nowrap;
+
+  &:first-letter {
+    text-transform: uppercase;
+  }
 `;
 
 export const SubTitle = styled.p`
@@ -62,4 +67,8 @@ export const SubTitle = styled.p`
   word-wrap: break-word;
   white-space: nowrap;
   color: ${theme.colors.secondary.light};
+
+  &:first-letter {
+    text-transform: uppercase;
+  }
 `;

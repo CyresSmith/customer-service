@@ -92,7 +92,7 @@ export const ListHeaderItem = styled.li`
 `;
 
 export const List = styled.ul`
-  height: 100%;
+  height: calc(100% - 80px);
   overflow-y: auto;
 `;
 
@@ -108,6 +108,8 @@ export const ItemBox = styled.li<ColumnsCount>`
   align-items: center;
   gap: ${theme.space[4]};
   animation: ${theme.animation.appear};
+  animation-duration: 500ms;
+  transition: ${theme.transition.primary};
 
   &:not(:last-of-type) {
     margin-bottom: ${theme.space[4]};
