@@ -83,37 +83,39 @@ const ClientsListPage = () => {
 
   return (
     <>
-      {data && data.length && (
-        <ItemsList
-          items={data?.map(
-            ({
-              id,
-              avatar,
-              firstName,
-              lastName,
-              phone,
-              email,
-              gender,
-              createdAt,
-            }) => ({
-              id,
-              avatar: avatar || '',
-              name: lastName ? firstName + ' ' + lastName : firstName,
-              phone,
-              email: email || 'Пошта не вказана',
-              gender: gender || 'Не вказано',
-              register: createdAt
-                ? new Date(createdAt).toLocaleDateString()
-                : '',
-            })
-          )}
-          onItemClick={handleItemClick}
-          addButtonTitle="Додати клієнта"
-          onAddClick={() => setModalOpen(OpenModal.ADD)}
-          keyForSelect="gender"
-          notSortedKeys={['phone', 'email']}
-        />
-      )}
+      <ItemsList
+        items={
+          !data
+            ? []
+            : data.map(
+                ({
+                  id,
+                  avatar,
+                  firstName,
+                  lastName,
+                  phone,
+                  email,
+                  gender,
+                  createdAt,
+                }) => ({
+                  id,
+                  avatar: avatar || '',
+                  name: lastName ? firstName + ' ' + lastName : firstName,
+                  phone,
+                  email: email || 'Пошта не вказана',
+                  gender: gender || 'Не вказано',
+                  register: createdAt
+                    ? new Date(createdAt).toLocaleDateString()
+                    : '',
+                })
+              )
+        }
+        onItemClick={handleItemClick}
+        addButtonTitle="Додати клієнта"
+        onAddClick={() => setModalOpen(OpenModal.ADD)}
+        keyForSelect="gender"
+        notSortedKeys={['phone', 'email']}
+      />
 
       {modalOpen === OpenModal.ADD && (
         <Modal
