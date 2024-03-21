@@ -17,26 +17,33 @@ import {
 } from './Employee.styled';
 import EmployeeModal from './EmployeeModal';
 import { StatusBadge } from './EmployeeProfile/EmployeeProfile.styled';
+import { useActions } from 'hooks';
 
-type Props = { employee: IEmployee };
+type Props = { employee: Partial<IEmployee> };
 
 const Employee = ({ employee }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { setChosenEmployee } = useActions();
 
-  const { avatar, user, firstName, lastName, role, jobTitle, status } =
+  const { avatar, firstName, lastName, role, jobTitle, status, id } =
     employee;
 
   const fullName =
-    (firstName || user.firstName) + ' ' + (lastName || user.lastName);
+    (firstName) + ' ' + (lastName);
+  
+  const handleModalClose = () => {
+    setChosenEmployee(null);
+    setIsModalOpen(false)
+  }
 
   return (
     <>
       <EmployeeBox onClick={() => setIsModalOpen(p => !p)}>
         <ItemLayout>
           <EmployeeImg>
-            {avatar !== '' || user.avatar !== '' ? (
+            {avatar !== '' ? (
               <img
-                src={avatar || user.avatar}
+                src={avatar}
                 alt={`${firstName + ' ' + lastName} image`}
               />
             ) : (
@@ -65,9 +72,9 @@ const Employee = ({ employee }: Props) => {
         </ItemLayout>
       </EmployeeBox>
 
-      {isModalOpen && (
-        <Modal $isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
-          <EmployeeModal employee={employee} />
+      {isModalOpen && id && (
+        <Modal $isOpen={isModalOpen} closeModal={handleModalClose}>
+          <EmployeeModal id={ +id } />
         </Modal>
       )}
     </>

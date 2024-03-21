@@ -25,13 +25,6 @@ const ChooseTime = ({ eventDate, eventDuration, eventTime, daySchedule, setEvent
     const forSelect = enableHours.map(eh => {
         return {value: eh}
     })
-    // const hoursForSelect = timeArray.map(t => {
-    //     const filtered = t
-
-    //     if () {
-    //         return {value: t}
-    //     }
-    // })
 
     const handleTimeSelect = (item: SelectItem) => {
         setEventTime(item.value)

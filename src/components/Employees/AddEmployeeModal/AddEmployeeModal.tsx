@@ -3,7 +3,6 @@ import Button from 'components/Ui/Buttons/Button';
 import Modal from 'components/Ui/Modal/Modal';
 import { useState } from 'react';
 import { HiCheck, HiX } from 'react-icons/hi';
-import { useOutletContext } from 'react-router-dom';
 import { UserData } from 'store/user/user.types';
 import { FormBox, Message } from './AddEmployeeModal.styled';
 import ExistAccountForm from './ExistAccountForm';
@@ -19,10 +18,6 @@ const AddEmployeeModal = ({ isOpen, closeModal }: Props) => {
   const [step, setStep] = useState<null | 1 | 2>(null);
   const [existUser, setExistUser] = useState<UserData | null>(null);
 
-  const { refetchCompanyData } = useOutletContext<{
-    refetchCompanyData: () => void;
-  }>();
-
   const handleBackClick = () => {
     setStep(null);
     setExistUser(null);
@@ -31,7 +26,6 @@ const AddEmployeeModal = ({ isOpen, closeModal }: Props) => {
   const handleModalClose = () => {
     handleBackClick();
     closeModal();
-    refetchCompanyData();
   };
 
   return (

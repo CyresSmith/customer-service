@@ -1,4 +1,4 @@
-import { useCompany } from 'hooks/useCompany';
+// import { useCompany } from 'hooks/useCompany';
 import Employee from './Employee/Employee';
 import {
   EmployeesCount,
@@ -6,24 +6,25 @@ import {
   HeaderItem,
   ItemLayout,
 } from './Employees.styled';
+import { useEmployees } from 'hooks/useEmployees';
 
-type Props = {};
+// type Props = {};
 
-const Employees = (props: Props) => {
-  const { employees } = useCompany();
+const Employees = () => {
+  const { allEmployees } = useEmployees();
 
   return (
     <>
       <ItemLayout>
         <EmployeesCount>
-          <HeaderItem>Кількість співробітників: {employees.length}</HeaderItem>
+          <HeaderItem>Кількість співробітників: {allEmployees.length}</HeaderItem>
         </EmployeesCount>
         <div></div>
         <HeaderItem>Статус</HeaderItem>
       </ItemLayout>
 
       <EmployeesList>
-        {employees.map(item => (
+        {allEmployees.map(item => (
           <Employee key={item.id} employee={item} />
         ))}
       </EmployeesList>

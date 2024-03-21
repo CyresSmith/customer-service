@@ -42,6 +42,11 @@ export interface IEmployee {
   services: Partial<IService>[];
 }
 
+export type EmployeesState = {
+  chosenEmployee: IEmployee | null;
+  allEmployees: Partial<IEmployee>[];
+}
+
 export type createEmployeeData = Pick<
   IEmployee,
   'jobTitle' | 'provider' | 'role'
@@ -53,11 +58,12 @@ export type addExistUserEmployee = {
 };
 
 export type addExistUserEmployeeData = {
-  id: string;
+  companyId: string;
   data: addExistUserEmployee;
 };
 
 export type UserData = {
+  id?: string | number;
   email: string;
   phone: string;
   password: string;
@@ -71,7 +77,7 @@ export type addNewUserEmployee = {
 };
 
 export type addNewUserEmployeeData = {
-  id: string;
+  companyId: string;
   data: addNewUserEmployee;
 };
 

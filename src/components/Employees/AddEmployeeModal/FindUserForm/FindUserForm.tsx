@@ -6,7 +6,7 @@ import { useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { HiArrowLeft, HiSearch, HiX } from 'react-icons/hi';
-import { useFindUserDataMutation } from 'services/company.api';
+import { useFindUserDataMutation } from 'services/employee.api';
 
 import Loader from 'components/Ui/Loader';
 import handleError from 'helpers/errorHandler';
@@ -57,7 +57,7 @@ const FindUserForm = ({ existUser, setExistUser, handleBackClick }: Props) => {
 
   const onSubmit = async (state: typeof initialState) => {
     const data = await findUserData({
-      id,
+      companyId: id,
       email: state.email,
     }).unwrap();
 
@@ -66,7 +66,7 @@ const FindUserForm = ({ existUser, setExistUser, handleBackClick }: Props) => {
     }
   };
 
-  const { state, setState, handleChange, handleSubmit, invalidFields, reset } =
+  const { state, handleChange, handleSubmit, invalidFields, reset } =
     useForm(initialState, onSubmit);
 
   const handleClick = () => {

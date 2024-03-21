@@ -5,7 +5,7 @@ import { getErrorMessage } from 'helpers/inputsValidation';
 import { useActions, useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { HiArrowLeft, HiPlusCircle } from 'react-icons/hi';
-import { useAddExistUserEmployeeMutation } from 'services/company.api';
+import { useAddExistUserEmployeeMutation } from 'services/employee.api';
 import { EmployeeRoleEnum } from 'services/types/employee.types';
 import { ButtonBox } from '../AddEmployeeModal.styled';
 
@@ -40,8 +40,9 @@ const initialState = {
 };
 
 const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
-  const { id, employees } = useCompany();
-  const { updateCompanyData } = useActions();
+  const { id } = useCompany();
+  const { addNewEmployee } = useActions();
+  const [addEmployee, { isLoading }] = useAddExistUserEmployeeMutation();
 
   const onSubmit = async ({
     jobTitle,
@@ -49,7 +50,7 @@ const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
     isAdmin,
   }: typeof initialState) => {
     const employee = await addEmployee({
-      id,
+      companyId: id,
       data: {
         userId,
         employeeData: {
@@ -61,9 +62,7 @@ const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
     }).unwrap();
 
     if (employee) {
-      updateCompanyData({
-        employees: [...employees, employee],
-      });
+      addNewEmployee(employee);
 
       closeModal();
     }
@@ -72,8 +71,6 @@ const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
   const { state, handleChange, handleSubmit, invalidFields } = useForm<
     typeof initialState
   >(initialState, onSubmit);
-
-  const [addEmployee, { isLoading }] = useAddExistUserEmployeeMutation();
 
   return (
     <>

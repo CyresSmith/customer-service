@@ -5,9 +5,9 @@ import { InputProps } from 'components/Ui/Form/types';
 import { getErrorMessage } from 'helpers/inputsValidation';
 import { useActions } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { State, useForm } from 'hooks/useForm';
+import { useForm } from 'hooks/useForm';
 import { HiArrowLeft, HiPlusCircle } from 'react-icons/hi';
-import { useAddNewUserEmployeeMutation } from 'services/company.api';
+import { useAddNewUserEmployeeMutation } from 'services/employee.api';
 import { EmployeeRoleEnum } from 'services/types/employee.types';
 import { ButtonBox } from '../AddEmployeeModal.styled';
 
@@ -68,12 +68,12 @@ const initialState = {
 };
 
 function NewUserEmployeeForm({ handleBackClick, closeModal }: Props) {
-  const { id, employees } = useCompany();
-  const { updateCompanyData } = useActions();
+  const { id } = useCompany();
+  const { addNewEmployee: toStore } = useActions();
   const [addNewEmployee, { isLoading }] = useAddNewUserEmployeeMutation();
 
   const onSubmit = async ({
-    admin,
+    isAdmin,
     jobTitle,
     provider,
     email,
@@ -81,14 +81,14 @@ function NewUserEmployeeForm({ handleBackClick, closeModal }: Props) {
     password,
     firstName,
     lastName,
-  }: State) => {
+  }: typeof initialState) => {
     const employee = await addNewEmployee({
-      id,
+      companyId: id,
       data: {
         employeeData: {
           jobTitle,
           provider,
-          role: admin ? EmployeeRoleEnum.ADMIN : EmployeeRoleEnum.EMPLOYEE,
+          role: isAdmin ? EmployeeRoleEnum.ADMIN : EmployeeRoleEnum.EMPLOYEE,
         },
         userData: {
           email,
@@ -101,11 +101,7 @@ function NewUserEmployeeForm({ handleBackClick, closeModal }: Props) {
     }).unwrap();
 
     if (employee) {
-      console.log(employee);
-
-      updateCompanyData({
-        employees: [...employees, employee],
-      });
+      toStore(employee);
 
       closeModal();
     }
