@@ -3,7 +3,7 @@ import theme from 'utils/theme';
 
 export const ListBar = styled.div`
   display: flex;
-  align-items: center;
+  align-items: end;
   justify-content: space-between;
   gap: ${theme.space[5]};
   width: 100%;
@@ -92,7 +92,7 @@ export const ListHeaderItem = styled.li`
 `;
 
 export const List = styled.ul`
-  height: calc(100% - 80px);
+  height: calc(100% - 101px);
   overflow-y: auto;
 `;
 

@@ -103,7 +103,7 @@ const ClientsListPage = () => {
                   name: lastName ? firstName + ' ' + lastName : firstName,
                   phone,
                   email: email || 'Пошта не вказана',
-                  gender: gender || 'Не вказано',
+                  gender,
                   register: createdAt
                     ? new Date(createdAt).toLocaleDateString()
                     : '',

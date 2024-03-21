@@ -18,7 +18,11 @@ import {
 import { HiPhoto } from 'react-icons/hi2';
 import { TbArrowsSort } from 'react-icons/tb';
 import Button from '../Buttons/Button';
-import { FormInput } from '../Form/CustomForm.styled';
+import {
+  FormInput,
+  FormInputLabel,
+  FormInputsListItem,
+} from '../Form/CustomForm.styled';
 import CustomFormSelect from '../Form/CustomFormSelect';
 import { SelectItem } from '../Form/types';
 import {
@@ -76,9 +80,8 @@ const ItemsList = <T extends StringRecord>({
 
   const selectAll = {
     id: 'all',
-    value: keyForSelect
-      ? `Всі: ${translateLabels(String(keyForSelect))}`
-      : 'Обрати всі',
+    value: 'Всі',
+    count: 0,
   };
 
   const initialSelection = [selectAll];
@@ -181,22 +184,22 @@ const ItemsList = <T extends StringRecord>({
     items.length > 0 && [
       selectAll,
       ...items.reduce((acc: SelectItem[], item, i) => {
-        const idx = acc.findIndex(
-          ({ value }) =>
-            value ===
-            capitalizeFirstLetter(
-              translateLabels(String(item[keyForSelect])) ||
-                String(item[keyForSelect])
-            )
+        selectAll.count++;
+
+        const value = capitalizeFirstLetter(
+          translateLabels(String(item[keyForSelect])) ||
+            String(item[keyForSelect])
         );
 
-        if (idx === -1) {
+        const existingIndex = acc.findIndex(({ value: val }) => val === value);
+
+        if (existingIndex !== -1) {
+          acc[existingIndex].count++;
+        } else {
           acc.push({
             id: i,
-            value: capitalizeFirstLetter(
-              translateLabels(String(item[keyForSelect])) ||
-                String(item[keyForSelect])
-            ),
+            value,
+            count: 1,
           });
         }
 
@@ -275,34 +278,44 @@ const ItemsList = <T extends StringRecord>({
     <>
       <ListBar>
         <FilterBox>
-          <SearchBox>
-            <FormInput
-              name="filter"
-              type="text"
-              value={filter}
-              onChange={handleChange}
-              placeholder="Пошук"
-              disabled={items.length === 0}
-            />
+          <FormInputsListItem as="div">
+            <FormInputLabel>Пошук</FormInputLabel>
 
-            <ButtonBox $hideButton={filter === ''}>
-              <Button
-                $variant="text"
-                $colors="danger"
-                Icon={HiX}
-                onClick={() => setFilter('')}
+            <SearchBox>
+              <FormInput
+                name="filter"
+                type="text"
+                value={filter}
+                onChange={handleChange}
+                placeholder="Введіть назву"
+                disabled={items.length === 0}
               />
-            </ButtonBox>
-          </SearchBox>
+
+              <ButtonBox $hideButton={filter === ''}>
+                <Button
+                  $variant="text"
+                  $colors="danger"
+                  Icon={HiX}
+                  onClick={() => setFilter('')}
+                />
+              </ButtonBox>
+            </SearchBox>
+          </FormInputsListItem>
 
           {keyForSelect && selectItems && (
-            <CustomFormSelect
-              disabled={items.length === 0}
-              width="200px"
-              selectItems={selectItems}
-              selectedItem={selectedKeys}
-              handleSelect={handleSelect}
-            />
+            <FormInputsListItem as="div">
+              <FormInputLabel>
+                {translateLabels(String(keyForSelect))}
+              </FormInputLabel>
+
+              <CustomFormSelect
+                disabled={items.length === 0}
+                width="200px"
+                selectItems={selectItems}
+                selectedItem={selectedKeys}
+                handleSelect={handleSelect}
+              />
+            </FormInputsListItem>
           )}
         </FilterBox>
 

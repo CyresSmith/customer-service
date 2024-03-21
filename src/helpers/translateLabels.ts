@@ -74,10 +74,6 @@ export const translateLabels = (name: string): string | undefined => {
       return 'Кількість послуг';
     case 'register':
       return 'Реєстрація';
-    case 'male':
-      return 'Чоловіча';
-    case 'female':
-      return 'Жіноча';
 
     default:
       break;
