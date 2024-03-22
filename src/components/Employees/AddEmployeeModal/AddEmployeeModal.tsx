@@ -30,6 +30,7 @@ const AddEmployeeModal = ({ isOpen, closeModal }: Props) => {
 
   return (
     <Modal
+      id="addEmployeeModal"
       title="Додати співробітника"
       $isOpen={isOpen}
       closeModal={closeModal}

@@ -1,17 +1,17 @@
 import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
 import ModalSectionsList from 'components/Ui/Modal/ModalSectionsList';
 import translateEmployee from 'helpers/translateEmployee';
+import { useActions } from 'hooks';
+import { useCompany } from 'hooks/useCompany';
+import { useEmployees } from 'hooks/useEmployees';
 import { useEffect, useState } from 'react';
 import { HiCurrencyDollar } from 'react-icons/hi';
 import { HiCalendarDays, HiMiniIdentification } from 'react-icons/hi2';
+import { useGetOneQuery } from 'services/employee.api';
+import { EmployeeModalContent } from './EmployeeModal.styled';
 import EmployeeProfile from './EmployeeProfile';
 import EmployeeSchedule from './EmployeeSchedule';
 import EmployeeServices from './EmployeeServices';
-import { EmployeeModalContent } from './EmployeeModal.styled';
-import { useGetOneQuery } from 'services/employee.api';
-import { useCompany } from 'hooks/useCompany';
-import { useActions } from 'hooks';
-import { useEmployees } from 'hooks/useEmployees';
 
 enum OpenModalEnum {
   PROFILE = 1,
@@ -52,17 +52,13 @@ const EmployeeModal = ({ id }: Props) => {
     return;
   }
 
-  const { avatar, user, firstName, lastName, role, jobTitle, services } =
-    chosenEmployee;
-
-  const fullName =
-    (firstName || user.firstName) + ' ' + (lastName || user.lastName);
+  const { avatar, user, firstName, lastName, role, jobTitle } = chosenEmployee;
 
   return (
     <EmployeeModalContent>
       <ModalHeaderWithAvatar
         avatar={avatar || user.avatar}
-        title={fullName}
+        title={`${firstName}  ${lastName && lastName}`}
         subtitle={translateEmployee(role) || jobTitle}
       />
 

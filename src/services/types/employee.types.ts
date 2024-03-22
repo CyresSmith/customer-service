@@ -1,7 +1,7 @@
 // import { IMonthSchedule, ITime } from './schedule.types';
 
-import { IMonthSchedule } from "./schedule.types";
-import { IService } from "./service.type";
+import { IMonthSchedule } from './schedule.types';
+import { IService } from './service.type';
 
 export interface IEmployeeUser {
   id: string;
@@ -39,13 +39,21 @@ export interface IEmployee {
   birthday: string;
   user: IEmployeeUser;
   schedules: IMonthSchedule[];
-  services: Partial<IService>[];
+  services: IService[];
+}
+
+export interface BasicEmployeeInfo
+  extends Pick<
+    IEmployee,
+    'id' | 'avatar' | 'firstName' | 'lastName' | 'status' | 'jobTitle'
+  > {
+  servicesCount: number;
 }
 
 export type EmployeesState = {
   chosenEmployee: IEmployee | null;
-  allEmployees: Partial<IEmployee>[];
-}
+  allEmployees: BasicEmployeeInfo[];
+};
 
 export type createEmployeeData = Pick<
   IEmployee,

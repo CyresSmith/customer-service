@@ -1,7 +1,9 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from 'services/instance';
+import { UserData } from 'store/user/user.types';
 import { MessageResponse } from './types';
 import {
+  BasicEmployeeInfo,
   IEmployee,
   UpdateEmployeeAvatar,
   UpdateEmployeeProfile,
@@ -13,7 +15,6 @@ import {
   IMonthSchedule,
   IUpdateEmployeeSchedule,
 } from './types/schedule.types';
-import { UserData } from 'store/user/user.types';
 
 export const employeeApi = createApi({
   reducerPath: 'employeeApi',
@@ -23,12 +24,15 @@ export const employeeApi = createApi({
   tagTypes: ['employeeApi', 'employeeSchedule'],
 
   endpoints: builder => ({
-    findUserData: builder.mutation<UserData, { companyId: string; email: string }>({
+    findUserData: builder.mutation<
+      UserData,
+      { companyId: string; email: string }
+    >({
       query: ({ companyId, email }) => ({
         url: `employees/find-employee-data`,
         method: 'POST',
         data: { email },
-        params: {companyId}
+        params: { companyId },
       }),
       invalidatesTags: ['employeeApi'],
     }),
@@ -39,7 +43,7 @@ export const employeeApi = createApi({
           url: `employees/add-exist-user-employee`,
           method: 'POST',
           data,
-          params: {companyId}
+          params: { companyId },
         }),
         invalidatesTags: ['employeeApi'],
       }
@@ -50,25 +54,25 @@ export const employeeApi = createApi({
         url: `employees/add-new-user-employee`,
         method: 'POST',
         data,
-        params: {companyId}
+        params: { companyId },
       }),
       invalidatesTags: ['employeeApi'],
     }),
 
-    getOne: builder.query<IEmployee, {companyId: number, id: number}>({
-      query: ({companyId, id}) => ({
+    getOne: builder.query<IEmployee, { companyId: number; id: number }>({
+      query: ({ companyId, id }) => ({
         url: `employees/get-one/${id}`,
         method: 'GET',
-        params: {companyId}
-      })
+        params: { companyId },
+      }),
     }),
 
-    getCompanyEmployees: builder.query<Partial<IEmployee>[], number>({
+    getCompanyEmployees: builder.query<BasicEmployeeInfo[], number>({
       query: companyId => ({
         url: `employees/get-all-from-company`,
         method: 'GET',
-        params: {companyId}
-      })
+        params: { companyId },
+      }),
     }),
 
     uploadEmployeeAvatar: builder.mutation<
@@ -79,7 +83,7 @@ export const employeeApi = createApi({
         url: `employees/update/${employeeId}/avatar`,
         method: 'PATCH',
         data,
-        params: {companyId}
+        params: { companyId },
       }),
       invalidatesTags: ['employeeApi'],
     }),
@@ -92,7 +96,7 @@ export const employeeApi = createApi({
         url: `employees/update/${employeeId}`,
         method: 'PATCH',
         data,
-        params: {companyId}
+        params: { companyId },
       }),
       invalidatesTags: ['employeeApi'],
     }),
@@ -139,5 +143,5 @@ export const {
   useGetEmployeeScheduleQuery,
   useDeleteEmployeeScheduleMutation,
   useGetCompanyEmployeesQuery,
-  useGetOneQuery
+  useGetOneQuery,
 } = employeeApi;

@@ -46,27 +46,19 @@ const EmployeesPage = () => {
       <ItemsList
         items={allEmployees.map(
           ({
-            id,
-            avatar,
             firstName,
             lastName,
-            status,
+            servicesCount,
+            id,
+            avatar,
             jobTitle,
-            services,
-            user,
+            status,
           }) => ({
             id,
             avatar,
-            name:
-              firstName && lastName
-                ? lastName
-                  ? firstName + ' ' + lastName
-                  : firstName
-                : user?.lastName
-                ? user?.firstName + ' ' + user?.lastName
-                : user?.firstName,
+            name: `${firstName} ${lastName}`,
             jobTitle,
-            servicesCount: services?.length || 0,
+            servicesCount,
             status,
           })
         )}
@@ -85,6 +77,7 @@ const EmployeesPage = () => {
 
       {openModal === OpenModal.EDIT && employeeId && (
         <Modal
+          id="editEmployeeModal"
           $isOpen={openModal === OpenModal.EDIT}
           closeModal={() => setOpenModal(null)}
         >
