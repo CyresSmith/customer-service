@@ -28,3 +28,8 @@ export interface IGetEmployeeSchedule {
   year: number;
   month: number;
 }
+
+export type SchedulesState = {
+  chosenSchedule: IMonthSchedule | null;
+  schedules: IMonthSchedule[];
+}

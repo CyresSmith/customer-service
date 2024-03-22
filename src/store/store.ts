@@ -19,6 +19,8 @@ import companySlice from './company/company.slice';
 import loadingSlice from './loading/loading.slice';
 import userSlice from './user/user.slice';
 import employeesSlice from './employees/employees.slice';
+import { schedulesApi } from 'services/schedules.api';
+import schedulesSlice from './schedules/schedules.slice';
 
 const persistUserConfig = {
   key: 'service',
@@ -37,10 +39,12 @@ const rootReducer = combineReducers({
   user: persistedUserReducer,
   clients: clientsSlice.reducer,
   employees: employeesSlice.reducer,
+  schedules: schedulesSlice.reducer,
   [authApi.reducerPath]: authApi.reducer,
   [companyApi.reducerPath]: companyApi.reducer,
   [clientsApi.reducerPath]: clientsApi.reducer,
   [employeeApi.reducerPath]: employeeApi.reducer,
+  [schedulesApi.reducerPath]: schedulesApi.reducer,
 });
 
 export const store = configureStore({
@@ -54,7 +58,8 @@ export const store = configureStore({
       .concat(authApi.middleware)
       .concat(companyApi.middleware)
       .concat(clientsApi.middleware)
-      .concat(employeeApi.middleware),
+      .concat(employeeApi.middleware)
+      .concat(schedulesApi.middleware),
 });
 
 export type TypeRootState = ReturnType<typeof rootReducer>;

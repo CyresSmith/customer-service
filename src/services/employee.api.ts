@@ -1,7 +1,6 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from 'services/instance';
 import { UserData } from 'store/user/user.types';
-import { MessageResponse } from './types';
 import {
   BasicEmployeeInfo,
   IEmployee,
@@ -10,18 +9,13 @@ import {
   addExistUserEmployeeData,
   addNewUserEmployeeData,
 } from './types/employee.types';
-import {
-  IGetEmployeeSchedule,
-  IMonthSchedule,
-  IUpdateEmployeeSchedule,
-} from './types/schedule.types';
 
 export const employeeApi = createApi({
   reducerPath: 'employeeApi',
 
   baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-  tagTypes: ['employeeApi', 'employeeSchedule'],
+  tagTypes: ['employeeApi'],
 
   endpoints: builder => ({
     findUserData: builder.mutation<
@@ -100,36 +94,6 @@ export const employeeApi = createApi({
       }),
       invalidatesTags: ['employeeApi'],
     }),
-
-    updateEmployeeSchedule: builder.mutation<
-      MessageResponse,
-      IUpdateEmployeeSchedule
-    >({
-      query: ({ companyId, employeeId, data }) => ({
-        url: `company/${companyId}/employee/${employeeId}/schedule`,
-        method: 'PATCH',
-        data,
-      }),
-      invalidatesTags: ['employeeSchedule'],
-    }),
-
-    getEmployeeSchedule: builder.query<IMonthSchedule, IGetEmployeeSchedule>({
-      query: ({ companyId, employeeId, year, month }) => ({
-        url: `company/${companyId}/employee/${employeeId}/schedule?year=${year}&month=${month}`,
-        method: 'GET',
-      }),
-    }),
-
-    deleteEmployeeSchedule: builder.mutation<
-      { message: string },
-      { companyId: string; employeeId: string; scheduleId: string }
-    >({
-      query: ({ companyId, employeeId, scheduleId }) => ({
-        url: `company/${companyId}/employee/${employeeId}/schedule/${scheduleId}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['employeeSchedule'],
-    }),
   }),
 });
 
@@ -139,9 +103,6 @@ export const {
   useAddNewUserEmployeeMutation,
   useUploadEmployeeAvatarMutation,
   useUpdateEmployeeProfileMutation,
-  useUpdateEmployeeScheduleMutation,
-  useGetEmployeeScheduleQuery,
-  useDeleteEmployeeScheduleMutation,
   useGetCompanyEmployeesQuery,
   useGetOneQuery,
 } = employeeApi;
