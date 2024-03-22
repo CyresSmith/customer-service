@@ -69,6 +69,44 @@ const CustomFormSelect = ({
     }
   };
 
+  const setSelectedValue = () => {
+    const notSelectStr = 'Не обрано';
+
+    if (
+      (!Array.isArray(selectedItem) && !selectedItem?.value) ||
+      !selectedItem
+    ) {
+      return notSelectStr;
+    } else if (Array.isArray(selectedItem)) {
+      if (selectedItem.length === 0) {
+        return notSelectStr;
+      } else {
+        if (selectedItem.length > 1) {
+          const countAcc = selectedItem.reduce((acc, item) => {
+            if (item.count) {
+              return acc + item.count;
+            }
+            return acc;
+          }, 0);
+
+          return countAcc > 0
+            ? `Обрано: ${selectedItem.length} (${countAcc})`
+            : `Обрано: ${selectedItem.length}`;
+        } else {
+          const { value, count } = selectedItem[0];
+          const translated = translateSelect(value);
+
+          return count ? `${translated} (${count})` : translated;
+        }
+      }
+    } else {
+      const { value, count } = selectedItem;
+      const translated = translateSelect(value);
+
+      return count ? `${translated}  (${count})` : translated;
+    }
+  };
+
   return (
     <SelectBox ref={selectRef} $width={width} disabled={disabled}>
       <Select
@@ -77,18 +115,7 @@ const CustomFormSelect = ({
         $open={isOpen}
         onClick={toggleOpen}
       >
-        <Selected>
-          {(!Array.isArray(selectedItem) && !selectedItem?.value) ||
-          !selectedItem
-            ? 'Не обрано'
-            : Array.isArray(selectedItem)
-            ? selectedItem.length === 0
-              ? 'Не обрано'
-              : selectedItem.length > 1
-              ? `Обрано: ${selectedItem.length}`
-              : translateSelect(selectedItem[0].value)
-            : translateSelect(selectedItem.value)}
-        </Selected>
+        <Selected>{setSelectedValue()}</Selected>
 
         <SelectIcon as={HiChevronDown} $open={isOpen} />
       </Select>
@@ -104,6 +131,7 @@ const CustomFormSelect = ({
             $selected={isSelected(item)}
           >
             {translateSelect(item.value)}
+            {item.count && ` (${item.count})`}
           </SelectListItem>
         ))}
       </SelectList>

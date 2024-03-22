@@ -56,6 +56,7 @@ export type ButtonsProps = {
 export type SelectItem = {
   id?: string | number;
   value: string;
+  count?: number;
 };
 
 export type SelectProps = {

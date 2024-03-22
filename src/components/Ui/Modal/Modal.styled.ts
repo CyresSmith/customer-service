@@ -31,15 +31,16 @@ export const ModalContainer = styled.div<Style>`
   border-radius: ${theme.radii.s};
   opacity: ${props => (props.$isOpen ? 1 : 0)};
   transform: ${props =>
-    props.$isOpen ? 'translate(0, 0)' : 'translate(100%, 0)'};
+    props.$isOpen ? 'translate(0, 0)' : 'translate(0, 100%)'};
   transition: ${theme.transition.modal};
   box-shadow: ${theme.shadow.m};
 `;
 
-export const Title = styled.h2<{$titleMargin: string | undefined}>`
+export const Title = styled.h2<{ $titleMargin: string | undefined }>`
   font-size: ${theme.fontSizes.xxl};
   font-weight: ${theme.fontWeights.light};
-  margin-bottom: ${props => props.$titleMargin ? props.$titleMargin : theme.space[6]};
+  margin-bottom: ${props =>
+    props.$titleMargin ? props.$titleMargin : theme.space[6]};
   position: relative;
 
   &:after {

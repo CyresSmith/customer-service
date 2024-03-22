@@ -7,7 +7,7 @@ import {
   TitleBox,
 } from './ModalHeaderWithAvatar.styled';
 
-type Props = { avatar: string; title: string; subtitle: string };
+type Props = { avatar: string; title: string; subtitle?: string };
 
 const ModalHeaderWithAvatar = ({ avatar, title, subtitle }: Props) => {
   return (
@@ -27,7 +27,7 @@ const ModalHeaderWithAvatar = ({ avatar, title, subtitle }: Props) => {
       <TitleBox>
         <Title>{title}</Title>
 
-        <SubTitle>{subtitle}</SubTitle>
+        {subtitle && <SubTitle>{subtitle}</SubTitle>}
       </TitleBox>
     </ModalHeaderBox>
   );

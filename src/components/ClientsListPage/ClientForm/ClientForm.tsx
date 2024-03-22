@@ -1,7 +1,13 @@
 import Button from 'components/Ui/Buttons/Button';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
-import { InputProps, InputValueType, SelectItem } from 'components/Ui/Form/types';
+import {
+  InputProps,
+  InputValueType,
+  SelectItem,
+} from 'components/Ui/Form/types';
 import { useForm } from 'hooks/useForm';
+import { IoMdSave } from 'react-icons/io';
+import { Client } from 'store/clients/clients.types';
 import {
   ButtonsBox,
   Form,
@@ -12,10 +18,8 @@ import {
   SubmitError,
   SubmitErrorsBox,
 } from './ClientForm.styled';
-import { Client } from 'store/clients/clients.types';
-import { IoMdSave } from 'react-icons/io';
 
-const inputs: Partial <InputProps>[] = [
+const inputs: Partial<InputProps>[] = [
   { name: 'firstName', type: 'text', isRequired: true },
   { name: 'lastName', type: 'text' },
   { name: 'birthday', type: 'date' },
@@ -25,10 +29,19 @@ const inputs: Partial <InputProps>[] = [
   { name: 'discount', type: 'text' },
   { name: 'card', type: 'text' },
   { name: 'source', type: 'text' },
-  { name: 'comment', type: 'textarea', placeholder: 'Побажання клієнта, додаткова інформація, примітки адміністратора..' },
+  {
+    name: 'comment',
+    type: 'textarea',
+    placeholder:
+      'Побажання клієнта, додаткова інформація, примітки адміністратора..',
+  },
 ];
 
-const genderOptions: SelectItem[] = [{value: 'male'}, {value: 'female'}, {value: 'other'}];
+const genderOptions: SelectItem[] = [
+  { value: 'male' },
+  { value: 'female' },
+  { value: 'other' },
+];
 
 type Props = {
   initialState: Client;
@@ -37,20 +50,25 @@ type Props = {
   type: string;
 };
 
-const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
-  const { state, handleChange, handleSubmit, invalidFields, setState } = useForm<Client>(
-    initialState,
-    onSubmit,
-  );
+const ClientForm = ({ initialState, onSubmit, isLoading, type }: Props) => {
+  const { state, handleChange, handleSubmit, invalidFields, setState } =
+    useForm<Client>(initialState, onSubmit);
 
   const disabledReset: boolean =
     JSON.stringify(
-      Object.fromEntries(Object.entries(state).filter(i => i[0] !== 'avatar' && i[0] !== 'updatedAt'))
+      Object.fromEntries(
+        Object.entries(state).filter(
+          i => i[0] !== 'avatar' && i[0] !== 'updatedAt'
+        )
+      )
     ) ===
-      JSON.stringify(
-        Object.fromEntries(
-          Object.entries(initialState).filter(i => i[0] !== 'avatar' && i[0] !== 'updatedAt')
-        ))
+    JSON.stringify(
+      Object.fromEntries(
+        Object.entries(initialState).filter(
+          i => i[0] !== 'avatar' && i[0] !== 'updatedAt'
+        )
+      )
+    );
 
   const disabledSubmit: boolean =
     invalidFields?.length > 0 ||
@@ -58,9 +76,9 @@ const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
     (state.firstName === '' && state.phone === '')
       ? true
       : false;
-  
+
   const handleSelect = (item: SelectItem) => {
-    setState({ ...state, gender: item.value })
+    setState({ ...state, gender: item.value });
   };
 
   return (
@@ -74,7 +92,11 @@ const ClientForm = ({initialState, onSubmit, isLoading, type}: Props) => {
               name={name!}
               type={type!}
               isRequired={isRequired}
-              value={type === 'select' ? {value: state[name as keyof InputValueType]} : state[name as keyof InputValueType]}
+              value={
+                type === 'select'
+                  ? { value: state[name as keyof InputValueType] }
+                  : state[name as keyof InputValueType]
+              }
               handleChange={handleChange}
               disabledIcon={true}
               selectItems={genderOptions}

@@ -1,13 +1,18 @@
-import { BaseQueryFn, createApi } from "@reduxjs/toolkit/query/react";
-import { axiosBaseQuery } from "./instance";
-import { AddClient, Client, UpdateClient, UploadAvatar } from "store/clients/clients.types";
+import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
+import {
+  AddClient,
+  Client,
+  UpdateClient,
+  UploadAvatar,
+} from 'store/clients/clients.types';
+import { axiosBaseQuery } from './instance';
 
 export const clientsApi = createApi({
-    reducerPath: 'clientsApi',
+  reducerPath: 'clientsApi',
 
-    baseQuery: axiosBaseQuery() as BaseQueryFn,
+  baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-    tagTypes: ['clientsApi'],
+  tagTypes: ['clientsApi'],
 
     endpoints: builder => {
         return ({
@@ -66,15 +71,25 @@ export const clientsApi = createApi({
                 invalidatesTags: ['clientsApi'],
             }),
 
-        });
-    },
+      delete: builder.mutation<
+        { message: string },
+        { companyId: number; id: number }
+      >({
+        query: ({ companyId, id }) => ({
+          url: `clients/${companyId}/${id}/delete`,
+          method: 'DELETE',
+        }),
+        invalidatesTags: ['clientsApi'],
+      }),
+    };
+  },
 });
 
 export const {
-    useCreateClientMutation,
-    useGetAllQuery,
-    useGetByIdQuery,
-    useUpdateClientMutation,
-    useUploadAvatarMutation,
-    useDeleteMutation
+  useCreateClientMutation,
+  useGetAllQuery,
+  useGetByIdQuery,
+  useUpdateClientMutation,
+  useUploadAvatarMutation,
+  useDeleteMutation,
 } = clientsApi;
