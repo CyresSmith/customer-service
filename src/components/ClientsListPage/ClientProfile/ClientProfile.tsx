@@ -30,7 +30,7 @@ const ClientProfile = ({
   refetchClients,
   closeModal,
 }: Props) => {
-  const { data, isLoading, refetch } = useGetByIdQuery({ companyId, clientId });
+  const { data, isLoading, refetch } = useGetByIdQuery({ companyId, id: clientId });
   const { setChosenClient } = useActions();
   const { chosen } = useClients();
   const [section, setSection] = useState<Sections>(Sections.PROFILE);
