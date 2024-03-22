@@ -18,6 +18,7 @@ import clientsSlice from './clients/clients.slice';
 import companySlice from './company/company.slice';
 import loadingSlice from './loading/loading.slice';
 import userSlice from './user/user.slice';
+import employeesSlice from './employees/employees.slice';
 
 const persistUserConfig = {
   key: 'service',
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   company: companySlice.reducer,
   user: persistedUserReducer,
   clients: clientsSlice.reducer,
+  employees: employeesSlice.reducer,
   [authApi.reducerPath]: authApi.reducer,
   [companyApi.reducerPath]: companyApi.reducer,
   [clientsApi.reducerPath]: clientsApi.reducer,

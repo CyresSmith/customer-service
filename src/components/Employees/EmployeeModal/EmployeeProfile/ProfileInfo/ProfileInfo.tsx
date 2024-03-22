@@ -6,7 +6,6 @@ import { getErrorMessage } from 'helpers/inputsValidation';
 import { useActions, useAdminRights, useAuth, useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { IoIosSave } from 'react-icons/io';
-import { useOutletContext } from 'react-router-dom';
 import { useUpdateEmployeeProfileMutation } from 'services/employee.api';
 import {
   EmployeeRoleEnum,
@@ -49,8 +48,8 @@ const ProfileInfo = ({ employee }: Props) => {
 
   const isAdmin = useAdminRights();
   const { user: currentUser } = useAuth();
-  const { id: companyId, employees } = useCompany();
-  const { updateCompanyData } = useActions();
+  const { id: companyId } = useCompany();
+  const { updateEmployee } = useActions();
 
   const isEditingAllowed = isAdmin || currentUser?.id === employee?.user?.id;
 
@@ -66,9 +65,6 @@ const ProfileInfo = ({ employee }: Props) => {
   };
 
   const [updateProfile, { isLoading }] = useUpdateEmployeeProfileMutation();
-  const { refetchCompanyData } = useOutletContext<{
-    refetchCompanyData: () => void;
-  }>();
 
   const onSubmit = async (state: typeof initialState) => {
     const data: UpdateEmployeeProfile = {};
@@ -79,20 +75,14 @@ const ProfileInfo = ({ employee }: Props) => {
       Object.assign(data, { [key]: value });
     });
 
-    const { message } = await updateProfile({
+    const updatedEmployee = await updateProfile({
       companyId,
       employeeId,
       data,
     }).unwrap();
 
-    if (message) {
-      updateCompanyData({
-        employees: employees.map(item =>
-          item.id !== employeeId ? item : { ...item, ...data }
-        ),
-      });
-
-      refetchCompanyData();
+    if (updatedEmployee.id) {
+      updateEmployee(updatedEmployee);
     }
   };
 

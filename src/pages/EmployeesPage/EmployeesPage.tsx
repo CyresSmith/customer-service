@@ -1,10 +1,13 @@
 import AddEmployeeModal from 'components/Employees/AddEmployeeModal';
 import EmployeeModal from 'components/Employees/EmployeeModal';
 import ItemsList from 'components/Ui/ItemsList';
+import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
+import { useActions, useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { useState } from 'react';
-import { IEmployee } from 'services/types/employee.types';
+import { useEmployees } from 'hooks/useEmployees';
+import { useEffect, useState } from 'react';
+import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 
 enum OpenModal {
   ADD = 1,
@@ -12,23 +15,36 @@ enum OpenModal {
 }
 
 const EmployeesPage = () => {
-  const { employees } = useCompany();
+  const { id: companyId } = useCompany();
+  const { accessToken } = useAuth();
+  const { setAllEmployees } = useActions();
   const [openModal, setOpenModal] = useState<OpenModal | null>(null);
-  const [employee, setEmployee] = useState<IEmployee | null>(null);
+  const [employeeId, setEmployeeId] = useState<string | number | null>(null);
+  const { allEmployees } = useEmployees();
 
   const handleItemClick = (employeeId: string | number) => {
-    const employee = employees.find(({ id }) => id === employeeId);
-
-    if (employee) {
-      setOpenModal(OpenModal.EDIT);
-      setEmployee(employee);
-    }
+    setEmployeeId(employeeId);
+    setOpenModal(OpenModal.EDIT);
   };
 
-  return (
+  const { data, isSuccess, isLoading } = useGetCompanyEmployeesQuery(
+    +companyId,
+    {
+      skip: !companyId || !accessToken,
+      refetchOnMountOrArgChange: true,
+    }
+  );
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      setAllEmployees(data);
+    }
+  }, [data, isSuccess, setAllEmployees]);
+
+  return !isLoading && allEmployees.length > 0 ? (
     <>
       <ItemsList
-        items={employees.map(
+        items={allEmployees.map(
           ({
             id,
             avatar,
@@ -46,11 +62,11 @@ const EmployeesPage = () => {
                 ? lastName
                   ? firstName + ' ' + lastName
                   : firstName
-                : user.lastName
-                ? user.firstName + ' ' + user.lastName
-                : user.firstName,
+                : user?.lastName
+                ? user?.firstName + ' ' + user?.lastName
+                : user?.firstName,
             jobTitle,
-            servicesCount: services.length,
+            servicesCount: services?.length || 0,
             status,
           })
         )}
@@ -67,16 +83,17 @@ const EmployeesPage = () => {
         />
       )}
 
-      {openModal === OpenModal.EDIT && employee && (
+      {openModal === OpenModal.EDIT && employeeId && (
         <Modal
-          id="employeeModal"
           $isOpen={openModal === OpenModal.EDIT}
           closeModal={() => setOpenModal(null)}
         >
-          <EmployeeModal employee={employee} />
+          <EmployeeModal id={+employeeId} />
         </Modal>
       )}
     </>
+  ) : (
+    <Loader />
   );
 };
 

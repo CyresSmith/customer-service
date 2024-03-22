@@ -19,7 +19,7 @@ export const ListItem = styled.li`
     align-items: center;
     gap: ${theme.space[3]};
     padding: ${theme.space[3]};
-    border: ${theme.borders.normal} ${theme.colors.accent.light};
+    border: ${theme.borders.normal} ${theme.colors.secondary.dark};
     border-radius: ${theme.radii.xs};
     white-space: nowrap;
     cursor: pointer;
@@ -27,7 +27,7 @@ export const ListItem = styled.li`
 
     &:hover,
     :focus-visible {
-        border-color: ${theme.colors.accent.main};
+        border-color: ${theme.colors.secondary.main};
         box-shadow: ${theme.shadow.m};
     }
 `

@@ -1,7 +1,6 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { ServiceTypeEnum } from 'helpers/enums';
 import { axiosBaseQuery } from 'services/instance';
-import { UserData } from 'store/user/user.types';
 import {
   Activity,
   Company,
@@ -14,12 +13,6 @@ import {
   CompanyCategory,
   ServiceCategory,
 } from './types/category.types';
-
-import {
-  IEmployee,
-  addExistUserEmployeeData,
-  addNewUserEmployeeData,
-} from './types/employee.types';
 
 import {
   IAddNewServiceDto,
@@ -88,35 +81,6 @@ export const companyApi = createApi({
     uploadCompanyAvatar: builder.mutation<{ url: string }, UpdateAvatar>({
       query: ({ id, data }) => ({
         url: `/company/${id}/profile/avatar`,
-        method: 'POST',
-        data,
-      }),
-      invalidatesTags: ['companyApi'],
-    }),
-
-    findUserData: builder.mutation<UserData, { id: string; email: string }>({
-      query: ({ id, email }) => ({
-        url: `/company/${id}/find-employee-data`,
-        method: 'POST',
-        data: { email },
-      }),
-      invalidatesTags: ['companyApi'],
-    }),
-
-    addExistUserEmployee: builder.mutation<IEmployee, addExistUserEmployeeData>(
-      {
-        query: ({ id, data }) => ({
-          url: `/company/${id}/add-exist-user-employee`,
-          method: 'POST',
-          data,
-        }),
-        invalidatesTags: ['companyApi'],
-      }
-    ),
-
-    addNewUserEmployee: builder.mutation<IEmployee, addNewUserEmployeeData>({
-      query: ({ id, data }) => ({
-        url: `/company/${id}/add-new-user-employee`,
         method: 'POST',
         data,
       }),
@@ -202,9 +166,6 @@ export const {
   useUploadCompanyAvatarMutation,
   useUpdateCompanyProfileMutation,
   useGetCompanyActivitiesQuery,
-  useFindUserDataMutation,
-  useAddExistUserEmployeeMutation,
-  useAddNewUserEmployeeMutation,
   useAddNewServiceMutation,
   useGetServicesCategoriesQuery,
   useAddServiceCategoryMutation,

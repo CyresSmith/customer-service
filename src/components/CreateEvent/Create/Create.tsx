@@ -1,11 +1,11 @@
-import { Container, FirstStepChoose, FirstStepChooseDesc, FirstStepChooseIcon, FirstStepChooseText, FirstStepChooseTitle } from "./Steps.styled";
+import { Container, FirstStepChoose, FirstStepChooseDesc, FirstStepChooseIcon, FirstStepChooseText, FirstStepChooseTitle } from "./Create.styled";
 import { GrDocumentUser, GrServicePlay } from "react-icons/gr";
 
 type Props = {
     setStep: (step: string) => void;
 }
 
-export const FirstStep = ({setStep}: Props) => {
+const Create = ({setStep}: Props) => {
     return (
         <Container>
             <FirstStepChoose onClick={() => setStep('employees')}>
@@ -25,3 +25,5 @@ export const FirstStep = ({setStep}: Props) => {
         </Container>
     )
 };
+
+export default Create;

@@ -2,7 +2,6 @@ import Avatar from 'components/Avatar';
 import { useActions, useAdminRights } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { MouseEvent } from 'react';
-import { useOutletContext } from 'react-router-dom';
 import {
   useUpdateEmployeeProfileMutation,
   useUploadEmployeeAvatarMutation,
@@ -26,16 +25,12 @@ type Props = { employee: IEmployee };
 const EmployeeProfile = ({ employee }: Props) => {
   const { avatar, user, status, id: employeeId, role } = employee;
   const isAdmin = useAdminRights();
-  const { id: companyId, employees } = useCompany();
-  const { updateCompanyData } = useActions();
-  const { refetchCompanyData } = useOutletContext<{
-    refetchCompanyData: () => void;
-  }>();
+  const { id: companyId } = useCompany();
+  const { updateEmployee, updateEmployeeAvatar } = useActions();
 
   const [uploadImg, { isLoading }] = useUploadEmployeeAvatarMutation();
 
-  const [updateProfile, { isLoading: isStatusLoading }] =
-    useUpdateEmployeeProfileMutation();
+  const [updateProfile] = useUpdateEmployeeProfileMutation();
 
   const handleUpload = async (file: File) => {
     const data = new FormData();
@@ -48,12 +43,7 @@ const EmployeeProfile = ({ employee }: Props) => {
     }).unwrap();
 
     if (url) {
-      updateCompanyData({
-        employees: employees.map(item =>
-          item.id === employee.id ? { ...item, avatar: url } : item
-        ),
-      });
-      refetchCompanyData();
+      updateEmployeeAvatar({avatar: url});
     }
   };
 
@@ -62,20 +52,14 @@ const EmployeeProfile = ({ employee }: Props) => {
 
     const data = { status };
 
-    const { message } = await updateProfile({
+    const updatedEmployee = await updateProfile({
       companyId,
       employeeId,
       data,
     }).unwrap();
 
-    if (message) {
-      updateCompanyData({
-        employees: employees.map(item =>
-          item.id !== employeeId ? item : { ...item, ...data }
-        ),
-      });
-
-      refetchCompanyData();
+    if (updatedEmployee.id) {
+      updateEmployee(updatedEmployee);
     }
   };
 
