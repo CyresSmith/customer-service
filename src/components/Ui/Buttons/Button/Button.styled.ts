@@ -46,7 +46,7 @@ export const Btn = styled.button<IButtonStyle>`
           width: ${iconSize()};
           height: ${iconSize()};
           fill: ${color()};
-          transition: ${theme.transition.primary};
+          // transition: ${theme.transition.primary};
       }
 
       span {

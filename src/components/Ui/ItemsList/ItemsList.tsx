@@ -15,7 +15,7 @@ import {
   HiSortDescending,
   HiX,
 } from 'react-icons/hi';
-import { HiPhoto } from 'react-icons/hi2';
+import { HiPhoto, HiTrash } from 'react-icons/hi2';
 import { TbArrowsSort } from 'react-icons/tb';
 import Button from '../Buttons/Button';
 import {
@@ -50,8 +50,9 @@ type Props<T extends StringRecord> = {
   keyForSelect?: keyof Omit<ItemType<T>, 'id' | 'avatar'>;
   notSortedKeys?: Array<keyof Omit<ItemType<T>, 'id' | 'avatar'>>;
   onItemClick: (id: string | number) => void;
-  onAddClick: () => void;
-  addButtonTitle: string;
+  onAddClick?: () => void;
+  addButtonTitle?: string;
+  onItemDeleteClick?: (id: string | number) => void;
 };
 
 enum SortTypeEnum {
@@ -69,6 +70,7 @@ const ItemsList = <T extends StringRecord>({
   notSortedKeys = [],
   addButtonTitle,
   onAddClick,
+  onItemDeleteClick,
 }: Props<T>) => {
   const isAdmin = useAdminRights();
   const [itemsState, setItemsState] = useState<ItemType<T>[]>([]);
@@ -91,6 +93,10 @@ const ItemsList = <T extends StringRecord>({
 
   const handleItemClick = (id: string | number) => {
     onItemClick(id);
+  };
+
+  const handleItemDelete = (id: string | number) => {
+    onItemDeleteClick && onItemDeleteClick(id);
   };
 
   const sort = () => {
@@ -337,7 +343,10 @@ const ItemsList = <T extends StringRecord>({
             <Message>Нічого не знайдено</Message>
           ) : (
             <>
-              <ListHeader $columnsCount={columnsCount}>
+              <ListHeader
+                $columnsCount={columnsCount}
+                $isDeleteButton={Boolean(onItemDeleteClick)}
+              >
                 {Object.keys(itemsState[0]).map(key => {
                   if (!NOT_SORT_KEYS.includes(key)) {
                     return (
@@ -348,7 +357,12 @@ const ItemsList = <T extends StringRecord>({
                           }
                           $variant="text"
                           size="s"
-                          $colors="light"
+                          $colors={
+                            sortState[key as keyof typeof sortState] ===
+                            SortTypeEnum.NULL
+                              ? 'light'
+                              : 'accent'
+                          }
                           Icon={
                             (notSortedKeys as Array<string>).includes(key)
                               ? undefined
@@ -375,6 +389,7 @@ const ItemsList = <T extends StringRecord>({
                   <ItemBox
                     key={item.id}
                     $columnsCount={columnsCount}
+                    $isDeleteButton={Boolean(onItemDeleteClick)}
                     onClick={() => handleItemClick(item.id)}
                   >
                     <AvatarBox>
@@ -436,6 +451,15 @@ const ItemsList = <T extends StringRecord>({
                         return <ItemParam key={key}>{value}</ItemParam>;
                       }
                     })}
+
+                    {onItemDeleteClick && (
+                      <Button
+                        Icon={HiTrash}
+                        $colors="transparent"
+                        $variant="text"
+                        onClick={() => handleItemDelete(item.id)}
+                      />
+                    )}
                   </ItemBox>
                 ))}
               </List>

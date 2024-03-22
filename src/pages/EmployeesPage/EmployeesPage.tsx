@@ -69,6 +69,7 @@ const EmployeesPage = () => {
 
       {openModal === OpenModal.EDIT && employee && (
         <Modal
+          id="employeeModal"
           $isOpen={openModal === OpenModal.EDIT}
           closeModal={() => setOpenModal(null)}
         >

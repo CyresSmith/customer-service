@@ -27,7 +27,7 @@ export const AvatarBox = styled.div`
   height: 50px;
   border-radius: ${theme.radii.round};
   overflow: hidden;
-  background-color: ${theme.colors.bg.light};
+  background-color: ${theme.colors.secondary.light};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -48,6 +48,7 @@ export const AvatarBox = styled.div`
     font-size: 30px;
     font-weight: ${theme.fontWeights.light};
     text-transform: uppercase;
+    color: ${theme.colors.bg.main};
   }
 `;
 
@@ -69,19 +70,30 @@ export const ButtonBox = styled.div<{ $hideButton: boolean }>`
   }
 `;
 
-type ColumnsCount = { $columnsCount: number };
+type ListGridProps = { $columnsCount: number; $isDeleteButton: boolean };
 
-export const ListHeader = styled.ul<ColumnsCount>`
+export const ListHeader = styled.ul<ListGridProps>`
   display: grid;
-  grid-template-columns: ${({ $columnsCount }) =>
-    `repeat(${$columnsCount},  1fr)`};
-  padding: 0 ${theme.space[4]} 0 calc(50px + (${theme.space[4]} * 2));
+  grid-template-columns: ${({ $columnsCount, $isDeleteButton }) =>
+    `repeat(${$columnsCount},   calc((100% - (${
+      $isDeleteButton ? '100px' : '50px'
+    })) / ${$columnsCount}))`};
+  padding: ${({ $isDeleteButton }) =>
+    `0 ${theme.space[4]} 0 calc(${$isDeleteButton ? '100px' : '50px'} + (${
+      theme.space[4]
+    } * 2))`};
   justify-items: center;
   gap: ${theme.space[4]};
   margin-bottom: ${theme.space[2]};
 `;
 
 export const ListHeaderItem = styled.li`
+  justify-self: center;
+
+  > button {
+    padding: ${theme.space[2]} 0;
+  }
+
   &:first-of-type {
     justify-self: start;
   }
@@ -96,12 +108,16 @@ export const List = styled.ul`
   overflow-y: auto;
 `;
 
-export const ItemBox = styled.li<ColumnsCount>`
+export const ItemBox = styled.li<ListGridProps>`
   display: grid;
-  grid-template-columns: ${({ $columnsCount }) =>
-    `50px repeat(${$columnsCount},  1fr)`};
+  grid-template-columns: ${({ $columnsCount, $isDeleteButton }) =>
+    `50px repeat(${$columnsCount},   calc((100% - ((${
+      $isDeleteButton ? '100px' : '50px'
+    }) + 16px * ${
+      $isDeleteButton ? $columnsCount + 1 : $columnsCount
+    })) / ${$columnsCount})) ${$isDeleteButton ? '50px' : ''}`};
   cursor: pointer;
-  padding: ${theme.space[4]};
+  padding: ${theme.space[3]} ${theme.space[4]};
   transition: ${theme.transition.primary};
   background-color: ${theme.colors.bg.main};
   border-radius: ${theme.radii.s};
@@ -110,31 +126,36 @@ export const ItemBox = styled.li<ColumnsCount>`
   animation: ${theme.animation.appear};
   animation-duration: 500ms;
   transition: ${theme.transition.primary};
+  background-color: ${theme.colors.bg.light};
 
   &:not(:last-of-type) {
-    margin-bottom: ${theme.space[4]};
+    margin-bottom: ${theme.space[3]};
   }
 
   &:hover {
-    background-color: ${theme.colors.bg.light};
+    background-color: ${theme.colors.secondary.dark};
   }
 `;
 
 export const ItemParam = styled.p`
   font-size: ${theme.fontSizes.l};
   font-weight: ${theme.fontWeights.light};
-  justify-self: center;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  white-space: nowrap;
 
   &:first-letter {
     text-transform: uppercase;
   }
 
   &:first-of-type {
-    justify-self: start;
+    text-align: left;
   }
 
   &:last-of-type {
-    justify-self: end;
+    text-align: right;
   }
 `;
 

@@ -12,6 +12,12 @@ import EmployeeServices from './EmployeeServices';
 
 type Props = { employee: IEmployee };
 
+enum OpenModalEnum {
+  PROFILE = 1,
+  SCHEDULE = 2,
+  SERVICES = 3,
+}
+
 const sectionButtons = [
   { id: 1, label: 'Профіль', Icon: HiMiniIdentification },
   { id: 2, label: 'Графік', Icon: HiCalendarDays },
@@ -22,8 +28,8 @@ const EmployeeModal = ({ employee }: Props) => {
   const { avatar, user, firstName, lastName, role, jobTitle, services } =
     employee;
 
-  const [activeSection, setActiveSection] = useState<number>(
-    sectionButtons[0].id
+  const [activeSection, setActiveSection] = useState<OpenModalEnum>(
+    OpenModalEnum.PROFILE
   );
 
   const fullName =
@@ -38,15 +44,23 @@ const EmployeeModal = ({ employee }: Props) => {
       />
 
       <ModalSectionsList
-        sectionButtons={sectionButtons}
+        sectionButtons={
+          employee.provider
+            ? sectionButtons
+            : sectionButtons.filter(({ id }) => id !== OpenModalEnum.SERVICES)
+        }
         currentSection={activeSection}
         handleSectionSelect={setActiveSection}
       />
 
-      {activeSection === 1 && <EmployeeProfile employee={employee} />}
-      {activeSection === 2 && <EmployeeSchedule employee={employee} />}
-      {activeSection === 3 && (
-        <EmployeeServices employeeId={employee.id} services={services} />
+      {activeSection === OpenModalEnum.PROFILE && (
+        <EmployeeProfile employee={employee} />
+      )}
+      {activeSection === OpenModalEnum.SCHEDULE && (
+        <EmployeeSchedule employee={employee} />
+      )}
+      {activeSection === OpenModalEnum.SERVICES && (
+        <EmployeeServices employee={employee} />
       )}
     </EmployeeModalContent>
   );
