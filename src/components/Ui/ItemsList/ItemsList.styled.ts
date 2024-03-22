@@ -74,14 +74,13 @@ type ListGridProps = { $columnsCount: number; $isDeleteButton: boolean };
 
 export const ListHeader = styled.ul<ListGridProps>`
   display: grid;
-  grid-template-columns: ${({ $columnsCount, $isDeleteButton }) =>
-    `repeat(${$columnsCount},   calc((100% - (${
-      $isDeleteButton ? '100px' : '50px'
-    })) / ${$columnsCount}))`};
-  padding: ${({ $isDeleteButton }) =>
-    `0 ${theme.space[4]} 0 calc(${$isDeleteButton ? '100px' : '50px'} + (${
-      theme.space[4]
-    } * 2))`};
+  grid-template-columns: 50px ${({ $columnsCount, $isDeleteButton }) =>
+      `repeat(${$columnsCount}, calc(((${
+        $isDeleteButton ? '100% - 50px' : '100%'
+      }) - (${theme.space[4]} * ${
+        $isDeleteButton ? $columnsCount + 4 : $columnsCount + 3
+      })) / ${$columnsCount}) ) ${$isDeleteButton ? '50px' : ''}`};
+  padding: 0 ${theme.space[4]};
   justify-items: center;
   gap: ${theme.space[4]};
   margin-bottom: ${theme.space[2]};
@@ -113,7 +112,7 @@ export const ItemBox = styled.li<ListGridProps>`
   grid-template-columns: ${({ $columnsCount, $isDeleteButton }) =>
     `50px repeat(${$columnsCount},   calc((100% - ((${
       $isDeleteButton ? '100px' : '50px'
-    }) + 16px * ${
+    }) + ${theme.space[4]} * ${
       $isDeleteButton ? $columnsCount + 1 : $columnsCount
     })) / ${$columnsCount})) ${$isDeleteButton ? '50px' : ''}`};
   cursor: pointer;

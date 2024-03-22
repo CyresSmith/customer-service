@@ -23,14 +23,14 @@ const hoursArray = generateSelectTimeArray({
   min: 0,
   max: 24,
   step: 1,
-  units: 'год',
+  units: 'г.',
 });
 
 const minutesArray = generateSelectTimeArray({
   min: 0,
   max: 55,
   step: 5,
-  units: 'хв',
+  units: 'хв.',
 });
 
 const EditEmployeeServiceModal = ({

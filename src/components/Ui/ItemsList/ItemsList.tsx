@@ -347,6 +347,7 @@ const ItemsList = <T extends StringRecord>({
                 $columnsCount={columnsCount}
                 $isDeleteButton={Boolean(onItemDeleteClick)}
               >
+                <div></div>
                 {Object.keys(itemsState[0]).map(key => {
                   if (!NOT_SORT_KEYS.includes(key)) {
                     return (
@@ -382,6 +383,7 @@ const ItemsList = <T extends StringRecord>({
                     );
                   }
                 })}
+                {onItemDeleteClick && <div></div>}
               </ListHeader>
 
               <List>

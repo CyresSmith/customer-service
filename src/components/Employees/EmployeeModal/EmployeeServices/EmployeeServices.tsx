@@ -57,8 +57,8 @@ const EmployeeServices = ({ employee }: Props) => {
           : 0;
 
       const serviceState = {
-        durationHours: { id: hours, value: `${hours} год` },
-        durationMinutes: { id: minutes, value: `${minutes} хв` },
+        durationHours: { id: hours, value: `${hours} г.` },
+        durationMinutes: { id: minutes, value: `${minutes} хв.` },
         price: employeeSetting?.price || service.price || 0,
       };
 

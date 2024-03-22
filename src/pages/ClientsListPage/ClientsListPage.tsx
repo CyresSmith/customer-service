@@ -100,10 +100,10 @@ const ClientsListPage = () => {
                 }) => ({
                   id,
                   avatar: avatar || '',
-                  name: lastName ? firstName + ' ' + lastName : firstName,
+                  name: `${firstName}  ${lastName && lastName}`,
                   phone,
                   email: email || 'Пошта не вказана',
-                  gender,
+                  gender: gender || 'other',
                   register: createdAt
                     ? new Date(createdAt).toLocaleDateString()
                     : '',
