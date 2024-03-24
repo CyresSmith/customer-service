@@ -5,7 +5,6 @@ import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
 import { useActions, useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { useEmployees } from 'hooks/useEmployees';
 import { useEffect, useState } from 'react';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 
@@ -20,14 +19,13 @@ const EmployeesPage = () => {
   const { setAllEmployees } = useActions();
   const [openModal, setOpenModal] = useState<OpenModal | null>(null);
   const [employeeId, setEmployeeId] = useState<string | number | null>(null);
-  const { allEmployees } = useEmployees();
 
   const handleItemClick = (employeeId: string | number) => {
     setEmployeeId(employeeId);
     setOpenModal(OpenModal.EDIT);
   };
 
-  const { data, isSuccess, isLoading } = useGetCompanyEmployeesQuery(
+  const { data: allEmployees, isSuccess, isLoading } = useGetCompanyEmployeesQuery(
     +companyId,
     {
       skip: !companyId || !accessToken,
@@ -36,12 +34,12 @@ const EmployeesPage = () => {
   );
 
   useEffect(() => {
-    if (isSuccess && data) {
-      setAllEmployees(data);
+    if (isSuccess && allEmployees) {
+      setAllEmployees(allEmployees);
     }
-  }, [data, isSuccess, setAllEmployees]);
+  }, [allEmployees, isSuccess, setAllEmployees]);
 
-  return !isLoading && allEmployees.length > 0 ? (
+  return !isLoading && allEmployees && allEmployees.length > 0 ? (
     <>
       <ItemsList
         items={allEmployees.map(

@@ -41,12 +41,13 @@ import { useCompany } from 'hooks/useCompany';
 import { IoIosSave } from 'react-icons/io';
 import { toast } from 'react-toastify';
 import {
-  useDeleteEmployeeScheduleMutation,
   useGetEmployeeScheduleQuery,
   useUpdateEmployeeScheduleMutation,
-} from 'services/employee.api';
+  useDeleteEmployeeScheduleMutation
+} from 'services/schedules.api';
 import { IDaySchedule } from 'services/types/schedule.types';
 import { IWorkingHours } from 'store/company/company.types';
+import { useActions } from 'hooks';
 
 setDefaultOptions({ locale: uk });
 
@@ -55,6 +56,11 @@ type Props = { employee: IEmployee };
 const EmployeeSchedule = ({ employee }: Props) => {
   const today = new Date(Date.now());
   const currentMonthStart = startOfMonth(today);
+  const {
+    setChosenSchedule,
+    deleteSchedule: deleteScheduleAction,
+    updateSchedule: updateScheduleAction
+  } = useActions();
 
   const isAdmin = useAdminRights();
   const { user } = useAuth();
@@ -67,8 +73,8 @@ const EmployeeSchedule = ({ employee }: Props) => {
     refetch,
   } = useGetEmployeeScheduleQuery(
     {
-      companyId,
-      employeeId: employee.id,
+      companyId: +companyId,
+      employeeId: +employee.id,
       year: getYear(selectedMonth),
       month: getMonth(selectedMonth),
     },
@@ -89,6 +95,12 @@ const EmployeeSchedule = ({ employee }: Props) => {
   const [updateSchedule, { isLoading }] = useUpdateEmployeeScheduleMutation();
   const [deleteSchedule, { isLoading: isDeleteLoading }] =
     useDeleteEmployeeScheduleMutation();
+  
+  useEffect(() => {
+    if (employeeSchedule) {
+      setChosenSchedule(employeeSchedule);
+    }
+  }, [employeeSchedule, setChosenSchedule])
 
   const selectedMonthPassed =
     getMonth(today) !== getMonth(selectedMonth) && isPast(selectedMonth);
@@ -97,17 +109,20 @@ const EmployeeSchedule = ({ employee }: Props) => {
     !selectedMonthPassed && (isAdmin || user?.id === employee?.user?.id);
 
   const handleScheduleUpdate = async () => {
-    const { message } = await updateSchedule({
-      companyId,
-      employeeId: employee.id,
-      data: {
+    const data = {
         year: getYear(selectedMonth),
         month: getMonth(selectedMonth),
         schedule: scheduleState,
-      },
+    }
+
+    const { message } = await updateSchedule({
+      companyId,
+      employeeId: employee.id,
+      data,
     }).unwrap();
 
     if (message) {
+      updateScheduleAction(data)
       resetState();
       setIsStateChanged(false);
       toast.success(message);
@@ -354,13 +369,14 @@ const EmployeeSchedule = ({ employee }: Props) => {
           toastMessage = message;
         }
       } else {
-        const { message } = await deleteSchedule({
-          companyId,
-          employeeId: employee.id,
-          scheduleId: String(employeeSchedule.id),
+        const {message} = await deleteSchedule({
+          companyId: +companyId,
+          employeeId: +employee.id,
+          scheduleId: employeeSchedule.id,
         }).unwrap();
 
         if (message) {
+          deleteScheduleAction({id: +employeeSchedule.id});
           toastMessage = message;
         }
       }
@@ -389,7 +405,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
 
   return (
     <EmployeeScheduleBox>
-      {workingHours?.length > 0 ? (
+      {workingHours && workingHours.length > 0 ? (
         <>
           <CalendarSide>
             {isScheduleLoading || isDeleteLoading || isLoading ? (

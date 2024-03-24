@@ -1,5 +1,5 @@
 import generateTimeArray, { getSchedule } from 'helpers/generateTimeArray';
-import { IEmployee } from 'services/types/employee.types';
+import { BasicEmployeeInfo } from 'services/types/employee.types';
 import { IWorkingHours } from 'store/company/company.types';
 import {
   BtnWrapper,
@@ -16,22 +16,45 @@ import EmployeesInfoList from './RecordLogList/EmployeesInfoList/EmployeesInfoLi
 import RecordLogList from './RecordLogList/RecordLogList';
 import TimeList from './RecordLogList/TimeList';
 import Calendar from 'components/Ui/Calendar/Calendar';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { SCHEDULES_PERPAGE } from 'helpers/constants';
 import Button from 'components/Ui/Buttons/Button';
 import { HiArrowCircleLeft, HiArrowCircleRight } from "react-icons/hi";
+import { useSchedules } from 'hooks/useSchedules';
+import { getMonth, getYear } from 'date-fns';
+import { useGetAllSchedulesQuery } from 'services/schedules.api';
+import { useActions } from 'hooks';
+import { useCompany } from 'hooks/useCompany';
 
 type Props = {
   date: Date;
   workingHours: IWorkingHours[] | null;
-  employees: IEmployee[];
+  employees: BasicEmployeeInfo[];
   setDate: React.Dispatch<React.SetStateAction<Date>>;
 };
 
 const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
+  const { id } = useCompany();
+  const { setAllSchedules } = useActions();
+  const { schedules } = useSchedules();
   const chosenDay = new Date(date).getDay();
   const [startIndex, setStartIndex] = useState<number>(0);
   const [isScroll, setIsScroll] = useState<boolean>(false);
+
+  const { data: freshAllSchedules, isSuccess: successGetSchedules } = useGetAllSchedulesQuery({
+    companyId: +id,
+    year: getYear(date),
+    month: getMonth(date)
+  }, {
+    skip: !id,
+    refetchOnMountOrArgChange: true
+  });
+
+  useEffect(() => {
+    if (freshAllSchedules && successGetSchedules) {
+      setAllSchedules(freshAllSchedules);
+    }
+  }, [freshAllSchedules, setAllSchedules, successGetSchedules])
 
   useLayoutEffect(() => {
     const schedulesListElementHeight = document.getElementById('schedulesList')?.offsetHeight;
@@ -78,6 +101,7 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
               columns={toRender.length}
               date={date}
               employees={toRender}
+              schedules={schedules}
             />
             {employees.length > SCHEDULES_PERPAGE && employees[employees.length - 1] !== toRender[toRender.length - 1] && 
               <BtnWrapper $right='10px'>
@@ -91,7 +115,7 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
               <ListsWrapper id='schedulesList' $columns={toRender.length}>
                 {toRender.map((provider, i) => (
                   <RecordLogList
-                    schedules={provider.schedules}
+                    schedules={schedules.filter(s => s.employee.id === +provider.id)}
                     companySchedule={companyDaySchedule}
                     key={provider.id}
                     date={date}

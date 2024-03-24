@@ -37,6 +37,7 @@ const EmployeeModal = ({ id }: Props) => {
     { companyId: +companyId, id: id },
     {
       skip: !id,
+      refetchOnMountOrArgChange: true
     }
   );
 

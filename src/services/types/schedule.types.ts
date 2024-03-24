@@ -10,6 +10,7 @@ export interface IDaySchedule {
 }
 
 export interface IMonthSchedule {
+  employee: { id: number };
   id?: number;
   year: number;
   month: number;
@@ -23,8 +24,8 @@ export interface IUpdateEmployeeSchedule {
 }
 
 export interface IGetEmployeeSchedule {
-  companyId: string;
-  employeeId: string;
+  companyId: number;
+  employeeId: number;
   year: number;
   month: number;
 }
@@ -32,4 +33,10 @@ export interface IGetEmployeeSchedule {
 export type SchedulesState = {
   chosenSchedule: IMonthSchedule | null;
   schedules: IMonthSchedule[];
+}
+
+export type DeletingSchedule = {
+  companyId: number,
+  employeeId: number,
+  scheduleId: number
 }

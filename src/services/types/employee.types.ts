@@ -45,7 +45,7 @@ export interface IEmployee {
 export interface BasicEmployeeInfo
   extends Pick<
     IEmployee,
-    'id' | 'avatar' | 'firstName' | 'lastName' | 'status' | 'jobTitle'
+    'id' | 'avatar' | 'firstName' | 'lastName' | 'status' | 'jobTitle' | 'provider'
   > {
   servicesCount: number;
 }

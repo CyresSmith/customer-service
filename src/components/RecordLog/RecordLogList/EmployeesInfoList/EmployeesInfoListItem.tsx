@@ -1,14 +1,16 @@
-import { IEmployee } from "services/types/employee.types"
+import { BasicEmployeeInfo } from "services/types/employee.types"
 import { Avatar, AvatarWrapper, EmployeeDaySchedule, ListItem, EmployeeName, InfoBox, NoAvatar } from './EmployeesInfoList.styled';
+import { IMonthSchedule } from "services/types/schedule.types";
 
 type Props = {
-    employee: IEmployee;
+    employee: BasicEmployeeInfo;
     last: boolean;
     date: Date;
+    schedules: IMonthSchedule[];
 }
 
-export const EmployeesInfoListItem = ({ employee, last, date }: Props) => {
-    const { lastName, firstName, avatar, schedules } = employee;
+export const EmployeesInfoListItem = ({ employee, last, date, schedules }: Props) => {
+    const { lastName, firstName, avatar,  } = employee;
     
     const chosenDay = new Date(date).getDate();
     const chosenMonth = new Date(date).getMonth();

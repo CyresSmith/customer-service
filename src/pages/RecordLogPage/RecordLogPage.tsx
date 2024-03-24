@@ -4,22 +4,31 @@ import RecordLogBar from 'components/RecordLog/RecordLogBar';
 import { SelectItem } from 'components/Ui/Form/types';
 import Modal from 'components/Ui/Modal/Modal';
 import PageContentLayout from 'components/Ui/PageContentLayout';
+import { useActions } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { useState } from 'react';
+import { useEmployees } from 'hooks/useEmployees';
+import { useEffect, useState } from 'react';
+import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 
 const RecordLogPage = () => {
-  const { employees, workingHours } = useCompany();
-  const providers = employees.filter(e => e.provider);
+  const { allEmployees } = useEmployees();
+  const { workingHours, id } = useCompany();
+  const { setAllEmployees } = useActions();
   const [eventStep, setEventStep] = useState<string | null>(null);
   const [date, setDate] = useState<Date>(new Date());
 
-  const handleEventStep = (step: string) => {
-    setEventStep(step);
-  };
+  const { data: freshAllEmployees, isSuccess: successGetEmployees } = useGetCompanyEmployeesQuery(+id, {
+    skip: !id,
+    refetchOnMountOrArgChange: true
+  });
 
-  const closeEventModal = () => {
-    setEventStep(null);
-  };
+  useEffect(() => {
+    if (freshAllEmployees && successGetEmployees) {
+      setAllEmployees(freshAllEmployees);
+    }
+  }, [freshAllEmployees, setAllEmployees, successGetEmployees]);
+
+  const providers = allEmployees?.filter(e => e.provider);
 
   const providersForSelect = providers.map(p => {
     return {
@@ -51,6 +60,14 @@ const RecordLogPage = () => {
           : newState.filter(({ id }) => id !== item.id);
       });
     }
+  };
+
+  const handleEventStep = (step: string) => {
+    setEventStep(step);
+  };
+
+  const closeEventModal = () => {
+    setEventStep(null);
   };
 
   const filteredProvidersList =
@@ -85,14 +102,14 @@ const RecordLogPage = () => {
           titleMargin='10px'
           closeModal={closeEventModal}
           $isOpen={eventStep !== null}
-        title={eventStep === 'employees' ?
-          'Оберіть працівника' :
-          eventStep === 'services' ?
-          'Оберіть послугу' :
-          eventStep === 'date' ?
-          'Оберіть дату та час' :
-          'Створення запису'
-        }
+          title={eventStep === 'employees' ?
+            'Оберіть працівника' :
+            eventStep === 'services' ?
+            'Оберіть послугу' :
+            eventStep === 'date' ?
+            'Оберіть дату та час' :
+            'Створення запису'
+          }
           children={
             <CreateEvent
               step={eventStep}
