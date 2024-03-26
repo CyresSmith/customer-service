@@ -1,13 +1,12 @@
 import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
 import ModalSectionsList from 'components/Ui/Modal/ModalSectionsList';
 import translateEmployee from 'helpers/translateEmployee';
-import { useActions } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { useEmployees } from 'hooks/useEmployees';
 import { useEffect, useState } from 'react';
 import { HiCurrencyDollar } from 'react-icons/hi';
 import { HiCalendarDays, HiMiniIdentification } from 'react-icons/hi2';
-import { useGetOneQuery } from 'services/employee.api';
+import { useGetOneEmployeeQuery } from 'services/employee.api';
+import { IEmployee } from 'services/types/employee.types';
 import { EmployeeModalContent } from './EmployeeModal.styled';
 import EmployeeProfile from './EmployeeProfile';
 import EmployeeSchedule from './EmployeeSchedule';
@@ -19,7 +18,7 @@ enum OpenModalEnum {
   SERVICES = 3,
 }
 
-type Props = { id: number };
+type Props = { id: number; refetchEmployees: () => void };
 
 const sectionButtons = [
   { id: 1, label: 'Профіль', Icon: HiMiniIdentification },
@@ -27,16 +26,18 @@ const sectionButtons = [
   { id: 3, label: 'Послуги', Icon: HiCurrencyDollar },
 ];
 
-const EmployeeModal = ({ id }: Props) => {
+const EmployeeModal = ({ id, refetchEmployees }: Props) => {
+  const { id: companyId } = useCompany();
   const [activeSection, setActiveSection] = useState<number>(
     sectionButtons[0].id
   );
-  const { setChosenEmployee } = useActions();
-  const { id: companyId } = useCompany();
-  const { data, isSuccess } = useGetOneQuery(
-    { companyId: +companyId, id: id },
+  const [chosenEmployee, setChosenEmployee] = useState<IEmployee | null>(null);
+
+  const { data, isSuccess, refetch } = useGetOneEmployeeQuery(
+    { companyId: +companyId, id },
     {
       skip: !id,
+      refetchOnMountOrArgChange: true,
     }
   );
 
@@ -45,8 +46,6 @@ const EmployeeModal = ({ id }: Props) => {
       setChosenEmployee(data);
     }
   }, [data, isSuccess, setChosenEmployee]);
-
-  const { chosenEmployee } = useEmployees();
 
   if (!chosenEmployee) {
     return;
@@ -73,13 +72,25 @@ const EmployeeModal = ({ id }: Props) => {
       />
 
       {activeSection === OpenModalEnum.PROFILE && (
-        <EmployeeProfile employee={chosenEmployee} />
+        <EmployeeProfile
+          employee={chosenEmployee}
+          refetchEmployee={() => {
+            refetch();
+            refetchEmployees();
+          }}
+        />
       )}
       {activeSection === OpenModalEnum.SCHEDULE && (
         <EmployeeSchedule employee={chosenEmployee} />
       )}
       {activeSection === OpenModalEnum.SERVICES && (
-        <EmployeeServices employee={chosenEmployee} />
+        <EmployeeServices
+          employee={chosenEmployee}
+          refetchEmployee={() => {
+            refetch();
+            refetchEmployees();
+          }}
+        />
       )}
     </EmployeeModalContent>
   );

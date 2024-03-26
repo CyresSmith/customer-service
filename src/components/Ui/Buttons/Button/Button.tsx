@@ -1,3 +1,4 @@
+import { MouseEventHandler } from 'react';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { Btn, Loader } from './Button.styled';
 import { IButton } from './Button.types';
@@ -18,11 +19,16 @@ const Button = ({
   $isIcon = false,
   shake = false,
 }: IButton) => {
+  const handleClick: MouseEventHandler<HTMLButtonElement> = e => {
+    e.stopPropagation();
+    onClick && onClick(e);
+  };
+
   return (
     <Btn
       id={id}
       disabled={disabled}
-      onClick={onClick}
+      onClick={handleClick}
       type={type}
       size={size}
       $colors={$colors}

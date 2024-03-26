@@ -1,5 +1,4 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
-import { ServiceTypeEnum } from 'helpers/enums';
 import { axiosBaseQuery } from 'services/instance';
 import {
   Activity,
@@ -8,18 +7,7 @@ import {
   IUpdateCompanyProfile,
   UpdateAvatar,
 } from '../store/company/company.types';
-import {
-  Category,
-  CompanyCategory,
-  ServiceCategory,
-} from './types/category.types';
-
-import {
-  IAddNewServiceDto,
-  IService,
-  IServiceUpdate,
-  ServiceBasicInfo,
-} from './types/service.type';
+import { CompanyCategory } from './types/category.types';
 
 export const companyApi = createApi({
   reducerPath: 'companyApi',
@@ -86,75 +74,6 @@ export const companyApi = createApi({
       }),
       invalidatesTags: ['companyApi'],
     }),
-
-    uploadServiceAvatar: builder.mutation<
-      { url: string },
-      { companyId: number; serviceId: number; data: FormData }
-    >({
-      query: ({ companyId, serviceId, data }) => ({
-        url: `company/${companyId}/service/${serviceId}/avatar`,
-        method: 'PATCH',
-        data,
-      }),
-      invalidatesTags: ['companyApi'],
-    }),
-
-    addNewService: builder.mutation<ServiceBasicInfo, IAddNewServiceDto>({
-      query: ({ companyId, data }) => ({
-        url: `/company/${companyId}/service`,
-        method: 'POST',
-        data,
-      }),
-      invalidatesTags: ['companyApi'],
-    }),
-
-    getServicesCategories: builder.query<ServiceCategory[], { id: string }>({
-      query: ({ id }) => ({
-        url: `/company/${id}/services-categories`,
-        method: 'GET',
-      }),
-    }),
-
-    getServices: builder.query<ServiceBasicInfo[], { id: string }>({
-      query: ({ id }) => ({
-        url: `/company/${id}/services`,
-        method: 'GET',
-      }),
-    }),
-
-    addServiceCategory: builder.mutation<
-      Category,
-      { id: string; data: { name: string; type: ServiceTypeEnum } }
-    >({
-      query: ({ id, data }) => ({
-        url: `/company/${id}/services-categories`,
-        method: 'POST',
-        data,
-      }),
-      invalidatesTags: ['companyApi'],
-    }),
-
-    getServiceData: builder.query<
-      IService,
-      { companyId: number; serviceId: number }
-    >({
-      query: ({ companyId, serviceId }) => ({
-        url: `/company/${companyId}/service/${serviceId}`,
-        method: 'GET',
-      }),
-    }),
-
-    updateServiceData: builder.mutation<
-      { message: string },
-      { companyId: number; serviceId: number; data: Partial<IServiceUpdate> }
-    >({
-      query: ({ companyId, serviceId, data }) => ({
-        url: `/company/${companyId}/service/${serviceId}`,
-        method: 'PATCH',
-        data,
-      }),
-      invalidatesTags: ['companyApi'],
-    }),
   }),
 });
 
@@ -166,11 +85,4 @@ export const {
   useUploadCompanyAvatarMutation,
   useUpdateCompanyProfileMutation,
   useGetCompanyActivitiesQuery,
-  useAddNewServiceMutation,
-  useGetServicesCategoriesQuery,
-  useAddServiceCategoryMutation,
-  useGetServicesQuery,
-  useUploadServiceAvatarMutation,
-  useGetServiceDataQuery,
-  useUpdateServiceDataMutation,
 } = companyApi;

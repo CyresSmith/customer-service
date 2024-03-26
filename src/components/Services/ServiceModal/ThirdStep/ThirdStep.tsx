@@ -1,16 +1,17 @@
+import { useCompanyRefetch } from 'components/Layout/UsersLayout/UsersLayout';
 import Button from 'components/Ui/Buttons/Button';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { SelectItem } from 'components/Ui/Form/types';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import { ServiceOpenModal, ServiceTypeEnum } from 'helpers/enums';
 import generateSelectTimeArray from 'helpers/generateSelectTimeArray';
+import { useAdminRights } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { ChangeEvent, FormEvent } from 'react';
 import { HiArrowLeft, HiCloudUpload } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
-import { useOutletContext } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useAddNewServiceMutation } from 'services/company.api';
+import { useAddNewServiceMutation } from 'services/service.api';
 import { IEmployee } from 'services/types/employee.types';
 import {
   EmployeesServiceSettings,
@@ -22,7 +23,11 @@ import {
 } from 'services/types/service.type';
 import EmployeeData from '../EmployeeData';
 import { ButtonBox } from '../SecondStep/SecondStep.styled';
-import { DurationBox, StepFormBox } from '../ServiceModal.styled';
+import {
+  DurationBox,
+  ButtonBox as SaveButtonBox,
+  StepFormBox,
+} from '../ServiceModal.styled';
 import SettingsBlock from './SettingsBlock';
 import {
   CheckboxBox,
@@ -32,9 +37,6 @@ import {
   Parameter,
   SettingsBlockBox,
 } from './ThirdStep.styled';
-
-import { useAdminRights } from 'hooks';
-import { ButtonBox as SaveButtonBox } from '../ServiceModal.styled';
 
 const hoursArray = generateSelectTimeArray({
   min: 0,
@@ -59,6 +61,7 @@ const breakArray = generateSelectTimeArray({
 
 interface Props extends ServiceStepProps {
   closeModal: () => void;
+  refetchData?: () => void;
 }
 
 const ThirdStep = ({
@@ -71,13 +74,13 @@ const ThirdStep = ({
   stateToCheck,
   handleServiceUpdate,
   isServiceUpdateLoading,
+  refetchData,
 }: Props) => {
   const { id: companyId } = useCompany();
   const isAdmin = useAdminRights();
 
-  const { refetchCompanyData } = useOutletContext<{
-    refetchCompanyData: () => void;
-  }>();
+  const { refetchCompanyData } = useCompanyRefetch();
+
   const [addNewService, { isLoading }] = useAddNewServiceMutation();
 
   const handleSubmit = async (e: FormEvent) => {
@@ -163,6 +166,7 @@ const ThirdStep = ({
 
     if (service && service.id) {
       refetchCompanyData();
+      refetchData && refetchData();
       toast.success(`Сервіс "${service.name}" додано`);
       closeModal();
     }
@@ -297,9 +301,14 @@ const ThirdStep = ({
 
   const isNextDisabled =
     serviceData.price === 0 ||
-    (serviceData?.durationHours?.id === 0
-      ? serviceData?.durationMinutes?.id === 0
-      : serviceData?.durationHours?.id === 0) ||
+    // (serviceData.durationHours === null
+    //   ? serviceData.durationMinutes === null
+    //   : serviceData.durationHours === null) ||
+    (serviceData?.durationHours?.id === 0 || serviceData?.durationHours === null
+      ? serviceData?.durationMinutes?.id === 0 ||
+        serviceData?.durationMinutes === null
+      : serviceData?.durationHours?.id === 0 ||
+        serviceData?.durationHours === null) ||
     isEmployeesSettingsChecked(serviceData);
 
   const checkString = JSON.stringify({
@@ -444,6 +453,8 @@ const ThirdStep = ({
               const userData = providers?.find(
                 ({ id: employeeId }) => +employeeId === +id
               );
+
+              if (!userData) return;
 
               return (
                 <SettingsBlock

@@ -1,3 +1,4 @@
+import { useCompanyRefetch } from 'components/Layout/UsersLayout/UsersLayout';
 import Modal from 'components/Ui/Modal/Modal';
 import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
 import ModalSectionsList from 'components/Ui/Modal/ModalSectionsList';
@@ -12,12 +13,11 @@ import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
 import { FaInfoCircle } from 'react-icons/fa';
 import { HiCurrencyDollar, HiUserGroup } from 'react-icons/hi';
-import { useOutletContext } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
   useGetServiceDataQuery,
   useUpdateServiceDataMutation,
-} from 'services/company.api';
+} from 'services/service.api';
 import { ServiceCategory } from 'services/types/category.types';
 import { EmployeeStatusEnum } from 'services/types/employee.types';
 import { IServiceUpdate, ServiceDataType } from 'services/types/service.type';
@@ -32,6 +32,7 @@ type Props = {
   serviceId?: number;
   categories: ServiceCategory[];
   refetchCategories: () => void;
+  refetchData?: () => void;
 };
 
 const initialState: ServiceDataType = {
@@ -63,6 +64,7 @@ const ServiceModal = ({
   serviceId,
   categories,
   refetchCategories,
+  refetchData,
 }: Props) => {
   const { accessToken, user } = useAuth();
   const { id, employees } = useCompany();
@@ -71,6 +73,8 @@ const ServiceModal = ({
   const [stateToCheck, setStateToCheck] = useState<ServiceDataType | null>(
     null
   );
+
+  const { refetchCompanyData } = useCompanyRefetch();
 
   const providers = employees.filter(
     ({ provider, status }) => provider && status === EmployeeStatusEnum.WORKING
@@ -108,10 +112,6 @@ const ServiceModal = ({
   const [updateService, { isLoading: isServiceUpdateLoading }] =
     useUpdateServiceDataMutation();
 
-  const { refetchCompanyData } = useOutletContext<{
-    refetchCompanyData: () => void;
-  }>();
-
   const handleServiceUpdate = async (data: Partial<IServiceUpdate>) => {
     if (serviceId) {
       const { message } = await updateService({
@@ -122,7 +122,7 @@ const ServiceModal = ({
 
       if (message) {
         setStateToCheck(serviceData);
-        refetchCompanyData();
+        refetchData && refetchData();
         toast.success(message);
       }
     }
@@ -250,6 +250,7 @@ const ServiceModal = ({
             serviceId={serviceId}
             handleServiceUpdate={handleServiceUpdate}
             isServiceUpdateLoading={isServiceUpdateLoading}
+            refetchCompanyData={refetchCompanyData}
           />
         )}
 
@@ -277,6 +278,7 @@ const ServiceModal = ({
             stateToCheck={stateToCheck}
             handleServiceUpdate={handleServiceUpdate}
             isServiceUpdateLoading={isServiceUpdateLoading}
+            refetchData={refetchData}
           />
         )}
       </ModalBox>

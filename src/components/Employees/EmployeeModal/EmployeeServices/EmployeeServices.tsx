@@ -1,3 +1,5 @@
+import ServiceModal from 'components/Services/ServiceModal';
+import ConfirmOperation from 'components/Ui/ConfirmOperation';
 import { SelectItem } from 'components/Ui/Form/types';
 import ItemsList from 'components/Ui/ItemsList';
 import {
@@ -6,13 +8,21 @@ import {
   millisecondsToMinutes,
 } from 'date-fns';
 import { ServiceOpenModal } from 'helpers/enums';
+import { useAdminRights, useAuth } from 'hooks';
+import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { useGetServicesCategoriesQuery } from 'services/categories.api';
+import { useRemoveEmployeeServiceMutation } from 'services/employee.api';
 import { IEmployee } from 'services/types/employee.types';
+import { EmployeesServiceSettings } from 'services/types/service.type';
+import AddServiceModal from './AddServiceModal/AddServiceModal';
 import EditEmployeeServiceModal from './EditEmployeeServiceModal/EditEmployeeServiceModal';
 import { EmployeeServicesBox } from './EmployeeServices.styled';
 
 type Props = {
   employee: IEmployee;
+  refetchEmployee: () => void;
 };
 
 type ServiceState = {
@@ -21,14 +31,44 @@ type ServiceState = {
   price: number;
 };
 
-const EmployeeServices = ({ employee }: Props) => {
+const EmployeeServices = ({ employee, refetchEmployee }: Props) => {
+  const isAdmin = useAdminRights();
+  const { user } = useAuth();
+  const { id: companyId } = useCompany();
   const [openModal, setOpenModal] = useState<ServiceOpenModal | null>(null);
-  const [serviceState, setServiceState] = useState<ServiceState | null>(null);
+  const [service, setService] = useState<{
+    id: number;
+    employeeId: number;
+    name: string;
+    avatar: string;
+    employeesSettings: EmployeesServiceSettings[];
+    state: ServiceState;
+  } | null>(null);
+
+  const [serviceId, setServiceId] = useState<string | null>(null);
+
+  const [removeEmployeeService, { isLoading: isEmployeeServiceRemoveLoading }] =
+    useRemoveEmployeeServiceMutation();
+
+  const {
+    isLoading: categoriesLoading,
+    data: categories,
+    refetch: refetchCategories,
+  } = useGetServicesCategoriesQuery({ companyId }, { skip: !companyId });
+
+  const editingAllowed = isAdmin || +user?.id === +employee.user.id;
+
+  const handleDelete = (id: number | string) => {
+    setServiceId(String(id));
+    setOpenModal(ServiceOpenModal.DELETE_SERVICE);
+  };
 
   const handleModalOpen = (
     type: ServiceOpenModal | null,
     serviceId?: number
   ) => {
+    if (type === ServiceOpenModal.ADD_TO_EMPLOYEE) return setOpenModal(type);
+
     if (!serviceId) return;
 
     const service = employee.services.find(({ id }) => id === serviceId);
@@ -57,21 +97,47 @@ const EmployeeServices = ({ employee }: Props) => {
           : 0;
 
       const serviceState = {
-        durationHours: { id: hours, value: `${hours} год` },
-        durationMinutes: { id: minutes, value: `${minutes} хв` },
+        durationHours: { id: hours, value: `${hours} г.` },
+        durationMinutes: { id: minutes, value: `${minutes} хв.` },
         price: employeeSetting?.price || service.price || 0,
       };
 
-      setServiceState(serviceState);
+      setService({
+        id: service.id,
+        employeeId: +employee.id,
+        name: service.name,
+        employeesSettings: service.employeesSettings,
+        avatar: service.avatar,
+        state: serviceState,
+      });
 
       setOpenModal(type);
     }
   };
 
   const handleModalClose = () => {
-    setServiceState(null);
+    setService(null);
+    setServiceId(null);
     setOpenModal(null);
   };
+
+  const handleRemoveEmployeeService = async () => {
+    if (serviceId) {
+      const { message } = await removeEmployeeService({
+        companyId,
+        employeeId: employee.id,
+        serviceId,
+      }).unwrap();
+
+      if (message) {
+        refetchEmployee();
+        handleModalClose();
+        toast.success(message);
+      }
+    }
+  };
+
+  const handleOpenCreateServiceModal = () => setOpenModal(ServiceOpenModal.ADD);
 
   return (
     <EmployeeServicesBox>
@@ -109,30 +175,61 @@ const EmployeeServices = ({ employee }: Props) => {
           })
         )}
         keyForSelect="category"
-        onItemClick={id => handleModalOpen(ServiceOpenModal.EDIT_SERVICE, +id)}
-        addButtonTitle={employee.provider ? 'Додати послугу' : undefined}
-        onAddClick={
-          employee.provider
-            ? () => handleModalOpen(ServiceOpenModal.ADD)
+        onItemClick={
+          editingAllowed
+            ? id => handleModalOpen(ServiceOpenModal.EDIT_SERVICE, +id)
             : undefined
         }
-        onItemDeleteClick={id => console.log(id)}
+        addButtonTitle={
+          editingAllowed && employee.provider ? 'Обрати послуги' : undefined
+        }
+        onAddClick={
+          editingAllowed && employee.provider
+            ? () => handleModalOpen(ServiceOpenModal.ADD_TO_EMPLOYEE)
+            : undefined
+        }
+        onItemDeleteClick={editingAllowed ? handleDelete : undefined}
       />
 
-      {openModal === ServiceOpenModal.EDIT_SERVICE && serviceState && (
-        // <ServiceModal
-        //   categories={categories}
-        //   openModal={openModal}
-        //   serviceId={serviceId}
-        //   handleModalClose={handleModalClose}
-        //   refetchCategories={() => refetchCategories()}
-        // />
+      {openModal === ServiceOpenModal.ADD_TO_EMPLOYEE && (
+        <AddServiceModal
+          isOpen={openModal === ServiceOpenModal.ADD_TO_EMPLOYEE}
+          handleModalClose={handleModalClose}
+          employeeServices={employee.services.map(({ id }) => +id)}
+          employeeId={employee.id}
+          refetchEmployee={refetchEmployee}
+          openCreateServiceModal={handleOpenCreateServiceModal}
+        />
+      )}
 
+      {openModal === ServiceOpenModal.ADD && categories && (
+        <ServiceModal
+          openModal={openModal}
+          handleModalClose={handleModalClose}
+          categories={categories}
+          refetchCategories={refetchCategories}
+          refetchData={refetchEmployee}
+        />
+      )}
+
+      {openModal === ServiceOpenModal.EDIT_SERVICE && service && (
         <EditEmployeeServiceModal
           openModal={openModal === ServiceOpenModal.EDIT_SERVICE}
           handleModalClose={handleModalClose}
-          serviceState={serviceState}
+          service={service}
         />
+      )}
+
+      {openModal === ServiceOpenModal.DELETE_SERVICE && serviceId && (
+        <ConfirmOperation
+          id="removeEmployeeService"
+          isOpen={openModal === ServiceOpenModal.DELETE_SERVICE}
+          closeConfirm={handleModalClose}
+          callback={handleRemoveEmployeeService}
+        >
+          Дійсно бажаєте відалити сервіс "
+          {employee.services.find(({ id }) => +id === +serviceId)?.name}",
+        </ConfirmOperation>
       )}
     </EmployeeServicesBox>
   );

@@ -23,7 +23,7 @@ const EmployeeData = ({
         {avatar ? (
           <img src={avatar} alt={`photo of ${firstName} ${lastName}`} />
         ) : (
-          <p>{firstName.slice(0, 1)}</p>
+          <p>{firstName?.slice(0, 1)}</p>
         )}
       </EmployeeImg>
 
