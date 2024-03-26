@@ -6,10 +6,10 @@ import {
 } from 'helpers/capitalizeFirstLetter';
 import { millisecondsToTime } from 'helpers/millisecondsToTime';
 import { translateLabels } from 'helpers/translateLabels';
-import { useAdminRights } from 'hooks';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { FaGenderless, FaMars, FaVenus } from 'react-icons/fa6';
 import {
+  HiCheckCircle,
   HiPlusCircle,
   HiSortAscending,
   HiSortDescending,
@@ -48,11 +48,14 @@ type ItemType<T extends StringRecord> = {
 type Props<T extends StringRecord> = {
   items: ItemType<T>[];
   keyForSelect?: keyof Omit<ItemType<T>, 'id' | 'avatar'>;
+  keyForSearch?: keyof Omit<ItemType<T>, 'id' | 'avatar'>;
   notSortedKeys?: Array<keyof Omit<ItemType<T>, 'id' | 'avatar'>>;
-  onItemClick: (id: string | number) => void;
+  onItemClick?: (id: string | number, selected?: Array<number>) => void;
   onAddClick?: () => void;
   addButtonTitle?: string;
   onItemDeleteClick?: (id: string | number) => void;
+  isDeleteLoading?: boolean;
+  selection?: number[] | undefined;
 };
 
 enum SortTypeEnum {
@@ -67,18 +70,21 @@ const ItemsList = <T extends StringRecord>({
   items,
   onItemClick,
   keyForSelect,
+  keyForSearch,
   notSortedKeys = [],
   addButtonTitle,
   onAddClick,
   onItemDeleteClick,
+  isDeleteLoading = false,
+  selection = undefined,
 }: Props<T>) => {
-  const isAdmin = useAdminRights();
   const [itemsState, setItemsState] = useState<ItemType<T>[]>([]);
   const [initialSortState, setInitialSortState] = useState<
     Record<string, SortTypeEnum>
   >({});
   const [sortState, setSortState] = useState(initialSortState);
   const [filter, setFilter] = useState<string>('');
+  const [selected, setSelected] = useState(selection || []);
 
   const selectAll = {
     id: 'all',
@@ -92,7 +98,19 @@ const ItemsList = <T extends StringRecord>({
     useState<SelectItem[]>(initialSelection);
 
   const handleItemClick = (id: string | number) => {
-    onItemClick(id);
+    let newSelection: Array<number> | undefined;
+
+    if (selection) {
+      newSelection = selected.includes(+id)
+        ? selected.filter(item => item !== +id)
+        : [...selected, +id];
+
+      setSelected(newSelection);
+
+      selection = newSelection;
+    }
+
+    onItemClick && onItemClick(id, newSelection);
   };
 
   const handleItemDelete = (id: string | number) => {
@@ -215,8 +233,10 @@ const ItemsList = <T extends StringRecord>({
 
   const filteredItems =
     filter && itemsState.length > 0
-      ? itemsState.filter(({ name }) => {
-          return name.toLowerCase().includes(filter);
+      ? itemsState.filter(item => {
+          return keyForSearch
+            ? String(item[keyForSearch]).toLowerCase().includes(filter)
+            : item.name.toLowerCase().includes(filter);
         })
       : itemsState;
 
@@ -293,7 +313,9 @@ const ItemsList = <T extends StringRecord>({
                 type="text"
                 value={filter}
                 onChange={handleChange}
-                placeholder="Введіть назву"
+                placeholder={
+                  translateLabels(String(keyForSearch)) || 'Введіть назву'
+                }
                 disabled={items.length === 0}
               />
 
@@ -325,7 +347,7 @@ const ItemsList = <T extends StringRecord>({
           )}
         </FilterBox>
 
-        {isAdmin && addButtonTitle && onAddClick && (
+        {addButtonTitle && onAddClick && (
           <Button
             onClick={onAddClick}
             Icon={HiPlusCircle}
@@ -359,8 +381,9 @@ const ItemsList = <T extends StringRecord>({
                           $variant="text"
                           size="s"
                           $colors={
+                            (notSortedKeys as string[]).includes(key) ||
                             sortState[key as keyof typeof sortState] ===
-                            SortTypeEnum.NULL
+                              SortTypeEnum.NULL
                               ? 'light'
                               : 'accent'
                           }
@@ -390,10 +413,12 @@ const ItemsList = <T extends StringRecord>({
                 {filteredItems.map(item => (
                   <ItemBox
                     key={item.id}
+                    $selected={selected && selected.includes(+item.id)}
                     $columnsCount={columnsCount}
                     $isDeleteButton={Boolean(onItemDeleteClick)}
                     onClick={() => handleItemClick(item.id)}
                   >
+                    <HiCheckCircle id="checkLabel" />
                     <AvatarBox>
                       {item.avatar ? (
                         <img
@@ -460,6 +485,7 @@ const ItemsList = <T extends StringRecord>({
                         $colors="transparent"
                         $variant="text"
                         onClick={() => handleItemDelete(item.id)}
+                        isLoading={isDeleteLoading}
                       />
                     )}
                   </ItemBox>

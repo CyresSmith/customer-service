@@ -21,7 +21,7 @@ import { useCompany } from 'hooks/useCompany';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { HiArrowRight } from 'react-icons/hi2';
 import { IoIosSave } from 'react-icons/io';
-import { useUploadServiceAvatarMutation } from 'services/company.api';
+import { useUploadServiceAvatarMutation } from 'services/service.api';
 import { ServiceCategory } from 'services/types/category.types';
 import { ServiceStepProps } from 'services/types/service.type';
 import {
@@ -54,6 +54,7 @@ interface Props extends ServiceStepProps {
   serviceId?: number;
   categories: ServiceCategory[];
   refetchCategories: () => void;
+  refetchCompanyData: () => void;
 }
 
 const FirstStep = ({
@@ -67,6 +68,7 @@ const FirstStep = ({
   isServiceUpdateLoading,
   categories,
   refetchCategories,
+  refetchCompanyData,
 }: Props) => {
   const { id } = useCompany();
   const isAdmin = useAdminRights();
@@ -85,7 +87,10 @@ const FirstStep = ({
         data,
       }).unwrap();
 
-      if (url) setServiceData(p => ({ ...p, avatar: url }));
+      if (url) {
+        refetchCompanyData();
+        setServiceData(p => ({ ...p, avatar: url }));
+      }
     }
   };
 

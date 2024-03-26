@@ -5,7 +5,7 @@ import { ServiceTypeEnum } from 'helpers/enums';
 import { useCompany } from 'hooks/useCompany';
 import { HiCloudUpload } from 'react-icons/hi';
 import { toast } from 'react-toastify';
-import { useAddServiceCategoryMutation } from 'services/company.api';
+import { useAddServiceCategoryMutation } from 'services/categories.api';
 import { Category } from 'services/types/category.types';
 
 type Props = {

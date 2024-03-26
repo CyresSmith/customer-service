@@ -114,6 +114,7 @@ const ClientsListPage = () => {
         addButtonTitle="Додати клієнта"
         onAddClick={() => setModalOpen(OpenModal.ADD)}
         keyForSelect="gender"
+        keyForSearch="phone"
         notSortedKeys={['phone', 'email']}
       />
 
