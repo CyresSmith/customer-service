@@ -20,30 +20,30 @@ export const schedulesApi = createApi({
         }),
 
         updateEmployeeSchedule: builder.mutation<MessageResponse, IUpdateEmployeeSchedule> ({
-        query: ({ companyId, employeeId, data }) => ({
-            url: `schedules/update/${employeeId}`,
-            method: 'PATCH',
-            data,
-            params: {companyId}
-        }),
-        invalidatesTags: ['schedulesApi'],
+            query: ({ companyId, employeeId, data }) => ({
+                url: `schedules/update/${employeeId}`,
+                method: 'PATCH',
+                data,
+                params: {companyId}
+            }),
+            invalidatesTags: ['schedulesApi'],
         }),
 
         getEmployeeSchedule: builder.query<IMonthSchedule, IGetEmployeeSchedule>({
-        query: ({ companyId, employeeId, year, month }) => ({
-            url: `schedules/get/${employeeId}`,
-            method: 'GET',
-            params: {companyId, year, month}
-        }),
+            query: ({ companyId, employeeId, year, month }) => ({
+                url: `schedules/get/${employeeId}`,
+                method: 'GET',
+                params: {companyId, year, month}
+            }),
         }),
 
         deleteEmployeeSchedule: builder.mutation<{message: string}, DeletingSchedule> ({
-        query: ({ companyId, employeeId, scheduleId }) => ({
-            url: `schedules/delete/${employeeId}/${scheduleId}`,
-            method: 'DELETE',
-            params: {companyId}
-        }),
-        invalidatesTags: ['schedulesApi'],
+            query: ({ companyId, employeeId, scheduleId }) => ({
+                url: `schedules/delete/${employeeId}/${scheduleId}`,
+                method: 'DELETE',
+                params: {companyId}
+            }),
+            invalidatesTags: ['schedulesApi'],
         }),
     })
 });
