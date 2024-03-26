@@ -36,7 +36,7 @@ export const clientsApi = createApi({
 
         getById: builder.query<Client, { companyId: number, id: number }>({
           query: ({ companyId, id }) => ({
-            url: `clients/${id}`,
+            url: `clients/${id}/one-by-id`,
             method: 'GET',
             params: { companyId }
           })

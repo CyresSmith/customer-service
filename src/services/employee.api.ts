@@ -56,7 +56,7 @@ export const employeeApi = createApi({
     getOneEmployee: builder.query<IEmployee, { companyId: number; id: number }>(
       {
         query: ({ companyId, id }) => ({
-          url: `employees/get-one/${id}`,
+          url: `employees/${id}/get-one`,
           method: 'GET',
           params: { companyId },
         }),

@@ -77,7 +77,7 @@ const RecordLogPage = () => {
       ? providers.filter(p => selectedItem.find(s => s.id === p.id))
       : providers;
 
-  return (
+  return successGetEmployees && (
     <>
       <PageContentLayout
         bar={

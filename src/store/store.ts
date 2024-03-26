@@ -48,6 +48,7 @@ const rootReducer = combineReducers({
   [employeeApi.reducerPath]: employeeApi.reducer,
   [serviceApi.reducerPath]: serviceApi.reducer,
   [categoriesApi.reducerPath]: categoriesApi.reducer,
+  [schedulesApi.reducerPath]: schedulesApi.reducer,
 });
 
 export const store = configureStore({

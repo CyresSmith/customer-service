@@ -11,17 +11,17 @@ export const schedulesApi = createApi({
     tagTypes: ['schedulesApi'],
 
     endpoints: builder => ({
-        getAllSchedules: builder.query<IMonthSchedule[], { companyId: number, year: number, month: number }> ({
+        getAllCompanySchedules: builder.query<IMonthSchedule[], { companyId: number, year: number, month: number }> ({
             query: ({ companyId, year, month }) => ({
-                url: `schedules/get-all/${companyId}`,
+                url: `schedules/get-all`,
                 method: 'GET',
-                params: {year, month}
+                params: {companyId, year, month}
             })
         }),
 
         updateEmployeeSchedule: builder.mutation<MessageResponse, IUpdateEmployeeSchedule> ({
             query: ({ companyId, employeeId, data }) => ({
-                url: `schedules/update/${employeeId}`,
+                url: `schedules/${employeeId}/update`,
                 method: 'PATCH',
                 data,
                 params: {companyId}
@@ -31,7 +31,7 @@ export const schedulesApi = createApi({
 
         getEmployeeSchedule: builder.query<IMonthSchedule, IGetEmployeeSchedule>({
             query: ({ companyId, employeeId, year, month }) => ({
-                url: `schedules/get/${employeeId}`,
+                url: `schedules/${employeeId}/get-one`,
                 method: 'GET',
                 params: {companyId, year, month}
             }),
@@ -39,7 +39,7 @@ export const schedulesApi = createApi({
 
         deleteEmployeeSchedule: builder.mutation<{message: string}, DeletingSchedule> ({
             query: ({ companyId, employeeId, scheduleId }) => ({
-                url: `schedules/delete/${employeeId}/${scheduleId}`,
+                url: `schedules/${scheduleId}/employee/${employeeId}/delete`,
                 method: 'DELETE',
                 params: {companyId}
             }),
@@ -49,7 +49,7 @@ export const schedulesApi = createApi({
 });
 
 export const {
-    useGetAllSchedulesQuery,
+    useGetAllCompanySchedulesQuery,
     useUpdateEmployeeScheduleMutation,
     useGetEmployeeScheduleQuery,
     useDeleteEmployeeScheduleMutation

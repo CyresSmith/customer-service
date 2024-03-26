@@ -22,7 +22,7 @@ import Button from 'components/Ui/Buttons/Button';
 import { HiArrowCircleLeft, HiArrowCircleRight } from "react-icons/hi";
 import { useSchedules } from 'hooks/useSchedules';
 import { getMonth, getYear } from 'date-fns';
-import { useGetAllSchedulesQuery } from 'services/schedules.api';
+import { useGetAllCompanySchedulesQuery } from 'services/schedules.api';
 import { useActions } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 
@@ -41,7 +41,7 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
   const [startIndex, setStartIndex] = useState<number>(0);
   const [isScroll, setIsScroll] = useState<boolean>(false);
 
-  const { data: freshAllSchedules, isSuccess: successGetSchedules } = useGetAllSchedulesQuery({
+  const { data: freshAllSchedules, isSuccess: successGetSchedules } = useGetAllCompanySchedulesQuery({
     companyId: +id,
     year: getYear(date),
     month: getMonth(date)
