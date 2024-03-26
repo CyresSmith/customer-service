@@ -100,10 +100,10 @@ const ClientsListPage = () => {
                 }) => ({
                   id,
                   avatar: avatar || '',
-                  name: lastName ? firstName + ' ' + lastName : firstName,
+                  name: `${firstName}  ${lastName && lastName}`,
                   phone,
                   email: email || 'Пошта не вказана',
-                  gender,
+                  gender: gender || 'other',
                   register: createdAt
                     ? new Date(createdAt).toLocaleDateString()
                     : '',
@@ -114,6 +114,7 @@ const ClientsListPage = () => {
         addButtonTitle="Додати клієнта"
         onAddClick={() => setModalOpen(OpenModal.ADD)}
         keyForSelect="gender"
+        keyForSearch="phone"
         notSortedKeys={['phone', 'email']}
       />
 

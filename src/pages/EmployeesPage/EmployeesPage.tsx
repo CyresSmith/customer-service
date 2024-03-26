@@ -3,10 +3,11 @@ import EmployeeModal from 'components/Employees/EmployeeModal';
 import ItemsList from 'components/Ui/ItemsList';
 import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
-import { useActions, useAuth } from 'hooks';
+import { useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
+import { BasicEmployeeInfo } from 'services/types/employee.types';
 
 enum OpenModal {
   ADD = 1,
@@ -16,28 +17,31 @@ enum OpenModal {
 const EmployeesPage = () => {
   const { id: companyId } = useCompany();
   const { accessToken } = useAuth();
-  const { setAllEmployees } = useActions();
+
   const [openModal, setOpenModal] = useState<OpenModal | null>(null);
   const [employeeId, setEmployeeId] = useState<string | number | null>(null);
+  const [allEmployees, setAllEmployees] = useState<BasicEmployeeInfo[]>([]);
 
   const handleItemClick = (employeeId: string | number) => {
     setEmployeeId(employeeId);
     setOpenModal(OpenModal.EDIT);
   };
 
-  const { data: allEmployees, isSuccess, isLoading } = useGetCompanyEmployeesQuery(
-    +companyId,
-    {
-      skip: !companyId || !accessToken,
-      refetchOnMountOrArgChange: true,
-    }
-  );
+  const {
+    data,
+    isSuccess,
+    isLoading,
+    refetch: refetchEmployees,
+  } = useGetCompanyEmployeesQuery(+companyId, {
+    skip: !companyId || !accessToken,
+    refetchOnMountOrArgChange: true,
+  });
 
   useEffect(() => {
-    if (isSuccess && allEmployees) {
-      setAllEmployees(allEmployees);
+    if (isSuccess && data) {
+      setAllEmployees(data);
     }
-  }, [allEmployees, isSuccess, setAllEmployees]);
+  }, [data, isSuccess, setAllEmployees]);
 
   return !isLoading && allEmployees && allEmployees.length > 0 ? (
     <>
@@ -79,7 +83,7 @@ const EmployeesPage = () => {
           $isOpen={openModal === OpenModal.EDIT}
           closeModal={() => setOpenModal(null)}
         >
-          <EmployeeModal id={+employeeId} />
+          <EmployeeModal id={+employeeId} refetchEmployees={refetchEmployees} />
         </Modal>
       )}
     </>

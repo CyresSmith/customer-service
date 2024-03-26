@@ -54,6 +54,10 @@ export const FirstStepBox = styled.div`
   flex-grow: 1;
 `;
 
+export const SecondStepBox = styled.div`
+  /* height: 320px; */
+`;
+
 export const StepFormBox = styled.form`
   display: flex;
   flex-direction: column;

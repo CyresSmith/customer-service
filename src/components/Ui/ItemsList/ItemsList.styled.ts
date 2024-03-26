@@ -35,7 +35,7 @@ export const AvatarBox = styled.div`
   > svg {
     width: 35px;
     height: 35px;
-    fill: ${theme.colors.secondary.light};
+    fill: ${theme.colors.bg.main};
   }
 
   > img {
@@ -70,18 +70,21 @@ export const ButtonBox = styled.div<{ $hideButton: boolean }>`
   }
 `;
 
-type ListGridProps = { $columnsCount: number; $isDeleteButton: boolean };
+type ListGridProps = {
+  $columnsCount: number;
+  $isDeleteButton: boolean;
+  $selected?: boolean;
+};
 
 export const ListHeader = styled.ul<ListGridProps>`
   display: grid;
-  grid-template-columns: ${({ $columnsCount, $isDeleteButton }) =>
-    `repeat(${$columnsCount},   calc((100% - (${
-      $isDeleteButton ? '100px' : '50px'
-    })) / ${$columnsCount}))`};
-  padding: ${({ $isDeleteButton }) =>
-    `0 ${theme.space[4]} 0 calc(${$isDeleteButton ? '100px' : '50px'} + (${
-      theme.space[4]
-    } * 2))`};
+  grid-template-columns: 50px ${({ $columnsCount, $isDeleteButton }) =>
+      `repeat(${$columnsCount}, calc(((${
+        $isDeleteButton ? '100% - 50px' : '100%'
+      }) - (${theme.space[4]} * ${
+        $isDeleteButton ? $columnsCount + 4 : $columnsCount + 3
+      })) / ${$columnsCount}) ) ${$isDeleteButton ? '50px' : ''}`};
+  padding: 0 ${theme.space[4]};
   justify-items: center;
   gap: ${theme.space[4]};
   margin-bottom: ${theme.space[2]};
@@ -109,11 +112,12 @@ export const List = styled.ul`
 `;
 
 export const ItemBox = styled.li<ListGridProps>`
+  position: relative;
   display: grid;
   grid-template-columns: ${({ $columnsCount, $isDeleteButton }) =>
     `50px repeat(${$columnsCount},   calc((100% - ((${
       $isDeleteButton ? '100px' : '50px'
-    }) + 16px * ${
+    }) + ${theme.space[4]} * ${
       $isDeleteButton ? $columnsCount + 1 : $columnsCount
     })) / ${$columnsCount})) ${$isDeleteButton ? '50px' : ''}`};
   cursor: pointer;
@@ -127,6 +131,20 @@ export const ItemBox = styled.li<ListGridProps>`
   animation-duration: 500ms;
   transition: ${theme.transition.primary};
   background-color: ${theme.colors.bg.light};
+  overflow: hidden;
+  box-shadow: ${theme.shadow.s};
+
+  & > svg[id='checkLabel'] {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 5px;
+    left: -35px;
+    transform: ${({ $selected }) => ($selected ? 'translateX(40px)' : '0')};
+    transition: ${theme.transition.primary};
+    fill: ${theme.colors.accent.main};
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+  }
 
   &:not(:last-of-type) {
     margin-bottom: ${theme.space[3]};

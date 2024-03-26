@@ -53,13 +53,15 @@ export const employeeApi = createApi({
       invalidatesTags: ['employeeApi'],
     }),
 
-    getOne: builder.query<IEmployee, { companyId: number; id: number }>({
-      query: ({ companyId, id }) => ({
-        url: `employees/get-one/${id}`,
-        method: 'GET',
-        params: { companyId },
-      }),
-    }),
+    getOneEmployee: builder.query<IEmployee, { companyId: number; id: number }>(
+      {
+        query: ({ companyId, id }) => ({
+          url: `employees/get-one/${id}`,
+          method: 'GET',
+          params: { companyId },
+        }),
+      }
+    ),
 
     getCompanyEmployees: builder.query<BasicEmployeeInfo[], number>({
       query: companyId => ({
@@ -74,7 +76,7 @@ export const employeeApi = createApi({
       UpdateEmployeeAvatar
     >({
       query: ({ companyId, employeeId, data }) => ({
-        url: `employees/update/${employeeId}/avatar`,
+        url: `employees/${employeeId}/update/avatar`,
         method: 'PATCH',
         data,
         params: { companyId },
@@ -87,10 +89,35 @@ export const employeeApi = createApi({
       { companyId: string; employeeId: string; data: UpdateEmployeeProfile }
     >({
       query: ({ companyId, employeeId, data }) => ({
-        url: `employees/update/${employeeId}`,
+        url: `employees/${employeeId}/update`,
         method: 'PATCH',
         data,
         params: { companyId },
+      }),
+      invalidatesTags: ['employeeApi'],
+    }),
+
+    removeEmployeeService: builder.mutation<
+      { message: string },
+      { companyId: string; employeeId: string; serviceId: string }
+    >({
+      query: ({ companyId, employeeId, serviceId }) => ({
+        url: `employees/${employeeId}/service/${serviceId}`,
+        params: { companyId },
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['employeeApi'],
+    }),
+
+    addEmployeeService: builder.mutation<
+      { message: string },
+      { companyId: string; employeeId: string; data: { services: number[] } }
+    >({
+      query: ({ companyId, employeeId, data }) => ({
+        url: `employees/${employeeId}/service`,
+        params: { companyId },
+        method: 'PATCH',
+        data,
       }),
       invalidatesTags: ['employeeApi'],
     }),
@@ -104,5 +131,7 @@ export const {
   useUploadEmployeeAvatarMutation,
   useUpdateEmployeeProfileMutation,
   useGetCompanyEmployeesQuery,
-  useGetOneQuery,
+  useGetOneEmployeeQuery,
+  useRemoveEmployeeServiceMutation,
+  useAddEmployeeServiceMutation,
 } = employeeApi;

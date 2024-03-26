@@ -1,4 +1,5 @@
 import Avatar from 'components/Avatar';
+import { useCompanyRefetch } from 'components/Layout/UsersLayout/UsersLayout';
 import Button from 'components/Ui/Buttons/Button';
 import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
@@ -18,7 +19,6 @@ import {
   HiX,
 } from 'react-icons/hi';
 import { HiQueueList, HiTableCells } from 'react-icons/hi2';
-import { useOutletContext } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useUploadCompanyAvatarMutation } from 'services/company.api';
 import {
@@ -58,9 +58,7 @@ const CompanyProfile = () => {
 
   const [editedPhone, setEditedPhone] = useState<string | null>(null);
 
-  const { refetchCompanyData } = useOutletContext<{
-    refetchCompanyData: () => void;
-  }>();
+  const { refetchCompanyData } = useCompanyRefetch();
 
   const [openModal, setOpenModal] = useState<OpenModal | null>(null);
 

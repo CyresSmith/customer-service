@@ -62,7 +62,6 @@ export const Btn = styled.button<IButtonStyle>`
   justify-content: center;
   border-radius: ${({ $round }) =>
     $round ? theme.radii.round : theme.radii.s};
-
   font-weight: ${theme.fontWeights.bold};
   transition: ${theme.transition.primary};
 
