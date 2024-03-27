@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useGetServicesCategoriesQuery } from 'services/categories.api';
 import { useRemoveEmployeeServiceMutation } from 'services/employee.api';
-import { IEmployee } from 'services/types/employee.types';
+import { EmployeeStatusEnum, IEmployee } from 'services/types/employee.types';
 import { EmployeesServiceSettings } from 'services/types/service.type';
 import AddServiceModal from './AddServiceModal/AddServiceModal';
 import EditEmployeeServiceModal from './EditEmployeeServiceModal/EditEmployeeServiceModal';
@@ -178,10 +178,16 @@ const EmployeeServices = ({ employee, refetchEmployee }: Props) => {
             : undefined
         }
         addButtonTitle={
-          editingAllowed && employee.provider ? 'Обрати послуги' : undefined
+          editingAllowed &&
+          employee.provider &&
+          employee.status !== EmployeeStatusEnum.FIRED
+            ? 'Обрати послуги'
+            : undefined
         }
         onAddClick={
-          editingAllowed && employee.provider
+          editingAllowed &&
+          employee.provider &&
+          employee.status !== EmployeeStatusEnum.FIRED
             ? () => handleModalOpen(ServiceOpenModal.ADD_TO_EMPLOYEE)
             : undefined
         }
