@@ -21,17 +21,10 @@ import {
 
 type Props = {
   companyId: number;
-  clientRefetch: () => void;
   closeModal: () => void;
-  refetchChosen: () => void;
 };
 
-export const Profile = ({
-  companyId,
-  clientRefetch,
-  closeModal,
-  refetchChosen,
-}: Props) => {
+export const Profile = ({ companyId, closeModal }: Props) => {
   const { chosen } = useClients();
   const { setClientAvatar, updateClient, deleteClient } = useActions();
 
@@ -63,8 +56,6 @@ export const Profile = ({
 
       if (url) {
         setClientAvatar({ avatar: url });
-        clientRefetch();
-        refetchChosen();
         toast.success('Аватар успішно оновлено');
       }
     }
@@ -86,7 +77,6 @@ export const Profile = ({
       if (data) {
         updateClient(data);
         toast.success(`Профіль успішно оновлено`);
-        clientRefetch();
       }
     }
   };
@@ -100,7 +90,6 @@ export const Profile = ({
 
       if (message) {
         deleteClient({ id });
-        clientRefetch();
         setConfirmOpen(false);
         closeModal();
         toast.success('Клієнта видалено');

@@ -13,7 +13,6 @@ type Props = {
   type: ServiceTypeEnum;
   isOpen: boolean;
   closeModal: () => void;
-  refetch?: () => void;
   onCategoryAdd?: (newCategory: Category) => void;
 };
 
@@ -30,7 +29,6 @@ const AddCategoryModal = ({
   type,
   isOpen,
   closeModal,
-  refetch,
   onCategoryAdd,
 }: Props) => {
   const { id: companyId } = useCompany();
@@ -46,7 +44,6 @@ const AddCategoryModal = ({
 
     if (response) {
       toast.success('Категорію додано');
-      refetch && refetch();
       onCategoryAdd && onCategoryAdd(response);
       closeModal();
     }

@@ -12,7 +12,6 @@ import { Profile } from './ClientProfileComponents/Profile';
 type Props = {
   companyId: number;
   clientId: number;
-  refetchClients: () => void;
   closeModal: () => void;
 };
 
@@ -24,13 +23,8 @@ const sectionButtons = [
   { id: Sections.PROFILE, label: 'Інформація', Icon: HiIdentification },
 ];
 
-const ClientProfile = ({
-  companyId,
-  clientId,
-  refetchClients,
-  closeModal,
-}: Props) => {
-  const { data, isLoading, refetch } = useGetByIdQuery({
+const ClientProfile = ({ companyId, clientId, closeModal }: Props) => {
+  const { data, isLoading } = useGetByIdQuery({
     companyId,
     id: clientId,
   });
@@ -66,12 +60,7 @@ const ClientProfile = ({
       />
 
       {section === Sections.PROFILE ? (
-        <Profile
-          companyId={companyId}
-          clientRefetch={refetchClients}
-          closeModal={closeModal}
-          refetchChosen={refetch}
-        />
+        <Profile companyId={companyId} closeModal={closeModal} />
       ) : (
         <Skeleton />
       )}

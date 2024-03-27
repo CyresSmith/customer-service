@@ -27,15 +27,13 @@ const EmployeesPage = () => {
     setOpenModal(OpenModal.EDIT);
   };
 
-  const {
-    data,
-    isSuccess,
-    isLoading,
-    refetch: refetchEmployees,
-  } = useGetCompanyEmployeesQuery(+companyId, {
-    skip: !companyId || !accessToken,
-    refetchOnMountOrArgChange: true,
-  });
+  const { data, isSuccess, isLoading } = useGetCompanyEmployeesQuery(
+    +companyId,
+    {
+      skip: !companyId || !accessToken,
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   useEffect(() => {
     if (isSuccess && data) {
@@ -83,7 +81,7 @@ const EmployeesPage = () => {
           $isOpen={openModal === OpenModal.EDIT}
           closeModal={() => setOpenModal(null)}
         >
-          <EmployeeModal id={employeeId} refetchEmployees={refetchEmployees} />
+          <EmployeeModal id={employeeId} />
         </Modal>
       )}
     </>

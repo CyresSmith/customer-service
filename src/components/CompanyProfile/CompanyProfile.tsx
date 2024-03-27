@@ -1,5 +1,4 @@
 import Avatar from 'components/Avatar';
-import { useCompanyRefetch } from 'components/Layout/UsersLayout/UsersLayout';
 import Button from 'components/Ui/Buttons/Button';
 import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
@@ -58,8 +57,6 @@ const CompanyProfile = () => {
 
   const [editedPhone, setEditedPhone] = useState<string | null>(null);
 
-  const { refetchCompanyData } = useCompanyRefetch();
-
   const [openModal, setOpenModal] = useState<OpenModal | null>(null);
 
   const { setCompanyLogo } = useActions();
@@ -75,13 +72,11 @@ const CompanyProfile = () => {
 
     if (url) {
       setCompanyLogo({ avatar: url });
-      refetchCompanyData();
       toast.success('Зображення успішно оновлено');
     }
   };
 
   const handleModalClose = () => {
-    refetchCompanyData();
     setOpenModal(null);
   };
 

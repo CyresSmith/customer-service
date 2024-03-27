@@ -66,19 +66,16 @@ const EmployeeSchedule = ({ employee }: Props) => {
   const { id: companyId, workingHours } = useCompany();
   const [selectedMonth, setSelectedMonth] = useState(currentMonthStart);
 
-  const {
-    isLoading: isScheduleLoading,
-    data: employeeSchedule,
-    refetch,
-  } = useGetEmployeeScheduleQuery(
-    {
-      companyId,
-      employeeId: +employee.id,
-      year: getYear(selectedMonth),
-      month: getMonth(selectedMonth),
-    },
-    { refetchOnMountOrArgChange: true }
-  );
+  const { isLoading: isScheduleLoading, data: employeeSchedule } =
+    useGetEmployeeScheduleQuery(
+      {
+        companyId,
+        employeeId: +employee.id,
+        year: getYear(selectedMonth),
+        month: getMonth(selectedMonth),
+      },
+      { refetchOnMountOrArgChange: true }
+    );
 
   const [scheduleState, setScheduleState] = useState<IDaySchedule[]>([]);
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
@@ -388,7 +385,6 @@ const EmployeeSchedule = ({ employee }: Props) => {
       if (toastMessage !== '') {
         toast.success(toastMessage);
       }
-      refetch();
       resetState();
     }
     setIsStateChanged(false);

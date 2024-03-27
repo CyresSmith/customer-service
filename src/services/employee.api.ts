@@ -21,7 +21,7 @@ export const employeeApi = createApi({
 
   baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-  tagTypes: ['employeeApi', 'employeeSchedule'],
+  tagTypes: ['employee', 'allEmployees'],
 
   endpoints: builder => ({
     findUserData: builder.mutation<
@@ -34,7 +34,8 @@ export const employeeApi = createApi({
         data: { email },
         params: { companyId },
       }),
-      invalidatesTags: ['employeeApi'],
+      invalidatesTags: result =>
+        result ? [{ type: 'employee', id: result?.id }] : ['employee'],
     }),
 
     addExistUserEmployee: builder.mutation<IEmployee, addExistUserEmployeeData>(
@@ -45,7 +46,8 @@ export const employeeApi = createApi({
           data,
           params: { companyId },
         }),
-        invalidatesTags: ['employeeApi'],
+        invalidatesTags: result =>
+          result ? [{ type: 'employee', id: result?.id }] : ['employee'],
       }
     ),
 
@@ -56,7 +58,8 @@ export const employeeApi = createApi({
         data,
         params: { companyId },
       }),
-      invalidatesTags: ['employeeApi'],
+      invalidatesTags: result =>
+        result ? [{ type: 'employee', id: result?.id }] : ['employee'],
     }),
 
     getOneEmployee: builder.query<IEmployee, { companyId: number; id: number }>(
@@ -66,6 +69,7 @@ export const employeeApi = createApi({
           method: 'GET',
           params: { companyId },
         }),
+        providesTags: (result, err, arg) => [{ type: 'employee', id: arg.id }],
       }
     ),
 
@@ -75,6 +79,10 @@ export const employeeApi = createApi({
         method: 'GET',
         params: { companyId },
       }),
+      providesTags: result =>
+        result
+          ? result.map(item => ({ type: 'allEmployees', id: item.id }))
+          : ['allEmployees'],
     }),
 
     uploadEmployeeAvatar: builder.mutation<
@@ -87,7 +95,10 @@ export const employeeApi = createApi({
         data,
         params: { companyId },
       }),
-      invalidatesTags: ['employeeApi'],
+      invalidatesTags: (result, err, arg) => [
+        { type: 'employee', id: arg.employeeId },
+        { type: 'allEmployees', id: arg.employeeId },
+      ],
     }),
 
     updateEmployeeProfile: builder.mutation<
@@ -100,7 +111,10 @@ export const employeeApi = createApi({
         data,
         params: { companyId },
       }),
-      invalidatesTags: ['employeeApi'],
+      invalidatesTags: (result, err, arg) => [
+        { type: 'employee', id: arg.employeeId },
+        { type: 'allEmployees', id: arg.employeeId },
+      ],
     }),
 
     updateEmployeeSchedule: builder.mutation<
@@ -112,7 +126,9 @@ export const employeeApi = createApi({
         method: 'PATCH',
         data,
       }),
-      invalidatesTags: ['employeeSchedule'],
+      invalidatesTags: (result, err, arg) => [
+        { type: 'employee', id: arg.employeeId },
+      ],
     }),
 
     getEmployeeSchedule: builder.query<IMonthSchedule, IGetEmployeeSchedule>({
@@ -120,6 +136,9 @@ export const employeeApi = createApi({
         url: `company/${companyId}/employee/${employeeId}/schedule?year=${year}&month=${month}`,
         method: 'GET',
       }),
+      providesTags: (result, err, arg) => [
+        { type: 'employee', id: arg.employeeId },
+      ],
     }),
 
     deleteEmployeeSchedule: builder.mutation<
@@ -130,7 +149,9 @@ export const employeeApi = createApi({
         url: `company/${companyId}/employee/${employeeId}/schedule/${scheduleId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['employeeSchedule'],
+      invalidatesTags: (result, err, arg) => [
+        { type: 'employee', id: arg.employeeId },
+      ],
     }),
 
     removeEmployeeService: builder.mutation<
@@ -142,7 +163,10 @@ export const employeeApi = createApi({
         params: { companyId },
         method: 'DELETE',
       }),
-      invalidatesTags: ['employeeApi'],
+      invalidatesTags: (result, err, arg) => [
+        { type: 'employee', id: arg.employeeId },
+        { type: 'allEmployees', id: arg.employeeId },
+      ],
     }),
 
     addEmployeeService: builder.mutation<
@@ -155,7 +179,10 @@ export const employeeApi = createApi({
         method: 'PATCH',
         data,
       }),
-      invalidatesTags: ['employeeApi'],
+      invalidatesTags: (result, err, arg) => [
+        { type: 'employee', id: arg.employeeId },
+        { type: 'allEmployees', id: arg.employeeId },
+      ],
     }),
   }),
 });

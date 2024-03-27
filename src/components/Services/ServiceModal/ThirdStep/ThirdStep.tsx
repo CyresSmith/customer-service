@@ -1,4 +1,3 @@
-import { useCompanyRefetch } from 'components/Layout/UsersLayout/UsersLayout';
 import Button from 'components/Ui/Buttons/Button';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { SelectItem } from 'components/Ui/Form/types';
@@ -61,7 +60,6 @@ const breakArray = generateSelectTimeArray({
 
 interface Props extends ServiceStepProps {
   closeModal: () => void;
-  refetchData?: () => void;
 }
 
 const ThirdStep = ({
@@ -74,12 +72,9 @@ const ThirdStep = ({
   stateToCheck,
   handleServiceUpdate,
   isServiceUpdateLoading,
-  refetchData,
 }: Props) => {
   const { id: companyId } = useCompany();
   const isAdmin = useAdminRights();
-
-  const { refetchCompanyData } = useCompanyRefetch();
 
   const [addNewService, { isLoading }] = useAddNewServiceMutation();
 
@@ -165,8 +160,6 @@ const ThirdStep = ({
     }).unwrap();
 
     if (service && service.id) {
-      refetchCompanyData();
-      refetchData && refetchData();
       toast.success(`Сервіс "${service.name}" додано`);
       closeModal();
     }

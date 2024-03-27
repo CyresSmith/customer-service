@@ -1,4 +1,4 @@
-import { useCompanyRefetch } from 'components/Layout/UsersLayout/UsersLayout';
+import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
 import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
 import ModalSectionsList from 'components/Ui/Modal/ModalSectionsList';
@@ -25,15 +25,12 @@ import FirstStep from './FirstStep/FirstStep';
 import SecondStep from './SecondStep';
 import { ModalBox, Step, StepBox, StepNumber } from './ServiceModal.styled';
 import ThirdStep from './ThirdStep';
-import Loader from 'components/Ui/Loader';
 
 type Props = {
   openModal: ServiceOpenModal;
   handleModalClose: () => void;
   serviceId?: number;
   categories: ServiceCategory[];
-  refetchCategories: () => void;
-  refetchData?: () => void;
 };
 
 const initialState: ServiceDataType = {
@@ -64,8 +61,6 @@ const ServiceModal = ({
   handleModalClose,
   serviceId,
   categories,
-  refetchCategories,
-  refetchData,
 }: Props) => {
   const { accessToken, user } = useAuth();
   const { id, employees } = useCompany();
@@ -74,8 +69,6 @@ const ServiceModal = ({
   const [stateToCheck, setStateToCheck] = useState<ServiceDataType | null>(
     null
   );
-
-  const { refetchCompanyData } = useCompanyRefetch();
 
   const providers = employees.filter(
     ({ provider, status }) => provider && status === EmployeeStatusEnum.WORKING
@@ -123,7 +116,6 @@ const ServiceModal = ({
 
       if (message) {
         setStateToCheck(serviceData);
-        refetchData && refetchData();
         toast.success(message);
       }
     }
@@ -243,7 +235,6 @@ const ServiceModal = ({
 
         {step === 1 && (
           <FirstStep
-            refetchCategories={refetchCategories}
             categories={categories}
             openModal={openModal}
             setStep={setStep}
@@ -253,7 +244,6 @@ const ServiceModal = ({
             serviceId={serviceId}
             handleServiceUpdate={handleServiceUpdate}
             isServiceUpdateLoading={isServiceUpdateLoading}
-            refetchCompanyData={refetchCompanyData}
           />
         )}
 
@@ -281,7 +271,6 @@ const ServiceModal = ({
             stateToCheck={stateToCheck}
             handleServiceUpdate={handleServiceUpdate}
             isServiceUpdateLoading={isServiceUpdateLoading}
-            refetchData={refetchData}
           />
         )}
       </ModalBox>

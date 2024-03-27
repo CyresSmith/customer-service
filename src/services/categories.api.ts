@@ -1,14 +1,18 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { ServiceTypeEnum } from 'helpers/enums';
 import { axiosBaseQuery } from 'services/instance';
-import { Category, ServiceCategory } from './types/category.types';
+import {
+  Category,
+  CompanyCategory,
+  ServiceCategory,
+} from './types/category.types';
 
 export const categoriesApi = createApi({
   reducerPath: 'categoriesApi',
 
   baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-  tagTypes: ['categories'],
+  tagTypes: ['servicesCategories', 'companyCategories'],
 
   endpoints: builder => ({
     getServicesCategories: builder.query<
@@ -20,6 +24,10 @@ export const categoriesApi = createApi({
         method: 'GET',
         params: { companyId },
       }),
+      providesTags: result =>
+        result
+          ? result.map(item => ({ type: 'servicesCategories', id: item.id }))
+          : ['servicesCategories'],
     }),
 
     addServiceCategory: builder.mutation<
@@ -32,10 +40,24 @@ export const categoriesApi = createApi({
         params: { companyId },
         data,
       }),
-      invalidatesTags: ['categories'],
+      invalidatesTags: ['servicesCategories'],
+    }),
+
+    getCompanyCategories: builder.query<CompanyCategory[], null>({
+      query: () => ({
+        url: `/category/company`,
+        method: 'GET',
+      }),
+      providesTags: result =>
+        result
+          ? result.map(item => ({ type: 'companyCategories', id: item.id }))
+          : ['companyCategories'],
     }),
   }),
 });
 
-export const { useGetServicesCategoriesQuery, useAddServiceCategoryMutation } =
-  categoriesApi;
+export const {
+  useGetServicesCategoriesQuery,
+  useAddServiceCategoryMutation,
+  useGetCompanyCategoriesQuery,
+} = categoriesApi;

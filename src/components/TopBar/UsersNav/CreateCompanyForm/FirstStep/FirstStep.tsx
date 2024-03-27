@@ -3,7 +3,7 @@ import handleError from 'helpers/errorHandler';
 import translateCategoryName from 'helpers/translateCategoryName';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useGetCompanyCategoriesQuery } from 'services/company.api';
+import { useGetCompanyCategoriesQuery } from 'services/categories.api';
 import { Activity } from 'store/company/company.types';
 import NextButton from '../Buttons/NextButton';
 import { ButtonBox, Title } from '../CreateCompanyForm.styled';

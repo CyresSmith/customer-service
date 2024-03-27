@@ -22,7 +22,6 @@ import { ServiceDataBox, ServiceName } from '../EmployeeServices.styled';
 type Props = {
   openModal: boolean;
   handleModalClose: () => void;
-  refetchEmployee: () => void;
   service: {
     id: number;
     employeeId: number;
@@ -55,7 +54,6 @@ const EditEmployeeServiceModal = ({
   openModal,
   handleModalClose,
   service,
-  refetchEmployee,
 }: Props) => {
   const { id: companyId } = useCompany();
   const [updateService, { isLoading }] = useUpdateServiceDataMutation();
@@ -97,7 +95,6 @@ const EditEmployeeServiceModal = ({
     }).unwrap();
 
     if (message) {
-      refetchEmployee();
       handleModalClose();
       toast.success(message);
     }
@@ -130,7 +127,7 @@ const EditEmployeeServiceModal = ({
           durationMinutesItems={minutesArray}
           durationMinutesValue={state.durationMinutes}
           priceValue={state.price}
-          employeeId={'1'}
+          employeeId={1}
         >
           <ServiceDataBox>
             <AvatarBox>

@@ -17,10 +17,11 @@ const RecordLogPage = () => {
   const [eventStep, setEventStep] = useState<string | null>(null);
   const [date, setDate] = useState<Date>(new Date());
 
-  const { data: freshAllEmployees, isSuccess: successGetEmployees } = useGetCompanyEmployeesQuery(+id, {
-    skip: !id,
-    refetchOnMountOrArgChange: true
-  });
+  const { data: freshAllEmployees, isSuccess: successGetEmployees } =
+    useGetCompanyEmployeesQuery(+id, {
+      skip: !id,
+      refetchOnMountOrArgChange: true,
+    });
 
   useEffect(() => {
     if (freshAllEmployees && successGetEmployees) {
@@ -37,7 +38,7 @@ const RecordLogPage = () => {
     };
   });
 
-  console.log(providersForSelect.length)
+  console.log(providersForSelect.length);
 
   const selectAll = {
     id: 'all',
@@ -46,7 +47,8 @@ const RecordLogPage = () => {
 
   const initialSelection = [selectAll];
 
-  const [selectedItem, setSelectedItem] = useState<SelectItem[]>(initialSelection);
+  const [selectedItem, setSelectedItem] =
+    useState<SelectItem[]>(initialSelection);
 
   const handleSelect = (item: SelectItem) => {
     if (item.id === selectAll.id) {
@@ -77,50 +79,50 @@ const RecordLogPage = () => {
       ? providers.filter(p => selectedItem.find(s => s.id === p.id))
       : providers;
 
-  return successGetEmployees && (
-    <>
-      <PageContentLayout
-        bar={
-          <RecordLogBar
-            date={date}
-            selectItems={[selectAll, ...providersForSelect]}
-            selected={selectedItem}
-            setDate={setDate}
-            handleSelect={handleSelect}
-            openEventModal={handleEventStep}
-          />
-        }
-        content={
-          <RecordLog
-            date={date}
-            setDate={setDate}
-            workingHours={workingHours}
-            employees={filteredProvidersList}
-          />
-        }
-      />
-      {eventStep !== null && 
-        <Modal
-          titleMargin='10px'
-          closeModal={closeEventModal}
-          $isOpen={eventStep !== null}
-          title={eventStep === 'employees' ?
-            'Оберіть працівника' :
-            eventStep === 'services' ?
-            'Оберіть послугу' :
-            eventStep === 'date' ?
-            'Оберіть дату та час' :
-            'Створення запису'
+  return (
+    successGetEmployees && (
+      <>
+        <PageContentLayout
+          bar={
+            <RecordLogBar
+              date={date}
+              selectItems={[selectAll, ...providersForSelect]}
+              selected={selectedItem}
+              setDate={setDate}
+              handleSelect={handleSelect}
+              openEventModal={handleEventStep}
+            />
           }
-          children={
-            <CreateEvent
-              step={eventStep}
-              handleEventStep={handleEventStep}
+          content={
+            <RecordLog
+              date={date}
+              setDate={setDate}
+              workingHours={workingHours}
+              employees={filteredProvidersList}
             />
           }
         />
-      }
-    </>
+        {eventStep !== null && (
+          <Modal
+            titleMargin="10px"
+            closeModal={closeEventModal}
+            $isOpen={eventStep !== null}
+            title={
+              eventStep === 'employees'
+                ? 'Оберіть працівника'
+                : eventStep === 'services'
+                ? 'Оберіть послугу'
+                : eventStep === 'date'
+                ? 'Оберіть дату та час'
+                : 'Створення запису'
+            }
+            children={
+              <CreateEvent step={eventStep} handleEventStep={handleEventStep} />
+            }
+          />
+        )}
+      </>
+    )
   );
 };
 

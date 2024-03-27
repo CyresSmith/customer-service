@@ -7,30 +7,23 @@ import {
   IUpdateCompanyProfile,
   UpdateAvatar,
 } from '../store/company/company.types';
-import { CompanyCategory } from './types/category.types';
 
 export const companyApi = createApi({
   reducerPath: 'companyApi',
 
   baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-  tagTypes: ['companyApi'],
+  tagTypes: ['company'],
 
   endpoints: builder => ({
-    getCompanyCategories: builder.query<CompanyCategory[], null>({
-      query: () => ({
-        url: `/category/company`,
-        method: 'GET',
-      }),
-    }),
-
     createCompany: builder.mutation<Company, CreateCompany>({
       query: data => ({
         url: '/company/register',
         method: 'POST',
         data,
       }),
-      invalidatesTags: ['companyApi'],
+      invalidatesTags: resp =>
+        resp ? [{ type: 'company', id: resp.id }] : ['company'],
     }),
 
     getCompanyById: builder.query<Company, { companyId: string | undefined }>({
@@ -39,13 +32,17 @@ export const companyApi = createApi({
           url: `/company/${companyId}`,
           method: 'GET',
         },
+      providesTags: (resp, err, arg) => [
+        { type: 'company', id: arg.companyId },
+      ],
     }),
 
-    getCompanyProfile: builder.query<Company, string>({
+    getCompanyProfile: builder.query<Company, number>({
       query: id => ({
         url: `/company/${id}/profile`,
         method: 'GET',
       }),
+      providesTags: (resp, err, id) => [{ type: 'company', id }],
     }),
 
     updateCompanyProfile: builder.mutation<
@@ -57,7 +54,7 @@ export const companyApi = createApi({
         method: 'PATCH',
         data,
       }),
-      invalidatesTags: ['companyApi'],
+      invalidatesTags: (resp, err, arg) => [{ type: 'company', id: arg.id }],
     }),
 
     getCompanyActivities: builder.query<Activity[], number>({
@@ -65,6 +62,7 @@ export const companyApi = createApi({
         url: `/company/${id}/activities`,
         method: 'GET',
       }),
+      providesTags: (resp, err, id) => [{ type: 'company', id }],
     }),
 
     uploadCompanyAvatar: builder.mutation<{ url: string }, UpdateAvatar>({
@@ -73,13 +71,12 @@ export const companyApi = createApi({
         method: 'POST',
         data,
       }),
-      invalidatesTags: ['companyApi'],
+      invalidatesTags: (resp, err, arg) => [{ type: 'company', id: arg.id }],
     }),
   }),
 });
 
 export const {
-  useGetCompanyCategoriesQuery,
   useCreateCompanyMutation,
   useGetCompanyByIdQuery,
   useGetCompanyProfileQuery,

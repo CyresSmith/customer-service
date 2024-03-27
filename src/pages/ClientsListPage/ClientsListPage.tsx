@@ -10,7 +10,7 @@ import { useCreateClientMutation, useGetAllQuery } from 'services/clients.api';
 import { Client } from 'store/clients/clients.types';
 
 const addInitialState: Client = {
-  id: '',
+  id: 0,
   firstName: '',
   lastName: '',
   birthday: '',
@@ -34,19 +34,12 @@ const ClientsListPage = () => {
   const [modalOpen, setModalOpen] = useState<OpenModal | null>(null);
   const [chosenClientId, setChosenClientId] = useState<number | null>(null);
 
-  const {
-    data,
-    isSuccess,
-    refetch: refetchClients,
-    isLoading,
-  } = useGetAllQuery(companyId, {
+  const { data, isSuccess, isLoading } = useGetAllQuery(companyId, {
     skip: !companyId,
   });
 
   const [createClientMutation, { isLoading: addClientLoading }] =
     useCreateClientMutation();
-
-  const clientsRefetch = () => refetchClients();
 
   const handleItemClick = (id: string | number) => {
     setChosenClientId(+id);
@@ -69,7 +62,6 @@ const ClientsListPage = () => {
 
     if (result) {
       setModalOpen(null);
-      refetchClients();
       addNewClient(result);
       toast.success('Нового клієнта успішно збережено');
     }
@@ -142,7 +134,6 @@ const ClientsListPage = () => {
           <ClientProfile
             companyId={+companyId}
             clientId={chosenClientId}
-            refetchClients={clientsRefetch}
             closeModal={() => setModalOpen(null)}
           />
         </Modal>

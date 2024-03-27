@@ -53,8 +53,6 @@ type InitialStateType = {
 interface Props extends ServiceStepProps {
   serviceId?: number;
   categories: ServiceCategory[];
-  refetchCategories: () => void;
-  refetchCompanyData: () => void;
 }
 
 const FirstStep = ({
@@ -67,8 +65,6 @@ const FirstStep = ({
   handleServiceUpdate,
   isServiceUpdateLoading,
   categories,
-  refetchCategories,
-  refetchCompanyData,
 }: Props) => {
   const { id } = useCompany();
   const isAdmin = useAdminRights();
@@ -88,7 +84,6 @@ const FirstStep = ({
       }).unwrap();
 
       if (url) {
-        refetchCompanyData();
         setServiceData(p => ({ ...p, avatar: url }));
       }
     }
@@ -281,7 +276,6 @@ const FirstStep = ({
           isOpen={addCategoryModalOpen}
           closeModal={() => setAddCategoryModalOpen(false)}
           type={serviceData.type as ServiceTypeEnum}
-          refetch={refetchCategories}
           onCategoryAdd={({ id, name }) =>
             setState(p => ({
               ...p,

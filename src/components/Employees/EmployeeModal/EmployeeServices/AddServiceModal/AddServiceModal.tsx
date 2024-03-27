@@ -15,7 +15,6 @@ type Props = {
   isOpen: boolean;
   handleModalClose: () => void;
   employeeId: number;
-  refetchEmployee: () => void;
   openCreateServiceModal: () => void;
 };
 
@@ -24,7 +23,6 @@ const AddServiceModal = ({
   handleModalClose,
   employeeServices,
   employeeId,
-  refetchEmployee,
   openCreateServiceModal,
 }: Props) => {
   const isAdmin = useAdminRights();
@@ -52,7 +50,6 @@ const AddServiceModal = ({
     }).unwrap();
 
     if (message) {
-      refetchEmployee();
       toast.success(message);
     }
   };

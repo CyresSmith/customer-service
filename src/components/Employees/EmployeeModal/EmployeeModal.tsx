@@ -18,7 +18,7 @@ enum OpenModalEnum {
   SERVICES = 3,
 }
 
-type Props = { id: number; refetchEmployees: () => void };
+type Props = { id: number };
 
 const sectionButtons = [
   { id: 1, label: 'Профіль', Icon: HiMiniIdentification },
@@ -26,14 +26,14 @@ const sectionButtons = [
   { id: 3, label: 'Послуги', Icon: HiCurrencyDollar },
 ];
 
-const EmployeeModal = ({ id, refetchEmployees }: Props) => {
+const EmployeeModal = ({ id }: Props) => {
   const { id: companyId } = useCompany();
   const [activeSection, setActiveSection] = useState<number>(
     sectionButtons[0].id
   );
   const [chosenEmployee, setChosenEmployee] = useState<IEmployee | null>(null);
 
-  const { data, isSuccess, refetch } = useGetOneEmployeeQuery(
+  const { data, isSuccess } = useGetOneEmployeeQuery(
     { companyId: +companyId, id },
     {
       skip: !id,
@@ -72,25 +72,13 @@ const EmployeeModal = ({ id, refetchEmployees }: Props) => {
       />
 
       {activeSection === OpenModalEnum.PROFILE && (
-        <EmployeeProfile
-          employee={chosenEmployee}
-          refetchEmployee={() => {
-            refetch();
-            refetchEmployees();
-          }}
-        />
+        <EmployeeProfile employee={chosenEmployee} />
       )}
       {activeSection === OpenModalEnum.SCHEDULE && (
         <EmployeeSchedule employee={chosenEmployee} />
       )}
       {activeSection === OpenModalEnum.SERVICES && (
-        <EmployeeServices
-          employee={chosenEmployee}
-          refetchEmployee={() => {
-            refetch();
-            refetchEmployees();
-          }}
-        />
+        <EmployeeServices employee={chosenEmployee} />
       )}
     </EmployeeModalContent>
   );

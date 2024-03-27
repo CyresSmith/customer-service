@@ -1,4 +1,3 @@
-import { useCompanyRefetch } from 'components/Layout/UsersLayout/UsersLayout';
 import ServiceModal from 'components/Services/ServiceModal';
 import ConfirmOperation from 'components/Ui/ConfirmOperation';
 import ItemsList from 'components/Ui/ItemsList';
@@ -8,20 +7,23 @@ import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useGetServicesCategoriesQuery } from 'services/categories.api';
-import { useDeleteServiceMutation } from 'services/service.api';
+import {
+  useDeleteServiceMutation,
+  useGetServicesQuery,
+} from 'services/service.api';
 
 const ServicesPage = () => {
-  const { id: companyId, services } = useCompany();
+  const { id: companyId } = useCompany();
   const [openModal, setOpenModal] = useState<ServiceOpenModal | null>(null);
   const [serviceId, setServiceId] = useState<number | undefined>(undefined);
 
-  const { refetchCompanyData } = useCompanyRefetch();
+  const { data: services, isLoading: servicesLoading } = useGetServicesQuery(
+    { companyId },
+    { skip: !companyId }
+  );
 
-  const {
-    isLoading: categoriesLoading,
-    data: categories,
-    refetch: refetchCategories,
-  } = useGetServicesCategoriesQuery({ companyId }, { skip: !companyId });
+  const { isLoading: categoriesLoading, data: categories } =
+    useGetServicesCategoriesQuery({ companyId }, { skip: !companyId });
 
   const [deleteService, { isLoading: isServiceDeleteLoading }] =
     useDeleteServiceMutation();
@@ -45,15 +47,14 @@ const ServicesPage = () => {
     const { message } = await deleteService({ companyId, serviceId }).unwrap();
 
     if (message) {
-      refetchCompanyData();
       handleModalClose();
       toast.success('Послугу видалено');
     }
   };
 
-  return categoriesLoading ? (
+  return categoriesLoading || servicesLoading ? (
     <Loader />
-  ) : (
+  ) : services ? (
     <>
       <ItemsList
         items={services.map(
@@ -85,7 +86,6 @@ const ServicesPage = () => {
             openModal={openModal}
             serviceId={serviceId}
             handleModalClose={handleModalClose}
-            refetchCategories={() => refetchCategories()}
           />
         )}
 
@@ -101,7 +101,7 @@ const ServicesPage = () => {
         </ConfirmOperation>
       )}
     </>
-  );
+  ) : null;
 };
 
 export default ServicesPage;

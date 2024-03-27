@@ -1,14 +1,23 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from 'services/instance';
-import { AuthState, RegisterResponse, UpdatePassword, UpdateUser, User, UserLogin, UserRegister, UserState } from '../store/user/user.types';
-import { UploadAvatar } from '../store/user/user.types';
+import {
+  AuthState,
+  RegisterResponse,
+  UpdatePassword,
+  UpdateUser,
+  UploadAvatar,
+  User,
+  UserLogin,
+  UserRegister,
+  UserState,
+} from '../store/user/user.types';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
 
   baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-  tagTypes: ['authApi'],
+  tagTypes: ['auth'],
 
   endpoints: builder => ({
     register: builder.mutation<RegisterResponse, UserRegister>({
@@ -17,7 +26,7 @@ export const authApi = createApi({
         method: 'POST',
         data,
       }),
-      invalidatesTags: ['authApi'],
+      invalidatesTags: ['auth'],
     }),
 
     verify: builder.query<AuthState, unknown>({
@@ -25,6 +34,7 @@ export const authApi = createApi({
         url: `/users/verify/${token}`,
         method: 'GET',
       }),
+      providesTags: ['auth'],
     }),
 
     logIn: builder.mutation<UserState, UserLogin>({
@@ -33,7 +43,7 @@ export const authApi = createApi({
         method: 'POST',
         data,
       }),
-      invalidatesTags: ['authApi'],
+      invalidatesTags: ['auth'],
     }),
 
     current: builder.query({
@@ -41,15 +51,16 @@ export const authApi = createApi({
         url: '/users/current',
         method: 'GET',
       }),
+      providesTags: ['auth'],
     }),
 
     updateUser: builder.mutation<User, UpdateUser>({
-      query: ({id, data}) => ({
+      query: ({ id, data }) => ({
         url: `/users/update/${id}`,
         method: 'PATCH',
         data,
       }),
-      invalidatesTags: ['authApi'],
+      invalidatesTags: ['auth'],
     }),
 
     logOut: builder.mutation({
@@ -57,7 +68,7 @@ export const authApi = createApi({
         url: '/auth/logout',
         method: 'POST',
       }),
-      invalidatesTags: ['authApi'],
+      invalidatesTags: ['auth'],
     }),
 
     uploadAvatar: builder.mutation<{ url: string }, UploadAvatar>({
@@ -66,16 +77,19 @@ export const authApi = createApi({
         method: 'POST',
         data,
       }),
-      invalidatesTags: ['authApi'],
+      invalidatesTags: ['auth'],
     }),
 
-    updatePassword: builder.mutation<Pick<RegisterResponse, 'message'>, UpdatePassword>({
-      query: ({id, data}) => ({
+    updatePassword: builder.mutation<
+      Pick<RegisterResponse, 'message'>,
+      UpdatePassword
+    >({
+      query: ({ id, data }) => ({
         url: `/users/update-password/${id}`,
         method: 'PATCH',
         data,
       }),
-      invalidatesTags: ['authApi'],
+      invalidatesTags: ['auth'],
     }),
   }),
 });
@@ -88,5 +102,5 @@ export const {
   useLogOutMutation,
   useUpdateUserMutation,
   useUploadAvatarMutation,
-  useUpdatePasswordMutation
+  useUpdatePasswordMutation,
 } = authApi;

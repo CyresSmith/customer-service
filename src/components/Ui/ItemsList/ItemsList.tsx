@@ -41,7 +41,7 @@ import {
 type StringRecord = Record<string, string | number>;
 
 type ItemType<T extends StringRecord> = {
-  id: number | number;
+  id: number | string;
   name: string;
 } & T;
 

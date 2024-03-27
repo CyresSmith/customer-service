@@ -12,7 +12,7 @@ export const serviceApi = createApi({
 
   baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-  tagTypes: ['services'],
+  tagTypes: ['services', 'service'],
 
   endpoints: builder => ({
     addNewService: builder.mutation<ServiceBasicInfo, IAddNewServiceDto>({
@@ -22,7 +22,8 @@ export const serviceApi = createApi({
         data,
         params: { companyId },
       }),
-      invalidatesTags: ['services'],
+      invalidatesTags: (resp, err, arg) =>
+        resp ? [{ type: 'services', id: resp.id }] : ['services'],
     }),
 
     getServices: builder.query<ServiceBasicInfo[], { companyId: number }>({
@@ -31,6 +32,10 @@ export const serviceApi = createApi({
         method: 'GET',
         params: { companyId },
       }),
+      providesTags: (resp, err, arg) =>
+        resp
+          ? resp.map(item => ({ type: 'services', id: item.id }))
+          : ['services'],
     }),
 
     uploadServiceAvatar: builder.mutation<
@@ -43,7 +48,10 @@ export const serviceApi = createApi({
         data,
         params: { companyId },
       }),
-      invalidatesTags: ['services'],
+      invalidatesTags: (resp, err, arg) => [
+        { type: 'services', id: arg.serviceId },
+        { type: 'service', id: arg.serviceId },
+      ],
     }),
 
     getServiceData: builder.query<
@@ -55,6 +63,9 @@ export const serviceApi = createApi({
         params: { companyId },
         method: 'GET',
       }),
+      providesTags: (resp, err, arg) => [
+        { type: 'service', id: arg.serviceId },
+      ],
     }),
 
     updateServiceData: builder.mutation<
@@ -67,7 +78,10 @@ export const serviceApi = createApi({
         params: { companyId },
         data,
       }),
-      invalidatesTags: ['services'],
+      invalidatesTags: (resp, err, arg) => [
+        { type: 'services', id: arg.serviceId },
+        { type: 'service', id: arg.serviceId },
+      ],
     }),
 
     deleteService: builder.mutation<
@@ -79,7 +93,10 @@ export const serviceApi = createApi({
         method: 'DELETE',
         params: { companyId },
       }),
-      invalidatesTags: ['services'],
+      invalidatesTags: (resp, err, arg) => [
+        { type: 'services', id: arg.serviceId },
+        { type: 'service', id: arg.serviceId },
+      ],
     }),
   }),
 });

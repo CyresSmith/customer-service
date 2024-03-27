@@ -22,7 +22,6 @@ import { EmployeeServicesBox } from './EmployeeServices.styled';
 
 type Props = {
   employee: IEmployee;
-  refetchEmployee: () => void;
 };
 
 type ServiceState = {
@@ -31,7 +30,7 @@ type ServiceState = {
   price: number;
 };
 
-const EmployeeServices = ({ employee, refetchEmployee }: Props) => {
+const EmployeeServices = ({ employee }: Props) => {
   const isAdmin = useAdminRights();
   const { user } = useAuth();
   const { id: companyId } = useCompany();
@@ -50,8 +49,10 @@ const EmployeeServices = ({ employee, refetchEmployee }: Props) => {
   const [removeEmployeeService, { isLoading: isEmployeeServiceRemoveLoading }] =
     useRemoveEmployeeServiceMutation();
 
-  const { data: categories, refetch: refetchCategories } =
-    useGetServicesCategoriesQuery({ companyId }, { skip: !companyId });
+  const { data: categories } = useGetServicesCategoriesQuery(
+    { companyId },
+    { skip: !companyId }
+  );
 
   const editingAllowed = isAdmin || user?.id === +employee.user.id;
 
@@ -127,7 +128,6 @@ const EmployeeServices = ({ employee, refetchEmployee }: Props) => {
       }).unwrap();
 
       if (message) {
-        refetchEmployee();
         handleModalClose();
         toast.success(message);
       }
@@ -200,7 +200,6 @@ const EmployeeServices = ({ employee, refetchEmployee }: Props) => {
           handleModalClose={handleModalClose}
           employeeServices={employee.services.map(({ id }) => +id)}
           employeeId={employee.id}
-          refetchEmployee={refetchEmployee}
           openCreateServiceModal={handleOpenCreateServiceModal}
         />
       )}
@@ -210,14 +209,11 @@ const EmployeeServices = ({ employee, refetchEmployee }: Props) => {
           openModal={openModal}
           handleModalClose={handleModalClose}
           categories={categories}
-          refetchCategories={refetchCategories}
-          refetchData={refetchEmployee}
         />
       )}
 
       {openModal === ServiceOpenModal.EDIT_SERVICE && service && (
         <EditEmployeeServiceModal
-          refetchEmployee={refetchEmployee}
           openModal={openModal === ServiceOpenModal.EDIT_SERVICE}
           handleModalClose={handleModalClose}
           service={service}

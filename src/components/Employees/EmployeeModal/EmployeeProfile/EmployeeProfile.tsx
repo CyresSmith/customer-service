@@ -1,5 +1,4 @@
 import Avatar from 'components/Avatar';
-import { useCompanyRefetch } from 'components/Layout/UsersLayout/UsersLayout';
 import { useActions, useAdminRights } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { MouseEvent } from 'react';
@@ -21,14 +20,13 @@ import {
 } from './EmployeeProfile.styled';
 import ProfileInfo from './ProfileInfo';
 
-type Props = { employee: IEmployee; refetchEmployee: () => void };
+type Props = { employee: IEmployee };
 
-const EmployeeProfile = ({ employee, refetchEmployee }: Props) => {
+const EmployeeProfile = ({ employee }: Props) => {
   const { avatar, user, status, id: employeeId, role } = employee;
   const isAdmin = useAdminRights();
   const { id: companyId } = useCompany();
   const { updateEmployee, updateEmployeeAvatar } = useActions();
-  const { refetchCompanyData } = useCompanyRefetch();
   const [uploadImg, { isLoading }] = useUploadEmployeeAvatarMutation();
   const [updateProfile] = useUpdateEmployeeProfileMutation();
 
@@ -44,7 +42,6 @@ const EmployeeProfile = ({ employee, refetchEmployee }: Props) => {
 
     if (url) {
       updateEmployeeAvatar({ avatar: url });
-      refetchEmployee();
     }
   };
 
@@ -61,8 +58,6 @@ const EmployeeProfile = ({ employee, refetchEmployee }: Props) => {
 
     if (updatedEmployee.id) {
       updateEmployee(updatedEmployee);
-      refetchCompanyData();
-      refetchEmployee();
     }
   };
 
