@@ -14,6 +14,7 @@ type Props = {
   children: ReactNode;
   closeConfirm: () => void;
   isOpen: boolean;
+  isLoading?: boolean;
 };
 
 const ConfirmOperation = ({
@@ -22,6 +23,7 @@ const ConfirmOperation = ({
   children,
   closeConfirm,
   isOpen,
+  isLoading = false,
 }: Props) => {
   return (
     <Modal
@@ -34,7 +36,12 @@ const ConfirmOperation = ({
           <ConfirmText>{children}</ConfirmText>
 
           <ConfirmBtnsWrapper>
-            <Button Icon={HiCheck} $colors="success" onClick={callback}>
+            <Button
+              Icon={HiCheck}
+              $colors="success"
+              onClick={callback}
+              isLoading={isLoading}
+            >
               Так
             </Button>
 

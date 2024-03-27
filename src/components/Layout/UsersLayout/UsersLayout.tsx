@@ -26,9 +26,12 @@ const UsersLayout = () => {
   const { setCompany, setUserRole } = useActions();
   const { user } = useAuth();
 
-  const { isSuccess, data, refetch } = useGetCompanyByIdQuery(companyId, {
-    skip: !companyId || !user,
-  });
+  const { isSuccess, data, refetch } = useGetCompanyByIdQuery(
+    { companyId },
+    {
+      skip: !companyId || !user,
+    }
+  );
 
   useEffect(() => {
     if (!match) return;

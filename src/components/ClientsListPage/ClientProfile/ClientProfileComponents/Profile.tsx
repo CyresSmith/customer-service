@@ -54,17 +54,19 @@ export const Profile = ({
     const data = new FormData();
     data.append('avatar', currentFile);
 
-    const { url } = await uploadAvatar({
-      companyId,
-      id: +chosen?.id,
-      data,
-    }).unwrap();
+    if (chosen && chosen.id) {
+      const { url } = await uploadAvatar({
+        companyId,
+        id: chosen?.id,
+        data,
+      }).unwrap();
 
-    if (url) {
-      setClientAvatar({ avatar: url });
-      clientRefetch();
-      refetchChosen();
-      toast.success('Аватар успішно оновлено');
+      if (url) {
+        setClientAvatar({ avatar: url });
+        clientRefetch();
+        refetchChosen();
+        toast.success('Аватар успішно оновлено');
+      }
     }
   };
 
@@ -106,7 +108,7 @@ export const Profile = ({
     }
   };
 
-  return (
+  return chosen ? (
     <>
       <SidesWrapper>
         <LeftSideWrapper>
@@ -153,5 +155,5 @@ export const Profile = ({
         />
       )}
     </>
-  );
+  ) : null;
 };

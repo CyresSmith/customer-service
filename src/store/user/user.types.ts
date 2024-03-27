@@ -1,8 +1,8 @@
 export type User = {
+  id: number;
   firstName?: string;
   lastName?: string;
   phone?: string;
-  id: string;
   email: string;
   verify: boolean;
   avatar?: string;
@@ -16,12 +16,13 @@ export type Auth = {
   newPassword: string;
 };
 
-export type UserRegister = Omit<User, 'verify' | 'id'> & Pick<Auth, 'password' | 'confirm'>;
+export type UserRegister = Omit<User, 'verify' | 'id'> &
+  Pick<Auth, 'password' | 'confirm'>;
 
 export type UserLogin = Pick<User, 'email'> & Pick<Auth, 'password'>;
 
 export type Company = {
-  id: string;
+  id: number;
   name: string;
 };
 
@@ -44,7 +45,7 @@ export type TokenState = Pick<UserState, 'accessToken' | 'refreshToken'>;
 
 export type UpdateUser = {
   data: Partial<User>;
-  id: string | number;
+  id: number;
 };
 
 export type UploadAvatar = {
@@ -53,7 +54,7 @@ export type UploadAvatar = {
 };
 
 export type UpdatePassword = {
-  id: string;
+  id: number;
   data: {
     password: string;
     newPassword: string;

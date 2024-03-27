@@ -3,14 +3,14 @@
 import { IMonthSchedule } from './schedule.types';
 import { IService } from './service.type';
 
-export interface IEmployeeUser {
-  id: string;
+export type IEmployeeUser = {
+  id: number;
   email: string;
   phone: string;
   firstName: string;
   lastName: string;
   avatar: string;
-}
+};
 
 export enum EmployeeStatusEnum {
   WORKING = 'working',
@@ -24,8 +24,8 @@ export enum EmployeeRoleEnum {
   USER = 'user',
 }
 
-export interface IEmployee {
-  id: string;
+export type IEmployee = {
+  id: number;
   jobTitle: string;
   provider: boolean;
   role: EmployeeRoleEnum;
@@ -40,15 +40,14 @@ export interface IEmployee {
   user: IEmployeeUser;
   schedules: IMonthSchedule[];
   services: IService[];
-}
+};
 
-export interface BasicEmployeeInfo
-  extends Pick<
-    IEmployee,
-    'id' | 'avatar' | 'firstName' | 'lastName' | 'status' | 'jobTitle'
-  > {
-  servicesCount: number;
-}
+export type BasicEmployeeInfo = Pick<
+  IEmployee,
+  'id' | 'avatar' | 'firstName' | 'lastName' | 'status' | 'jobTitle'
+> & {
+  servicesCount?: number;
+};
 
 export type EmployeesState = {
   chosenEmployee: IEmployee | null;
@@ -61,17 +60,17 @@ export type createEmployeeData = Pick<
 >;
 
 export type addExistUserEmployee = {
-  userId: string;
+  userId: number;
   employeeData: createEmployeeData;
 };
 
 export type addExistUserEmployeeData = {
-  companyId: string;
+  companyId: number;
   data: addExistUserEmployee;
 };
 
 export type UserData = {
-  id?: string | number;
+  id?: number;
   email: string;
   phone: string;
   password: string;
@@ -85,15 +84,15 @@ export type addNewUserEmployee = {
 };
 
 export type addNewUserEmployeeData = {
-  companyId: string;
+  companyId: number;
   data: addNewUserEmployee;
 };
 
-export interface UpdateEmployeeAvatar {
-  employeeId: string;
-  companyId: string;
+export type UpdateEmployeeAvatar = {
+  employeeId: number;
+  companyId: number;
   data: FormData;
-}
+};
 
 export type UpdateEmployeeProfile = Partial<
   Omit<IEmployee, 'id' | 'user' | 'avatar'>

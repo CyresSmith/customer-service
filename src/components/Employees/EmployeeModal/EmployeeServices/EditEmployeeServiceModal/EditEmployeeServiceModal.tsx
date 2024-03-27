@@ -14,7 +14,6 @@ import { useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { HiPhoto } from 'react-icons/hi2';
 import { IoIosSave } from 'react-icons/io';
-import { useOutletContext } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useUpdateServiceDataMutation } from 'services/service.api';
 import { EmployeesServiceSettings } from 'services/types/service.type';
@@ -23,6 +22,7 @@ import { ServiceDataBox, ServiceName } from '../EmployeeServices.styled';
 type Props = {
   openModal: boolean;
   handleModalClose: () => void;
+  refetchEmployee: () => void;
   service: {
     id: number;
     employeeId: number;
@@ -55,11 +55,10 @@ const EditEmployeeServiceModal = ({
   openModal,
   handleModalClose,
   service,
+  refetchEmployee,
 }: Props) => {
   const { id: companyId } = useCompany();
   const [updateService, { isLoading }] = useUpdateServiceDataMutation();
-
-  const { refetchCompanyData } = useOutletContext();
 
   const onSubmit = async (state: typeof service.state) => {
     let update: { price: number; duration?: number } = { price: state.price };
@@ -104,14 +103,8 @@ const EditEmployeeServiceModal = ({
     }
   };
 
-  const {
-    handleChange,
-    handleSelect,
-    handleSubmit,
-    reset,
-    state,
-    invalidFields,
-  } = useForm(service.state, onSubmit);
+  const { handleChange, handleSelect, handleSubmit, state, invalidFields } =
+    useForm(service.state, onSubmit);
 
   return (
     <Modal

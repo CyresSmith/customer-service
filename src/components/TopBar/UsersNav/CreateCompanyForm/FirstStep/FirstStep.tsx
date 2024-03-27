@@ -4,7 +4,7 @@ import translateCategoryName from 'helpers/translateCategoryName';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useGetCompanyCategoriesQuery } from 'services/company.api';
-import { Activity } from 'services/types/category.types';
+import { Activity } from 'store/company/company.types';
 import NextButton from '../Buttons/NextButton';
 import { ButtonBox, Title } from '../CreateCompanyForm.styled';
 import { stepProps } from '../CreateCompanyForm.types';
@@ -23,10 +23,10 @@ const FirstStep = ({
   const { isLoading, isError, error, data } =
     useGetCompanyCategoriesQuery(null);
 
-  const handleSelect = (id: string) => {
+  const handleSelect = (id: number) => {
     setCompanyData(p => ({
       ...p,
-      category: companyData.category === id ? '' : id,
+      category: companyData.category === id ? 0 : id,
     }));
 
     const activities = data?.find(item => item.id === id)?.activities;
@@ -63,7 +63,7 @@ const FirstStep = ({
 
       <ButtonBox>
         <NextButton
-          disabled={isLoading || companyData.category === ''}
+          disabled={isLoading || companyData.category === 0}
           isLoading={isLoading}
           onClick={nextPage}
         />

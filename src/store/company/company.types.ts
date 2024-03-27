@@ -2,22 +2,22 @@ import { ICompanySchedule } from 'components/CompanyProfile/SetScheduleModal/Set
 import { IEmployee } from 'services/types/employee.types';
 import { ServiceBasicInfo } from 'services/types/service.type';
 
-export interface IWorkTime {
+export type IWorkTime = {
   from: number;
   to: number;
-}
+};
 
 export type Branches = 'one' | 'more';
 
 export type EmployeesCount = '2-5' | '6-9' | '10+';
 
 export type Activity = {
-  id: string;
+  id: number;
   name: string;
 };
 
 export type Company = {
-  id: string;
+  id: number;
   name: string;
   phones: string[];
   city: string;
@@ -32,43 +32,45 @@ export type Company = {
   services: ServiceBasicInfo[];
 };
 
-export interface CreateCompany
-  extends Pick<Company, 'name' | 'city' | 'index' | 'address' | 'phones'> {
+export type CreateCompany = Pick<
+  Company,
+  'name' | 'city' | 'index' | 'address' | 'phones'
+> & {
   employeesCount: EmployeesCount | '';
   branches: Branches | '';
-  category: string;
-  activities: string[];
-}
+  category: number;
+  activities: number[];
+};
 
-export interface CreateCompanyDto
-  extends Pick<
-    CreateCompany,
-    | 'name'
-    | 'city'
-    | 'index'
-    | 'address'
-    | 'category'
-    | 'activities'
-    | 'employeesCount'
-    | 'branches'
-  > {
+export type CreateCompanyDto = Pick<
+  CreateCompany,
+  | 'name'
+  | 'city'
+  | 'index'
+  | 'address'
+  | 'category'
+  | 'activities'
+  | 'employeesCount'
+  | 'branches'
+> & {
   phone: string;
-}
+};
 
-export interface UpdateAvatar {
-  id: string;
+export type UpdateAvatar = {
+  id: number;
   data: FormData;
-}
+};
 
-interface IUpdateCompanyProfileData
-  extends Omit<Company, 'avatar' | 'images' | 'activities'> {
-  activities: string[];
-}
+type IUpdateCompanyProfileData = Omit<
+  Company,
+  'avatar' | 'images' | 'activities'
+> & {
+  activities: number[];
+};
 
-export interface IUpdateCompanyProfile {
-  id: string;
+export type IUpdateCompanyProfile = {
+  id: number;
   data: Partial<IUpdateCompanyProfileData>;
-}
+};
 
-export interface IWorkingHours
-  extends Pick<ICompanySchedule, 'days' | 'hours'> {}
+export type IWorkingHours = Pick<ICompanySchedule, 'days' | 'hours'>;

@@ -12,21 +12,21 @@ import {
   StyledIcon,
 } from './Item.styled';
 
-export interface MenuLink {
+export type MenuLink = {
   id: string | number;
   label: string;
   to: string;
   Icon?: IconType;
-}
+};
 
-export interface MenuItem extends MenuLink {
+export type MenuItem = MenuLink & {
   children?: MenuItem[] | [];
   size?: MenuSize;
   openItem: string | null;
   setOpenItem: Dispatch<SetStateAction<string | null>>;
   onItemClick?: () => void;
   isChildren?: boolean;
-}
+};
 
 const Item = ({
   label,

@@ -1,5 +1,5 @@
 import translateActivityName from 'helpers/translateActivityName';
-import { Activity } from 'services/types/category.types';
+import { Activity } from 'store/company/company.types';
 import BackButton from '../Buttons/BackButton';
 import NextButton from '../Buttons/NextButton';
 import { ButtonBox, Title } from '../CreateCompanyForm.styled';
@@ -17,7 +17,7 @@ const SecondStep = ({
   prevPage,
   activities,
 }: Props) => {
-  const handleSelect = (id: string) => {
+  const handleSelect = (id: number) => {
     setCompanyData(p => {
       return p.activities.includes(id)
         ? { ...p, activities: p.activities.filter(item => item !== id) }

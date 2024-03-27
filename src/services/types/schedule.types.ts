@@ -1,30 +1,30 @@
-export interface ITime {
+export type ITime = {
   from: string;
   to: string;
-}
+};
 
-export interface IDaySchedule {
+export type IDaySchedule = {
   hours: ITime;
   breakHours?: ITime;
   day: number;
-}
+};
 
-export interface IMonthSchedule {
+export type IMonthSchedule = {
   id?: number;
   year: number;
   month: number;
   schedule: IDaySchedule[];
-}
+};
 
-export interface IUpdateEmployeeSchedule {
-  companyId: string;
-  employeeId: string;
+export type IUpdateEmployeeSchedule = {
+  companyId: number;
+  employeeId: number;
   data: IMonthSchedule;
-}
+};
 
-export interface IGetEmployeeSchedule {
-  companyId: string;
-  employeeId: string;
+export type IGetEmployeeSchedule = {
+  companyId: number;
+  employeeId: number;
   year: number;
   month: number;
-}
+};

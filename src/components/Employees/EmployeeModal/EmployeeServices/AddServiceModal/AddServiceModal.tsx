@@ -1,4 +1,3 @@
-import ServiceModal from 'components/Services/ServiceModal';
 import { ButtonBox } from 'components/Services/ServiceModal/ServiceModal.styled';
 import Button from 'components/Ui/Buttons/Button';
 import ItemsList from 'components/Ui/ItemsList';
@@ -15,7 +14,7 @@ type Props = {
   employeeServices?: number[];
   isOpen: boolean;
   handleModalClose: () => void;
-  employeeId: string;
+  employeeId: number;
   refetchEmployee: () => void;
   openCreateServiceModal: () => void;
 };
@@ -34,8 +33,7 @@ const AddServiceModal = ({
     employeeServices || []
   );
 
-  const [addServices, { isLoading: isAddServicesLoading }] =
-    useAddEmployeeServiceMutation();
+  const [addServices, { isLoading }] = useAddEmployeeServiceMutation();
 
   const editingAllowed = isAdmin;
   const servicesChanged =
@@ -92,6 +90,7 @@ const AddServiceModal = ({
             onClick={handleSave}
             $colors="accent"
             Icon={IoIosSave}
+            isLoading={isLoading}
           >
             Зберегти
           </Button>

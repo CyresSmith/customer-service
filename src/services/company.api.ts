@@ -33,11 +33,12 @@ export const companyApi = createApi({
       invalidatesTags: ['companyApi'],
     }),
 
-    getCompanyById: builder.query<Company, string>({
-      query: id => ({
-        url: `/company/${id}`,
-        method: 'GET',
-      }),
+    getCompanyById: builder.query<Company, { companyId: string | undefined }>({
+      query: ({ companyId }) =>
+        companyId && {
+          url: `/company/${companyId}`,
+          method: 'GET',
+        },
     }),
 
     getCompanyProfile: builder.query<Company, string>({
@@ -59,7 +60,7 @@ export const companyApi = createApi({
       invalidatesTags: ['companyApi'],
     }),
 
-    getCompanyActivities: builder.query<Activity[], string>({
+    getCompanyActivities: builder.query<Activity[], number>({
       query: id => ({
         url: `/company/${id}/activities`,
         method: 'GET',

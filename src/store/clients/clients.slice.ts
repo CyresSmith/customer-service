@@ -1,22 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Client, ClientsState } from './clients.types';
 
+const clientInitialState: Client = {
+  id: 0,
+  firstName: '',
+  phone: '',
+};
+
 const initialState: ClientsState = {
-  chosen: {
-    firstName: '',
-    lastName: '',
-    phone: '',
-    id: '',
-    email: '',
-    avatar: '',
-    discount: 0,
-    source: '',
-    comment: '',
-    birthday: '',
-    gender: 'choose',
-    card: '',
-    companyId: undefined,
-  },
+  chosen: clientInitialState,
   allClients: [],
 };
 
@@ -25,7 +17,6 @@ const clientsSlice = createSlice({
   initialState,
   reducers: {
     addNewClient(state, { payload }: PayloadAction<Client>) {
-      console.log(payload);
       return { chosen: payload, allClients: [payload, ...state.allClients] };
     },
     setClients(state, { payload }: PayloadAction<Client[]>) {
@@ -38,7 +29,7 @@ const clientsSlice = createSlice({
       return {
         chosen: payload,
         allClients: state.allClients.map(client => {
-          if (client.id === state.chosen.id) {
+          if (state.chosen && state.chosen.id === client.id) {
             return payload;
           }
           return client;
@@ -46,22 +37,24 @@ const clientsSlice = createSlice({
       };
     },
     setClientAvatar(state, { payload }: PayloadAction<Pick<Client, 'avatar'>>) {
-      return {
-        chosen: {
-          ...state.chosen,
-          avatar: payload.avatar,
-        },
-        allClients: state.allClients.map(client => {
-          if (client.id === state.chosen.id) {
-            return { ...client, ...payload };
+      return state.chosen
+        ? {
+            chosen: {
+              ...state.chosen,
+              avatar: payload.avatar,
+            },
+            allClients: state.allClients.map(client => {
+              if (state.chosen && client.id === state.chosen.id) {
+                return { ...client, ...payload };
+              }
+              return client;
+            }),
           }
-          return client;
-        }),
-      };
+        : state;
     },
     deleteClient(state, { payload }: PayloadAction<{ id: number }>) {
       return {
-        chosen: initialState.chosen,
+        ...state,
         allClients: state.allClients.filter(client => client.id !== payload.id),
       };
     },

@@ -14,7 +14,7 @@ type Props = {
   durationHoursItems: SelectItem[];
   durationMinutesValue: SelectItem;
   durationMinutesItems: SelectItem[];
-  employeeId?: string;
+  employeeId?: number;
   children: ReactNode;
 };
 

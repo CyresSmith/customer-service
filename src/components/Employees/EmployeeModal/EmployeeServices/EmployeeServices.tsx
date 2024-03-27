@@ -45,21 +45,18 @@ const EmployeeServices = ({ employee, refetchEmployee }: Props) => {
     state: ServiceState;
   } | null>(null);
 
-  const [serviceId, setServiceId] = useState<string | null>(null);
+  const [serviceId, setServiceId] = useState<number | null>(null);
 
   const [removeEmployeeService, { isLoading: isEmployeeServiceRemoveLoading }] =
     useRemoveEmployeeServiceMutation();
 
-  const {
-    isLoading: categoriesLoading,
-    data: categories,
-    refetch: refetchCategories,
-  } = useGetServicesCategoriesQuery({ companyId }, { skip: !companyId });
+  const { data: categories, refetch: refetchCategories } =
+    useGetServicesCategoriesQuery({ companyId }, { skip: !companyId });
 
-  const editingAllowed = isAdmin || +user?.id === +employee.user.id;
+  const editingAllowed = isAdmin || user?.id === +employee.user.id;
 
-  const handleDelete = (id: number | string) => {
-    setServiceId(String(id));
+  const handleDelete = (id: number) => {
+    setServiceId(id);
     setOpenModal(ServiceOpenModal.DELETE_SERVICE);
   };
 
@@ -144,7 +141,7 @@ const EmployeeServices = ({ employee, refetchEmployee }: Props) => {
       <ItemsList
         items={employee.services.map(
           ({
-            id = '',
+            id = 0,
             avatar = '',
             name = '',
             category,
@@ -214,6 +211,7 @@ const EmployeeServices = ({ employee, refetchEmployee }: Props) => {
 
       {openModal === ServiceOpenModal.EDIT_SERVICE && service && (
         <EditEmployeeServiceModal
+          refetchEmployee={refetchEmployee}
           openModal={openModal === ServiceOpenModal.EDIT_SERVICE}
           handleModalClose={handleModalClose}
           service={service}
@@ -226,6 +224,7 @@ const EmployeeServices = ({ employee, refetchEmployee }: Props) => {
           isOpen={openModal === ServiceOpenModal.DELETE_SERVICE}
           closeConfirm={handleModalClose}
           callback={handleRemoveEmployeeService}
+          isLoading={isEmployeeServiceRemoveLoading}
         >
           Дійсно бажаєте відалити сервіс "
           {employee.services.find(({ id }) => +id === +serviceId)?.name}",

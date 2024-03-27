@@ -258,7 +258,12 @@ const EmployeeSchedule = ({ employee }: Props) => {
       end ? time >= start && time <= end : time >= start
     );
 
-  const handleTimeSelect = (time: string, id: string) => {
+  const handleTimeSelect = (
+    time: string | string[],
+    id?: string | undefined
+  ) => {
+    if (typeof time !== 'string') return;
+
     if (id === 'from') setFrom(time);
     if (id === 'to') setTo(time);
     if (id === 'breakFrom') setBreakFrom(time);
@@ -357,7 +362,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
         const { message } = await deleteSchedule({
           companyId,
           employeeId: employee.id,
-          scheduleId: String(employeeSchedule.id),
+          scheduleId: employeeSchedule.id,
         }).unwrap();
 
         if (message) {
@@ -389,7 +394,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
 
   return (
     <EmployeeScheduleBox>
-      {workingHours?.length > 0 ? (
+      {workingHours && workingHours?.length > 0 ? (
         <>
           <CalendarSide>
             {isScheduleLoading || isDeleteLoading || isLoading ? (

@@ -25,7 +25,7 @@ export const serviceApi = createApi({
       invalidatesTags: ['services'],
     }),
 
-    getServices: builder.query<ServiceBasicInfo[], { companyId: string }>({
+    getServices: builder.query<ServiceBasicInfo[], { companyId: number }>({
       query: ({ companyId }) => ({
         url: `/service/get-all`,
         method: 'GET',
@@ -72,7 +72,7 @@ export const serviceApi = createApi({
 
     deleteService: builder.mutation<
       { message: string },
-      { companyId: string; serviceId: number | string }
+      { companyId: number; serviceId: number }
     >({
       query: ({ companyId, serviceId }) => ({
         url: `service/${serviceId}`,

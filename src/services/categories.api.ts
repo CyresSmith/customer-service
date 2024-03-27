@@ -13,7 +13,7 @@ export const categoriesApi = createApi({
   endpoints: builder => ({
     getServicesCategories: builder.query<
       ServiceCategory[],
-      { companyId: string }
+      { companyId: number }
     >({
       query: ({ companyId }) => ({
         url: `category/services`,

@@ -26,7 +26,7 @@ export const employeeApi = createApi({
   endpoints: builder => ({
     findUserData: builder.mutation<
       UserData,
-      { companyId: string; email: string }
+      { companyId: number; email: string }
     >({
       query: ({ companyId, email }) => ({
         url: `employees/find-employee-data`,
@@ -92,7 +92,7 @@ export const employeeApi = createApi({
 
     updateEmployeeProfile: builder.mutation<
       IEmployee,
-      { companyId: string; employeeId: string; data: UpdateEmployeeProfile }
+      { companyId: number; employeeId: number; data: UpdateEmployeeProfile }
     >({
       query: ({ companyId, employeeId, data }) => ({
         url: `employees/${employeeId}/update`,
@@ -124,7 +124,7 @@ export const employeeApi = createApi({
 
     deleteEmployeeSchedule: builder.mutation<
       { message: string },
-      { companyId: string; employeeId: string; scheduleId: string }
+      { companyId: number; employeeId: number; scheduleId: number }
     >({
       query: ({ companyId, employeeId, scheduleId }) => ({
         url: `company/${companyId}/employee/${employeeId}/schedule/${scheduleId}`,
@@ -135,7 +135,7 @@ export const employeeApi = createApi({
 
     removeEmployeeService: builder.mutation<
       { message: string },
-      { companyId: string; employeeId: string; serviceId: string }
+      { companyId: number; employeeId: number; serviceId: number }
     >({
       query: ({ companyId, employeeId, serviceId }) => ({
         url: `employees/${employeeId}/service/${serviceId}`,
@@ -147,7 +147,7 @@ export const employeeApi = createApi({
 
     addEmployeeService: builder.mutation<
       { message: string },
-      { companyId: string; employeeId: string; data: { services: number[] } }
+      { companyId: number; employeeId: number; data: { services: number[] } }
     >({
       query: ({ companyId, employeeId, data }) => ({
         url: `employees/${employeeId}/service`,

@@ -25,6 +25,7 @@ import FirstStep from './FirstStep/FirstStep';
 import SecondStep from './SecondStep';
 import { ModalBox, Step, StepBox, StepNumber } from './ServiceModal.styled';
 import ThirdStep from './ThirdStep';
+import Loader from 'components/Ui/Loader';
 
 type Props = {
   openModal: ServiceOpenModal;
@@ -199,7 +200,9 @@ const ServiceModal = ({
     }
   }, [data, openModal]);
 
-  return (
+  return IsServiceDataLoading ? (
+    <Loader />
+  ) : (
     <Modal
       id="addService"
       title={
