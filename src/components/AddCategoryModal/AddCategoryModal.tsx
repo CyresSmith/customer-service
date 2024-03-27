@@ -21,7 +21,9 @@ const categoryInitialState = {
   name: '',
 };
 
-const categoryInputs: InputProps[] = [{ name: 'name', type: 'text' }];
+const categoryInputs: InputProps[] = [
+  { name: 'name', type: 'text', value: '' },
+];
 
 const AddCategoryModal = ({
   modalId,
@@ -31,14 +33,14 @@ const AddCategoryModal = ({
   refetch,
   onCategoryAdd,
 }: Props) => {
-  const { id } = useCompany();
+  const { id: companyId } = useCompany();
 
   const [addServiceCategory, { isLoading: isServiceCategoryLoading }] =
     useAddServiceCategoryMutation();
 
   const handleCategoryAdd = async (data: typeof categoryInitialState) => {
     const response = await addServiceCategory({
-      id,
+      companyId,
       data: { ...data, type },
     }).unwrap();
 

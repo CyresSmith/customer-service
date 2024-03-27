@@ -4,24 +4,26 @@ import { Dispatch, SetStateAction } from 'react';
 import { IEmployee } from './employee.types';
 
 export type EmployeeSettings = {
-  employeeId: string;
+  employeeId: number;
   durationHours?: SelectItem;
   durationMinutes?: SelectItem;
   price?: number;
 };
 
-export interface IEmployeeSettingsDto
-  extends Pick<EmployeeSettings, 'employeeId' | 'price'> {
+export type IEmployeeSettingsDto = Pick<
+  EmployeeSettings,
+  'employeeId' | 'price'
+> & {
   duration?: number;
-}
+};
 
 export type ServiceDataType = {
   avatar?: string;
   category: SelectItem | null;
   name: string;
   desc: string;
-  employees: string[];
-  resources?: string[];
+  employees: number[];
+  resources?: number[];
   type: string;
   durationHours: SelectItem | null;
   durationMinutes: SelectItem | null;
@@ -36,32 +38,31 @@ export type ServiceDataType = {
   placeLimit: number;
 };
 
-export interface INewServiceDtoType
-  extends Omit<
-    ServiceDataType,
-    | 'category'
-    | 'durationHours'
-    | 'durationMinutes'
-    | 'break'
-    | 'breakDuration'
-    | 'employeesSettings'
-    | 'capacityLimit'
-    | 'capacity'
-    | 'placesLimit'
-    | 'placeLimit'
-  > {
+export type INewServiceDtoType = Omit<
+  ServiceDataType,
+  | 'category'
+  | 'durationHours'
+  | 'durationMinutes'
+  | 'break'
+  | 'breakDuration'
+  | 'employeesSettings'
+  | 'capacityLimit'
+  | 'capacity'
+  | 'placesLimit'
+  | 'placeLimit'
+> & {
   category: number;
   duration: number;
   break: number;
   employeesSettings?: IEmployeeSettingsDto[];
   capacity?: number;
   placeLimit?: number;
-}
+};
 
-export interface IAddNewServiceDto {
-  companyId: string;
+export type IAddNewServiceDto = {
+  companyId: number;
   data: INewServiceDtoType;
-}
+};
 
 export type ServiceStepProps = {
   openModal: ServiceOpenModal;
@@ -80,7 +81,7 @@ export type EmployeesServiceSettings = {
   duration?: number;
 };
 
-export interface IService {
+export type IService = {
   id: number;
   name: string;
   avatar: string;
@@ -96,14 +97,16 @@ export interface IService {
   type: ServiceTypeEnum;
   capacity: number;
   placeLimit: number;
-}
+};
 
-export interface IServiceUpdate
-  extends Omit<IService, 'category' | 'employees' | 'type'> {
+export type IServiceUpdate = Omit<
+  IService,
+  'category' | 'employees' | 'type'
+> & {
   category: number;
   employees: string[];
   type: string;
-}
+};
 
 export type ServiceBasicInfo = Pick<
   IService,

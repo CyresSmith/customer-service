@@ -5,8 +5,8 @@ import generateTimeArray from 'helpers/generateTimeArray';
 import translateWorkSchedule from 'helpers/translateWorkSchedule';
 import { useEffect, useState } from 'react';
 import { HiMinusCircle, HiPlusCircle } from 'react-icons/hi';
-import { DayList, Time, WeekBox } from './SetWorkSchedule.styled';
 import { ICompanySchedule } from '../SetScheduleModal';
+import { DayList, Time, WeekBox } from './SetWorkSchedule.styled';
 
 type Props = {
   addSchedule: () => void;
@@ -75,7 +75,7 @@ const SetWorkSchedule = ({
 
         <Select
           selectedItem={from}
-          onSelect={item => setFrom(item)}
+          onSelect={item => typeof item === 'string' && setFrom(item)}
           $colors="light"
           items={generateTimeArray()}
         />
@@ -86,7 +86,7 @@ const SetWorkSchedule = ({
 
         <Select
           selectedItem={to}
-          onSelect={item => setTo(item)}
+          onSelect={item => typeof item === 'string' && setTo(item)}
           $colors="light"
           items={generateTimeArray()}
         />

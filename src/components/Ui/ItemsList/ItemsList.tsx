@@ -41,7 +41,7 @@ import {
 type StringRecord = Record<string, string | number>;
 
 type ItemType<T extends StringRecord> = {
-  id: string | number;
+  id: number;
   name: string;
 } & T;
 
@@ -50,10 +50,10 @@ type Props<T extends StringRecord> = {
   keyForSelect?: keyof Omit<ItemType<T>, 'id' | 'avatar'>;
   keyForSearch?: keyof Omit<ItemType<T>, 'id' | 'avatar'>;
   notSortedKeys?: Array<keyof Omit<ItemType<T>, 'id' | 'avatar'>>;
-  onItemClick?: (id: string | number, selected?: Array<number>) => void;
+  onItemClick?: (id: number, selected?: Array<number>) => void;
   onAddClick?: () => void;
   addButtonTitle?: string;
-  onItemDeleteClick?: (id: string | number) => void;
+  onItemDeleteClick?: (id: number) => void;
   isDeleteLoading?: boolean;
   selection?: number[] | undefined;
 };
@@ -97,13 +97,13 @@ const ItemsList = <T extends StringRecord>({
   const [selectedKeys, setSelectedKeys] =
     useState<SelectItem[]>(initialSelection);
 
-  const handleItemClick = (id: string | number) => {
+  const handleItemClick = (id: number) => {
     let newSelection: Array<number> | undefined;
 
     if (selection) {
-      newSelection = selected.includes(+id)
-        ? selected.filter(item => item !== +id)
-        : [...selected, +id];
+      newSelection = selected.includes(id)
+        ? selected.filter(item => item !== id)
+        : [...selected, id];
 
       setSelected(newSelection);
 
@@ -113,7 +113,7 @@ const ItemsList = <T extends StringRecord>({
     onItemClick && onItemClick(id, newSelection);
   };
 
-  const handleItemDelete = (id: string | number) => {
+  const handleItemDelete = (id: number) => {
     onItemDeleteClick && onItemDeleteClick(id);
   };
 
@@ -217,7 +217,7 @@ const ItemsList = <T extends StringRecord>({
 
         const existingIndex = acc.findIndex(({ value: val }) => val === value);
 
-        if (existingIndex !== -1) {
+        if (existingIndex !== -1 && acc[existingIndex].count !== undefined) {
           acc[existingIndex].count++;
         } else {
           acc.push({

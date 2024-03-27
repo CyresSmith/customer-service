@@ -20,7 +20,7 @@ const CreateCompanyForm = ({ closeModal }: Props) => {
     address: '',
     index: '',
     phone: '',
-    category: '',
+    category: 0,
     activities: [],
     branches: 'one',
     employeesCount: '2-5',

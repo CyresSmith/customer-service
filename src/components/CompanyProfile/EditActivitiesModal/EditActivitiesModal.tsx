@@ -24,6 +24,7 @@ const EditActivitiesModal = ({ closeModal }: Props) => {
   const { updateCompanyData } = useActions();
   const { data: activitiesData, isLoading: categoryLoading } =
     useGetCompanyActivitiesQuery(id);
+
   const [uploadActivities, { isLoading, isSuccess }] =
     useUpdateCompanyProfileMutation();
 
@@ -31,7 +32,7 @@ const EditActivitiesModal = ({ closeModal }: Props) => {
     activities.map(({ id }) => id)
   );
 
-  const handleSelect = (id: string) => {
+  const handleSelect = (id: number) => {
     setActivitiesState(p => {
       return p.includes(id) ? [...p.filter(item => item !== id)] : [...p, id];
     });

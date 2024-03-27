@@ -48,7 +48,7 @@ enum MessageEnum {
 }
 
 const FindUserForm = ({ existUser, setExistUser, handleBackClick }: Props) => {
-  const { id } = useCompany();
+  const { id: companyId } = useCompany();
   const [findUserData, { isLoading, isError, error }] =
     useFindUserDataMutation();
   const [message, setMessage] = useState<MessageEnum | string>(
@@ -57,7 +57,7 @@ const FindUserForm = ({ existUser, setExistUser, handleBackClick }: Props) => {
 
   const onSubmit = async (state: typeof initialState) => {
     const data = await findUserData({
-      companyId: id,
+      companyId,
       email: state.email,
     }).unwrap();
 
@@ -66,8 +66,10 @@ const FindUserForm = ({ existUser, setExistUser, handleBackClick }: Props) => {
     }
   };
 
-  const { state, handleChange, handleSubmit, invalidFields, reset } =
-    useForm(initialState, onSubmit);
+  const { state, handleChange, handleSubmit, invalidFields, reset } = useForm(
+    initialState,
+    onSubmit
+  );
 
   const handleClick = () => {
     reset();

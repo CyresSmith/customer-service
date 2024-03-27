@@ -172,7 +172,7 @@ const ThirdStep = ({
     }
   };
 
-  const stateChange = (e: ChangeEvent<HTMLInputElement>, id?: string) => {
+  const stateChange = (e: ChangeEvent<HTMLInputElement>, id?: number) => {
     if (!isAdmin) return;
 
     const { name, value, type } = e.target;
@@ -226,7 +226,7 @@ const ThirdStep = ({
   const stateSelect = (
     selected: SelectItem,
     fieldName?: string,
-    id?: string
+    id?: number
   ) => {
     if (!isAdmin) return;
 

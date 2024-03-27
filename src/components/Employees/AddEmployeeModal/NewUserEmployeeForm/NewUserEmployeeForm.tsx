@@ -142,7 +142,7 @@ function NewUserEmployeeForm({ handleBackClick, closeModal }: Props) {
           disabled={Object.values(state).includes('') || isLoading}
           $colors="accent"
         >
-          Додати
+          Додать
         </Button>
       </ButtonBox>
     </Form>

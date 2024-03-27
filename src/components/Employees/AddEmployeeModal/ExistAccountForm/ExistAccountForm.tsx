@@ -10,7 +10,7 @@ import { EmployeeRoleEnum } from 'services/types/employee.types';
 import { ButtonBox } from '../AddEmployeeModal.styled';
 
 type Props = {
-  userId: string;
+  userId: number;
   handleBackClick: () => void;
   closeModal: () => void;
 };
@@ -40,7 +40,7 @@ const initialState = {
 };
 
 const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
-  const { id } = useCompany();
+  const { id: companyId } = useCompany();
   const { addNewEmployee } = useActions();
   const [addEmployee, { isLoading }] = useAddExistUserEmployeeMutation();
 
@@ -50,7 +50,7 @@ const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
     isAdmin,
   }: typeof initialState) => {
     const employee = await addEmployee({
-      companyId: id,
+      companyId,
       data: {
         userId,
         employeeData: {
@@ -99,7 +99,7 @@ const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
             disabled={Object.values(state).includes('') || isLoading}
             $colors="accent"
           >
-            Додати
+            Додать
           </Button>
         </ButtonBox>
       </Form>

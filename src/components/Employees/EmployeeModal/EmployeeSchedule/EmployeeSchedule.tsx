@@ -36,18 +36,17 @@ import {
 } from 'date-fns';
 import { uk } from 'date-fns/locale';
 import generateTimeArray from 'helpers/generateTimeArray';
-import { useAdminRights, useAuth } from 'hooks';
+import { useActions, useAdminRights, useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { IoIosSave } from 'react-icons/io';
 import { toast } from 'react-toastify';
 import {
+  useDeleteEmployeeScheduleMutation,
   useGetEmployeeScheduleQuery,
   useUpdateEmployeeScheduleMutation,
-  useDeleteEmployeeScheduleMutation
 } from 'services/schedules.api';
-import { IDaySchedule } from 'services/types/schedule.types';
+import { IDaySchedule, IMonthSchedule } from 'services/types/schedule.types';
 import { IWorkingHours } from 'store/company/company.types';
-import { useActions } from 'hooks';
 
 setDefaultOptions({ locale: uk });
 
@@ -59,7 +58,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
   const {
     setChosenSchedule,
     deleteSchedule: deleteScheduleAction,
-    updateSchedule: updateScheduleAction
+    updateSchedule: updateScheduleAction,
   } = useActions();
 
   const isAdmin = useAdminRights();
@@ -73,7 +72,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
     refetch,
   } = useGetEmployeeScheduleQuery(
     {
-      companyId: +companyId,
+      companyId,
       employeeId: +employee.id,
       year: getYear(selectedMonth),
       month: getMonth(selectedMonth),
@@ -95,12 +94,12 @@ const EmployeeSchedule = ({ employee }: Props) => {
   const [updateSchedule, { isLoading }] = useUpdateEmployeeScheduleMutation();
   const [deleteSchedule, { isLoading: isDeleteLoading }] =
     useDeleteEmployeeScheduleMutation();
-  
+
   useEffect(() => {
     if (employeeSchedule) {
       setChosenSchedule(employeeSchedule);
     }
-  }, [employeeSchedule, setChosenSchedule])
+  }, [employeeSchedule, setChosenSchedule]);
 
   const selectedMonthPassed =
     getMonth(today) !== getMonth(selectedMonth) && isPast(selectedMonth);
@@ -109,11 +108,11 @@ const EmployeeSchedule = ({ employee }: Props) => {
     !selectedMonthPassed && (isAdmin || user?.id === employee?.user?.id);
 
   const handleScheduleUpdate = async () => {
-    const data = {
-        year: getYear(selectedMonth),
-        month: getMonth(selectedMonth),
-        schedule: scheduleState,
-    }
+    const data: IMonthSchedule = {
+      year: getYear(selectedMonth),
+      month: getMonth(selectedMonth),
+      schedule: scheduleState,
+    };
 
     const { message } = await updateSchedule({
       companyId,
@@ -122,7 +121,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
     }).unwrap();
 
     if (message) {
-      updateScheduleAction(data)
+      updateScheduleAction(data);
       resetState();
       setIsStateChanged(false);
       toast.success(message);
@@ -273,7 +272,12 @@ const EmployeeSchedule = ({ employee }: Props) => {
       end ? time >= start && time <= end : time >= start
     );
 
-  const handleTimeSelect = (time: string, id: string) => {
+  const handleTimeSelect = (
+    time: string | string[],
+    id?: string | undefined
+  ) => {
+    if (typeof time !== 'string') return;
+
     if (id === 'from') setFrom(time);
     if (id === 'to') setTo(time);
     if (id === 'breakFrom') setBreakFrom(time);
@@ -369,14 +373,14 @@ const EmployeeSchedule = ({ employee }: Props) => {
           toastMessage = message;
         }
       } else {
-        const {message} = await deleteSchedule({
-          companyId: +companyId,
-          employeeId: +employee.id,
+        const { message } = await deleteSchedule({
+          companyId,
+          employeeId: employee.id,
           scheduleId: employeeSchedule.id,
         }).unwrap();
 
         if (message) {
-          deleteScheduleAction({id: +employeeSchedule.id});
+          deleteScheduleAction({ id: +employeeSchedule.id });
           toastMessage = message;
         }
       }
@@ -405,7 +409,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
 
   return (
     <EmployeeScheduleBox>
-      {workingHours && workingHours.length > 0 ? (
+      {workingHours && workingHours?.length > 0 ? (
         <>
           <CalendarSide>
             {isScheduleLoading || isDeleteLoading || isLoading ? (

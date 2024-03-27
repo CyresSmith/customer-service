@@ -7,22 +7,24 @@ type ICompanyInitialState = {
   userRole: EmployeeRoleEnum;
 };
 
+const initialCompanyState: Company = {
+  id: 0,
+  name: '',
+  phones: [],
+  city: '',
+  address: '',
+  index: '',
+  workingHours: null,
+  desc: '',
+  avatar: '',
+  images: [],
+  activities: [],
+  employees: [],
+  services: [],
+};
+
 const initialState: ICompanyInitialState = {
-  company: {
-    id: '',
-    name: '',
-    phones: [],
-    city: '',
-    address: '',
-    index: '',
-    workingHours: null,
-    desc: '',
-    avatar: '',
-    images: [],
-    activities: [],
-    employees: [],
-    services: [],
-  },
+  company: initialCompanyState,
   userRole: EmployeeRoleEnum.USER,
 };
 

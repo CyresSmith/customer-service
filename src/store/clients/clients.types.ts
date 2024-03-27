@@ -2,7 +2,7 @@ export type Client = {
   firstName: string;
   lastName?: string;
   phone: string;
-  id: number | string;
+  id: number;
   email?: string;
   avatar?: string;
   discount?: number;
@@ -17,12 +17,12 @@ export type Client = {
 };
 
 export type Company = {
-  id: number | string;
+  id: number;
   name: string;
 };
 
 export type ClientsState = {
-  chosen: Client;
+  chosen: Client | null;
   allClients: Client[];
 };
 
@@ -33,12 +33,12 @@ export type AddClient = {
 
 export type UpdateClient = {
   data: Partial<Client>;
-  id: string | number;
+  id: number;
   companyId: number;
 };
 
 export type UploadAvatar = {
   data: FormData;
-  id: string | number;
+  id: number;
   companyId: number;
 };
