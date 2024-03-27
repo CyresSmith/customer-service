@@ -19,10 +19,10 @@ const EmployeesPage = () => {
   const { accessToken } = useAuth();
 
   const [openModal, setOpenModal] = useState<OpenModal | null>(null);
-  const [employeeId, setEmployeeId] = useState<string | number | null>(null);
+  const [employeeId, setEmployeeId] = useState<number | null>(null);
   const [allEmployees, setAllEmployees] = useState<BasicEmployeeInfo[]>([]);
 
-  const handleItemClick = (employeeId: string | number) => {
+  const handleItemClick = (employeeId: number) => {
     setEmployeeId(employeeId);
     setOpenModal(OpenModal.EDIT);
   };
@@ -60,7 +60,7 @@ const EmployeesPage = () => {
             avatar,
             name: `${firstName} ${lastName}`,
             jobTitle,
-            servicesCount,
+            servicesCount: servicesCount || 0,
             status,
           })
         )}
@@ -83,7 +83,7 @@ const EmployeesPage = () => {
           $isOpen={openModal === OpenModal.EDIT}
           closeModal={() => setOpenModal(null)}
         >
-          <EmployeeModal id={+employeeId} refetchEmployees={refetchEmployees} />
+          <EmployeeModal id={employeeId} refetchEmployees={refetchEmployees} />
         </Modal>
       )}
     </>
