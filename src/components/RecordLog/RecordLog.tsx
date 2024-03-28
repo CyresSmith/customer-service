@@ -84,7 +84,7 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
 
   const companyDaySchedule = getSchedule(timeArray, from, to);
 
-  const toRender =
+  const providersToRender =
     employees.length > SCHEDULES_PERPAGE
       ? employees.slice(startIndex, startIndex + SCHEDULES_PERPAGE)
       : employees;
@@ -106,14 +106,14 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
           )}
           <EmployeesInfoList
             isScroll={isScroll}
-            columns={toRender.length}
+            columns={providersToRender.length}
             date={date}
-            employees={toRender}
+            employees={providersToRender}
             schedules={allSchedules}
           />
           {employees.length > SCHEDULES_PERPAGE &&
             employees[employees.length - 1] !==
-            toRender[toRender.length - 1] && (
+            providersToRender[providersToRender.length - 1] && (
               <BtnWrapper $right="10px">
                 <Button
                   onClick={() => setStartIndex(s => s + 1)}
@@ -128,14 +128,14 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
         <ScrollWrapper id="schedulesContainer">
           <SchedulesContainer>
             <TimeList side="left" workHours={companyDaySchedule} />
-            <ListsWrapper id="schedulesList" $columns={toRender.length}>
-              {toRender.map((provider, i) => (
+            <ListsWrapper id="schedulesList" $columns={providersToRender.length}>
+              {providersToRender.map((provider, i) => (
                 <RecordLogList
-                  schedules={allSchedules.filter(s => s.id === +provider.id)}
+                  schedules={allSchedules.filter(s => s.employee.id === provider.id)}
                   companySchedule={companyDaySchedule}
                   key={provider.id}
                   date={date}
-                  last={i === toRender.length - 1}
+                  last={i === providersToRender.length - 1}
                 />
               ))}
             </ListsWrapper>
