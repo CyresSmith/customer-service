@@ -17,8 +17,8 @@ const RecordLogPage = () => {
   const [selectedItem, setSelectedItem] = useState<SelectItem[]>(initialSelection);
 
   const { data: allEmployees, isSuccess: successGetEmployees } = useGetCompanyEmployeesQuery(+id, {
-      skip: !id,
-      refetchOnMountOrArgChange: true,
+    skip: !id,
+    refetchOnMountOrArgChange: true
   });
   
   if (!allEmployees || allEmployees.length === 0) {

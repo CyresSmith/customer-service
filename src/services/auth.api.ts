@@ -46,7 +46,7 @@ export const authApi = createApi({
       invalidatesTags: ['auth'],
     }),
 
-    current: builder.query({
+    current: builder.query<AuthState, undefined>({
       query: () => ({
         url: '/users/current',
         method: 'GET',
@@ -99,6 +99,7 @@ export const {
   useVerifyQuery,
   useLogInMutation,
   useCurrentQuery,
+  useLazyCurrentQuery,
   useLogOutMutation,
   useUpdateUserMutation,
   useUploadAvatarMutation,

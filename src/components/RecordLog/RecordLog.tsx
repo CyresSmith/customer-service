@@ -45,8 +45,8 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
         month: getMonth(date),
       },
       {
-        skip: !id,
-        refetchOnMountOrArgChange: true,
+        skip: !id || !employees,
+        refetchOnMountOrArgChange: true
       }
     );
 
