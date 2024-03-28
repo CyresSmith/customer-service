@@ -32,7 +32,7 @@ export const AvatarBox = styled.div`
   }
 
   > span {
-    font-size: 30px;
+    font-size: 25px;
     font-weight: ${theme.fontWeights.light};
     text-transform: uppercase;
   }

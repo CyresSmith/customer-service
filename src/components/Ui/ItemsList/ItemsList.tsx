@@ -4,6 +4,7 @@ import {
   capitalizeFirstLetter,
   capitalizeObjectValues,
 } from 'helpers/capitalizeFirstLetter';
+import getAvatarLetters from 'helpers/getAvatarLetters';
 import { millisecondsToTime } from 'helpers/millisecondsToTime';
 import { translateLabels } from 'helpers/translateLabels';
 import { ChangeEvent, useEffect, useState } from 'react';
@@ -416,7 +417,7 @@ const ItemsList = <T extends StringRecord>({
                     $selected={selected && selected.includes(+item.id)}
                     $columnsCount={columnsCount}
                     $isDeleteButton={Boolean(onItemDeleteClick)}
-                    onClick={() => handleItemClick(item.id)}
+                    onClick={() => handleItemClick(+item.id)}
                   >
                     <HiCheckCircle id="checkLabel" />
                     <AvatarBox>
@@ -426,7 +427,7 @@ const ItemsList = <T extends StringRecord>({
                           alt={`${item.name} image`}
                         />
                       ) : item.name ? (
-                        <span>{item.name.slice(0, 1)}</span>
+                        <span>{getAvatarLetters(item.name)}</span>
                       ) : (
                         <HiPhoto />
                       )}
