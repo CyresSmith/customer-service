@@ -15,13 +15,11 @@ import { clientsApi } from 'services/clients.api';
 import { companyApi } from 'services/company.api';
 import { employeeApi } from 'services/employee.api';
 import { serviceApi } from 'services/service.api';
+import { schedulesApi } from 'services/schedules.api';
 import { authApi } from '../services/auth.api';
 import companySlice from './company/company.slice';
-import employeesSlice from './employees/employees.slice';
 import loadingSlice from './loading/loading.slice';
 import userSlice from './user/user.slice';
-import { schedulesApi } from 'services/schedules.api';
-import schedulesSlice from './schedules/schedules.slice';
 
 const persistUserConfig = {
   key: 'service',
@@ -38,8 +36,6 @@ const rootReducer = combineReducers({
   loading: loadingSlice.reducer,
   company: companySlice.reducer,
   user: persistedUserReducer,
-  employees: employeesSlice.reducer,
-  schedules: schedulesSlice.reducer,
   [authApi.reducerPath]: authApi.reducer,
   [companyApi.reducerPath]: companyApi.reducer,
   [clientsApi.reducerPath]: clientsApi.reducer,

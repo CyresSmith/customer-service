@@ -5,9 +5,8 @@ import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
 import { useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
-import { BasicEmployeeInfo } from 'services/types/employee.types';
 
 enum OpenModal {
   ADD = 1,
@@ -20,14 +19,14 @@ const EmployeesPage = () => {
 
   const [openModal, setOpenModal] = useState<OpenModal | null>(null);
   const [employeeId, setEmployeeId] = useState<number | null>(null);
-  const [allEmployees, setAllEmployees] = useState<BasicEmployeeInfo[]>([]);
+  // const [allEmployees, setAllEmployees] = useState<BasicEmployeeInfo[]>([]);
 
   const handleItemClick = (employeeId: number) => {
     setEmployeeId(employeeId);
     setOpenModal(OpenModal.EDIT);
   };
 
-  const { data, isSuccess, isLoading } = useGetCompanyEmployeesQuery(
+  const { data, isLoading } = useGetCompanyEmployeesQuery(
     +companyId,
     {
       skip: !companyId || !accessToken,
@@ -35,16 +34,16 @@ const EmployeesPage = () => {
     }
   );
 
-  useEffect(() => {
-    if (isSuccess && data) {
-      setAllEmployees(data);
-    }
-  }, [data, isSuccess, setAllEmployees]);
+  // useEffect(() => {
+  //   if (isSuccess && data) {
+  //     setAllEmployees(data);
+  //   }
+  // }, [data, isSuccess, setAllEmployees]);
 
-  return !isLoading && allEmployees && allEmployees.length > 0 ? (
+  return !isLoading && data && data.length > 0 ? (
     <>
       <ItemsList
-        items={allEmployees.map(
+        items={data.map(
           ({
             firstName,
             lastName,
