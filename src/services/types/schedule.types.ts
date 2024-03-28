@@ -14,6 +14,7 @@ export type IMonthSchedule = {
   year: number;
   month: number;
   schedule: IDaySchedule[];
+  employee: { id: number };
 };
 
 export type IUpdateEmployeeSchedule = {
