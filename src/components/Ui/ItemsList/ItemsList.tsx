@@ -4,7 +4,6 @@ import {
   capitalizeFirstLetter,
   capitalizeObjectValues,
 } from 'helpers/capitalizeFirstLetter';
-import getAvatarLetters from 'helpers/getAvatarLetters';
 import { millisecondsToTime } from 'helpers/millisecondsToTime';
 import { translateLabels } from 'helpers/translateLabels';
 import { ChangeEvent, useEffect, useState } from 'react';
@@ -16,7 +15,7 @@ import {
   HiSortDescending,
   HiX,
 } from 'react-icons/hi';
-import { HiPhoto, HiTrash } from 'react-icons/hi2';
+import { HiTrash } from 'react-icons/hi2';
 import { TbArrowsSort } from 'react-icons/tb';
 import Button from '../Buttons/Button';
 import {
@@ -26,8 +25,8 @@ import {
 } from '../Form/CustomForm.styled';
 import CustomFormSelect from '../Form/CustomFormSelect';
 import { SelectItem } from '../Form/types';
+import ItemAvatar from './ItemAvatar';
 import {
-  AvatarBox,
   ButtonBox,
   FilterBox,
   ItemBox,
@@ -420,18 +419,11 @@ const ItemsList = <T extends StringRecord>({
                     onClick={() => handleItemClick(+item.id)}
                   >
                     <HiCheckCircle id="checkLabel" />
-                    <AvatarBox>
-                      {item.avatar ? (
-                        <img
-                          src={String(item.avatar)}
-                          alt={`${item.name} image`}
-                        />
-                      ) : item.name ? (
-                        <span>{getAvatarLetters(item.name)}</span>
-                      ) : (
-                        <HiPhoto />
-                      )}
-                    </AvatarBox>
+
+                    <ItemAvatar
+                      avatar={item.avatar.toString()}
+                      name={item.name}
+                    />
 
                     {Object.entries(item).map(([key, value]) => {
                       if (key === 'status') {

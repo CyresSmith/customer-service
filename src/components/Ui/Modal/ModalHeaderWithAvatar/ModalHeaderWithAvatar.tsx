@@ -1,7 +1,5 @@
-import getAvatarLetters from 'helpers/getAvatarLetters';
-import { HiPhoto } from 'react-icons/hi2';
+import ItemAvatar from 'components/Ui/ItemsList/ItemAvatar';
 import {
-  AvatarBox,
   ModalHeaderBox,
   SubTitle,
   Title,
@@ -13,17 +11,7 @@ type Props = { avatar: string; title: string; subtitle?: string };
 const ModalHeaderWithAvatar = ({ avatar, title, subtitle }: Props) => {
   return (
     <ModalHeaderBox>
-      {
-        <AvatarBox>
-          {avatar ? (
-            <img src={avatar} alt={`${title} image`} />
-          ) : title ? (
-            <span>{getAvatarLetters(title)}</span>
-          ) : (
-            <HiPhoto />
-          )}
-        </AvatarBox>
-      }
+      <ItemAvatar avatar={avatar} name={title} />
 
       <TitleBox>
         <Title>{title}</Title>

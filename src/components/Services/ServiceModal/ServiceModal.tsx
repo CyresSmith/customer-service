@@ -18,7 +18,6 @@ import {
   useGetServiceDataQuery,
   useUpdateServiceDataMutation,
 } from 'services/service.api';
-import { ServiceCategory } from 'services/types/category.types';
 import { EmployeeStatusEnum } from 'services/types/employee.types';
 import { IServiceUpdate, ServiceDataType } from 'services/types/service.type';
 import FirstStep from './FirstStep/FirstStep';
@@ -30,7 +29,6 @@ type Props = {
   openModal: ServiceOpenModal;
   handleModalClose: () => void;
   serviceId?: number;
-  categories: ServiceCategory[];
 };
 
 const initialState: ServiceDataType = {
@@ -56,12 +54,7 @@ const sectionButtons = [
   { id: 3, label: 'Час та вартість', Icon: HiCurrencyDollar },
 ];
 
-const ServiceModal = ({
-  openModal,
-  handleModalClose,
-  serviceId,
-  categories,
-}: Props) => {
+const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
   const { accessToken, user } = useAuth();
   const { id, employees } = useCompany();
   const [step, setStep] = useState(1);
@@ -235,7 +228,6 @@ const ServiceModal = ({
 
         {step === 1 && (
           <FirstStep
-            categories={categories}
             openModal={openModal}
             setStep={setStep}
             serviceData={serviceData}

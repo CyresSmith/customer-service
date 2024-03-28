@@ -57,6 +57,7 @@ export const categoriesApi = createApi({
 });
 
 export const {
+  useLazyGetServicesCategoriesQuery,
   useGetServicesCategoriesQuery,
   useAddServiceCategoryMutation,
   useGetCompanyCategoriesQuery,
