@@ -2,11 +2,10 @@ import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
 import ModalSectionsList from 'components/Ui/Modal/ModalSectionsList';
 import translateEmployee from 'helpers/translateEmployee';
 import { useCompany } from 'hooks/useCompany';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { HiCurrencyDollar } from 'react-icons/hi';
 import { HiCalendarDays, HiMiniIdentification } from 'react-icons/hi2';
 import { useGetOneEmployeeQuery } from 'services/employee.api';
-import { IEmployee } from 'services/types/employee.types';
 import { EmployeeModalContent } from './EmployeeModal.styled';
 import EmployeeProfile from './EmployeeProfile';
 import EmployeeSchedule from './EmployeeSchedule';
@@ -31,9 +30,8 @@ const EmployeeModal = ({ id }: Props) => {
   const [activeSection, setActiveSection] = useState<number>(
     sectionButtons[0].id
   );
-  const [chosenEmployee, setChosenEmployee] = useState<IEmployee | null>(null);
 
-  const { data, isSuccess } = useGetOneEmployeeQuery(
+  const { data } = useGetOneEmployeeQuery(
     { companyId: +companyId, id },
     {
       skip: !id,
@@ -41,17 +39,11 @@ const EmployeeModal = ({ id }: Props) => {
     }
   );
 
-  useEffect(() => {
-    if (data && isSuccess) {
-      setChosenEmployee(data);
-    }
-  }, [data, isSuccess, setChosenEmployee]);
-
-  if (!chosenEmployee) {
+  if (!data) {
     return;
   }
 
-  const { avatar, user, firstName, lastName, role, jobTitle } = chosenEmployee;
+  const { avatar, user, firstName, lastName, role, jobTitle } = data;
 
   return (
     <EmployeeModalContent>
@@ -63,7 +55,7 @@ const EmployeeModal = ({ id }: Props) => {
 
       <ModalSectionsList
         sectionButtons={
-          chosenEmployee.provider
+          data.provider
             ? sectionButtons
             : sectionButtons.filter(({ id }) => id !== OpenModalEnum.SERVICES)
         }
@@ -72,13 +64,13 @@ const EmployeeModal = ({ id }: Props) => {
       />
 
       {activeSection === OpenModalEnum.PROFILE && (
-        <EmployeeProfile employee={chosenEmployee} />
+        <EmployeeProfile employee={data} />
       )}
       {activeSection === OpenModalEnum.SCHEDULE && (
-        <EmployeeSchedule employee={chosenEmployee} />
+        <EmployeeSchedule employee={data} />
       )}
       {activeSection === OpenModalEnum.SERVICES && (
-        <EmployeeServices employee={chosenEmployee} />
+        <EmployeeServices employee={data} />
       )}
     </EmployeeModalContent>
   );

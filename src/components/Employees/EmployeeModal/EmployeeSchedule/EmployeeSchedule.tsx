@@ -36,7 +36,7 @@ import {
 } from 'date-fns';
 import { uk } from 'date-fns/locale';
 import generateTimeArray from 'helpers/generateTimeArray';
-import { useActions, useAdminRights, useAuth } from 'hooks';
+import { useAdminRights, useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { IoIosSave } from 'react-icons/io';
 import { toast } from 'react-toastify';
@@ -55,11 +55,6 @@ type Props = { employee: IEmployee };
 const EmployeeSchedule = ({ employee }: Props) => {
   const today = new Date(Date.now());
   const currentMonthStart = startOfMonth(today);
-  const {
-    setChosenSchedule,
-    deleteSchedule: deleteScheduleAction,
-    updateSchedule: updateScheduleAction,
-  } = useActions();
 
   const isAdmin = useAdminRights();
   const { user } = useAuth();
@@ -92,12 +87,6 @@ const EmployeeSchedule = ({ employee }: Props) => {
   const [deleteSchedule, { isLoading: isDeleteLoading }] =
     useDeleteEmployeeScheduleMutation();
 
-  useEffect(() => {
-    if (employeeSchedule) {
-      setChosenSchedule(employeeSchedule);
-    }
-  }, [employeeSchedule, setChosenSchedule]);
-
   const selectedMonthPassed =
     getMonth(today) !== getMonth(selectedMonth) && isPast(selectedMonth);
 
@@ -118,7 +107,6 @@ const EmployeeSchedule = ({ employee }: Props) => {
     }).unwrap();
 
     if (message) {
-      updateScheduleAction(data);
       resetState();
       setIsStateChanged(false);
       toast.success(message);
@@ -377,7 +365,6 @@ const EmployeeSchedule = ({ employee }: Props) => {
         }).unwrap();
 
         if (message) {
-          deleteScheduleAction({ id: +employeeSchedule.id });
           toastMessage = message;
         }
       }

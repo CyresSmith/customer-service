@@ -3,7 +3,6 @@ import { Form, FormInputsList } from 'components/Ui/Form/CustomForm.styled';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { InputProps } from 'components/Ui/Form/types';
 import { getErrorMessage } from 'helpers/inputsValidation';
-import { useActions } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useForm } from 'hooks/useForm';
 import { HiArrowLeft, HiPlusCircle } from 'react-icons/hi';
@@ -69,8 +68,7 @@ const initialState = {
 
 function NewUserEmployeeForm({ handleBackClick, closeModal }: Props) {
   const { id } = useCompany();
-  const { addNewEmployee: toStore } = useActions();
-  const [addNewEmployee, { isLoading }] = useAddNewUserEmployeeMutation();
+  const [addNewEmployee, { isLoading, isSuccess }] = useAddNewUserEmployeeMutation();
 
   const onSubmit = async ({
     isAdmin,
@@ -100,9 +98,7 @@ function NewUserEmployeeForm({ handleBackClick, closeModal }: Props) {
       },
     }).unwrap();
 
-    if (employee) {
-      toStore(employee);
-
+    if (employee && isSuccess) {
       closeModal();
     }
   };

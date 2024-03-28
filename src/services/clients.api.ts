@@ -4,7 +4,7 @@ import {
   Client,
   UpdateClient,
   UploadAvatar,
-} from 'store/clients/clients.types';
+} from 'services/types/clients.types';
 import { axiosBaseQuery } from './instance';
 
 export const clientsApi = createApi({

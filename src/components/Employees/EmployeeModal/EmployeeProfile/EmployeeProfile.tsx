@@ -1,5 +1,5 @@
 import Avatar from 'components/Avatar';
-import { useActions, useAdminRights } from 'hooks';
+import { useAdminRights } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { MouseEvent } from 'react';
 import {
@@ -19,6 +19,7 @@ import {
   StatusItem,
 } from './EmployeeProfile.styled';
 import ProfileInfo from './ProfileInfo';
+import { toast } from 'react-toastify';
 
 type Props = { employee: IEmployee };
 
@@ -26,7 +27,6 @@ const EmployeeProfile = ({ employee }: Props) => {
   const { avatar, user, status, id: employeeId, role } = employee;
   const isAdmin = useAdminRights();
   const { id: companyId } = useCompany();
-  const { updateEmployee, updateEmployeeAvatar } = useActions();
   const [uploadImg, { isLoading }] = useUploadEmployeeAvatarMutation();
   const [updateProfile] = useUpdateEmployeeProfileMutation();
 
@@ -41,7 +41,7 @@ const EmployeeProfile = ({ employee }: Props) => {
     }).unwrap();
 
     if (url) {
-      updateEmployeeAvatar({ avatar: url });
+      toast.success('Профіль оновлено');
     }
   };
 
@@ -57,7 +57,7 @@ const EmployeeProfile = ({ employee }: Props) => {
     }).unwrap();
 
     if (updatedEmployee.id) {
-      updateEmployee(updatedEmployee);
+      toast.success('Профіль оновлено');
     }
   };
 
