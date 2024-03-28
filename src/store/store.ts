@@ -16,7 +16,6 @@ import { companyApi } from 'services/company.api';
 import { employeeApi } from 'services/employee.api';
 import { serviceApi } from 'services/service.api';
 import { authApi } from '../services/auth.api';
-import clientsSlice from './clients/clients.slice';
 import companySlice from './company/company.slice';
 import employeesSlice from './employees/employees.slice';
 import loadingSlice from './loading/loading.slice';
@@ -39,7 +38,6 @@ const rootReducer = combineReducers({
   loading: loadingSlice.reducer,
   company: companySlice.reducer,
   user: persistedUserReducer,
-  clients: clientsSlice.reducer,
   employees: employeesSlice.reducer,
   schedules: schedulesSlice.reducer,
   [authApi.reducerPath]: authApi.reducer,
