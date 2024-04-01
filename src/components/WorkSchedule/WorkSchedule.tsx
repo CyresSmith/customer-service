@@ -1,126 +1,203 @@
 import ItemAvatar from 'components/Ui/ItemsList/ItemAvatar';
+import Loader from 'components/Ui/Loader';
 import {
   eachDayOfInterval,
   endOfMonth,
+  format,
   getDate,
   getDay,
   getDaysInMonth,
   getMonth,
   getYear,
-  isToday,
-  isWeekend,
+  isSameDay,
   startOfMonth,
+  startOfToday,
 } from 'date-fns';
-import translateWorkSchedule from 'helpers/translateWorkSchedule';
 import { useCompany } from 'hooks/useCompany';
-import { LegacyRef, useEffect, useRef } from 'react';
-import { EmployeeStatusEnum } from 'services/types/employee.types';
+import { LegacyRef, useEffect, useRef, useState } from 'react';
+import { useGetAllCompanySchedulesQuery } from 'services/schedules.api';
+import { IEmployee } from 'services/types/employee.types';
 import {
-  DayBox,
+  Day,
+  DayDate,
+  DayDateBox,
   DayName,
-  DayNumber,
-  EmployeeName,
-  FirstCell,
-  HeaderDayBox,
-  HeaderFirstCell,
-  Month,
+  Employee,
+  EmployeesList,
+  HeaderDay,
+  HeaderRowBox,
   RowBox,
-  ScheduleBox,
+  SchedulesList,
+  SchedulesListBox,
+  WorkHours,
+  WorkScheduleBox,
 } from './WorkSchedule.styled';
 
-type Props = {};
+type Props = { providers: IEmployee[]; selectedMonth: Date };
 
-const WorkSchedule = (props: Props) => {
-  const { workingHours, employees } = useCompany();
+const WorkSchedule = ({ providers, selectedMonth }: Props) => {
+  const { id, workingHours, employees } = useCompany();
+
+  const [selectedDays, setSelectedDays] = useState<
+    { id: number; dates: Date[] }[]
+  >([]);
+
+  const [scrollLeft, setScrollLeft] = useState<number>(0);
+
+  const handleScroll = e => {
+    const { scrollLeft } = e.target;
+    setScrollLeft(scrollLeft);
+  };
+
+  const { data: allSchedules, isLoading } = useGetAllCompanySchedulesQuery(
+    {
+      companyId: id,
+      year: getYear(selectedMonth),
+      month: getMonth(selectedMonth),
+    },
+    {
+      skip: !id || !employees || !providers,
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   const scrollRef: LegacyRef<HTMLLIElement> = useRef(null);
 
-  const providers = employees.filter(
-    ({ provider, status }) => provider && status === EmployeeStatusEnum.WORKING
-  );
-
-  const today = new Date(Date.now());
-  const monthDaysCount = getDaysInMonth(today);
+  const monthDaysCount = getDaysInMonth(selectedMonth);
   const monthDays = eachDayOfInterval({
-    start: startOfMonth(today),
-    end: endOfMonth(today),
+    start: startOfMonth(selectedMonth),
+    end: endOfMonth(selectedMonth),
   });
 
+  const handleSelect = (date: Date, id?: number) => {
+    if (date < startOfToday()) return;
+
+    if (id) {
+      setSelectedDays(p => {
+        const idx = p.findIndex(item => item.id === id);
+
+        if (idx === -1) {
+          return [...p, { id, dates: [date] }];
+        } else {
+          const dateIdx = p[idx].dates.findIndex(selected =>
+            isSameDay(selected, date)
+          );
+
+          if (dateIdx === -1) {
+            return p.map((item, index) =>
+              index === idx ? { ...item, dates: [...item.dates, date] } : item
+            );
+          } else {
+            const newDates = [...p[idx].dates];
+            newDates.splice(dateIdx, 1);
+
+            const newSelectedDays =
+              newDates.length > 0
+                ? p.map((item, index) =>
+                    index === idx ? { ...item, dates: newDates } : item
+                  )
+                : p.filter((_, index) => index !== idx);
+
+            return newSelectedDays;
+          }
+        }
+      });
+    } else {
+      setSelectedDays(p => {
+        let newState = [...p];
+
+        for (const { id } of providers) {
+          const idx = newState.findIndex(item => item.id === id);
+
+          if (idx === -1) {
+            newState = [...newState, { id, dates: [date] }];
+          } else {
+            const dateIdx = newState[idx].dates.findIndex(selected =>
+              isSameDay(selected, date)
+            );
+
+            if (dateIdx === -1) {
+              newState[idx].dates = [...newState[idx].dates, date];
+            }
+          }
+        }
+
+        return newState;
+      });
+    }
+  };
+
   useEffect(() => {
-    if (!scrollRef.current) return;
+    if (!scrollRef.current || isLoading) return;
 
-    scrollRef.current.scrollIntoView({
-      inline: 'center',
-      behavior: 'smooth',
-    });
-  }, []);
+    const timeout = setTimeout(() => {
+      scrollRef.current?.scrollIntoView({
+        inline: 'center',
+        behavior: 'smooth',
+      });
+    }, 100);
 
-  return (
-    <ScheduleBox>
-      <RowBox $daysCount={monthDaysCount}>
-        <HeaderFirstCell></HeaderFirstCell>
+    return () => clearTimeout(timeout);
+  }, [scrollRef, selectedMonth, isLoading]);
 
-        <Month>
+  return isLoading ? (
+    <Loader />
+  ) : (
+    <WorkScheduleBox onScroll={handleScroll}>
+      <SchedulesList>
+        <HeaderRowBox key={id} $daysCount={monthDaysCount + 1}>
+          <HeaderDay />
+
           {monthDays.map((item, i) => {
-            const today = isToday(item);
-            const day = getDay(item);
+            const hours = workingHours?.find(({ days }) =>
+              days.includes(getDay(item))
+            );
 
             return (
-              <HeaderDayBox
-                $isWeekend={isWeekend(item)}
-                $isNotWorking={Boolean(
-                  !workingHours?.find(({ days }) => days.includes(day))
+              <HeaderDay key={i}>
+                <DayDateBox>
+                  <DayDate>{getDate(item)}</DayDate>
+                  <DayName>{format(item, 'EEEE')}</DayName>
+                </DayDateBox>
+
+                {hours && (
+                  <WorkHours>
+                    <span>{hours.hours.from}</span>
+                    {' - '}
+                    <span>{hours.hours.to}</span>
+                  </WorkHours>
                 )}
-                $isToday={today}
-                key={i}
-                ref={today ? scrollRef : null}
-              >
-                <DayNumber>{getDate(item)}</DayNumber>
-                <DayName>{translateWorkSchedule(day)}</DayName>
-              </HeaderDayBox>
+              </HeaderDay>
             );
           })}
-        </Month>
-      </RowBox>
+        </HeaderRowBox>
 
-      {providers.map(({ id, avatar, firstName, lastName, schedules }) => {
-        const currentSchedule = schedules.find(
-          ({ year, month }) =>
-            year === getYear(today) && month === getMonth(today)
-        );
+        <SchedulesListBox $daysCount={monthDaysCount + 1}>
+          <EmployeesList
+            style={{ left: scrollLeft }}
+            $employeesCount={providers.length}
+          >
+            {providers.map(({ id, avatar, firstName }) => (
+              <Employee>
+                <ItemAvatar avatar={avatar} name={firstName} />
 
-        return (
-          <RowBox key={id} $daysCount={monthDaysCount}>
-            <FirstCell>
-              <ItemAvatar avatar={avatar} />
+                <p>{firstName}</p>
+              </Employee>
+            ))}
+          </EmployeesList>
 
-              <EmployeeName>{`${firstName} ${lastName}`}</EmployeeName>
-            </FirstCell>
+          {providers.map(({ id, avatar, firstName }) => (
+            <RowBox key={id} $daysCount={monthDaysCount + 1}>
+              <Day />
 
-            <Month>
-              {monthDays.map((item, i) => {
-                const daySchedule =
-                  currentSchedule &&
-                  currentSchedule.schedule.find(
-                    ({ day }) => day === getDate(item)
-                  );
-
-                return (
-                  <DayBox key={i}>
-                    {daySchedule ? (
-                      <>
-                        <span>{daySchedule.hours.from}</span>
-                        <span>{daySchedule.hours.to}</span>
-                      </>
-                    ) : null}
-                  </DayBox>
-                );
-              })}
-            </Month>
-          </RowBox>
-        );
-      })}
-    </ScheduleBox>
+              {monthDays.map((item, i) => (
+                <Day key={i}>{getDate(item)}</Day>
+              ))}
+            </RowBox>
+          ))}
+        </SchedulesListBox>
+      </SchedulesList>
+    </WorkScheduleBox>
   );
 };
 

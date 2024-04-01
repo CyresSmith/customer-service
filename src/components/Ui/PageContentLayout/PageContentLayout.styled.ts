@@ -5,8 +5,8 @@ export const PageBar = styled.div`
   width: 100%;
   border-bottom: ${theme.borders.normal} ${theme.colors.bg.main};
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  align-items: flex-end;
+  justify-content: flex-start;
   gap: ${theme.space[4]};
   padding-bottom: ${theme.space[4]};
   flex-wrap: wrap;
