@@ -20,6 +20,8 @@ const RecordLogPage = () => {
     skip: !id,
     refetchOnMountOrArgChange: true
   });
+
+  console.log(successGetEmployees);
   
   if (!allEmployees || allEmployees.length === 0) {
     return;
@@ -63,7 +65,7 @@ const RecordLogPage = () => {
       ? providers.filter(p => selectedItem.find(s => s.id === p.id))
       : providers;
 
-  return successGetEmployees && allEmployees && (
+  return allEmployees && (
     <>
       <PageContentLayout
         bar={
@@ -78,6 +80,7 @@ const RecordLogPage = () => {
         }
         content={
           <RecordLog
+            skip={!successGetEmployees}
             date={date}
             setDate={setDate}
             workingHours={workingHours}

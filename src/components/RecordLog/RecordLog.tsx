@@ -29,9 +29,10 @@ type Props = {
   workingHours: IWorkingHours[] | null;
   employees: BasicEmployeeInfo[];
   setDate: React.Dispatch<React.SetStateAction<Date>>;
+  skip: boolean;
 };
 
-const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
+const RecordLog = ({ skip, date, workingHours, employees, setDate }: Props) => {
   const { id } = useCompany();
   const chosenDay = new Date(date).getDay();
   const [startIndex, setStartIndex] = useState<number>(0);
@@ -45,8 +46,8 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
         month: getMonth(date),
       },
       {
-        skip: !id || !employees,
-        // refetchOnMountOrArgChange: true
+        skip: !id || skip,
+        refetchOnMountOrArgChange: true
       }
     );
 
