@@ -1,8 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
 import Button from "../Buttons/Button";
-import { Container, DateWrapper, DateValue } from "./DateSwitcher.styled";
+import { Container, DateWrapper, DateValue, ReturnBtnWrapper } from "./DateSwitcher.styled";
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
 import { addDays, addMonths, addYears } from "date-fns";
+import { RiArrowGoBackFill } from "react-icons/ri";
+import { isSameDay } from 'date-fns';
 
 type Props = {
     date: Date;
@@ -23,6 +25,8 @@ const DateSwitcher = ({ date, setDate, dateType = 'day', buttonsColor = 'transpa
         month: dateType === 'year' ? undefined : 'long',
         year: dateType === 'year' ? 'numeric' : undefined,
     });
+
+    const isSameCalendarDay = isSameDay(new Date(Date.now()), date);
 
     const handleDateChange = (event: string) => {
         if (event === '+') {
@@ -51,6 +55,11 @@ const DateSwitcher = ({ date, setDate, dateType = 'day', buttonsColor = 'transpa
                 <DateValue $fontSize={fontSize}>{chosenDate}</DateValue>
             </DateWrapper>
             <Button onClick={() => handleDateChange('+')} Icon={HiArrowRight} $round={roundBtns} $colors={buttonsColor} />
+            {!isSameCalendarDay &&
+                <ReturnBtnWrapper>
+                    <Button onClick={() => setDate(new Date(Date.now()))} Icon={RiArrowGoBackFill} $colors='light' />
+                </ReturnBtnWrapper>
+            }
         </Container>
     )
 }

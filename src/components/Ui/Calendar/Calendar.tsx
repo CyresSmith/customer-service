@@ -12,6 +12,7 @@ import { CalendarBox, CalendarGrid, SwitcherWrapper, WeekDay } from './Calendar.
 import { shortWeekDays } from 'helpers/constants';
 import { CalendarDay } from './CalendarDay';
 import DateSwitcher from '../DateSwitcher';
+import { useState } from 'react';
 
 type Props = {
   date: Date;
@@ -22,14 +23,15 @@ type Props = {
 };
 
 const Calendar = ({ date, setDate, cellSize = 30, monthSize = '18px', enableDays }: Props) => {
+  const [monthDate, setMonthDate] = useState(new Date(Date.now()));
   const today = new Date(Date.now());
 
-  const thisMonthStart = startOfMonth(date);
-  const thisMonthEnd = lastDayOfMonth(date);
-  const isMondayFirstDay = isMonday(startOfMonth(date));
+  const thisMonthStart = startOfMonth(monthDate);
+  const thisMonthEnd = lastDayOfMonth(monthDate);
+  const isMondayFirstDay = isMonday(startOfMonth(monthDate));
   const isSundayFirstDay = thisMonthStart.getDay() === 0;
   const isSundayLastDay = thisMonthEnd.getDay() === 0;
-  const thisMonthDaysArray = eachDayOfInterval({ start: startOfMonth(date), end: lastDayOfMonth(date) });
+  const thisMonthDaysArray = eachDayOfInterval({ start: startOfMonth(monthDate), end: lastDayOfMonth(monthDate) });
 
   const getFullMonthArrayForRender = () => {
     let daysArray: Date[] = [];
@@ -59,7 +61,7 @@ const Calendar = ({ date, setDate, cellSize = 30, monthSize = '18px', enableDays
   return (
     <CalendarBox>
       <SwitcherWrapper>
-        <DateSwitcher fontSize={monthSize} dateType='month' setDate={setDate} date={date} />
+        <DateSwitcher fontSize={monthSize} dateType='month' setDate={setMonthDate} date={monthDate} />
       </SwitcherWrapper>
       <CalendarGrid>
         {shortWeekDays.map(({ name }, i) => <WeekDay key={i}><span>{name}</span></WeekDay>)}

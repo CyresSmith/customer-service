@@ -13,7 +13,14 @@ type Props = {
 export const CalendarDay = ({ anotherMonth, date, isToday, selected, handleClick, cellSize, disabled = false }: Props) => {
 
     return (
-        <Day $disabled={disabled} $cellSize={cellSize} onClick={handleClick} $today={isToday} $selected={selected} $anotherMonth={anotherMonth}>
+        <Day
+            $disabled={disabled}
+            $cellSize={cellSize}
+            onClick={handleClick}
+            $today={isToday}
+            $selected={selected}
+            $anotherMonth={anotherMonth}
+        >
             <DayDate $today={isToday} $cellSize={cellSize}>
                 {date}
             </DayDate>
