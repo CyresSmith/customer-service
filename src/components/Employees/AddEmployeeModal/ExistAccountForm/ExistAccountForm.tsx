@@ -2,7 +2,7 @@ import Button from 'components/Ui/Buttons/Button';
 import { Form, FormInputsList } from 'components/Ui/Form/CustomForm.styled';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { getErrorMessage } from 'helpers/inputsValidation';
-import { useActions, useForm } from 'hooks';
+import { useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { HiArrowLeft, HiPlusCircle } from 'react-icons/hi';
 import { useAddExistUserEmployeeMutation } from 'services/employee.api';
@@ -41,8 +41,7 @@ const initialState = {
 
 const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
   const { id: companyId } = useCompany();
-  const { addNewEmployee } = useActions();
-  const [addEmployee, { isLoading }] = useAddExistUserEmployeeMutation();
+  const [addEmployee, { isLoading, isSuccess }] = useAddExistUserEmployeeMutation();
 
   const onSubmit = async ({
     jobTitle,
@@ -61,9 +60,7 @@ const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
       },
     }).unwrap();
 
-    if (employee) {
-      addNewEmployee(employee);
-
+    if (employee && isSuccess) {
       closeModal();
     }
   };

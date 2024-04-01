@@ -2,12 +2,11 @@ import ClientForm from 'components/ClientsListPage/ClientForm';
 import ClientProfile from 'components/ClientsListPage/ClientProfile';
 import ItemsList from 'components/Ui/ItemsList';
 import Modal from 'components/Ui/Modal/Modal';
-import { useActions } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCreateClientMutation, useGetAllQuery } from 'services/clients.api';
-import { Client } from 'store/clients/clients.types';
+import { Client } from 'services/types/clients.types';
 
 const addInitialState: Client = {
   id: 0,
@@ -30,16 +29,14 @@ enum OpenModal {
 
 const ClientsListPage = () => {
   const { id: companyId } = useCompany();
-  const { setClients, addNewClient, deleteClient } = useActions();
   const [modalOpen, setModalOpen] = useState<OpenModal | null>(null);
   const [chosenClientId, setChosenClientId] = useState<number | null>(null);
 
-  const { data, isSuccess, isLoading } = useGetAllQuery(companyId, {
+  const { data, isLoading } = useGetAllQuery(companyId, {
     skip: !companyId,
   });
 
-  const [createClientMutation, { isLoading: addClientLoading }] =
-    useCreateClientMutation();
+  const [createClientMutation] = useCreateClientMutation();
 
   const handleItemClick = (id: string | number) => {
     setChosenClientId(+id);
@@ -62,16 +59,9 @@ const ClientsListPage = () => {
 
     if (result) {
       setModalOpen(null);
-      addNewClient(result);
       toast.success('Нового клієнта успішно збережено');
     }
   };
-
-  useEffect(() => {
-    if (isSuccess && data) {
-      setClients(data);
-    }
-  }, [data, isSuccess, setClients]);
 
   return (
     <>

@@ -7,7 +7,7 @@ import {
 } from 'components/Ui/Form/types';
 import { useForm } from 'hooks/useForm';
 import { IoMdSave } from 'react-icons/io';
-import { Client } from 'store/clients/clients.types';
+import { Client } from 'services/types/clients.types';
 import {
   ButtonsBox,
   Form,

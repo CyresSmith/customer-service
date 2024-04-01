@@ -2,8 +2,6 @@ import Avatar from 'components/Avatar';
 import ClientForm from 'components/ClientsListPage/ClientForm';
 import Button from 'components/Ui/Buttons/Button';
 import ConfirmOperation from 'components/Ui/ConfirmOperation';
-import { useActions } from 'hooks';
-import { useClients } from 'hooks/useClients';
 import { useState } from 'react';
 import { HiUserRemove } from 'react-icons/hi';
 import { toast } from 'react-toastify';
@@ -12,7 +10,7 @@ import {
   useUpdateClientMutation,
   useUploadAvatarMutation,
 } from 'services/clients.api';
-import { Client } from 'store/clients/clients.types';
+import { Client } from 'services/types/clients.types';
 import {
   BtnWrapper,
   LeftSideWrapper,
@@ -22,11 +20,10 @@ import {
 type Props = {
   companyId: number;
   closeModal: () => void;
+  client: Client;
 };
 
-export const Profile = ({ companyId, closeModal }: Props) => {
-  const { chosen } = useClients();
-  const { setClientAvatar, updateClient, deleteClient } = useActions();
+export const Profile = ({ companyId, closeModal, client }: Props) => {
 
   const [uploadAvatar, { isLoading: uploadLoading }] =
     useUploadAvatarMutation();
@@ -47,35 +44,33 @@ export const Profile = ({ companyId, closeModal }: Props) => {
     const data = new FormData();
     data.append('avatar', currentFile);
 
-    if (chosen && chosen.id) {
+    if (client && client.id) {
       const { url } = await uploadAvatar({
         companyId,
-        id: chosen?.id,
+        id: client.id,
         data,
       }).unwrap();
 
       if (url) {
-        setClientAvatar({ avatar: url });
         toast.success('Аватар успішно оновлено');
       }
     }
   };
 
   const handleUpdate = async (newData: Partial<Client>) => {
-    if (chosen) {
+    if (client) {
       const filtered = Object.fromEntries(
         Object.entries(newData).filter(
-          ([, v]) => !Object.values(chosen).includes(v)
+          ([, v]) => !Object.values(client).includes(v)
         )
       );
       const data = await updateClientMutation({
         companyId,
-        id: chosen?.id,
+        id: client.id,
         data: filtered,
       }).unwrap();
 
       if (data) {
-        updateClient(data);
         toast.success(`Профіль успішно оновлено`);
       }
     }
@@ -89,7 +84,6 @@ export const Profile = ({ companyId, closeModal }: Props) => {
       }).unwrap();
 
       if (message) {
-        deleteClient({ id });
         setConfirmOpen(false);
         closeModal();
         toast.success('Клієнта видалено');
@@ -97,7 +91,7 @@ export const Profile = ({ companyId, closeModal }: Props) => {
     }
   };
 
-  return chosen ? (
+  return client ? (
     <>
       <SidesWrapper>
         <LeftSideWrapper>
@@ -105,7 +99,7 @@ export const Profile = ({ companyId, closeModal }: Props) => {
             size={200}
             handleUpload={handleUpload}
             alt="Client photo"
-            currentImageUrl={chosen.avatar || ''}
+            currentImageUrl={client.avatar || ''}
             allowChanges={true}
             isLoading={uploadLoading}
           />
@@ -126,7 +120,7 @@ export const Profile = ({ companyId, closeModal }: Props) => {
           type="update"
           onSubmit={handleUpdate}
           isLoading={updateLoading}
-          initialState={chosen}
+          initialState={client}
         />
       </SidesWrapper>
 
@@ -135,11 +129,11 @@ export const Profile = ({ companyId, closeModal }: Props) => {
           id="deleteClientConfirm"
           isOpen={confirmOpen}
           children={`Підвтердити видалення клієнта ${
-            chosen.lastName
-              ? chosen.firstName + ' ' + chosen.lastName
-              : chosen.firstName
+            client.lastName
+              ? client.firstName + ' ' + client.lastName
+              : client.firstName
           }?`}
-          callback={() => handleDelete(+chosen.id)}
+          callback={() => handleDelete(+client.id)}
           closeConfirm={confirmToggle}
         />
       )}

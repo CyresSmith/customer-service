@@ -1,9 +1,7 @@
 import Loader from 'components/Ui/Loader';
 import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
 import ModalSectionsList from 'components/Ui/Modal/ModalSectionsList';
-import { useActions } from 'hooks';
-import { useClients } from 'hooks/useClients';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { HiIdentification } from 'react-icons/hi2';
 import { useGetByIdQuery } from 'services/clients.api';
 import { Container, Skeleton } from './ClientProfile.styled';
@@ -28,28 +26,20 @@ const ClientProfile = ({ companyId, clientId, closeModal }: Props) => {
     companyId,
     id: clientId,
   });
-  const { setChosenClient } = useActions();
-  const { chosen } = useClients();
   const [section, setSection] = useState<Sections>(Sections.PROFILE);
 
-  useEffect(() => {
-    if (data) {
-      setChosenClient(data);
-    }
-  }, [data, setChosenClient]);
-
-  return isLoading || clientId !== chosen?.id || !chosen ? (
+  return isLoading || !data || clientId !== data.id ? (
     <Skeleton>
       <Loader />
     </Skeleton>
   ) : (
     <Container>
       <ModalHeaderWithAvatar
-        avatar={chosen.avatar || ''}
+        avatar={data.avatar || ''}
         title={
-          chosen.lastName
-            ? chosen.firstName + ' ' + chosen.lastName
-            : chosen.firstName || ''
+          data.lastName
+            ? data.firstName + ' ' + data.lastName
+            : data.firstName || ''
         }
       />
 
@@ -60,7 +50,7 @@ const ClientProfile = ({ companyId, clientId, closeModal }: Props) => {
       />
 
       {section === Sections.PROFILE ? (
-        <Profile companyId={companyId} closeModal={closeModal} />
+        <Profile companyId={companyId} client={data} closeModal={closeModal} />
       ) : (
         <Skeleton />
       )}

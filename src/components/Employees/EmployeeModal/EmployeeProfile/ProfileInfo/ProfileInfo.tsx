@@ -3,7 +3,7 @@ import { Form } from 'components/Ui/Form/CustomForm.styled';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { InputProps } from 'components/Ui/Form/types';
 import { getErrorMessage } from 'helpers/inputsValidation';
-import { useActions, useAdminRights, useAuth, useForm } from 'hooks';
+import { useAdminRights, useAuth, useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { IoIosSave } from 'react-icons/io';
 import { useUpdateEmployeeProfileMutation } from 'services/employee.api';
@@ -17,6 +17,7 @@ import {
   FormInputsList,
   ProfileInfoBox,
 } from './ProfileInfo.styled';
+import { toast } from 'react-toastify';
 
 type Props = { employee: IEmployee };
 
@@ -49,7 +50,6 @@ const ProfileInfo = ({ employee }: Props) => {
   const isAdmin = useAdminRights();
   const { user: currentUser } = useAuth();
   const { id: companyId } = useCompany();
-  const { updateEmployee } = useActions();
 
   const isEditingAllowed = isAdmin || currentUser?.id === employee?.user?.id;
 
@@ -82,7 +82,7 @@ const ProfileInfo = ({ employee }: Props) => {
     }).unwrap();
 
     if (updatedEmployee.id) {
-      updateEmployee(updatedEmployee);
+      toast.success('Профіль оновлено');
     }
   };
 

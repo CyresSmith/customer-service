@@ -1,12 +1,11 @@
 import MainLayout from 'components/Layout/MainLayout';
 import Loader from 'components/Ui/Loader';
 import PrivateRoute from 'helpers/PrivateRoute';
-import { useActions } from 'hooks';
-import { useAuth } from 'hooks/useAuth';
+import { useActions, useAuth } from 'hooks';
 import { Suspense, lazy, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Bounce, ToastContainer } from 'react-toastify';
-import { useCurrentQuery } from 'services/auth.api';
+import { useLazyCurrentQuery } from 'services/auth.api';
 import { useLoading } from 'hooks';
 import 'react-toastify/dist/ReactToastify.min.css';
 
@@ -23,21 +22,26 @@ const Workspace = lazy(() => import('components/Layout/UsersLayout'));
 const EmployeesPage = lazy(() => import('pages/EmployeesPage'));
 
 function App() {
-  const { accessToken, user } = useAuth();
+  const { user, accessToken } = useAuth();
   const { setCurrentUser } = useActions();
   const { isGlobalLoading } = useLoading();
 
-  const { data, isSuccess } = useCurrentQuery(accessToken, {
-    skip: Boolean(user || !accessToken),
-  });
+  const [getCurrentUser] = useLazyCurrentQuery();
 
   useEffect(() => {
-    if (isSuccess) {
-      if (data && data?.user) {
-        setCurrentUser(data);
-      }
+    const fetchData = async () => {
+    const { data, isSuccess } = await getCurrentUser(undefined);
+    
+    if (data && isSuccess) {
+      setCurrentUser(data);
     }
-  }, [data, isSuccess, setCurrentUser]);
+  }
+
+    if (!user && accessToken) {
+      fetchData();
+    }
+
+  }, [accessToken, getCurrentUser, setCurrentUser, user])
 
   return (
     <>
