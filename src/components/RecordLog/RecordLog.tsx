@@ -46,7 +46,7 @@ const RecordLog = ({ date, workingHours, employees, setDate }: Props) => {
       },
       {
         skip: !id || !employees,
-        refetchOnMountOrArgChange: true
+        // refetchOnMountOrArgChange: true
       }
     );
 
