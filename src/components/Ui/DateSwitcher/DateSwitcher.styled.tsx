@@ -8,6 +8,7 @@ type SwitcherType = {
 };
 
 export const Container = styled.div<SwitcherType>`
+    position: relative;
     width: ${props => props.$type === 'month' ? '150px' : props.$type === 'year' ? '100px' : '200px'};
     display: flex;
     align-items: center;
@@ -33,4 +34,9 @@ export const DateValue = styled.p<{$fontSize: string}>`
     &::first-letter {
         text-transform: uppercase;
     }
+`
+
+export const ReturnBtnWrapper = styled.div`
+    position: absolute;
+    right: -30%;
 `

@@ -38,8 +38,6 @@ const RecordLogPage = () => {
     };
   });
 
-  console.log(providersForSelect.length);
-
   const selectAll = {
     id: 'all',
     value: `Всі працівники: ${providersForSelect.length}`,
