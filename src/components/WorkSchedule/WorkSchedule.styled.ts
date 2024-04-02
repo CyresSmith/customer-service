@@ -63,9 +63,14 @@ export const Employee = styled.div`
   align-items: center;
   justify-content: center;
   border-bottom: ${theme.borders.normal} ${theme.colors.bg.light};
+  cursor: pointer;
 `;
 
-export const HeaderDay = styled.li`
+type DayProps = {
+  $isNotWorkingDay?: boolean;
+};
+
+export const HeaderDay = styled.li<DayProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -74,12 +79,15 @@ export const HeaderDay = styled.li`
   font-size: ${theme.fontSizes.m};
   padding: ${theme.space[4]} 0;
   font-weight: ${theme.fontWeights.light};
+  cursor: ${({ $isNotWorkingDay }) =>
+    $isNotWorkingDay ? 'default' : 'pointer'};
 `;
 
-export const DayDateBox = styled.div`
+export const DayDateBox = styled.div<DayProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  opacity: ${({ $isNotWorkingDay }) => ($isNotWorkingDay ? 0.5 : 1)};
 `;
 
 export const DayDate = styled.span`
@@ -94,6 +102,46 @@ export const WorkHours = styled.div`
   color: ${theme.colors.secondary.main};
 `;
 
-export const Day = styled.div`
+export const Day = styled.div<DayProps>`
   border-bottom: ${theme.borders.normal} ${theme.colors.bg.light};
+  cursor: pointer;
+  padding: ${theme.space[2]};
+  cursor: ${({ $isNotWorkingDay }) =>
+    $isNotWorkingDay ? 'default' : 'pointer'};
+`;
+
+export const DayBox = styled.div<{ $selected?: boolean } & DayProps>`
+  width: 100%;
+  height: 100%;
+  border-radius: ${theme.radii.s};
+  color: ${({ $selected }) =>
+    $selected ? `${theme.colors.bg.dark}` : `${theme.colors.white}`};
+  background-color: ${({ $selected }) =>
+    $selected ? `${theme.colors.secondary.light}` : 'transparent'};
+  transition: ${theme.transition.primary};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: ${theme.space[2]};
+  font-size: ${theme.fontSizes.l};
+
+  &:hover {
+    background-color: ${({ $isNotWorkingDay, $selected }) =>
+      $isNotWorkingDay
+        ? 'transparent'
+        : $selected
+        ? `${theme.colors.secondary.light}`
+        : ` ${theme.colors.secondary.main}`};
+  }
+`;
+
+export const DayBreak = styled.div<{ $selected?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: ${theme.space[1]};
+  font-size: ${theme.fontSizes.s};
+  color: ${({ $selected }) =>
+    $selected ? `${theme.colors.bg.main}` : `${theme.colors.secondary.light}`};
+  transition: inherit;
 `;

@@ -98,6 +98,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
       year: getYear(selectedMonth),
       month: getMonth(selectedMonth),
       schedule: scheduleState,
+      employee: { id: employee.id },
     };
 
     const { message } = await updateSchedule({
@@ -342,16 +343,19 @@ const EmployeeSchedule = ({ employee }: Props) => {
 
     if (employeeSchedule && employeeSchedule.id) {
       if (selectedDays.length > 0) {
+        const data = {
+          year: getYear(selectedMonth),
+          month: getMonth(selectedMonth),
+          schedule: scheduleState.filter(
+            ({ day }) => !selectedDays.includes(day)
+          ),
+          employee: { id: employee.id },
+        };
+
         const { message } = await updateSchedule({
           companyId,
           employeeId: employee.id,
-          data: {
-            year: getYear(selectedMonth),
-            month: getMonth(selectedMonth) + 1,
-            schedule: scheduleState.filter(
-              ({ day }) => !selectedDays.includes(day)
-            ),
-          },
+          data,
         }).unwrap();
 
         if (message) {

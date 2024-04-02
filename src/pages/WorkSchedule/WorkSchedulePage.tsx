@@ -35,7 +35,7 @@ const WorkSchedulePage = () => {
         />
       }
       content={
-        providersForRender.length > 1 ? (
+        providersForRender.length > 0 ? (
           <WorkSchedule
             selectedMonth={selectedMonth}
             providers={providersForRender}
