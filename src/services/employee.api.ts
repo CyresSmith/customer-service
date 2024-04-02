@@ -194,6 +194,7 @@ export const {
   useUploadEmployeeAvatarMutation,
   useUpdateEmployeeProfileMutation,
   useGetCompanyEmployeesQuery,
+  useLazyGetCompanyEmployeesQuery,
   useGetOneEmployeeQuery,
   useRemoveEmployeeServiceMutation,
   useAddEmployeeServiceMutation,

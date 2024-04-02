@@ -5,8 +5,12 @@ import { SelectItem } from 'components/Ui/Form/types';
 import Modal from 'components/Ui/Modal/Modal';
 import PageContentLayout from 'components/Ui/PageContentLayout';
 import { useCompany } from 'hooks/useCompany';
-import { useState } from 'react';
-import { useGetCompanyEmployeesQuery } from 'services/employee.api';
+import { useEffect, useState } from 'react';
+import { useLazyGetCompanyEmployeesQuery } from 'services/employee.api';
+import { useLazyGetAllCompanySchedulesQuery } from 'services/schedules.api';
+import { getMonth, getYear } from 'date-fns';
+import { IMonthSchedule } from 'services/types/schedule.types';
+import { BasicEmployeeInfo } from 'services/types/employee.types';
 
 const initialSelection = [{id: 'all', value: `Всі працівники`}];
 
@@ -15,17 +19,28 @@ const RecordLogPage = () => {
   const [eventStep, setEventStep] = useState<string | null>(null);
   const [date, setDate] = useState<Date>(new Date());
   const [selectedItem, setSelectedItem] = useState<SelectItem[]>(initialSelection);
-
-  const { data: allEmployees, isSuccess: successGetEmployees } = useGetCompanyEmployeesQuery(+id, {
-    skip: !id,
-    refetchOnMountOrArgChange: true
-  });
-
-  console.log(successGetEmployees);
+  const [allSchedules, setAllSchedules] = useState<IMonthSchedule[]>([]);
+  const [allEmployees, setAllEmployees] = useState<BasicEmployeeInfo[]>([]);
+  const [getEmployees] = useLazyGetCompanyEmployeesQuery();
+  const [getSchedules] = useLazyGetAllCompanySchedulesQuery();
   
-  if (!allEmployees || allEmployees.length === 0) {
-    return;
-  }
+  useEffect(() => {
+    const getData = async () => {
+      if (id) {
+        const { data: employees } = await getEmployees(id);
+        if (employees) {
+          setAllEmployees(employees);
+        }
+
+        const { data: schedules } = await getSchedules({companyId: id, month: getMonth(date), year: getYear(date)});
+        if (schedules) {
+          setAllSchedules(schedules);
+        }
+      }
+    }
+
+    getData();
+  }, [date, getEmployees, getSchedules, id])
 
   const providers = allEmployees.filter(e => e.provider);
 
@@ -80,7 +95,7 @@ const RecordLogPage = () => {
         }
         content={
           <RecordLog
-            skip={!successGetEmployees}
+            allSchedules={allSchedules}
             date={date}
             setDate={setDate}
             workingHours={workingHours}

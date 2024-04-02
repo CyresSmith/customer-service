@@ -1,12 +1,9 @@
 import Button from 'components/Ui/Buttons/Button';
 import Calendar from 'components/Ui/Calendar/Calendar';
-import { getMonth, getYear } from 'date-fns';
 import { SCHEDULES_PERPAGE } from 'helpers/constants';
 import generateTimeArray, { getSchedule } from 'helpers/generateTimeArray';
-import { useCompany } from 'hooks/useCompany';
 import { useLayoutEffect, useState } from 'react';
 import { HiArrowCircleLeft, HiArrowCircleRight } from 'react-icons/hi';
-import { useGetAllCompanySchedulesQuery } from 'services/schedules.api';
 import { BasicEmployeeInfo } from 'services/types/employee.types';
 import { IWorkingHours } from 'store/company/company.types';
 import {
@@ -23,33 +20,20 @@ import {
 import EmployeesInfoList from './RecordLogList/EmployeesInfoList/EmployeesInfoList';
 import RecordLogList from './RecordLogList/RecordLogList';
 import TimeList from './RecordLogList/TimeList';
+import { IMonthSchedule } from 'services/types/schedule.types';
 
 type Props = {
   date: Date;
   workingHours: IWorkingHours[] | null;
   employees: BasicEmployeeInfo[];
   setDate: React.Dispatch<React.SetStateAction<Date>>;
-  skip: boolean;
+  allSchedules: IMonthSchedule[];
 };
 
-const RecordLog = ({ skip, date, workingHours, employees, setDate }: Props) => {
-  const { id } = useCompany();
+const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Props) => {
   const chosenDay = new Date(date).getDay();
   const [startIndex, setStartIndex] = useState<number>(0);
   const [isScroll, setIsScroll] = useState<boolean>(false);
-
-  const { data: allSchedules } =
-    useGetAllCompanySchedulesQuery(
-      {
-        companyId: +id,
-        year: getYear(date),
-        month: getMonth(date),
-      },
-      {
-        skip: !id || skip,
-        refetchOnMountOrArgChange: true
-      }
-    );
 
   useLayoutEffect(() => {
     const schedulesListElementHeight =

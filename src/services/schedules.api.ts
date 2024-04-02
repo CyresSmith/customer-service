@@ -76,6 +76,7 @@ export const schedulesApi = createApi({
 
 export const {
   useGetAllCompanySchedulesQuery,
+  useLazyGetAllCompanySchedulesQuery,
   useUpdateEmployeeScheduleMutation,
   useGetEmployeeScheduleQuery,
   useDeleteEmployeeScheduleMutation,
