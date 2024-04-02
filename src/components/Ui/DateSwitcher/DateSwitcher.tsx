@@ -57,7 +57,7 @@ const DateSwitcher = ({ date, setDate, dateType = 'day', buttonsColor = 'transpa
             <Button onClick={() => handleDateChange('+')} Icon={HiArrowRight} $round={roundBtns} $colors={buttonsColor} />
             {!isSameCalendarDay &&
                 <ReturnBtnWrapper>
-                    <Button onClick={() => setDate(new Date(Date.now()))} Icon={RiArrowGoBackFill} $colors='light' />
+                    <Button onClick={() => setDate(new Date(Date.now()))} Icon={RiArrowGoBackFill} $colors='light' size="s" />
                 </ReturnBtnWrapper>
             }
         </Container>

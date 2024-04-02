@@ -23,7 +23,9 @@ const RecordLogPage = () => {
   const [allEmployees, setAllEmployees] = useState<BasicEmployeeInfo[]>([]);
   const [getEmployees] = useLazyGetCompanyEmployeesQuery();
   const [getSchedules] = useLazyGetAllCompanySchedulesQuery();
-  
+  const chosenYear = getYear(date);
+  const chosenMonth = getMonth(date);
+
   useEffect(() => {
     const getData = async () => {
       if (id) {
@@ -32,7 +34,7 @@ const RecordLogPage = () => {
           setAllEmployees(employees);
         }
 
-        const { data: schedules } = await getSchedules({companyId: id, month: getMonth(date), year: getYear(date)});
+        const { data: schedules } = await getSchedules({ companyId: id, month: chosenMonth, year: chosenYear });
         if (schedules) {
           setAllSchedules(schedules);
         }
@@ -40,7 +42,7 @@ const RecordLogPage = () => {
     }
 
     getData();
-  }, [date, getEmployees, getSchedules, id])
+  }, [chosenMonth, chosenYear, getEmployees, getSchedules, id]);
 
   const providers = allEmployees.filter(e => e.provider);
 
