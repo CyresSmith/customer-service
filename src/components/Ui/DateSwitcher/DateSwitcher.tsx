@@ -31,6 +31,13 @@ const DateSwitcher = ({
   borderRadius = 's',
   fontSize = '16px',
 }: Props) => {
+  const chosenDate = new Date(date).toLocaleDateString('uk-UK', {
+    weekday: dateType === 'day' ? 'short' : undefined,
+    day: dateType === 'day' ? 'numeric' : undefined,
+    month: dateType === 'year' ? undefined : 'long',
+    year: dateType === 'year' ? 'numeric' : undefined,
+  });
+
   const isSameCalendarDay = isSameDay(new Date(Date.now()), date);
 
   const handleDateChange = (event: string) => {
@@ -62,7 +69,7 @@ const DateSwitcher = ({
         $colors={buttonsColor}
       />
       <DateWrapper $border={border} $type={dateType}>
-        <DateValue $fontSize={fontSize}>{'chosenDate'}</DateValue>
+        <DateValue $fontSize={fontSize}>{chosenDate}</DateValue>
       </DateWrapper>
       <Button
         onClick={() => handleDateChange('+')}
