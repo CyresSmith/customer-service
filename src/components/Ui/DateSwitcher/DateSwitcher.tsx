@@ -1,17 +1,14 @@
-import {
-  addDays,
-  addMonths,
-  addYears,
-  format,
-  setDefaultOptions,
-} from 'date-fns';
-import { uk } from 'date-fns/locale';
+import { addDays, addMonths, addYears, isSameDay } from 'date-fns';
 import { Dispatch, SetStateAction } from 'react';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
+import { RiArrowGoBackFill } from 'react-icons/ri';
 import Button from '../Buttons/Button';
-import { Container, DateValue, DateWrapper } from './DateSwitcher.styled';
-
-setDefaultOptions({ locale: uk });
+import {
+  Container,
+  DateValue,
+  DateWrapper,
+  ReturnBtnWrapper,
+} from './DateSwitcher.styled';
 
 type Props = {
   date: Date;
@@ -34,12 +31,7 @@ const DateSwitcher = ({
   borderRadius = 's',
   fontSize = '16px',
 }: Props) => {
-  const dateFormat =
-    dateType === 'day'
-      ? 'EEEEEE, PP'
-      : dateType === 'month'
-      ? 'LLLL yyyy'
-      : 'yyyy';
+  const isSameCalendarDay = isSameDay(new Date(Date.now()), date);
 
   const handleDateChange = (event: string) => {
     if (event === '+') {
@@ -70,7 +62,7 @@ const DateSwitcher = ({
         $colors={buttonsColor}
       />
       <DateWrapper $border={border} $type={dateType}>
-        <DateValue $fontSize={fontSize}>{format(date, dateFormat)}</DateValue>
+        <DateValue $fontSize={fontSize}>{'chosenDate'}</DateValue>
       </DateWrapper>
       <Button
         onClick={() => handleDateChange('+')}
@@ -78,6 +70,16 @@ const DateSwitcher = ({
         $round={roundBtns}
         $colors={buttonsColor}
       />
+      {!isSameCalendarDay && (
+        <ReturnBtnWrapper>
+          <Button
+            onClick={() => setDate(new Date(Date.now()))}
+            Icon={RiArrowGoBackFill}
+            $colors="light"
+            size="s"
+          />
+        </ReturnBtnWrapper>
+      )}
     </Container>
   );
 };
