@@ -26,6 +26,7 @@ const CustomFormInput = ({
   value,
   handleChange,
   handleSelect,
+  handlePickDate,
   isValid,
   disabledIcon,
   isRequired = false,
@@ -70,11 +71,12 @@ const CustomFormInput = ({
                 : (value as SelectItem)
             }
           />
-          ) : name === 'birthday' ? (
+          ) : name === 'birthday' && handlePickDate ? (
               <DatePicker
+                prewDate={value as Date}
                 calendarCellSize={25}
                 bgColor='dark'
-                handleDateConfirm={(date: Date) => console.log(date)}
+                handleDateConfirm={handlePickDate}
               />
             ) : (
           <FormInput

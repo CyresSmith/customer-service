@@ -16,7 +16,7 @@ export type ValidationReturn = { [key: string]: string }[];
 
 export function useForm<
   Type extends {
-    [k: string]: string | number | boolean | SelectItem | SelectItem[] | null;
+    [k: string]: string | number | boolean | SelectItem | SelectItem[] | Date | null;
   }
 >(initialState: Type, onSubmit: (state: Type) => void): ReturnType<Type> {
   const [state, setState] = useState<Type>(initialState);

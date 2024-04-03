@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Picker, DateBox, Wrapper, DateRow, PickerIcon, BtnsWrapper } from "./DatePicker.styled";
+import { Picker, DateBox, Wrapper, PickerIcon, BtnsWrapper } from "./DatePicker.styled";
 import Calendar from "../Calendar/Calendar";
 import DateSwitcher from "../DateSwitcher";
 import { useClickOutside, useEscapeKey } from "hooks";
@@ -9,17 +9,18 @@ import { MdCalendarMonth } from "react-icons/md";
 import Button from "../Buttons/Button";
 
 type Props = {
+    prewDate?: Date;
     bgColor: 'dark' | 'light';
     handleDateConfirm: (date: Date) => void;
     calendarCellSize?: number;
 }
 
-const initialState = new Date(1990, 0, 1);
-
-const DatePicker = ({ bgColor, calendarCellSize = 30, handleDateConfirm }: Props) => {
+const DatePicker = ({ bgColor, calendarCellSize = 30, handleDateConfirm, prewDate }: Props) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [date, setDate] = useState<Date>(initialState);
-    const mounted = useMountTransition({isMounted: isOpen, mountDelay: 1, unmountDelay: 100});
+    const mounted = useMountTransition({ isMounted: isOpen, mountDelay: 1, unmountDelay: 100 });
+    
+    const initialState = new Date(1990, 0, 1);
+    const [date, setDate] = useState<Date>(prewDate ? prewDate : initialState);
 
     const toggleOpen = () => {
         setIsOpen(o => !o);
@@ -27,11 +28,12 @@ const DatePicker = ({ bgColor, calendarCellSize = 30, handleDateConfirm }: Props
 
     const handleClose = () => {
         setIsOpen(false);
-        setDate(initialState);
+        setDate(prewDate ? prewDate : initialState);
     };
 
     const handleConfirm = () => {
         handleDateConfirm(date);
+        setIsOpen(false);
     };
 
     useEscapeKey(handleClose);
@@ -41,10 +43,12 @@ const DatePicker = ({ bgColor, calendarCellSize = 30, handleDateConfirm }: Props
 
     return (
         <Wrapper ref={selectRef}>
-            <Picker $isOpen={isOpen} onClick={toggleOpen}>
-                <DateRow>{date === initialState ? 'Встановити дату' : output}</DateRow>
-                <PickerIcon $isOpen={isOpen} as={MdCalendarMonth} />
-            </Picker>
+            <Picker
+                onClick={toggleOpen}
+                $isOpen={isOpen}
+                value={JSON.stringify(initialState) === JSON.stringify(date) ? 'Встановити дату' : output}
+                readOnly={true}
+            />
             {isOpen &&
                 <DateBox $bgColor={bgColor} $isOpen={mounted}>
                     <DateSwitcher fontSize="18px" noReset={true} dateType="year" date={date} setDate={setDate} />
@@ -56,6 +60,7 @@ const DatePicker = ({ bgColor, calendarCellSize = 30, handleDateConfirm }: Props
                     </BtnsWrapper>
                 </DateBox>
             }
+            <PickerIcon $isOpen={isOpen} as={MdCalendarMonth} />
         </Wrapper>
     )
 };

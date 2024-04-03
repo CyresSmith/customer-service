@@ -8,7 +8,7 @@ export type Client = {
   discount?: number;
   source?: string;
   comment?: string;
-  birthday?: string;
+  birthday?: Date | null;
   gender?: string;
   card?: string;
   companyId?: number;

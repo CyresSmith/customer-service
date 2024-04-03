@@ -1,15 +1,10 @@
-import DatePicker from "components/Ui/DatePicker";
+// type Props = {};
 
-type Props = {};
-
-const WorkSchedule = (props: Props) => {
-  const handleDatePick = () => {
-
-  }
+const WorkSchedule = () => {
 
   return (
     <>
-      <DatePicker bgColor="dark" calendarCellSize={30} handleDateConfirm={handleDatePick} />
+      
     </>
   );
 };

@@ -11,7 +11,7 @@ export const Wrapper = styled.div`
     width: 100%;
 `
 
-export const Picker = styled.div<Pick <DatePickerProps, '$isOpen'>>`
+export const Picker = styled.input<Pick <DatePickerProps, '$isOpen'>>`
     color: ${theme.colors.bg.dark};
     padding: ${theme.space[2]} ${theme.space[3]};
     border-radius: ${theme.radii.s};
@@ -26,6 +26,7 @@ export const Picker = styled.div<Pick <DatePickerProps, '$isOpen'>>`
     font-size: ${theme.fontSizes.l};
     width: 100%;
     outline: none;
+    resize: none;
     cursor: pointer;
 `
 
