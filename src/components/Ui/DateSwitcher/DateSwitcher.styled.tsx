@@ -9,7 +9,7 @@ type SwitcherType = {
 
 export const Container = styled.div<SwitcherType>`
     position: relative;
-    width: ${props => props.$type === 'month' ? '150px' : props.$type === 'year' ? '100px' : '200px'};
+    width: ${props => props.$type === 'month' ? '150px' : props.$type === 'year' ? '150px' : '200px'};
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -22,7 +22,7 @@ export const DateWrapper = styled.div<Pick<SwitcherType, '$border' | '$type'>>`
     padding: ${theme.space[2]} ${theme.space[3]};
     border-left: ${props => props.$border ? `${theme.borders.normal}` : 'none'} ${props => props.$border === 'light' ? `${theme.colors.secondary.dark}` : props.$border === 'dark' ? `${theme.colors.bg.main}` : null};
     border-right: ${props => props.$border ? `${theme.borders.normal}` : 'none'} ${props => props.$border === 'light' ? `${theme.colors.secondary.dark}` : props.$border === 'dark' ? `${theme.colors.bg.main}` : null};
-    width: ${props => props.$type === 'month' ? '100px' : props.$type === 'year' ? '50px' : '150px'};
+    width: ${props => props.$type === 'month' ? '100px' : props.$type === 'year' ? '70px' : '150px'};
     white-space: nowrap;
 `
 

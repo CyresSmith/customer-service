@@ -9,11 +9,11 @@ type CalendarDay = {
   $disabled: boolean;
 }
 
-export const CalendarBox = styled.div`
+export const CalendarBox = styled.div<{$padding: string}>`
   width: 100%;
   background-color: ${theme.colors.bg.main};
   border-radius: ${theme.radii.m};
-  padding: ${theme.space[3]};
+  padding: ${props => props.$padding};
 `;
 
 export const CalendarGrid = styled.div`

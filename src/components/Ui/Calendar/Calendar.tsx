@@ -20,18 +20,20 @@ type Props = {
   cellSize?: number;
   monthSize?: string;
   enableDays?: Date[];
+  noSwitcher?: boolean;
+  padding?: string;
 };
 
-const Calendar = ({ date, setDate, cellSize = 30, monthSize = '18px', enableDays }: Props) => {
-  const [monthDate, setMonthDate] = useState(new Date(Date.now()));
+const Calendar = ({noSwitcher = false, date, setDate, cellSize = 30, monthSize = '18px', enableDays, padding = '10px' }: Props) => {
+  const [monthDate, setMonthDate] = useState(date);
   const today = new Date(Date.now());
 
-  const thisMonthStart = startOfMonth(monthDate);
-  const thisMonthEnd = lastDayOfMonth(monthDate);
-  const isMondayFirstDay = isMonday(startOfMonth(monthDate));
+  const thisMonthStart = startOfMonth(noSwitcher ? date : monthDate);
+  const thisMonthEnd = lastDayOfMonth(noSwitcher ? date : monthDate);
+  const isMondayFirstDay = isMonday(startOfMonth(noSwitcher ? date : monthDate));
   const isSundayFirstDay = thisMonthStart.getDay() === 0;
   const isSundayLastDay = thisMonthEnd.getDay() === 0;
-  const thisMonthDaysArray = eachDayOfInterval({ start: startOfMonth(monthDate), end: lastDayOfMonth(monthDate) });
+  const thisMonthDaysArray = eachDayOfInterval({ start: startOfMonth(noSwitcher ? date : monthDate), end: lastDayOfMonth(noSwitcher ? date : monthDate) });
 
   const getFullMonthArrayForRender = () => {
     let daysArray: Date[] = [];
@@ -59,10 +61,12 @@ const Calendar = ({ date, setDate, cellSize = 30, monthSize = '18px', enableDays
   }
 
   return (
-    <CalendarBox>
-      <SwitcherWrapper>
-        <DateSwitcher fontSize={monthSize} dateType='month' setDate={setMonthDate} date={monthDate} />
-      </SwitcherWrapper>
+    <CalendarBox $padding={padding}>
+      {!noSwitcher && 
+        <SwitcherWrapper>
+          <DateSwitcher fontSize={monthSize} dateType='month' setDate={setMonthDate} date={monthDate} />
+        </SwitcherWrapper>
+      }
       <CalendarGrid>
         {shortWeekDays.map(({ name }, i) => <WeekDay key={i}><span>{name}</span></WeekDay>)}
         {fullMonthArrayForRender.map((day, i) =>
@@ -74,7 +78,7 @@ const Calendar = ({ date, setDate, cellSize = 30, monthSize = '18px', enableDays
             key={i}
             date={day.getDate()}
             selected={isSameDay(day, date)}
-            anotherMonth={!isSameMonth(day, date)}
+            anotherMonth={!isSameMonth(day, noSwitcher ? date : monthDate)}
           />)}
       </CalendarGrid>
     </CalendarBox>

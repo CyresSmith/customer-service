@@ -15,9 +15,10 @@ type Props = {
     borderRadius?: 'xs' | 's' | 'm',
     border?: 'light' | 'dark',
     fontSize?: string;
+    noReset?: boolean;
 }
 
-const DateSwitcher = ({ date, setDate, dateType = 'day', buttonsColor = 'transparent', roundBtns = true, border, borderRadius = 's', fontSize = '16px' }: Props) => {
+const DateSwitcher = ({ noReset = false, date, setDate, dateType = 'day', buttonsColor = 'transparent', roundBtns = true, border, borderRadius = 's', fontSize = '16px' }: Props) => {
 
     const chosenDate = new Date(date).toLocaleDateString('uk-UK', {
         weekday: dateType === 'day' ? 'short' : undefined,
@@ -55,7 +56,7 @@ const DateSwitcher = ({ date, setDate, dateType = 'day', buttonsColor = 'transpa
                 <DateValue $fontSize={fontSize}>{chosenDate}</DateValue>
             </DateWrapper>
             <Button onClick={() => handleDateChange('+')} Icon={HiArrowRight} $round={roundBtns} $colors={buttonsColor} />
-            {!isSameCalendarDay &&
+            {!isSameCalendarDay && !noReset &&
                 <ReturnBtnWrapper>
                     <Button onClick={() => setDate(new Date(Date.now()))} Icon={RiArrowGoBackFill} $colors='light' size="s" />
                 </ReturnBtnWrapper>
