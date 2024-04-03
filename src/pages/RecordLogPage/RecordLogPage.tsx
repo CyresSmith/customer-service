@@ -11,6 +11,7 @@ import { useLazyGetAllCompanySchedulesQuery } from 'services/schedules.api';
 import { getMonth, getYear } from 'date-fns';
 import { IMonthSchedule } from 'services/types/schedule.types';
 import { BasicEmployeeInfo } from 'services/types/employee.types';
+import { EmployeeStatusEnum } from 'services/types/employee.types';
 
 const initialSelection = [{id: 'all', value: `Всі працівники`}];
 
@@ -44,9 +45,9 @@ const RecordLogPage = () => {
     getData();
   }, [chosenMonth, chosenYear, getEmployees, getSchedules, id]);
 
-  const providers = allEmployees.filter(e => e.provider);
+  const workingProviders = allEmployees.filter(e => e.provider && e.status === EmployeeStatusEnum.WORKING);
 
-  const providersForSelect = providers.map(p => {
+  const providersForSelect = workingProviders.map(p => {
     return {
       id: p.id,
       value: p.lastName ? p.firstName + ' ' + p.lastName : p.firstName,
@@ -79,8 +80,8 @@ const RecordLogPage = () => {
 
   const filteredProvidersList =
     selectedItem[0]?.id !== 'all'
-      ? providers.filter(p => selectedItem.find(s => s.id === p.id))
-      : providers;
+      ? workingProviders.filter(p => selectedItem.find(s => s.id === p.id))
+      : workingProviders;
 
   return allEmployees && (
     <>
