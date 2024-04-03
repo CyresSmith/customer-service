@@ -5,6 +5,7 @@ const ANIMATION_TIME = '3s';
 
 export const LoaderBox = styled.div`
   position: absolute;
+  z-index: 999;
   top: 0;
   left: 0;
   width: 100%;

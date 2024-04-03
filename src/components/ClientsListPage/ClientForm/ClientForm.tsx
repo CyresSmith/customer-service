@@ -85,8 +85,6 @@ const ClientForm = ({ initialState, onSubmit, isLoading, type }: Props) => {
     setState({ ...state, birthday: date });
   }
 
-  console.log(state);
-
   return (
     <Form onSubmit={handleSubmit}>
       {type === 'add' && <FormTitle>Новий клієнт</FormTitle>}
