@@ -8,10 +8,10 @@ import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
 import { useLazyGetCompanyEmployeesQuery } from 'services/employee.api';
 import { useLazyGetAllCompanySchedulesQuery } from 'services/schedules.api';
-import { getMonth, getYear } from 'date-fns';
 import { IMonthSchedule } from 'services/types/schedule.types';
 import { BasicEmployeeInfo } from 'services/types/employee.types';
 import { EmployeeStatusEnum } from 'services/types/employee.types';
+import { getDate, getMonth, getYear } from 'date-fns';
 
 const initialSelection = [{id: 'all', value: `Всі працівники`}];
 
@@ -47,7 +47,17 @@ const RecordLogPage = () => {
 
   const workingProviders = allEmployees.filter(e => e.provider && e.status === EmployeeStatusEnum.WORKING);
 
-  const providersForSelect = workingProviders.map(p => {
+  const employeesWithThisDaySchedule = workingProviders.filter(e => {
+  const year = getYear(date);
+  const month = getMonth(date);
+  const day = getDate(date);
+
+  if (allSchedules.find(s => s.employee.id === e.id && s.year === year && s.month === month && s.schedule.find(ss => ss.day === day))) {
+    return e;
+  }
+});
+
+  const providersForSelect = employeesWithThisDaySchedule.map(p => {
     return {
       id: p.id,
       value: p.lastName ? p.firstName + ' ' + p.lastName : p.firstName,
@@ -80,8 +90,8 @@ const RecordLogPage = () => {
 
   const filteredProvidersList =
     selectedItem[0]?.id !== 'all'
-      ? workingProviders.filter(p => selectedItem.find(s => s.id === p.id))
-      : workingProviders;
+      ? employeesWithThisDaySchedule.filter(p => selectedItem.find(s => s.id === p.id))
+      : employeesWithThisDaySchedule;
 
   return allEmployees && (
     <>

@@ -12,6 +12,7 @@ import {
   EmployeesListWrapper,
   LeftWrapper,
   ListsWrapper,
+  NoDataWrapper,
   NoSchedule,
   RigthWrapper,
   SchedulesContainer,
@@ -23,6 +24,7 @@ import TimeList from './RecordLogList/TimeList';
 import { IMonthSchedule } from 'services/types/schedule.types';
 import { useLoading } from 'hooks';
 import Loader from 'components/Ui/Loader';
+// import { useNavigate } from 'react-router-dom';
 
 type Props = {
   date: Date;
@@ -37,6 +39,7 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
   const chosenDay = new Date(date).getDay();
   const [startIndex, setStartIndex] = useState<number>(0);
   const [isScroll, setIsScroll] = useState<boolean>(false);
+  // const navigate = useNavigate();
 
   useLayoutEffect(() => {
     const schedulesListElementHeight =
@@ -54,19 +57,31 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
     setIsScroll(schedulesListElementHeight > schedulesContainerElementHeight);
   }, [employees]);
 
-  if (!workingHours) {
-    return <p>Не встановлено графік роботи компанії!</p>;
-  }
+  const todayCompanySchedule = workingHours && workingHours.find(wh => wh.days.includes(chosenDay));
 
-  const today = workingHours.find(wh => wh.days.includes(chosenDay));
+  // const handleReplace = (path: string) => {
+  //   navigate(path, {replace: true});
+  // }
 
-  if (!today) {
-    return (
-      <NoSchedule>Не встановлено графік роботи для обраного дня!</NoSchedule>
-    );
-  }
+  // if (!todayCompanySchedule) {
+  //   return (
+  //     <NoDataWrapper>
+  //       <NoSchedule>Не встановлено графік роботи компанії для обраного дня!</NoSchedule>
+  //       <Button $colors='light' children='Перейти до профілю компанії' />
+  //     </NoDataWrapper>
+  //   );
+  // }
 
-  const { from, to } = today!.hours;
+  // if (employees.length < 1) {
+  //   return (
+  //     <NoDataWrapper>
+  //       <NoSchedule>Відсутні працівники з доступним графіком роботи на обраний день!</NoSchedule>
+  //       <Button $colors='light' children='До списку співробітників' />
+  //     </NoDataWrapper>
+  //   )
+  // }
+
+  const { from, to } = todayCompanySchedule!.hours;
 
   const timeArray = generateTimeArray(true);
 
@@ -78,8 +93,15 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
       : employees;
 
   return isGlobalLoading ?
-    (<Loader />) :
-    workingHours && allSchedules && (
+      (<Loader />) :
+    !todayCompanySchedule ?
+      <NoDataWrapper>
+        <NoSchedule>Не встановлено графік роботи компанії для обраного дня!</NoSchedule>
+        <Button $colors='light' children='Перейти до профілю компанії' />
+      </NoDataWrapper> :
+
+      employees.length > 0 ?
+        
     <Container>
       <LeftWrapper>
         <EmployeesListWrapper>
@@ -136,8 +158,11 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
       <RigthWrapper>
         <Calendar cellSize={30} date={date} setDate={setDate} />
       </RigthWrapper>
-    </Container>
-  );
+    </Container> :
+    <NoDataWrapper>
+      <NoSchedule>Відсутні працівники з доступним графіком роботи на обраний день!</NoSchedule>
+      <Button $colors='light' children='До списку співробітників' />
+    </NoDataWrapper>
 };
 
 export default RecordLog;
