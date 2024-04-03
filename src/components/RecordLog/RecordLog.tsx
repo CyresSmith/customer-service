@@ -21,6 +21,8 @@ import EmployeesInfoList from './RecordLogList/EmployeesInfoList/EmployeesInfoLi
 import RecordLogList from './RecordLogList/RecordLogList';
 import TimeList from './RecordLogList/TimeList';
 import { IMonthSchedule } from 'services/types/schedule.types';
+import { useLoading } from 'hooks';
+import Loader from 'components/Ui/Loader';
 
 type Props = {
   date: Date;
@@ -31,6 +33,7 @@ type Props = {
 };
 
 const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Props) => {
+  const { isGlobalLoading } = useLoading();
   const chosenDay = new Date(date).getDay();
   const [startIndex, setStartIndex] = useState<number>(0);
   const [isScroll, setIsScroll] = useState<boolean>(false);
@@ -74,7 +77,9 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
       ? employees.slice(startIndex, startIndex + SCHEDULES_PERPAGE)
       : employees;
 
-  return workingHours && allSchedules && (
+  return isGlobalLoading ?
+    (<Loader />) :
+    workingHours && allSchedules && (
     <Container>
       <LeftWrapper>
         <EmployeesListWrapper>
