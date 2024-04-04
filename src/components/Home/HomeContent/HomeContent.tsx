@@ -1,7 +1,7 @@
 import { Container } from './HomeContent.styled';
 
 const HomeContent = () => {
-  return <Container>Home</Container>;
+    return <Container>Home</Container>;
 };
 
 export default HomeContent;

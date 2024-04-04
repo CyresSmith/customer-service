@@ -9,58 +9,54 @@ import { useLogOutMutation } from 'services/auth.api';
 import { NavList, NavListItemLink, StyledIcon } from './UsersNav.styled';
 
 type Props = {
-  handleClose: () => void;
+    handleClose: () => void;
 };
 
 const menuItems = [
-  { to: 'workspace', Icon: MdWorkOutline, label: 'Компанія' },
-  { to: '#', Icon: AiOutlineUser, label: 'Профіль' },
-  { to: '', Icon: RiLogoutBoxRLine, label: 'Вийти' },
+    { to: 'workspace', Icon: MdWorkOutline, label: 'Компанія' },
+    { to: '#', Icon: AiOutlineUser, label: 'Профіль' },
+    { to: '', Icon: RiLogoutBoxRLine, label: 'Вийти' },
 ];
 
 const UsersNavList = ({ handleClose }: Props) => {
-  const navigate = useNavigate();
-  const { logOut } = useActions();
-  const { user } = useAuth();
+    const navigate = useNavigate();
+    const { logOut } = useActions();
+    const { user } = useAuth();
 
-  const [apiLogout, { isError, isLoading, isSuccess, error }] =
-    useLogOutMutation();
+    const [apiLogout, { isError, isLoading, isSuccess, error }] = useLogOutMutation();
 
-  const handleLogout = (): void => {
-    apiLogout({});
-  };
+    const handleLogout = (): void => {
+        apiLogout({});
+    };
 
-  useEffect(() => {
-    if (isLoading) {
-      console.log('isLoading');
-    }
+    useEffect(() => {
+        if (isLoading) {
+            console.log('isLoading');
+        }
 
-    if (isSuccess) {
-      logOut();
-      toast.info(`До зустрічі, ${user?.firstName}!`);
-      navigate('/', { replace: true });
-    }
+        if (isSuccess) {
+            logOut();
+            toast.info(`До зустрічі, ${user?.firstName}!`);
+            navigate('/', { replace: true });
+        }
 
-    if (isError) {
-      console.log(error);
-    }
-  }, [error, isError, isLoading, isSuccess, logOut, navigate, user?.firstName]);
+        if (isError) {
+            console.log(error);
+        }
+    }, [error, isError, isLoading, isSuccess, logOut, navigate, user?.firstName]);
 
-  return (
-    <NavList>
-      {menuItems.map(({ to, label, Icon }) => (
-        <li
-          key={label}
-          onClick={label === 'Вийти' ? handleLogout : handleClose}
-        >
-          <NavListItemLink to={to} as={label === 'Вийти' ? 'button' : NavLink}>
-            <StyledIcon as={Icon} />
-            {label}
-          </NavListItemLink>
-        </li>
-      ))}
-    </NavList>
-  );
+    return (
+        <NavList>
+            {menuItems.map(({ to, label, Icon }) => (
+                <li key={label} onClick={label === 'Вийти' ? handleLogout : handleClose}>
+                    <NavListItemLink to={to} as={label === 'Вийти' ? 'button' : NavLink}>
+                        <StyledIcon as={Icon} />
+                        {label}
+                    </NavListItemLink>
+                </li>
+            ))}
+        </NavList>
+    );
 };
 
 export default UsersNavList;

@@ -1,25 +1,25 @@
 :root {
-  font-family: 'Sofia Sans', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
+    font-family: 'Sofia Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
 
-  color: #fff;
-  /* background-color: #000; */
+    color: #fff;
+    /* background-color: #000; */
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  margin: 0;
+    margin: 0;
 }
 
 h1,
@@ -29,68 +29,68 @@ h4,
 h5,
 h6,
 p {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 nav,
 ul,
 ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 img {
-  display: block;
-  max-width: 100%;
-  height: auto;
+    display: block;
+    max-width: 100%;
+    height: auto;
 }
 
 a {
-  text-decoration: none;
-  color: inherit;
+    text-decoration: none;
+    color: inherit;
 }
 
 button {
-  outline: none;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
-  padding: 0;
-  margin: 0;
+    outline: none;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+    margin: 0;
 }
 
 input,
 textarea,
 select {
-  font-family: inherit;
-  outline: none;
-  border: none;
+    font-family: inherit;
+    outline: none;
+    border: none;
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 10px;
+    width: 5px;
+    height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: #ffb000;
+    border-radius: 10px;
+    background-color: #ffb000;
 }
 
 ::-webkit-scrollbar-track {
-  border-radius: 10px;
+    border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #fff;
+    background: #fff;
 }
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  transition: background-color 5000000s ease-in-out 0s;
+    transition: background-color 5000000s ease-in-out 0s;
 }

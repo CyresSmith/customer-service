@@ -1,5 +1,5 @@
 const RootLoader = () => {
-  return <div>Root Loading...</div>;
+    return <div>Root Loading...</div>;
 };
 
 export default RootLoader;

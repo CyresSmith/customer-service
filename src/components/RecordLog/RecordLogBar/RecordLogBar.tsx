@@ -7,42 +7,42 @@ import { Container, LeftWrapper } from './RecordLogBar.styled';
 import { HiPlus } from 'react-icons/hi';
 
 type Props = {
-  date: Date;
-  setDate: Dispatch<SetStateAction<Date>>;
-  selectItems: SelectItem[];
-  selected: SelectItem[];
-  handleSelect: (item: SelectItem) => void;
-  openEventModal: (step: string) => void;
+    date: Date;
+    setDate: Dispatch<SetStateAction<Date>>;
+    selectItems: SelectItem[];
+    selected: SelectItem[];
+    handleSelect: (item: SelectItem) => void;
+    openEventModal: (step: string) => void;
 };
 
 const RecordLogBar = ({
-  date,
-  setDate,
-  handleSelect,
-  selected,
-  selectItems,
-  openEventModal,
+    date,
+    setDate,
+    handleSelect,
+    selected,
+    selectItems,
+    openEventModal,
 }: Props) => {
-  return (
-    <Container>
-      <LeftWrapper>
-        <CustomFormSelect
-          width="300px"
-          selectItems={selectItems}
-          handleSelect={handleSelect}
-          selectedItem={selected}
-          closeOnSelect={false}
-        />
-        <DateSwitcher dateType="day" date={date} setDate={setDate} />
-      </LeftWrapper>
-      <Button
-        onClick={() => openEventModal('create')}
-        Icon={HiPlus}
-        children="Додати запис"
-        $colors="accent"
-      />
-    </Container>
-  );
+    return (
+        <Container>
+            <LeftWrapper>
+                <CustomFormSelect
+                    width="300px"
+                    selectItems={selectItems}
+                    handleSelect={handleSelect}
+                    selectedItem={selected}
+                    closeOnSelect={false}
+                />
+                <DateSwitcher dateType="day" date={date} setDate={setDate} />
+            </LeftWrapper>
+            <Button
+                onClick={() => openEventModal('create')}
+                Icon={HiPlus}
+                children="Додати запис"
+                $colors="accent"
+            />
+        </Container>
+    );
 };
 
 export default RecordLogBar;

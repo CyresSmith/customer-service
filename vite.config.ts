@@ -4,6 +4,6 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/customer-service',
-  plugins: [react(), tsconfigPaths()],
+    base: '/customer-service',
+    plugins: [react(), tsconfigPaths()],
 });

@@ -1,6 +1,6 @@
 import {
-  CategoriesList,
-  Category,
+    CategoriesList,
+    Category,
 } from 'components/TopBar/UsersNav/CreateCompanyForm/FirstStep/FirstStep.styled';
 import Button from 'components/Ui/Buttons/Button';
 import Loader from 'components/Ui/Loader';
@@ -11,8 +11,8 @@ import { useEffect, useState } from 'react';
 import { HiQueueList } from 'react-icons/hi2';
 import { toast } from 'react-toastify';
 import {
-  useGetCompanyActivitiesQuery,
-  useUpdateCompanyProfileMutation,
+    useGetCompanyActivitiesQuery,
+    useUpdateCompanyProfileMutation,
 } from 'services/company.api';
 import { ModalBox } from '../CompanyProfile.styled';
 import { ButtonBox } from '../SetScheduleModal/SetScheduleModal.styled';
@@ -20,81 +20,75 @@ import { ButtonBox } from '../SetScheduleModal/SetScheduleModal.styled';
 type Props = { closeModal: () => void };
 
 const EditActivitiesModal = ({ closeModal }: Props) => {
-  const { id, activities } = useCompany();
-  const { updateCompanyData } = useActions();
-  const { data: activitiesData, isLoading: categoryLoading } =
-    useGetCompanyActivitiesQuery(id);
+    const { id, activities } = useCompany();
+    const { updateCompanyData } = useActions();
+    const { data: activitiesData, isLoading: categoryLoading } = useGetCompanyActivitiesQuery(id);
 
-  const [uploadActivities, { isLoading, isSuccess }] =
-    useUpdateCompanyProfileMutation();
+    const [uploadActivities, { isLoading, isSuccess }] = useUpdateCompanyProfileMutation();
 
-  const [activitiesState, setActivitiesState] = useState(
-    activities.map(({ id }) => id)
-  );
+    const [activitiesState, setActivitiesState] = useState(activities.map(({ id }) => id));
 
-  const handleSelect = (id: number) => {
-    setActivitiesState(p => {
-      return p.includes(id) ? [...p.filter(item => item !== id)] : [...p, id];
-    });
-  };
-
-  const handleCategoryUpdate = async () => {
-    const data = {
-      activities: activitiesState,
+    const handleSelect = (id: number) => {
+        setActivitiesState(p => {
+            return p.includes(id) ? [...p.filter(item => item !== id)] : [...p, id];
+        });
     };
 
-    const { message } = await uploadActivities({ id, data }).unwrap();
+    const handleCategoryUpdate = async () => {
+        const data = {
+            activities: activitiesState,
+        };
 
-    if (message && activitiesData) {
-      updateCompanyData({
-        activities: activitiesData.filter(({ id }) =>
-          activitiesState.includes(id)
-        ),
-      });
+        const { message } = await uploadActivities({ id, data }).unwrap();
 
-      closeModal();
-    }
-  };
+        if (message && activitiesData) {
+            updateCompanyData({
+                activities: activitiesData.filter(({ id }) => activitiesState.includes(id)),
+            });
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success('Напрямки діяльності оновлено');
-    }
-  }, [isSuccess]);
+            closeModal();
+        }
+    };
 
-  return (
-    <>
-      {categoryLoading && <Loader />}
+    useEffect(() => {
+        if (isSuccess) {
+            toast.success('Напрямки діяльності оновлено');
+        }
+    }, [isSuccess]);
 
-      {!categoryLoading && activitiesData && (
-        <ModalBox>
-          <CategoriesList>
-            {activitiesData.map(item => (
-              <Category
-                key={item.id}
-                selected={activitiesState.includes(item.id)}
-                onClick={() => handleSelect(item.id)}
-              >
-                {translateActivityName(item.name)}
-              </Category>
-            ))}
-          </CategoriesList>
+    return (
+        <>
+            {categoryLoading && <Loader />}
 
-          <ButtonBox>
-            <Button
-              isLoading={isLoading}
-              onClick={handleCategoryUpdate}
-              disabled={isLoading}
-              Icon={HiQueueList}
-              $colors="accent"
-            >
-              Оновити напрямки
-            </Button>
-          </ButtonBox>
-        </ModalBox>
-      )}
-    </>
-  );
+            {!categoryLoading && activitiesData && (
+                <ModalBox>
+                    <CategoriesList>
+                        {activitiesData.map(item => (
+                            <Category
+                                key={item.id}
+                                selected={activitiesState.includes(item.id)}
+                                onClick={() => handleSelect(item.id)}
+                            >
+                                {translateActivityName(item.name)}
+                            </Category>
+                        ))}
+                    </CategoriesList>
+
+                    <ButtonBox>
+                        <Button
+                            isLoading={isLoading}
+                            onClick={handleCategoryUpdate}
+                            disabled={isLoading}
+                            Icon={HiQueueList}
+                            $colors="accent"
+                        >
+                            Оновити напрямки
+                        </Button>
+                    </ButtonBox>
+                </ModalBox>
+            )}
+        </>
+    );
 };
 
 export default EditActivitiesModal;

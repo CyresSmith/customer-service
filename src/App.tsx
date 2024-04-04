@@ -22,86 +22,86 @@ const Workspace = lazy(() => import('components/Layout/UsersLayout'));
 const EmployeesPage = lazy(() => import('pages/EmployeesPage'));
 
 function App() {
-  const { user, accessToken } = useAuth();
-  const { setCurrentUser } = useActions();
-  const { isGlobalLoading } = useLoading();
+    const { user, accessToken } = useAuth();
+    const { setCurrentUser } = useActions();
+    const { isGlobalLoading } = useLoading();
 
-  const [getCurrentUser] = useLazyCurrentQuery();
+    const [getCurrentUser] = useLazyCurrentQuery();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data, isSuccess } = await getCurrentUser(undefined);
+    useEffect(() => {
+        const fetchData = async () => {
+            const { data, isSuccess } = await getCurrentUser(undefined);
 
-      if (data && isSuccess) {
-        setCurrentUser(data);
-      }
-    };
+            if (data && isSuccess) {
+                setCurrentUser(data);
+            }
+        };
 
-    if (!user && accessToken) {
-      fetchData();
-    }
-  }, [accessToken, getCurrentUser, setCurrentUser, user]);
+        if (!user && accessToken) {
+            fetchData();
+        }
+    }, [accessToken, getCurrentUser, setCurrentUser, user]);
 
-  return (
-    <>
-      {isGlobalLoading && <Loader />}
-      <ToastContainer
-        position="bottom-right"
-        stacked
-        transition={Bounce}
-        theme={'colored'}
-        newestOnTop
-      />
-      <Suspense fallback={<Loader />}>
-        <Routes>
-          <Route path="/" element={<MainLayout />}>
-            {/* <Route index element={<PublicRoute children={<HomePage />} />} /> */}
-            <Route index element={<HomePage />} />
-            <Route path="/verify/:code" element={<VerifyPage />} />
-            <Route
-              path="/my-profile"
-              element={<PrivateRoute children={<ProfilePage />} />}
+    return (
+        <>
+            {isGlobalLoading && <Loader />}
+            <ToastContainer
+                position="bottom-right"
+                stacked
+                transition={Bounce}
+                theme={'colored'}
+                newestOnTop
             />
-            <Route
-              path="/:companyId"
-              element={<PrivateRoute children={<Workspace />} />}
-            >
-              <Route
-                path="record-log"
-                element={<PrivateRoute children={<RecordLog />} />}
-              />
+            <Suspense fallback={<Loader />}>
+                <Routes>
+                    <Route path="/" element={<MainLayout />}>
+                        {/* <Route index element={<PublicRoute children={<HomePage />} />} /> */}
+                        <Route index element={<HomePage />} />
+                        <Route path="/verify/:code" element={<VerifyPage />} />
+                        <Route
+                            path="/my-profile"
+                            element={<PrivateRoute children={<ProfilePage />} />}
+                        />
+                        <Route
+                            path="/:companyId"
+                            element={<PrivateRoute children={<Workspace />} />}
+                        >
+                            <Route
+                                path="record-log"
+                                element={<PrivateRoute children={<RecordLog />} />}
+                            />
 
-              <Route
-                path="work-schedule"
-                element={<PrivateRoute children={<WorkSchedule />} />}
-              />
-              <Route
-                path="clients-list"
-                element={<PrivateRoute children={<ClientsListPage />} />}
-              />
-              <Route
-                path="clients-statistic"
-                element={<PrivateRoute children={<ClientsListPage />} />}
-              />
-              <Route
-                path="profile"
-                element={<PrivateRoute children={<CompanyProfile />} />}
-              />
-              <Route
-                path="employees"
-                element={<PrivateRoute children={<EmployeesPage />} />}
-              />
-              <Route
-                path="services"
-                element={<PrivateRoute children={<ServicesPage />} />}
-              />
-            </Route>
-          </Route>
-          <Route path="*" element={<ErrorPage />} />
-        </Routes>
-      </Suspense>
-    </>
-  );
+                            <Route
+                                path="work-schedule"
+                                element={<PrivateRoute children={<WorkSchedule />} />}
+                            />
+                            <Route
+                                path="clients-list"
+                                element={<PrivateRoute children={<ClientsListPage />} />}
+                            />
+                            <Route
+                                path="clients-statistic"
+                                element={<PrivateRoute children={<ClientsListPage />} />}
+                            />
+                            <Route
+                                path="profile"
+                                element={<PrivateRoute children={<CompanyProfile />} />}
+                            />
+                            <Route
+                                path="employees"
+                                element={<PrivateRoute children={<EmployeesPage />} />}
+                            />
+                            <Route
+                                path="services"
+                                element={<PrivateRoute children={<ServicesPage />} />}
+                            />
+                        </Route>
+                    </Route>
+                    <Route path="*" element={<ErrorPage />} />
+                </Routes>
+            </Suspense>
+        </>
+    );
 }
 
 export default App;

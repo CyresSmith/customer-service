@@ -11,139 +11,134 @@ import { EmployeeRoleEnum } from 'services/types/employee.types';
 import { ButtonBox } from '../AddEmployeeModal.styled';
 
 type Props = {
-  handleBackClick: () => void;
-  closeModal: () => void;
+    handleBackClick: () => void;
+    closeModal: () => void;
 };
 
 const inputs: Partial<InputProps>[] = [
-  {
-    name: 'email',
-    type: 'email',
-    isRequired: true,
-  },
-  { name: 'password', type: 'password', isRequired: true },
-  { name: 'confirm', type: 'password', isRequired: true },
-  {
-    name: 'firstName',
-    type: 'text',
-    isRequired: true,
-  },
-  {
-    name: 'lastName',
-    type: 'text',
-  },
-  {
-    name: 'phone',
-    type: 'tel',
-    isRequired: true,
-  },
-  {
-    name: 'jobTitle',
-    type: 'text',
-    isRequired: true,
-  },
-  {
-    name: 'provider',
-    type: 'checkbox',
-    label: false,
-  },
-  {
-    name: 'isAdmin',
-    type: 'checkbox',
-    label: false,
-  },
+    {
+        name: 'email',
+        type: 'email',
+        isRequired: true,
+    },
+    { name: 'password', type: 'password', isRequired: true },
+    { name: 'confirm', type: 'password', isRequired: true },
+    {
+        name: 'firstName',
+        type: 'text',
+        isRequired: true,
+    },
+    {
+        name: 'lastName',
+        type: 'text',
+    },
+    {
+        name: 'phone',
+        type: 'tel',
+        isRequired: true,
+    },
+    {
+        name: 'jobTitle',
+        type: 'text',
+        isRequired: true,
+    },
+    {
+        name: 'provider',
+        type: 'checkbox',
+        label: false,
+    },
+    {
+        name: 'isAdmin',
+        type: 'checkbox',
+        label: false,
+    },
 ];
 
 const initialState = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  jobTitle: '',
-  provider: false,
-  isAdmin: false,
-  password: '',
-  confirm: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    jobTitle: '',
+    provider: false,
+    isAdmin: false,
+    password: '',
+    confirm: '',
 };
 
 function NewUserEmployeeForm({ handleBackClick, closeModal }: Props) {
-  const { id } = useCompany();
-  const [addNewEmployee, { isLoading, isSuccess }] =
-    useAddNewUserEmployeeMutation();
+    const { id } = useCompany();
+    const [addNewEmployee, { isLoading, isSuccess }] = useAddNewUserEmployeeMutation();
 
-  const onSubmit = async ({
-    isAdmin,
-    jobTitle,
-    provider,
-    email,
-    phone,
-    password,
-    firstName,
-    lastName,
-  }: typeof initialState) => {
-    const employee = await addNewEmployee({
-      companyId: id,
-      data: {
-        employeeData: {
-          jobTitle,
-          provider,
-          role: isAdmin ? EmployeeRoleEnum.ADMIN : EmployeeRoleEnum.EMPLOYEE,
-        },
-        userData: {
-          email,
-          phone,
-          password,
-          firstName,
-          lastName,
-        },
-      },
-    }).unwrap();
+    const onSubmit = async ({
+        isAdmin,
+        jobTitle,
+        provider,
+        email,
+        phone,
+        password,
+        firstName,
+        lastName,
+    }: typeof initialState) => {
+        const employee = await addNewEmployee({
+            companyId: id,
+            data: {
+                employeeData: {
+                    jobTitle,
+                    provider,
+                    role: isAdmin ? EmployeeRoleEnum.ADMIN : EmployeeRoleEnum.EMPLOYEE,
+                },
+                userData: {
+                    email,
+                    phone,
+                    password,
+                    firstName,
+                    lastName,
+                },
+            },
+        }).unwrap();
 
-    if (employee && isSuccess) {
-      closeModal();
-    }
-  };
+        if (employee && isSuccess) {
+            closeModal();
+        }
+    };
 
-  const { state, handleChange, handleSubmit, invalidFields } = useForm<
-    typeof initialState
-  >(initialState, onSubmit);
+    const { state, handleChange, handleSubmit, invalidFields } = useForm<typeof initialState>(
+        initialState,
+        onSubmit
+    );
 
-  return (
-    <Form onSubmit={handleSubmit}>
-      <FormInputsList>
-        {(inputs as InputProps[]).map((item, i) => (
-          <CustomFormInput
-            key={i}
-            {...item}
-            value={state[item.name as keyof typeof initialState]}
-            handleChange={handleChange}
-            isValid={getErrorMessage(item.name, invalidFields)}
-          />
-        ))}
-      </FormInputsList>
+    return (
+        <Form onSubmit={handleSubmit}>
+            <FormInputsList>
+                {(inputs as InputProps[]).map((item, i) => (
+                    <CustomFormInput
+                        key={i}
+                        {...item}
+                        value={state[item.name as keyof typeof initialState]}
+                        handleChange={handleChange}
+                        isValid={getErrorMessage(item.name, invalidFields)}
+                    />
+                ))}
+            </FormInputsList>
 
-      <ButtonBox>
-        <Button
-          Icon={HiArrowLeft}
-          type="submit"
-          $colors="light"
-          onClick={handleBackClick}
-        >
-          Назад
-        </Button>
+            <ButtonBox>
+                <Button Icon={HiArrowLeft} type="submit" $colors="light" onClick={handleBackClick}>
+                    Назад
+                </Button>
 
-        <Button
-          isLoading={isLoading}
-          Icon={HiPlusCircle}
-          type="submit"
-          disabled={Object.values(state).includes('') || isLoading}
-          $colors="accent"
-        >
-          Додать
-        </Button>
-      </ButtonBox>
-    </Form>
-  );
+                <Button
+                    isLoading={isLoading}
+                    Icon={HiPlusCircle}
+                    type="submit"
+                    disabled={Object.values(state).includes('') || isLoading}
+                    $colors="accent"
+                >
+                    Додать
+                </Button>
+            </ButtonBox>
+        </Form>
+    );
 }
 
 export default NewUserEmployeeForm;

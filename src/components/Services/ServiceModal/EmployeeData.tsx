@@ -1,39 +1,34 @@
 import { IEmployee } from 'services/types/employee.types';
-import {
-  EmployeeDataBox,
-  EmployeeImg,
-  JobTitle,
-  Name,
-} from './SecondStep/SecondStep.styled';
+import { EmployeeDataBox, EmployeeImg, JobTitle, Name } from './SecondStep/SecondStep.styled';
 
 export interface IEmployeeData extends IEmployee {
-  checkIcon?: boolean;
+    checkIcon?: boolean;
 }
 
 const EmployeeData = ({
-  avatar,
-  firstName,
-  jobTitle,
-  lastName,
-  checkIcon = true,
+    avatar,
+    firstName,
+    jobTitle,
+    lastName,
+    checkIcon = true,
 }: IEmployeeData) => {
-  return (
-    <EmployeeDataBox $checkIcon={checkIcon}>
-      <EmployeeImg>
-        {avatar ? (
-          <img src={avatar} alt={`photo of ${firstName} ${lastName}`} />
-        ) : (
-          <p>{firstName?.slice(0, 1)}</p>
-        )}
-      </EmployeeImg>
+    return (
+        <EmployeeDataBox $checkIcon={checkIcon}>
+            <EmployeeImg>
+                {avatar ? (
+                    <img src={avatar} alt={`photo of ${firstName} ${lastName}`} />
+                ) : (
+                    <p>{firstName?.slice(0, 1)}</p>
+                )}
+            </EmployeeImg>
 
-      <Name>
-        {firstName} {lastName && lastName}
-        <br />
-        <JobTitle>{jobTitle}</JobTitle>
-      </Name>
-    </EmployeeDataBox>
-  );
+            <Name>
+                {firstName} {lastName && lastName}
+                <br />
+                <JobTitle>{jobTitle}</JobTitle>
+            </Name>
+        </EmployeeDataBox>
+    );
 };
 
 export default EmployeeData;

@@ -7,55 +7,46 @@ import { stepProps } from '../CreateCompanyForm.types';
 import { CategoriesList, Category } from '../FirstStep/FirstStep.styled';
 
 interface Props extends stepProps {
-  activities: Activity[];
+    activities: Activity[];
 }
 
-const SecondStep = ({
-  companyData,
-  setCompanyData,
-  nextPage,
-  prevPage,
-  activities,
-}: Props) => {
-  const handleSelect = (id: number) => {
-    setCompanyData(p => {
-      return p.activities.includes(id)
-        ? { ...p, activities: p.activities.filter(item => item !== id) }
-        : { ...p, activities: [...p.activities, id] };
-    });
-  };
+const SecondStep = ({ companyData, setCompanyData, nextPage, prevPage, activities }: Props) => {
+    const handleSelect = (id: number) => {
+        setCompanyData(p => {
+            return p.activities.includes(id)
+                ? { ...p, activities: p.activities.filter(item => item !== id) }
+                : { ...p, activities: [...p.activities, id] };
+        });
+    };
 
-  const handleBackClick = () => {
-    setCompanyData(p => ({ ...p, activities: [] }));
-    prevPage();
-  };
+    const handleBackClick = () => {
+        setCompanyData(p => ({ ...p, activities: [] }));
+        prevPage();
+    };
 
-  return (
-    <>
-      <Title>Виберіть спеціалізації</Title>
+    return (
+        <>
+            <Title>Виберіть спеціалізації</Title>
 
-      <CategoriesList>
-        {activities.map(item => (
-          <Category
-            selected={companyData.activities.includes(item.id)}
-            key={item.id}
-            onClick={() => handleSelect(item.id)}
-          >
-            {translateActivityName(item.name)}
-          </Category>
-        ))}
-      </CategoriesList>
+            <CategoriesList>
+                {activities.map(item => (
+                    <Category
+                        selected={companyData.activities.includes(item.id)}
+                        key={item.id}
+                        onClick={() => handleSelect(item.id)}
+                    >
+                        {translateActivityName(item.name)}
+                    </Category>
+                ))}
+            </CategoriesList>
 
-      <ButtonBox>
-        <BackButton onClick={handleBackClick} />
+            <ButtonBox>
+                <BackButton onClick={handleBackClick} />
 
-        <NextButton
-          disabled={companyData.activities.length === 0}
-          onClick={nextPage}
-        />
-      </ButtonBox>
-    </>
-  );
+                <NextButton disabled={companyData.activities.length === 0} onClick={nextPage} />
+            </ButtonBox>
+        </>
+    );
 };
 
 export default SecondStep;

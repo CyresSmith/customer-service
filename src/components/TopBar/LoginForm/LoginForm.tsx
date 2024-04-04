@@ -10,54 +10,54 @@ import { UserLogin } from 'store/user/user.types';
 import { InputProps } from 'components/Ui/Form/types';
 
 type Props = {
-  closeModal: () => void;
+    closeModal: () => void;
 };
 
 const loginInputs: Partial<InputProps>[] = [
-  { name: 'email', type: 'email' },
-  { name: 'password', type: 'password' },
+    { name: 'email', type: 'email' },
+    { name: 'password', type: 'password' },
 ];
 
 const initialLoginState: UserLogin = {
-  email: '',
-  password: '',
+    email: '',
+    password: '',
 };
 
 const LoginForm = ({ closeModal }: Props) => {
-  const navigate = useNavigate();
-  const { logIn } = useActions();
+    const navigate = useNavigate();
+    const { logIn } = useActions();
 
-  const [loginMutation, { isLoading, isSuccess }] = useLogInMutation();
+    const [loginMutation, { isLoading, isSuccess }] = useLogInMutation();
 
-  const handleSubmit = async (state: UserLogin): Promise<void> => {
-    const data = await loginMutation(state).unwrap();
+    const handleSubmit = async (state: UserLogin): Promise<void> => {
+        const data = await loginMutation(state).unwrap();
 
-    if (data) {
-      logIn(data);
-      toast.success(`Вітаю, ${data.user?.firstName}`);
-    }
-  };
+        if (data) {
+            logIn(data);
+            toast.success(`Вітаю, ${data.user?.firstName}`);
+        }
+    };
 
-  useEffect(() => {
-    if (isSuccess) {
-      closeModal();
-      navigate('/', { replace: true });
-    }
-  }, [closeModal, isSuccess, navigate]);
+    useEffect(() => {
+        if (isSuccess) {
+            closeModal();
+            navigate('/', { replace: true });
+        }
+    }, [closeModal, isSuccess, navigate]);
 
-  return (
-    <FormBox>
-      <CustomForm<UserLogin>
-        SubmitButtonIcon={HiLogin}
-        isLoading={isLoading}
-        buttonLabel="Увійти"
-        onSubmit={handleSubmit}
-        initialState={initialLoginState}
-        inputs={loginInputs}
-        // title='Авторизація'
-      />
-    </FormBox>
-  );
+    return (
+        <FormBox>
+            <CustomForm<UserLogin>
+                SubmitButtonIcon={HiLogin}
+                isLoading={isLoading}
+                buttonLabel="Увійти"
+                onSubmit={handleSubmit}
+                initialState={initialLoginState}
+                inputs={loginInputs}
+                // title='Авторизація'
+            />
+        </FormBox>
+    );
 };
 
 export default LoginForm;

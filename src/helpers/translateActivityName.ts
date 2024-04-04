@@ -1,161 +1,161 @@
 const translateActivityName = (name: string) => {
-  switch (name) {
-    case 'Psychology':
-      return 'Психологія';
+    switch (name) {
+        case 'Psychology':
+            return 'Психологія';
 
-    case 'Cleaning':
-      return 'Клінінг';
+        case 'Cleaning':
+            return 'Клінінг';
 
-    case 'Piercing':
-      return 'Пірсинг';
+        case 'Piercing':
+            return 'Пірсинг';
 
-    case 'Eyebrows':
-      return 'Брови';
+        case 'Eyebrows':
+            return 'Брови';
 
-    case 'Tattoo':
-      return 'Татуаж, тату';
+        case 'Tattoo':
+            return 'Татуаж, тату';
 
-    case 'Barbershop':
-      return 'Барбершоп';
+        case 'Barbershop':
+            return 'Барбершоп';
 
-    case 'Nail service':
-      return 'Нігтьовий сервіс';
+        case 'Nail service':
+            return 'Нігтьовий сервіс';
 
-    case 'Cosmetology':
-      return 'Косметологія';
+        case 'Cosmetology':
+            return 'Косметологія';
 
-    case 'Sugaring':
-      return 'Шугарінг';
+        case 'Sugaring':
+            return 'Шугарінг';
 
-    case 'Massage':
-      return 'Масаж';
+        case 'Massage':
+            return 'Масаж';
 
-    case 'Makeup':
-      return 'Візаж';
+        case 'Makeup':
+            return 'Візаж';
 
-    case 'Solarium':
-      return 'Солярій';
+        case 'Solarium':
+            return 'Солярій';
 
-    case 'Mustache, beard':
-      return 'Вуса, борода';
+        case 'Mustache, beard':
+            return 'Вуса, борода';
 
-    case 'Hairdressing services':
-      return 'Перукарські послуги';
+        case 'Hairdressing services':
+            return 'Перукарські послуги';
 
-    case 'SPA':
-      return 'СПА';
+        case 'SPA':
+            return 'СПА';
 
-    case 'Eyelash':
-      return 'Вія';
+        case 'Eyelash':
+            return 'Вія';
 
-    case 'Podology':
-      return 'Подологія';
+        case 'Podology':
+            return 'Подологія';
 
-    case 'Dentistry':
-      return 'Стоматологія';
+        case 'Dentistry':
+            return 'Стоматологія';
 
-    case 'Medicine':
-      return 'Медицина';
+        case 'Medicine':
+            return 'Медицина';
 
-    case 'Ophthalmology':
-      return 'Офтальмологія';
+        case 'Ophthalmology':
+            return 'Офтальмологія';
 
-    case 'Analyzes':
-      return 'Аналізи';
+        case 'Analyzes':
+            return 'Аналізи';
 
-    case 'Martial arts':
-      return 'Єдиноборства';
+        case 'Martial arts':
+            return 'Єдиноборства';
 
-    case 'Dancing':
-      return 'Танці';
+        case 'Dancing':
+            return 'Танці';
 
-    case 'Fitness':
-      return 'Фітнес';
+        case 'Fitness':
+            return 'Фітнес';
 
-    case 'Yoga':
-      return 'Йога';
+        case 'Yoga':
+            return 'Йога';
 
-    case 'Coworking':
-      return 'Коворкінг';
+        case 'Coworking':
+            return 'Коворкінг';
 
-    case 'Rent':
-      return 'Оренда';
+        case 'Rent':
+            return 'Оренда';
 
-    case 'Veterinarian':
-      return 'Ветеринарія';
+        case 'Veterinarian':
+            return 'Ветеринарія';
 
-    case 'Grooming':
-      return 'Грумінг';
+        case 'Grooming':
+            return 'Грумінг';
 
-    case 'Tire fitting':
-      return 'Шиномонтаж';
+        case 'Tire fitting':
+            return 'Шиномонтаж';
 
-    case 'Car wash':
-      return 'Автомийка';
+        case 'Car wash':
+            return 'Автомийка';
 
-    case 'Detailing':
-      return 'Детейлінг';
+        case 'Detailing':
+            return 'Детейлінг';
 
-    case 'Driving school':
-      return 'Автошкола';
+        case 'Driving school':
+            return 'Автошкола';
 
-    case 'Car service':
-      return 'Автосервіс';
+        case 'Car service':
+            return 'Автосервіс';
 
-    case 'Technical inspection':
-      return 'Техогляд';
+        case 'Technical inspection':
+            return 'Техогляд';
 
-    case 'Quest':
-      return 'Квест';
+        case 'Quest':
+            return 'Квест';
 
-    case 'Baths, saunas':
-      return 'Лазні, сауни';
+        case 'Baths, saunas':
+            return 'Лазні, сауни';
 
-    case 'Tourism':
-      return 'Туризм';
+        case 'Tourism':
+            return 'Туризм';
 
-    case 'Bowling':
-      return 'Боулінг';
+        case 'Bowling':
+            return 'Боулінг';
 
-    case 'eSports':
-      return 'Кіберспорт';
+        case 'eSports':
+            return 'Кіберспорт';
 
-    case 'Courses':
-      return 'Курси';
+        case 'Courses':
+            return 'Курси';
 
-    case 'Vocal':
-      return 'Вокал';
+        case 'Vocal':
+            return 'Вокал';
 
-    case 'Tutor':
-      return 'Репетитор';
+        case 'Tutor':
+            return 'Репетитор';
 
-    case 'Language school':
-      return 'Мовна школа';
+        case 'Language school':
+            return 'Мовна школа';
 
-    case 'Music':
-      return 'Музика';
+        case 'Music':
+            return 'Музика';
 
-    case 'Driving':
-      return 'Автошкола';
+        case 'Driving':
+            return 'Автошкола';
 
-    case 'Notary':
-      return 'Нотаріус';
+        case 'Notary':
+            return 'Нотаріус';
 
-    case 'Legal Services':
-      return 'Юридичні послуги';
+        case 'Legal Services':
+            return 'Юридичні послуги';
 
-    case 'Photo studio':
-      return 'Фотостудія';
+        case 'Photo studio':
+            return 'Фотостудія';
 
-    case 'Restaurant':
-      return 'Ресторан';
+        case 'Restaurant':
+            return 'Ресторан';
 
-    case 'Others':
-      return 'Інше';
+        case 'Others':
+            return 'Інше';
 
-    default:
-      break;
-  }
+        default:
+            break;
+    }
 };
 
 export default translateActivityName;
