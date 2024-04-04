@@ -1,14 +1,20 @@
 import { IButton } from '../Buttons/Button/Button.types';
 
-export interface ISelect
-  extends Pick<IButton, 'id' | 'disabled' | 'size' | '$colors' | '$variant'> {
+export type ISelectHandler = (item: string | string[], id?: string) => void;
+
+export type ISelect = Pick<
+  IButton,
+  'id' | 'disabled' | 'size' | '$colors' | '$variant'
+> & {
   items: string[];
   selectedItem: string | string[];
   several?: boolean;
-  onSelect: (item: string | string[], id?: string) => void;
-}
+  onSelect: ISelectHandler;
+};
 
-export interface ISelectStyle
-  extends Omit<ISelect, 'id' | 'items' | 'onSelect' | 'selectedItem'> {
+export type ISelectStyle = Omit<
+  ISelect,
+  'id' | 'items' | 'onSelect' | 'selectedItem'
+> & {
   $isOpen: boolean;
-}
+};

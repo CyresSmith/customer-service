@@ -17,7 +17,7 @@ import {
 } from 'date-fns';
 import arraysAreEqual from 'helpers/areArrayEqual';
 import { useCompany } from 'hooks/useCompany';
-import { LegacyRef, useEffect, useRef, useState } from 'react';
+import { LegacyRef, UIEventHandler, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useGetAllCompanySchedulesQuery } from 'services/schedules.api';
 import { IEmployee } from 'services/types/employee.types';
@@ -50,7 +50,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
 
   const [scrollLeft, setScrollLeft] = useState<number>(0);
 
-  const handleScroll = (e: UIEvent) => {
+  const handleScroll: UIEventHandler<HTMLDivElement> = e => {
     const { scrollLeft } = e.target as HTMLDivElement;
 
     setScrollLeft(scrollLeft);
@@ -230,118 +230,122 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
   return isLoading ? (
     <Loader />
   ) : (
-    <WorkScheduleBox onScroll={handleScroll}>
-      <SchedulesList>
-        <HeaderRowBox key={id} $daysCount={monthDaysCount + 1}>
-          <HeaderDay />
+    <>
+      <WorkScheduleBox onScroll={handleScroll}>
+        <SchedulesList>
+          <HeaderRowBox key={id} $daysCount={monthDaysCount + 1}>
+            <HeaderDay />
 
-          {monthDays.map((item, i) => {
-            const hours = workingHours?.find(({ days }) =>
-              days.includes(getDay(item))
-            );
+            {monthDays.map((item, i) => {
+              const hours = workingHours?.find(({ days }) =>
+                days.includes(getDay(item))
+              );
 
-            const isNotWorking = isNotWorkingDay(item);
+              const isNotWorking = isNotWorkingDay(item);
 
-            return (
-              <HeaderDay
-                onClick={() => handleSelect(item)}
-                key={i}
-                $isNotWorkingDay={isNotWorking}
-              >
-                <DayDateBox $isNotWorkingDay={isNotWorking}>
-                  <DayDate>{getDate(item)}</DayDate>
-                  <DayName>{format(item, 'EEEE')}</DayName>
-                </DayDateBox>
+              return (
+                <HeaderDay
+                  onClick={() => handleSelect(item)}
+                  key={i}
+                  $isNotWorkingDay={isNotWorking}
+                >
+                  <DayDateBox $isNotWorkingDay={isNotWorking}>
+                    <DayDate>{getDate(item)}</DayDate>
+                    <DayName>{format(item, 'EEEE')}</DayName>
+                  </DayDateBox>
 
-                {hours && (
-                  <WorkHours>
-                    <span>{hours.hours.from}</span>
-                    {' - '}
-                    <span>{hours.hours.to}</span>
-                  </WorkHours>
-                )}
-              </HeaderDay>
-            );
-          })}
-        </HeaderRowBox>
+                  {hours && (
+                    <WorkHours>
+                      <span>{hours.hours.from}</span>
+                      {' - '}
+                      <span>{hours.hours.to}</span>
+                    </WorkHours>
+                  )}
+                </HeaderDay>
+              );
+            })}
+          </HeaderRowBox>
 
-        <SchedulesListBox $daysCount={monthDaysCount + 1}>
-          <EmployeesList
-            style={{ left: scrollLeft }}
-            $employeesCount={providers.length}
-          >
-            {providers.map(({ id, avatar, firstName }) => (
-              <Employee key={id} onClick={() => handleEmployeeClick(id)}>
-                <ItemAvatar avatar={avatar} name={firstName} />
+          <SchedulesListBox $daysCount={monthDaysCount + 1}>
+            <EmployeesList
+              style={{ left: scrollLeft }}
+              $employeesCount={providers.length}
+            >
+              {providers.map(({ id, avatar, firstName }) => (
+                <Employee key={id} onClick={() => handleEmployeeClick(id)}>
+                  <ItemAvatar avatar={avatar} name={firstName} />
 
-                <p>{firstName}</p>
-              </Employee>
-            ))}
-          </EmployeesList>
+                  <p>{firstName}</p>
+                </Employee>
+              ))}
+            </EmployeesList>
 
-          {providers.map(({ id }) => {
-            const employeeSchedule = allSchedules?.find(
-              ({ employee }) => employee.id === id
-            );
+            {providers.map(({ id }) => {
+              const employeeSchedule = allSchedules?.find(
+                ({ employee }) => employee.id === id
+              );
 
-            return (
-              <RowBox key={id} $daysCount={monthDaysCount + 1}>
-                <Day />
+              return (
+                <RowBox key={id} $daysCount={monthDaysCount + 1}>
+                  <Day />
 
-                {monthDays.map((item, i) => {
-                  const isSelected =
-                    selectedDays?.findIndex(
-                      selected =>
-                        selected?.id === id &&
-                        selected?.dates?.findIndex(selected =>
-                          isSameDay(selected, item)
-                        ) !== -1
-                    ) !== -1;
+                  {monthDays.map((item, i) => {
+                    const isSelected =
+                      selectedDays?.findIndex(
+                        selected =>
+                          selected?.id === id &&
+                          selected?.dates?.findIndex(selected =>
+                            isSameDay(selected, item)
+                          ) !== -1
+                      ) !== -1;
 
-                  const daySchedule = employeeSchedule?.schedule.find(
-                    ({ day }) => day === getDate(item)
-                  );
+                    const daySchedule = employeeSchedule?.schedule.find(
+                      ({ day }) => day === getDate(item)
+                    );
 
-                  const dayRef = isThisMonth(selectedMonth)
-                    ? isToday(item)
-                    : getDate(item) === 1;
+                    const dayRef = isThisMonth(selectedMonth)
+                      ? isToday(item)
+                      : getDate(item) === 1;
 
-                  const isNotWorking = isNotWorkingDay(item);
+                    const isNotWorking = isNotWorkingDay(item);
 
-                  return (
-                    <Day
-                      $isNotWorkingDay={isNotWorking}
-                      ref={dayRef ? scrollRef : null}
-                      onClick={() => handleSelect(item, id)}
-                      key={i}
-                    >
-                      <DayBox
+                    return (
+                      <Day
                         $isNotWorkingDay={isNotWorking}
-                        $selected={isSelected}
+                        ref={dayRef ? scrollRef : null}
+                        onClick={() => handleSelect(item, id)}
+                        key={i}
                       >
-                        {daySchedule && (
-                          <>
-                            <span>{daySchedule.hours.from}</span>
-                            {daySchedule.breakHours && (
-                              <DayBreak $selected={isSelected}>
-                                <span>{daySchedule.breakHours.from}</span>
-                                {'-'}
-                                <span>{daySchedule.breakHours.to}</span>
-                              </DayBreak>
-                            )}
-                            <span>{daySchedule.hours.to}</span>
-                          </>
-                        )}
-                      </DayBox>
-                    </Day>
-                  );
-                })}
-              </RowBox>
-            );
-          })}
-        </SchedulesListBox>
-      </SchedulesList>
-    </WorkScheduleBox>
+                        <DayBox
+                          $isNotWorkingDay={isNotWorking}
+                          $selected={isSelected}
+                        >
+                          {daySchedule && (
+                            <>
+                              <span>{daySchedule.hours.from}</span>
+                              {daySchedule.breakHours && (
+                                <DayBreak $selected={isSelected}>
+                                  <span>{daySchedule.breakHours.from}</span>
+                                  {'-'}
+                                  <span>{daySchedule.breakHours.to}</span>
+                                </DayBreak>
+                              )}
+                              <span>{daySchedule.hours.to}</span>
+                            </>
+                          )}
+                        </DayBox>
+                      </Day>
+                    );
+                  })}
+                </RowBox>
+              );
+            })}
+          </SchedulesListBox>
+        </SchedulesList>
+      </WorkScheduleBox>
+
+      {/* <ScheduleTimeSelection selectedDays={selectedDays.map()} /> */}
+    </>
   );
 };
 
