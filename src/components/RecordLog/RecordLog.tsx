@@ -1,6 +1,6 @@
 import Button from 'components/Ui/Buttons/Button';
 import Calendar from 'components/Ui/Calendar/Calendar';
-import { SCHEDULES_PERPAGE } from 'helpers/constants';
+import { SCHEDULES_PER_PAGE } from 'helpers/constants';
 import generateTimeArray, { getSchedule } from 'helpers/generateTimeArray';
 import { useLayoutEffect, useState } from 'react';
 import { HiArrowCircleLeft, HiArrowCircleRight } from 'react-icons/hi';
@@ -14,7 +14,7 @@ import {
     ListsWrapper,
     NoDataWrapper,
     NoSchedule,
-    RigthWrapper,
+    RightWrapper,
     SchedulesContainer,
     ScrollWrapper,
 } from './RecordLog.styled';
@@ -59,37 +59,15 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
     const todayCompanySchedule =
         workingHours && workingHours.find(wh => wh.days.includes(chosenDay));
 
-    // const handleReplace = (path: string) => {
-    //   navigate(path, {replace: true});
-    // }
-
-    // if (!todayCompanySchedule) {
-    //   return (
-    //     <NoDataWrapper>
-    //       <NoSchedule>Не встановлено графік роботи компанії для обраного дня!</NoSchedule>
-    //       <Button $colors='light' children='Перейти до профілю компанії' />
-    //     </NoDataWrapper>
-    //   );
-    // }
-
-    // if (employees.length < 1) {
-    //   return (
-    //     <NoDataWrapper>
-    //       <NoSchedule>Відсутні працівники з доступним графіком роботи на обраний день!</NoSchedule>
-    //       <Button $colors='light' children='До списку співробітників' />
-    //     </NoDataWrapper>
-    //   )
-    // }
-
-    const { from, to } = todayCompanySchedule!.hours;
+    const { from, to } = todayCompanySchedule?.hours;
 
     const timeArray = generateTimeArray(true);
 
     const companyDaySchedule = getSchedule(timeArray, from, to);
 
     const providersToRender =
-        employees.length > SCHEDULES_PERPAGE
-            ? employees.slice(startIndex, startIndex + SCHEDULES_PERPAGE)
+        employees.length > SCHEDULES_PER_PAGE
+            ? employees.slice(startIndex, startIndex + SCHEDULES_PER_PAGE)
             : employees;
 
     return isGlobalLoading ? (
@@ -103,7 +81,7 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
         <Container>
             <LeftWrapper>
                 <EmployeesListWrapper>
-                    {startIndex !== 0 && employees.length > SCHEDULES_PERPAGE && (
+                    {startIndex !== 0 && employees.length > SCHEDULES_PER_PAGE && (
                         <BtnWrapper $left="10px">
                             <Button
                                 onClick={() => setStartIndex(s => s - 1)}
@@ -121,7 +99,7 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
                         employees={providersToRender}
                         schedules={allSchedules}
                     />
-                    {employees.length > SCHEDULES_PERPAGE &&
+                    {employees.length > SCHEDULES_PER_PAGE &&
                         employees[employees.length - 1] !==
                             providersToRender[providersToRender.length - 1] && (
                             <BtnWrapper $right="10px">
@@ -155,9 +133,9 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
                     </SchedulesContainer>
                 </ScrollWrapper>
             </LeftWrapper>
-            <RigthWrapper>
+            <RightWrapper>
                 <Calendar cellSize={30} date={date} setDate={setDate} />
-            </RigthWrapper>
+            </RightWrapper>
         </Container>
     ) : (
         <NoDataWrapper>
