@@ -79,8 +79,8 @@ const Select = ({
           {!several
             ? selected
             : severalSelected.length > 0
-            ? severalSelected.join(', ')
-            : 'Нічого не вибрано'}
+              ? severalSelected.join(', ')
+              : 'Нічого не вибрано'}
         </span>
 
         <HiChevronDown />

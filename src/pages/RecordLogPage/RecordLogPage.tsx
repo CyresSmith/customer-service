@@ -13,13 +13,14 @@ import { BasicEmployeeInfo } from 'services/types/employee.types';
 import { EmployeeStatusEnum } from 'services/types/employee.types';
 import { getDate, getMonth, getYear } from 'date-fns';
 
-const initialSelection = [{id: 'all', value: `Всі працівники`}];
+const initialSelection = [{ id: 'all', value: `Всі працівники` }];
 
 const RecordLogPage = () => {
   const { workingHours, id } = useCompany();
   const [eventStep, setEventStep] = useState<string | null>(null);
   const [date, setDate] = useState<Date>(new Date());
-  const [selectedItem, setSelectedItem] = useState<SelectItem[]>(initialSelection);
+  const [selectedItem, setSelectedItem] =
+    useState<SelectItem[]>(initialSelection);
   const [allSchedules, setAllSchedules] = useState<IMonthSchedule[]>([]);
   const [allEmployees, setAllEmployees] = useState<BasicEmployeeInfo[]>([]);
   const [getEmployees] = useLazyGetCompanyEmployeesQuery();
@@ -35,27 +36,41 @@ const RecordLogPage = () => {
           setAllEmployees(employees);
         }
 
-        const { data: schedules } = await getSchedules({ companyId: id, month: chosenMonth, year: chosenYear });
+        const { data: schedules } = await getSchedules({
+          companyId: id,
+          month: chosenMonth,
+          year: chosenYear,
+        });
         if (schedules) {
           setAllSchedules(schedules);
         }
       }
-    }
+    };
 
     getData();
   }, [chosenMonth, chosenYear, getEmployees, getSchedules, id]);
 
-  const workingProviders = allEmployees.filter(e => e.provider && e.status === EmployeeStatusEnum.WORKING);
+  const workingProviders = allEmployees.filter(
+    e => e.provider && e.status === EmployeeStatusEnum.WORKING
+  );
 
   const employeesWithThisDaySchedule = workingProviders.filter(e => {
-  const year = getYear(date);
-  const month = getMonth(date);
-  const day = getDate(date);
+    const year = getYear(date);
+    const month = getMonth(date);
+    const day = getDate(date);
 
-  if (allSchedules.find(s => s.employee.id === e.id && s.year === year && s.month === month && s.schedule.find(ss => ss.day === day))) {
-    return e;
-  }
-});
+    if (
+      allSchedules.find(
+        s =>
+          s.employee.id === e.id &&
+          s.year === year &&
+          s.month === month &&
+          s.schedule.find(ss => ss.day === day)
+      )
+    ) {
+      return e;
+    }
+  });
 
   const providersForSelect = employeesWithThisDaySchedule.map(p => {
     return {
@@ -90,52 +105,56 @@ const RecordLogPage = () => {
 
   const filteredProvidersList =
     selectedItem[0]?.id !== 'all'
-      ? employeesWithThisDaySchedule.filter(p => selectedItem.find(s => s.id === p.id))
+      ? employeesWithThisDaySchedule.filter(p =>
+          selectedItem.find(s => s.id === p.id)
+        )
       : employeesWithThisDaySchedule;
 
-  return allEmployees && (
-    <>
-      <PageContentLayout
-        bar={
-          <RecordLogBar
-            date={date}
-            selectItems={[...initialSelection, ...providersForSelect]}
-            selected={selectedItem}
-            setDate={setDate}
-            handleSelect={handleSelect}
-            openEventModal={handleEventStep}
-          />
-        }
-        content={
-          <RecordLog
-            allSchedules={allSchedules}
-            date={date}
-            setDate={setDate}
-            workingHours={workingHours}
-            employees={filteredProvidersList}
-          />
-        }
-      />
-      {eventStep !== null && (
-        <Modal
-          titleMargin="10px"
-          closeModal={closeEventModal}
-          $isOpen={eventStep !== null}
-          title={
-            eventStep === 'employees'
-              ? 'Оберіть працівника'
-              : eventStep === 'services'
-                ? 'Оберіть послугу'
-                : eventStep === 'date'
-                  ? 'Оберіть дату та час'
-                  : 'Створення запису'
+  return (
+    allEmployees && (
+      <>
+        <PageContentLayout
+          bar={
+            <RecordLogBar
+              date={date}
+              selectItems={[...initialSelection, ...providersForSelect]}
+              selected={selectedItem}
+              setDate={setDate}
+              handleSelect={handleSelect}
+              openEventModal={handleEventStep}
+            />
           }
-          children={
-            <CreateEvent step={eventStep} handleEventStep={handleEventStep} />
+          content={
+            <RecordLog
+              allSchedules={allSchedules}
+              date={date}
+              setDate={setDate}
+              workingHours={workingHours}
+              employees={filteredProvidersList}
+            />
           }
         />
-      )}
-    </>
+        {eventStep !== null && (
+          <Modal
+            titleMargin="10px"
+            closeModal={closeEventModal}
+            $isOpen={eventStep !== null}
+            title={
+              eventStep === 'employees'
+                ? 'Оберіть працівника'
+                : eventStep === 'services'
+                  ? 'Оберіть послугу'
+                  : eventStep === 'date'
+                    ? 'Оберіть дату та час'
+                    : 'Створення запису'
+            }
+            children={
+              <CreateEvent step={eventStep} handleEventStep={handleEventStep} />
+            }
+          />
+        )}
+      </>
+    )
   );
 };
 

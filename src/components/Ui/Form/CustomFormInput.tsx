@@ -71,14 +71,14 @@ const CustomFormInput = ({
                 : (value as SelectItem)
             }
           />
-          ) : name === 'birthday' && handlePickDate ? (
-              <DatePicker
-                prewDate={value as Date}
-                calendarCellSize={25}
-                bgColor='dark'
-                handleDateConfirm={handlePickDate}
-              />
-            ) : (
+        ) : name === 'birthday' && handlePickDate ? (
+          <DatePicker
+            prewDate={value as Date}
+            calendarCellSize={25}
+            bgColor="dark"
+            handleDateConfirm={handlePickDate}
+          />
+        ) : (
           <FormInput
             disabled={disabled}
             type={type !== 'password' ? type : hidden ? type : 'text'}

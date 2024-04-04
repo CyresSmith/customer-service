@@ -26,13 +26,10 @@ const EmployeesPage = () => {
     setOpenModal(OpenModal.EDIT);
   };
 
-  const { data, isLoading } = useGetCompanyEmployeesQuery(
-    +companyId,
-    {
-      skip: !companyId || !accessToken,
-      refetchOnMountOrArgChange: true,
-    }
-  );
+  const { data, isLoading } = useGetCompanyEmployeesQuery(+companyId, {
+    skip: !companyId || !accessToken,
+    refetchOnMountOrArgChange: true,
+  });
 
   // useEffect(() => {
   //   if (isSuccess && data) {

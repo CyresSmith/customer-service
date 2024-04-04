@@ -83,7 +83,7 @@ const ClientForm = ({ initialState, onSubmit, isLoading, type }: Props) => {
 
   const handlePickDate = (date: Date) => {
     setState({ ...state, birthday: date });
-  }
+  };
 
   return (
     <Form onSubmit={handleSubmit}>

@@ -7,9 +7,9 @@ type CalendarDay = {
   $anotherMonth: boolean;
   $cellSize: number;
   $disabled: boolean;
-}
+};
 
-export const CalendarBox = styled.div<{$padding: string}>`
+export const CalendarBox = styled.div<{ $padding: string }>`
   width: 100%;
   background-color: ${theme.colors.bg.main};
   border-radius: ${theme.radii.m};
@@ -47,14 +47,14 @@ export const Day = styled.div<CalendarDay>`
     $selected
       ? theme.colors.secondary.light
       : $today
-      ? theme.colors.accent.main
-      : theme.colors.bg.light};
+        ? theme.colors.accent.main
+        : theme.colors.bg.light};
   color: ${({ $today, $selected }) =>
     $selected
       ? theme.colors.bg.main
       : $today
-      ? theme.colors.bg.dark
-      : theme.colors.white};
+        ? theme.colors.bg.dark
+        : theme.colors.white};
   border-radius: ${theme.radii.xs};
   padding: ${theme.space[2]};
   width: ${props => props.$cellSize}px;
@@ -62,12 +62,14 @@ export const Day = styled.div<CalendarDay>`
   opacity: ${({ $anotherMonth }) => ($anotherMonth ? 0.8 : 1)};
   transition: ${theme.transition.primary};
   cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
-  opacity: ${({ $disabled, $anotherMonth }) => ($disabled ? 0.5 : $anotherMonth ? 0.7 : 1)};
-  pointer-events: ${props => props.$disabled ? 'none' : 'all'};
+  opacity: ${({ $disabled, $anotherMonth }) =>
+    $disabled ? 0.5 : $anotherMonth ? 0.7 : 1};
+  pointer-events: ${props => (props.$disabled ? 'none' : 'all')};
 `;
 
 export const DayDate = styled.p<Pick<CalendarDay, '$today' | '$cellSize'>>`
   font-size: ${props => props.$cellSize / 2}px;
-  font-weight: ${({ $today }) => $today ? `${theme.fontWeights.bold}` : `${theme.fontWeights.regular}`};
+  font-weight: ${({ $today }) =>
+    $today ? `${theme.fontWeights.bold}` : `${theme.fontWeights.regular}`};
   text-align: center;
 `;

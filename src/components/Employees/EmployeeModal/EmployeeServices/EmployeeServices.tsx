@@ -80,8 +80,8 @@ const EmployeeServices = ({ employee }: Props) => {
         employeeSetting && employeeSetting.duration
           ? millisecondsToHours(employeeSetting.duration)
           : service?.duration
-          ? millisecondsToHours(service?.duration)
-          : 0;
+            ? millisecondsToHours(service?.duration)
+            : 0;
 
       const minutes =
         employeeSetting && employeeSetting.duration
@@ -89,10 +89,10 @@ const EmployeeServices = ({ employee }: Props) => {
               employeeSetting?.duration - hoursToMilliseconds(hours)
             )
           : service?.duration
-          ? millisecondsToMinutes(
-              service?.duration - hoursToMilliseconds(hours)
-            )
-          : 0;
+            ? millisecondsToMinutes(
+                service?.duration - hoursToMilliseconds(hours)
+              )
+            : 0;
 
       const serviceState = {
         durationHours: { id: hours, value: `${hours} г.` },

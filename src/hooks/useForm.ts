@@ -16,8 +16,15 @@ export type ValidationReturn = { [key: string]: string }[];
 
 export function useForm<
   Type extends {
-    [k: string]: string | number | boolean | SelectItem | SelectItem[] | Date | null;
-  }
+    [k: string]:
+      | string
+      | number
+      | boolean
+      | SelectItem
+      | SelectItem[]
+      | Date
+      | null;
+  },
 >(initialState: Type, onSubmit: (state: Type) => void): ReturnType<Type> {
   const [state, setState] = useState<Type>(initialState);
 
@@ -76,8 +83,8 @@ export function useForm<
                 ? null
                 : selected
               : currentState?.value === selected.value
-              ? null
-              : selected,
+                ? null
+                : selected,
           };
         }
       }

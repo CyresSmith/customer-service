@@ -11,7 +11,7 @@ import theme from 'utils/theme';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <BrowserRouter basename='customer-service'>
+      <BrowserRouter basename="customer-service">
         <ThemeProvider theme={theme}>
           <App />
         </ThemeProvider>

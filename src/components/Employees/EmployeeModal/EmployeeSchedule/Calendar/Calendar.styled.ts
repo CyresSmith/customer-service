@@ -35,14 +35,14 @@ export const Day = styled.div<ICalendarDay>`
     $selected
       ? theme.colors.secondary.light
       : $today
-      ? theme.colors.accent.main
-      : theme.colors.bg.light};
+        ? theme.colors.accent.main
+        : theme.colors.bg.light};
   color: ${({ $today, $selected }) =>
     $selected
       ? theme.colors.bg.main
       : $today
-      ? theme.colors.bg.dark
-      : theme.colors.white};
+        ? theme.colors.bg.dark
+        : theme.colors.white};
   border-radius: ${theme.radii.s};
   padding: ${theme.space[2]};
   height: 73px;
@@ -55,8 +55,8 @@ export const Day = styled.div<ICalendarDay>`
       $selected
         ? theme.colors.secondary.light
         : $today
-        ? theme.colors.accent.light
-        : theme.colors.secondary.main};
+          ? theme.colors.accent.light
+          : theme.colors.secondary.main};
   }
 
   &.other {

@@ -1,12 +1,7 @@
 // type Props = {};
 
 const WorkSchedule = () => {
-
-  return (
-    <>
-      
-    </>
-  );
+  return <></>;
 };
 
 export default WorkSchedule;

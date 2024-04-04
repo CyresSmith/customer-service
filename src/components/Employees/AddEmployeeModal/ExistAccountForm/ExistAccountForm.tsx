@@ -41,7 +41,8 @@ const initialState = {
 
 const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
   const { id: companyId } = useCompany();
-  const [addEmployee, { isLoading, isSuccess }] = useAddExistUserEmployeeMutation();
+  const [addEmployee, { isLoading, isSuccess }] =
+    useAddExistUserEmployeeMutation();
 
   const onSubmit = async ({
     jobTitle,

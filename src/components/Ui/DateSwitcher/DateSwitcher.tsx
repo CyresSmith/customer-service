@@ -48,16 +48,16 @@ const DateSwitcher = ({
         return dateType === 'day'
           ? addDays(date, 1)
           : dateType === 'month'
-          ? addMonths(date, 1)
-          : addYears(date, 1);
+            ? addMonths(date, 1)
+            : addYears(date, 1);
       });
     } else {
       setDate(() => {
         return dateType === 'day'
           ? addDays(date, -1)
           : dateType === 'month'
-          ? addMonths(date, -1)
-          : addYears(date, -1);
+            ? addMonths(date, -1)
+            : addYears(date, -1);
       });
     }
   };

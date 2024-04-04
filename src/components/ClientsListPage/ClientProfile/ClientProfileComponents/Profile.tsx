@@ -24,7 +24,6 @@ type Props = {
 };
 
 export const Profile = ({ companyId, closeModal, client }: Props) => {
-
   const [uploadAvatar, { isLoading: uploadLoading }] =
     useUploadAvatarMutation();
 

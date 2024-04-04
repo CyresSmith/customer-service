@@ -34,7 +34,13 @@ type Props = {
   allSchedules: IMonthSchedule[];
 };
 
-const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Props) => {
+const RecordLog = ({
+  allSchedules,
+  date,
+  workingHours,
+  employees,
+  setDate,
+}: Props) => {
   const { isGlobalLoading } = useLoading();
   const chosenDay = new Date(date).getDay();
   const [startIndex, setStartIndex] = useState<number>(0);
@@ -57,7 +63,8 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
     setIsScroll(schedulesListElementHeight > schedulesContainerElementHeight);
   }, [employees]);
 
-  const todayCompanySchedule = workingHours && workingHours.find(wh => wh.days.includes(chosenDay));
+  const todayCompanySchedule =
+    workingHours && workingHours.find(wh => wh.days.includes(chosenDay));
 
   // const handleReplace = (path: string) => {
   //   navigate(path, {replace: true});
@@ -92,16 +99,16 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
       ? employees.slice(startIndex, startIndex + SCHEDULES_PERPAGE)
       : employees;
 
-  return isGlobalLoading ?
-      (<Loader />) :
-    !todayCompanySchedule ?
-      <NoDataWrapper>
-        <NoSchedule>Не встановлено графік роботи компанії для обраного дня!</NoSchedule>
-        <Button $colors='light' children='Перейти до профілю компанії' />
-      </NoDataWrapper> :
-
-      employees.length > 0 ?
-        
+  return isGlobalLoading ? (
+    <Loader />
+  ) : !todayCompanySchedule ? (
+    <NoDataWrapper>
+      <NoSchedule>
+        Не встановлено графік роботи компанії для обраного дня!
+      </NoSchedule>
+      <Button $colors="light" children="Перейти до профілю компанії" />
+    </NoDataWrapper>
+  ) : employees.length > 0 ? (
     <Container>
       <LeftWrapper>
         <EmployeesListWrapper>
@@ -125,7 +132,7 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
           />
           {employees.length > SCHEDULES_PERPAGE &&
             employees[employees.length - 1] !==
-            providersToRender[providersToRender.length - 1] && (
+              providersToRender[providersToRender.length - 1] && (
               <BtnWrapper $right="10px">
                 <Button
                   onClick={() => setStartIndex(s => s + 1)}
@@ -140,10 +147,15 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
         <ScrollWrapper id="schedulesContainer">
           <SchedulesContainer>
             <TimeList side="left" workHours={companyDaySchedule} />
-            <ListsWrapper id="schedulesList" $columns={providersToRender.length}>
+            <ListsWrapper
+              id="schedulesList"
+              $columns={providersToRender.length}
+            >
               {providersToRender.map((provider, i) => (
                 <RecordLogList
-                  schedules={allSchedules.filter(s => s.employee.id === provider.id)}
+                  schedules={allSchedules.filter(
+                    s => s.employee.id === provider.id
+                  )}
                   companySchedule={companyDaySchedule}
                   key={provider.id}
                   date={date}
@@ -158,11 +170,15 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
       <RigthWrapper>
         <Calendar cellSize={30} date={date} setDate={setDate} />
       </RigthWrapper>
-    </Container> :
+    </Container>
+  ) : (
     <NoDataWrapper>
-      <NoSchedule>Відсутні працівники з доступним графіком роботи на обраний день!</NoSchedule>
-      <Button $colors='light' children='До списку співробітників' />
+      <NoSchedule>
+        Відсутні працівники з доступним графіком роботи на обраний день!
+      </NoSchedule>
+      <Button $colors="light" children="До списку співробітників" />
     </NoDataWrapper>
+  );
 };
 
 export default RecordLog;

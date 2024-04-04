@@ -546,12 +546,12 @@ const EmployeeSchedule = ({ employee }: Props) => {
                                 to
                                   ? timeArray[timeArray.indexOf(to) - 1]
                                   : selectedDayCompanySchedule
-                                  ? timeArray[
-                                      timeArray.indexOf(
-                                        selectedDayCompanySchedule.hours.to
-                                      ) - 1
-                                    ]
-                                  : ''
+                                    ? timeArray[
+                                        timeArray.indexOf(
+                                          selectedDayCompanySchedule.hours.to
+                                        ) - 1
+                                      ]
+                                    : ''
                               )}
                               disabled={!isEditingAllowed || breakFrom === ''}
                             />

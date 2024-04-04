@@ -184,8 +184,8 @@ const ThirdStep = ({
     const newValue = Number.isNaN(+value)
       ? 0
       : +value >= 999999
-      ? 999999
-      : +value;
+        ? 999999
+        : +value;
 
     setServiceData(p => {
       if (id === undefined) {

@@ -11,9 +11,8 @@ const PrivateRoute = ({ children }: Props): React.ReactElement => {
   const { isLoggedIn, accessToken } = useAuth();
   const { isGlobalLoading } = useLoading();
 
-  const redirect: boolean = !isLoggedIn && !isGlobalLoading && !accessToken
-    ? true
-    : false;
+  const redirect: boolean =
+    !isLoggedIn && !isGlobalLoading && !accessToken ? true : false;
 
   return redirect ? <Navigate to="/" replace={true} /> : children;
 };

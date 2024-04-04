@@ -5,7 +5,10 @@ import Modal from 'components/Ui/Modal/Modal';
 import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useCreateClientMutation, useGetAllClientsQuery } from 'services/clients.api';
+import {
+  useCreateClientMutation,
+  useGetAllClientsQuery,
+} from 'services/clients.api';
 import { Client } from 'services/types/clients.types';
 
 const addInitialState: Client = {

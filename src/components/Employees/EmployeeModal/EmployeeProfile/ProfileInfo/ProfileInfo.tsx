@@ -86,13 +86,12 @@ const ProfileInfo = ({ employee }: Props) => {
     }
   };
 
-  const { state, handleChange, handleSubmit, invalidFields, setState } = useForm<
-    typeof initialState
-    >(initialState, onSubmit);
+  const { state, handleChange, handleSubmit, invalidFields, setState } =
+    useForm<typeof initialState>(initialState, onSubmit);
 
-    const handlePickDate = (date: Date) => {
-      setState({ ...state, birthday: date });
-    }
+  const handlePickDate = (date: Date) => {
+    setState({ ...state, birthday: date });
+  };
 
   return (
     <ProfileInfoBox>

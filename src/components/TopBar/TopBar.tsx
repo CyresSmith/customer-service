@@ -38,7 +38,8 @@ const TopBar = () => {
       </TopBarWrapper>
 
       {isOpen && (
-        <Modal title={isOpen === 'register' ? 'Реєстрація' : 'Авторизація'}
+        <Modal
+          title={isOpen === 'register' ? 'Реєстрація' : 'Авторизація'}
           children={
             isOpen === 'register' ? (
               <RegisterForm closeModal={closeModal} />

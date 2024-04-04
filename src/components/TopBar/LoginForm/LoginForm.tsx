@@ -13,7 +13,7 @@ type Props = {
   closeModal: () => void;
 };
 
-const loginInputs:  Partial <InputProps>[] = [
+const loginInputs: Partial<InputProps>[] = [
   { name: 'email', type: 'email' },
   { name: 'password', type: 'password' },
 ];
@@ -27,8 +27,7 @@ const LoginForm = ({ closeModal }: Props) => {
   const navigate = useNavigate();
   const { logIn } = useActions();
 
-  const [loginMutation, { isLoading, isSuccess }] =
-    useLogInMutation();
+  const [loginMutation, { isLoading, isSuccess }] = useLogInMutation();
 
   const handleSubmit = async (state: UserLogin): Promise<void> => {
     const data = await loginMutation(state).unwrap();

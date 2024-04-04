@@ -30,18 +30,17 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-    const { data, isSuccess } = await getCurrentUser(undefined);
-    
-    if (data && isSuccess) {
-      setCurrentUser(data);
-    }
-  }
+      const { data, isSuccess } = await getCurrentUser(undefined);
+
+      if (data && isSuccess) {
+        setCurrentUser(data);
+      }
+    };
 
     if (!user && accessToken) {
       fetchData();
     }
-
-  }, [accessToken, getCurrentUser, setCurrentUser, user])
+  }, [accessToken, getCurrentUser, setCurrentUser, user]);
 
   return (
     <>

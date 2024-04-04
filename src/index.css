@@ -77,7 +77,7 @@ select {
 }
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background-color: #FFB000;
+  background-color: #ffb000;
 }
 
 ::-webkit-scrollbar-track {

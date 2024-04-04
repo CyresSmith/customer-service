@@ -32,11 +32,17 @@ const RecordLogList = ({ companySchedule, schedules, date, last }: Props) => {
   const chosenMonth = new Date(date).getMonth();
   const chosenYear = new Date(date).getFullYear();
 
-  const chosenSchedule = schedules.filter(s => s.year === chosenYear && s.month === chosenMonth)[0]?.schedule.find(sh => sh.day === chosenDay)?.hours ?
-    schedules.filter(s => s.year === chosenYear && s.month === chosenMonth)[0]?.schedule.find(sh => sh.day === chosenDay)?.hours :
-    { from: '', to: '' };
-  
-  const breakHours = schedules.find(s => s.year === chosenYear && s.month === chosenMonth)?.schedule.find(s => s.day === chosenDay)?.breakHours;
+  const chosenSchedule = schedules
+    .filter(s => s.year === chosenYear && s.month === chosenMonth)[0]
+    ?.schedule.find(sh => sh.day === chosenDay)?.hours
+    ? schedules
+        .filter(s => s.year === chosenYear && s.month === chosenMonth)[0]
+        ?.schedule.find(sh => sh.day === chosenDay)?.hours
+    : { from: '', to: '' };
+
+  const breakHours = schedules
+    .find(s => s.year === chosenYear && s.month === chosenMonth)
+    ?.schedule.find(s => s.day === chosenDay)?.breakHours;
 
   const getEmployeeSchedule = (): string[] => {
     const { from, to } = chosenSchedule!;
@@ -60,7 +66,7 @@ const RecordLogList = ({ companySchedule, schedules, date, last }: Props) => {
         } else {
           return s;
         }
-      })
+      });
 
       return withBreaks;
     }

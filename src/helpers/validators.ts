@@ -15,7 +15,6 @@ const validators: IndexType = {
 };
 
 const validateInputs = (name: string, value: Value): Result<Value> => {
-
   if (!Object.keys(validators).includes(name)) {
     return { ok: true, value };
   } else {
