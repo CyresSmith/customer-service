@@ -81,6 +81,10 @@ const ClientForm = ({ initialState, onSubmit, isLoading, type }: Props) => {
     setState({ ...state, gender: item.value });
   };
 
+  const handlePickDate = (date: Date) => {
+    setState({ ...state, birthday: date });
+  }
+
   return (
     <Form onSubmit={handleSubmit}>
       {type === 'add' && <FormTitle>Новий клієнт</FormTitle>}
@@ -98,6 +102,7 @@ const ClientForm = ({ initialState, onSubmit, isLoading, type }: Props) => {
                   : state[name as keyof InputValueType]
               }
               handleChange={handleChange}
+              handlePickDate={handlePickDate}
               disabledIcon={true}
               selectItems={genderOptions}
               handleSelect={handleSelect}

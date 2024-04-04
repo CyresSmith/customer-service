@@ -50,7 +50,13 @@ export const ListsWrapper = styled.div<{ $columns: number }>`
     grid-template-rows: auto;
 `
 
+export const NoDataWrapper = styled.div`
+    margin: auto auto;
+    text-align: center;
+`
+
 export const NoSchedule = styled.p`
     font-size: ${theme.fontSizes.heading.xs};
     justify-self: center;
+    margin-bottom: ${theme.space[4]};
 `

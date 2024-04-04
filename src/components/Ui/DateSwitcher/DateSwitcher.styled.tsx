@@ -13,14 +13,16 @@ export const Container = styled.div<SwitcherType>`
     props.$type === 'month'
       ? '150px'
       : props.$type === 'year'
-      ? '100px'
+      ? '150px'
       : '200px'};
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-radius: ${props =>
     props.$borderRadius ? `${theme.radii[props.$borderRadius]}` : 'none'};
-  border: ${props =>
+  border-width: ${props =>
+    props.$border ? `${theme.borders.normal}` : 'none'};
+  border-color: ${props =>
     props.$border === 'light'
       ? `${theme.colors.secondary.dark}`
       : props.$border === 'dark'
@@ -31,24 +33,34 @@ export const Container = styled.div<SwitcherType>`
 export const DateWrapper = styled.div<Pick<SwitcherType, '$border' | '$type'>>`
   text-align: center;
   padding: ${theme.space[2]} ${theme.space[3]};
-  border-left: ${props =>
-    props.$border === 'light'
-      ? `${theme.colors.secondary.dark}`
-      : props.$border === 'dark'
-      ? `${theme.colors.bg.main}`
-      : null};
-  border-right: ${props =>
-    props.$border === 'light'
-      ? `${theme.colors.secondary.dark}`
-      : props.$border === 'dark'
-      ? `${theme.colors.bg.main}`
-      : null};
+  border-left: ${({ $border }) =>
+    $border
+      ? `${theme.borders.normal} ${
+          $border === 'light'
+            ? `${theme.colors.secondary.dark}`
+            : $border === 'dark'
+            ? `${theme.colors.bg.main}`
+            : ''
+        }`
+      : 'none'};
+
+  border-right: ${({ $border }) =>
+    $border
+      ? `${theme.borders.normal} ${
+          $border === 'light'
+            ? `${theme.colors.secondary.dark}`
+            : $border === 'dark'
+            ? `${theme.colors.bg.main}`
+            : ''
+        }`
+      : 'none'};
+
   width: ${props =>
     props.$type === 'month'
-      ? '150px'
+      ? '100px'
       : props.$type === 'year'
-      ? '50px'
-      : '200px'};
+      ? '70px'
+      : '150px'};
   white-space: nowrap;
 `;
 

@@ -26,7 +26,7 @@ export const clientsApi = createApi({
         invalidatesTags: ['clients'],
       }),
 
-      getAll: builder.query<Client[], unknown>({
+      getAllClients: builder.query<Client[], unknown>({
         query: (companyId: number) => ({
           url: `clients/get-all`,
           method: 'GET',
@@ -93,7 +93,7 @@ export const clientsApi = createApi({
 
 export const {
   useCreateClientMutation,
-  useGetAllQuery,
+  useGetAllClientsQuery,
   useGetByIdQuery,
   useUpdateClientMutation,
   useUploadAvatarMutation,
