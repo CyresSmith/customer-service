@@ -14,6 +14,7 @@ import {
     SelectionSide,
 } from './EmployeeSchedule.styled';
 
+import ScheduleTimeSelection from 'components/ScheduleTimeSelection';
 import Loader from 'components/Ui/Loader';
 import {
     addMonths,
@@ -36,7 +37,6 @@ import {
 } from 'services/schedules.api';
 import { IDaySchedule, IMonthSchedule } from 'services/types/schedule.types';
 import { IWorkingHours } from 'store/company/company.types';
-i;
 
 type Props = { employee: IEmployee };
 
