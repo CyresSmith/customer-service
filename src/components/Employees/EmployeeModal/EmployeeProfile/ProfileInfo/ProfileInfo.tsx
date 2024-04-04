@@ -86,9 +86,13 @@ const ProfileInfo = ({ employee }: Props) => {
     }
   };
 
-  const { state, handleChange, handleSubmit, invalidFields } = useForm<
+  const { state, handleChange, handleSubmit, invalidFields, setState } = useForm<
     typeof initialState
-  >(initialState, onSubmit);
+    >(initialState, onSubmit);
+
+    const handlePickDate = (date: Date) => {
+      setState({ ...state, birthday: date });
+    }
 
   return (
     <ProfileInfoBox>
@@ -100,6 +104,7 @@ const ProfileInfo = ({ employee }: Props) => {
               {...item}
               value={state[item.name as keyof typeof initialState]}
               handleChange={handleChange}
+              handlePickDate={handlePickDate}
               isValid={getErrorMessage(item.name, invalidFields)}
               isReadonly={!isEditingAllowed}
             />

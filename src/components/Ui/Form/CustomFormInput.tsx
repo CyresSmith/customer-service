@@ -18,6 +18,7 @@ import { MdOutlineDone } from 'react-icons/md';
 import Checkbox from './Checkbox';
 import CustomFormSelect from './CustomFormSelect';
 import { InputProps, SelectItem } from './types';
+import DatePicker from '../DatePicker';
 
 const CustomFormInput = ({
   name,
@@ -25,6 +26,7 @@ const CustomFormInput = ({
   value,
   handleChange,
   handleSelect,
+  handlePickDate,
   isValid,
   disabledIcon,
   isRequired = false,
@@ -69,7 +71,14 @@ const CustomFormInput = ({
                 : (value as SelectItem)
             }
           />
-        ) : (
+          ) : name === 'birthday' && handlePickDate ? (
+              <DatePicker
+                prewDate={value as Date}
+                calendarCellSize={25}
+                bgColor='dark'
+                handleDateConfirm={handlePickDate}
+              />
+            ) : (
           <FormInput
             disabled={disabled}
             type={type !== 'password' ? type : hidden ? type : 'text'}

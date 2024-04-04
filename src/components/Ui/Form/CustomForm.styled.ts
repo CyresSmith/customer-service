@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import theme from 'utils/theme';
 
-const baseInputStyles = `
+export const baseInputStyles = `
   color: ${theme.colors.bg.dark};
   padding: ${theme.space[2]} ${theme.space[3]};
   border-radius: ${theme.radii.s};

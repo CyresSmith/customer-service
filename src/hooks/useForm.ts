@@ -16,7 +16,7 @@ export type ValidationReturn = { [key: string]: string }[];
 
 export function useForm<
   Type extends {
-    [k: string]: string | number | boolean | SelectItem | SelectItem[] | null;
+    [k: string]: string | number | boolean | SelectItem | SelectItem[] | Date | null;
   }
 >(initialState: Type, onSubmit: (state: Type) => void): ReturnType<Type> {
   const [state, setState] = useState<Type>(initialState);
@@ -38,7 +38,7 @@ export function useForm<
       } else if (name === 'price') {
         newState = { ...newState, [name]: Number.isNaN(+value) ? 0 : +value };
       } else {
-        newState = { ...newState, [name]: value.trim() };
+        newState = { ...newState, [name]: value };
       }
 
       return newState;

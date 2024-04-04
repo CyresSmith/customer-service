@@ -1,7 +1,12 @@
-type Props = {};
+// type Props = {};
 
-const WorkSchedule = (props: Props) => {
-  return <div>WorkScheduleContent</div>;
+const WorkSchedule = () => {
+
+  return (
+    <>
+      
+    </>
+  );
 };
 
 export default WorkSchedule;

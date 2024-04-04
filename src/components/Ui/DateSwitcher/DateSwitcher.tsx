@@ -19,9 +19,11 @@ type Props = {
   borderRadius?: 'xs' | 's' | 'm';
   border?: 'light' | 'dark';
   fontSize?: string;
+  noReset?: boolean;
 };
 
 const DateSwitcher = ({
+  noReset = false,
   date,
   setDate,
   dateType = 'day',
@@ -77,7 +79,7 @@ const DateSwitcher = ({
         $round={roundBtns}
         $colors={buttonsColor}
       />
-      {!isSameCalendarDay && (
+      {!isSameCalendarDay && !noReset && (
         <ReturnBtnWrapper>
           <Button
             onClick={() => setDate(new Date(Date.now()))}

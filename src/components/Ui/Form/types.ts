@@ -6,7 +6,8 @@ export type InputValueType =
   | number
   | boolean
   | SelectItem
-  | SelectItem[];
+  | SelectItem[]
+  | Date;
 
 export type InputProps = {
   name: string;
@@ -14,6 +15,7 @@ export type InputProps = {
   type: string;
   handleChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   handleSelect?: (selected: SelectItem, fieldName?: string) => void;
+  handlePickDate?: (date: Date) => void;
   isValid?: string;
   disabledIcon?: boolean;
   isRequired?: boolean;
