@@ -1,47 +1,47 @@
 const translateCategoryName = (name: string) => {
-  switch (name) {
-    case 'Services':
-      return 'Послуги';
+    switch (name) {
+        case 'Services':
+            return 'Послуги';
 
-    case 'Beauty':
-      return 'Краса';
+        case 'Beauty':
+            return 'Краса';
 
-    case 'Healthy':
-      return "Здоров'я";
+        case 'Healthy':
+            return "Здоров'я";
 
-    case 'Sport':
-      return 'Спорт';
+        case 'Sport':
+            return 'Спорт';
 
-    case 'Rent':
-      return 'Оренда';
+        case 'Rent':
+            return 'Оренда';
 
-    case 'Animals':
-      return 'Тваринки';
+        case 'Animals':
+            return 'Тваринки';
 
-    case 'Auto':
-      return 'Авто';
+        case 'Auto':
+            return 'Авто';
 
-    case 'Entertainment':
-      return 'Розваги';
+        case 'Entertainment':
+            return 'Розваги';
 
-    case 'Teaching':
-      return 'Навчання';
+        case 'Teaching':
+            return 'Навчання';
 
-    case 'Lawyers':
-      return 'Юристи';
+        case 'Lawyers':
+            return 'Юристи';
 
-    case 'Style':
-      return 'Стиль';
+        case 'Style':
+            return 'Стиль';
 
-    case 'Restaurants':
-      return 'Ресторани';
+        case 'Restaurants':
+            return 'Ресторани';
 
-    case 'Others':
-      return 'Інше';
+        case 'Others':
+            return 'Інше';
 
-    default:
-      break;
-  }
+        default:
+            break;
+    }
 };
 
 export default translateCategoryName;

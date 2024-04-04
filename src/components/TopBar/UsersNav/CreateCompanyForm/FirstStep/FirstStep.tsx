@@ -11,65 +11,59 @@ import { stepProps } from '../CreateCompanyForm.types';
 import { CategoriesList, Category } from './FirstStep.styled';
 
 interface Props extends stepProps {
-  setActivities: Dispatch<SetStateAction<[] | Activity[]>>;
+    setActivities: Dispatch<SetStateAction<[] | Activity[]>>;
 }
 
-const FirstStep = ({
-  companyData,
-  setCompanyData,
-  nextPage,
-  setActivities,
-}: Props) => {
-  const { isLoading, isError, error, data } =
-    useGetCompanyCategoriesQuery(null);
+const FirstStep = ({ companyData, setCompanyData, nextPage, setActivities }: Props) => {
+    const { isLoading, isError, error, data } = useGetCompanyCategoriesQuery(null);
 
-  const handleSelect = (id: number) => {
-    setCompanyData(p => ({
-      ...p,
-      category: companyData.category === id ? 0 : id,
-    }));
+    const handleSelect = (id: number) => {
+        setCompanyData(p => ({
+            ...p,
+            category: companyData.category === id ? 0 : id,
+        }));
 
-    const activities = data?.find(item => item.id === id)?.activities;
+        const activities = data?.find(item => item.id === id)?.activities;
 
-    if (activities) setActivities(activities);
-  };
+        if (activities) setActivities(activities);
+    };
 
-  useEffect(() => {
-    if (isError) {
-      console.log(error);
-      toast.error(handleError(error));
-    }
-  }, [error, isError]);
+    useEffect(() => {
+        if (isError) {
+            console.log(error);
+            toast.error(handleError(error));
+        }
+    }, [error, isError]);
 
-  return (
-    <>
-      <Title>Виберіть сферу діяльності</Title>
+    return (
+        <>
+            <Title>Виберіть сферу діяльності</Title>
 
-      {isLoading && !data && <Loader />}
+            {isLoading && !data && <Loader />}
 
-      {!isLoading && data && data.length > 0 && (
-        <CategoriesList>
-          {data.map(item => (
-            <Category
-              selected={companyData.category === item.id}
-              key={item.id}
-              onClick={() => handleSelect(item.id)}
-            >
-              {translateCategoryName(item.name)}
-            </Category>
-          ))}
-        </CategoriesList>
-      )}
+            {!isLoading && data && data.length > 0 && (
+                <CategoriesList>
+                    {data.map(item => (
+                        <Category
+                            selected={companyData.category === item.id}
+                            key={item.id}
+                            onClick={() => handleSelect(item.id)}
+                        >
+                            {translateCategoryName(item.name)}
+                        </Category>
+                    ))}
+                </CategoriesList>
+            )}
 
-      <ButtonBox>
-        <NextButton
-          disabled={isLoading || companyData.category === 0}
-          isLoading={isLoading}
-          onClick={nextPage}
-        />
-      </ButtonBox>
-    </>
-  );
+            <ButtonBox>
+                <NextButton
+                    disabled={isLoading || companyData.category === 0}
+                    isLoading={isLoading}
+                    onClick={nextPage}
+                />
+            </ButtonBox>
+        </>
+    );
 };
 
 export default FirstStep;

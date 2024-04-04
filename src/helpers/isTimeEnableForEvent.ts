@@ -2,8 +2,8 @@ export const isTimeEnableForEvent = (
     eventDate: Date,
     eventDuration: number,
     potentialEventStart: string,
-    lastEnableEventEnd: string): boolean => {
-    
+    lastEnableEventEnd: string
+): boolean => {
     const year = eventDate.getFullYear();
     const month = eventDate.getMonth();
     const day = eventDate.getDate();
@@ -16,4 +16,4 @@ export const isTimeEnableForEvent = (
     const endDateTime = new Date(year, month, day, endHour, endMinutes + 1).getTime();
 
     return eventDuration < endDateTime - startDateTime;
-}
+};

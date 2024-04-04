@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 type Props = {
     isMounted: boolean;
-    mountDelay?: number
-    unmountDelay?: number
-}
+    mountDelay?: number;
+    unmountDelay?: number;
+};
 
 const useMountTransition = ({ isMounted, mountDelay, unmountDelay }: Props) => {
     const [mounted, setMounted] = useState(false);
@@ -28,7 +28,7 @@ const useMountTransition = ({ isMounted, mountDelay, unmountDelay }: Props) => {
 
         return () => {
             clearTimeout(timeoutId);
-        }
+        };
     }, [unmountDelay, isMounted, mounted, mountDelay]);
 
     return mounted;

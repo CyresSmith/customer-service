@@ -8,7 +8,7 @@ export const Container = styled.div`
     gap: ${theme.space[4]};
     align-items: center;
     justify-content: center;
-`
+`;
 
 export const FirstStepChoose = styled.div`
     padding: ${theme.space[2]};
@@ -28,26 +28,25 @@ export const FirstStepChoose = styled.div`
     :focus-visible {
         box-shadow: ${theme.shadow.m};
     }
-`
+`;
 
 export const FirstStepChooseIcon = styled.svg`
     width: 50px;
     height: 50px;
     stroke: ${theme.colors.accent.light};
-`
+`;
 
 export const FirstStepChooseText = styled.div`
     text-align: center;
-`
-
+`;
 
 export const FirstStepChooseTitle = styled.p`
     font-size: ${theme.fontSizes.xl};
     color: ${theme.colors.accent.light};
     font-weight: ${theme.fontWeights.bold};
     margin-bottom: ${theme.space[3]};
-`
+`;
 
 export const FirstStepChooseDesc = styled.p`
     font-style: italic;
-`
+`;

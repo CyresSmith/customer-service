@@ -1,7 +1,7 @@
-import CustomForm from "components/Ui/Form/CustomForm";
-import { FormBox } from "./UpdateDataForm.styled";
-import { IoMdClose, IoMdSave  } from 'react-icons/io';
-import { User } from "store/user/user.types";
+import CustomForm from 'components/Ui/Form/CustomForm';
+import { FormBox } from './UpdateDataForm.styled';
+import { IoMdClose, IoMdSave } from 'react-icons/io';
+import { User } from 'store/user/user.types';
 
 type Props = {
     userData: User;
@@ -10,14 +10,13 @@ type Props = {
 };
 
 const updateInputs = [
-  { name: 'firstName', type: 'text' },
-  { name: 'lastName', type: 'text' },
-  { name: 'phone', type: 'text' },
-  { name: 'email', type: 'email' },
+    { name: 'firstName', type: 'text' },
+    { name: 'lastName', type: 'text' },
+    { name: 'phone', type: 'text' },
+    { name: 'email', type: 'email' },
 ];
 
 const UpdateDataForm = ({ userData, onSubmit, isLoading }: Props) => {
-
     return (
         <FormBox>
             <CustomForm
@@ -32,7 +31,7 @@ const UpdateDataForm = ({ userData, onSubmit, isLoading }: Props) => {
                 isLoading={isLoading}
             />
         </FormBox>
-    )
+    );
 };
 
 export default UpdateDataForm;

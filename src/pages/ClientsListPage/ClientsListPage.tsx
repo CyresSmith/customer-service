@@ -9,127 +9,125 @@ import { useCreateClientMutation, useGetAllClientsQuery } from 'services/clients
 import { Client } from 'services/types/clients.types';
 
 const addInitialState: Client = {
-  id: 0,
-  firstName: '',
-  lastName: '',
-  birthday: null,
-  phone: '',
-  email: '',
-  discount: 0,
-  card: '',
-  source: '',
-  comment: '',
-  gender: '',
+    id: 0,
+    firstName: '',
+    lastName: '',
+    birthday: null,
+    phone: '',
+    email: '',
+    discount: 0,
+    card: '',
+    source: '',
+    comment: '',
+    gender: '',
 };
 
 enum OpenModal {
-  ADD = 1,
-  EDIT = 2,
+    ADD = 1,
+    EDIT = 2,
 }
 
 const ClientsListPage = () => {
-  const { id: companyId } = useCompany();
-  const [modalOpen, setModalOpen] = useState<OpenModal | null>(null);
-  const [chosenClientId, setChosenClientId] = useState<number | null>(null);
+    const { id: companyId } = useCompany();
+    const [modalOpen, setModalOpen] = useState<OpenModal | null>(null);
+    const [chosenClientId, setChosenClientId] = useState<number | null>(null);
 
-  const { data, isLoading } = useGetAllClientsQuery(companyId, {
-    skip: !companyId,
-  });
+    const { data, isLoading } = useGetAllClientsQuery(companyId, {
+        skip: !companyId,
+    });
 
-  const [createClientMutation] = useCreateClientMutation();
+    const [createClientMutation] = useCreateClientMutation();
 
-  const handleItemClick = (id: string | number) => {
-    setChosenClientId(+id);
-    setModalOpen(OpenModal.EDIT);
-  };
+    const handleItemClick = (id: string | number) => {
+        setChosenClientId(+id);
+        setModalOpen(OpenModal.EDIT);
+    };
 
-  const handleAddClient = async (state: Client) => {
-    if (!companyId) {
-      return;
-    }
-
-    const data = Object.fromEntries(
-      Object.entries(state).filter(i => i[1] !== '')
-    );
-
-    const result = await createClientMutation({
-      data,
-      companyId: +companyId,
-    }).unwrap();
-
-    if (result) {
-      setModalOpen(null);
-      toast.success('Нового клієнта успішно збережено');
-    }
-  };
-
-  return (
-    <>
-      <ItemsList
-        items={
-          !data
-            ? []
-            : data.map(
-                ({
-                  id,
-                  avatar,
-                  firstName,
-                  lastName,
-                  phone,
-                  email,
-                  gender,
-                  createdAt,
-                }) => ({
-                  id,
-                  avatar: avatar || '',
-                  name: `${firstName}  ${lastName && lastName}`,
-                  phone,
-                  email: email || 'Пошта не вказана',
-                  gender: gender || 'other',
-                  register: createdAt
-                    ? new Date(createdAt).toLocaleDateString()
-                    : '',
-                })
-              )
+    const handleAddClient = async (state: Client) => {
+        if (!companyId) {
+            return;
         }
-        onItemClick={handleItemClick}
-        addButtonTitle="Додати клієнта"
-        onAddClick={() => setModalOpen(OpenModal.ADD)}
-        keyForSelect="gender"
-        keyForSearch="phone"
-        notSortedKeys={['phone', 'email']}
-      />
 
-      {modalOpen === OpenModal.ADD && (
-        <Modal
-          id="newClient"
-          $isOpen={modalOpen === OpenModal.ADD}
-          closeModal={() => setModalOpen(null)}
-        >
-          <ClientForm
-            type="add"
-            initialState={addInitialState}
-            onSubmit={handleAddClient}
-            isLoading={isLoading}
-          />
-        </Modal>
-      )}
+        const data = Object.fromEntries(Object.entries(state).filter(i => i[1] !== ''));
 
-      {modalOpen === OpenModal.EDIT && companyId && chosenClientId && (
-        <Modal
-          id="clientProfile"
-          $isOpen={modalOpen === OpenModal.EDIT}
-          closeModal={() => setModalOpen(null)}
-        >
-          <ClientProfile
-            companyId={+companyId}
-            clientId={chosenClientId}
-            closeModal={() => setModalOpen(null)}
-          />
-        </Modal>
-      )}
-    </>
-  );
+        const result = await createClientMutation({
+            data,
+            companyId: +companyId,
+        }).unwrap();
+
+        if (result) {
+            setModalOpen(null);
+            toast.success('Нового клієнта успішно збережено');
+        }
+    };
+
+    return (
+        <>
+            <ItemsList
+                items={
+                    !data
+                        ? []
+                        : data.map(
+                              ({
+                                  id,
+                                  avatar,
+                                  firstName,
+                                  lastName,
+                                  phone,
+                                  email,
+                                  gender,
+                                  createdAt,
+                              }) => ({
+                                  id,
+                                  avatar: avatar || '',
+                                  name: `${firstName}  ${lastName && lastName}`,
+                                  phone,
+                                  email: email || 'Пошта не вказана',
+                                  gender: gender || 'other',
+                                  register: createdAt
+                                      ? new Date(createdAt).toLocaleDateString()
+                                      : '',
+                              })
+                          )
+                }
+                onItemClick={handleItemClick}
+                addButtonTitle="Додати клієнта"
+                onAddClick={() => setModalOpen(OpenModal.ADD)}
+                keyForSelect="gender"
+                keyForSearch="phone"
+                notSortedKeys={['phone', 'email']}
+            />
+
+            {modalOpen === OpenModal.ADD && (
+                <Modal
+                    id="newClient"
+                    $isOpen={modalOpen === OpenModal.ADD}
+                    closeModal={() => setModalOpen(null)}
+                >
+                    <ClientForm
+                        type="add"
+                        initialState={addInitialState}
+                        onSubmit={handleAddClient}
+                        isLoading={isLoading}
+                    />
+                </Modal>
+            )}
+
+            {modalOpen === OpenModal.EDIT && companyId && chosenClientId && (
+                <Modal
+                    id="clientProfile"
+                    $isOpen={modalOpen === OpenModal.EDIT}
+                    closeModal={() => setModalOpen(null)}
+                >
+                    <ClientProfile
+                        companyId={+companyId}
+                        clientId={chosenClientId}
+                        closeModal={() => setModalOpen(null)}
+                    />
+                </Modal>
+            )}
+        </>
+    );
 };
 
 export default ClientsListPage;

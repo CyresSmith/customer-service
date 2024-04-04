@@ -1,12 +1,12 @@
-import CustomForm from "components/Ui/Form/CustomForm";
-import { FormBox } from "./UpdateDataForm.styled";
+import CustomForm from 'components/Ui/Form/CustomForm';
+import { FormBox } from './UpdateDataForm.styled';
 import { IoMdSave } from 'react-icons/io';
 
 type UpdtPass = {
     password: string;
     newPassword: string;
     confirm: string;
-}
+};
 
 type Props = {
     handleSubmit: (arg: UpdtPass) => void;
@@ -22,11 +22,10 @@ const updateInputs = [
 const initialState: UpdtPass = {
     password: '',
     newPassword: '',
-    confirm: ''
-}
+    confirm: '',
+};
 
 const UpdatePassForm = ({ handleSubmit, isLoading }: Props) => {
-
     return (
         <FormBox>
             <CustomForm<UpdtPass>
@@ -40,7 +39,7 @@ const UpdatePassForm = ({ handleSubmit, isLoading }: Props) => {
                 isLoading={isLoading}
             />
         </FormBox>
-    )
+    );
 };
 
 export default UpdatePassForm;

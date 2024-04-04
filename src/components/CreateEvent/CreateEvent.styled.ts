@@ -8,21 +8,21 @@ export const Container = styled.div`
     flex-direction: column;
     gap: ${theme.space[4]};
     justify-content: space-between;
-`
+`;
 
 export const ContentBox = styled.div`
     width: 100%;
     height: 100%;
     overflow: hidden;
-`
+`;
 
-export const BtnsBox = styled.div<{$step: string | null}>`
+export const BtnsBox = styled.div<{ $step: string | null }>`
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: ${props => props.$step !== 'create' ? 'space-between' : 'end'};
-`
+    justify-content: ${props => (props.$step !== 'create' ? 'space-between' : 'end')};
+`;
 
 export const ChosenServices = styled.p`
     border-bottom: ${theme.borders.normal} ${theme.colors.white};
-`
+`;

@@ -4,102 +4,91 @@ import { IMonthSchedule } from './schedule.types';
 import { IService } from './service.type';
 
 export type IEmployeeUser = {
-  id: number;
-  email: string;
-  phone: string;
-  firstName: string;
-  lastName: string;
-  avatar: string;
+    id: number;
+    email: string;
+    phone: string;
+    firstName: string;
+    lastName: string;
+    avatar: string;
 };
 
 export enum EmployeeStatusEnum {
-  WORKING = 'working',
-  FIRED = 'fired',
+    WORKING = 'working',
+    FIRED = 'fired',
 }
 
 export enum EmployeeRoleEnum {
-  OWNER = 'owner',
-  ADMIN = 'admin',
-  EMPLOYEE = 'employee',
-  USER = 'user',
+    OWNER = 'owner',
+    ADMIN = 'admin',
+    EMPLOYEE = 'employee',
+    USER = 'user',
 }
 
 export type IEmployee = {
-  id: number;
-  jobTitle: string;
-  provider: boolean;
-  role: EmployeeRoleEnum;
-  status: EmployeeStatusEnum;
-  avatar: string;
-  info: string;
-  email: string;
-  phone: string;
-  firstName: string;
-  lastName: string;
-  birthday: Date;
-  user: IEmployeeUser;
-  schedules: IMonthSchedule[];
-  services: IService[];
+    id: number;
+    jobTitle: string;
+    provider: boolean;
+    role: EmployeeRoleEnum;
+    status: EmployeeStatusEnum;
+    avatar: string;
+    info: string;
+    email: string;
+    phone: string;
+    firstName: string;
+    lastName: string;
+    birthday: Date;
+    user: IEmployeeUser;
+    schedules: IMonthSchedule[];
+    services: IService[];
 };
 
 export type BasicEmployeeInfo = Pick<
-  IEmployee,
-  | 'id'
-  | 'avatar'
-  | 'firstName'
-  | 'lastName'
-  | 'status'
-  | 'jobTitle'
-  | 'provider'
+    IEmployee,
+    'id' | 'avatar' | 'firstName' | 'lastName' | 'status' | 'jobTitle' | 'provider'
 > & {
-  servicesCount?: number;
+    servicesCount?: number;
 };
 
 export type EmployeesState = {
-  chosenEmployee: IEmployee | null;
-  allEmployees: BasicEmployeeInfo[];
+    chosenEmployee: IEmployee | null;
+    allEmployees: BasicEmployeeInfo[];
 };
 
-export type createEmployeeData = Pick<
-  IEmployee,
-  'jobTitle' | 'provider' | 'role'
->;
+export type createEmployeeData = Pick<IEmployee, 'jobTitle' | 'provider' | 'role'>;
 
 export type addExistUserEmployee = {
-  userId: number;
-  employeeData: createEmployeeData;
+    userId: number;
+    employeeData: createEmployeeData;
 };
 
 export type addExistUserEmployeeData = {
-  companyId: number;
-  data: addExistUserEmployee;
+    companyId: number;
+    data: addExistUserEmployee;
 };
 
 export type UserData = {
-  id?: number;
-  email: string;
-  phone: string;
-  password: string;
-  firstName: string;
-  lastName: string;
+    id?: number;
+    email: string;
+    phone: string;
+    password: string;
+    firstName: string;
+    lastName: string;
 };
 
 export type addNewUserEmployee = {
-  userData: UserData;
-  employeeData: createEmployeeData;
+    userData: UserData;
+    employeeData: createEmployeeData;
 };
 
 export type addNewUserEmployeeData = {
-  companyId: number;
-  data: addNewUserEmployee;
+    companyId: number;
+    data: addNewUserEmployee;
 };
 
 export type UpdateEmployeeAvatar = {
-  employeeId: number;
-  companyId: number;
-  data: FormData;
+    employeeId: number;
+    companyId: number;
+    data: FormData;
 };
 
-export type UpdateEmployeeProfile = Partial<
-  Omit<IEmployee, 'id' | 'user' | 'avatar'>
->;
+export type UpdateEmployeeProfile = Partial<Omit<IEmployee, 'id' | 'user' | 'avatar'>>;

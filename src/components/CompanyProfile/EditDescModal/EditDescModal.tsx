@@ -13,75 +13,74 @@ import { Form } from './EditDescModal.styled';
 type Props = { closeModal: () => void };
 
 const EditDescModal = ({ closeModal }: Props) => {
-  const { id, desc } = useCompany();
-  const { updateCompanyData } = useActions();
+    const { id, desc } = useCompany();
+    const { updateCompanyData } = useActions();
 
-  const [uploadDesc, { isLoading, isSuccess }] =
-    useUpdateCompanyProfileMutation();
+    const [uploadDesc, { isLoading, isSuccess }] = useUpdateCompanyProfileMutation();
 
-  const onSubmit = async (state: { desc: string }) => {
-    if (state?.desc) {
-      const { message } = await uploadDesc({
-        id,
-        data: state,
-      }).unwrap();
+    const onSubmit = async (state: { desc: string }) => {
+        if (state?.desc) {
+            const { message } = await uploadDesc({
+                id,
+                data: state,
+            }).unwrap();
 
-      if (message) updateCompanyData(state);
+            if (message) updateCompanyData(state);
 
-      closeModal();
-    }
-  };
+            closeModal();
+        }
+    };
 
-  const initialState = { desc: desc ? desc : '' };
+    const initialState = { desc: desc ? desc : '' };
 
-  const { handleChange, handleSubmit, state, invalidFields, reset } = useForm<
-    typeof initialState
-  >(initialState, onSubmit);
+    const { handleChange, handleSubmit, state, invalidFields, reset } = useForm<
+        typeof initialState
+    >(initialState, onSubmit);
 
-  const errorMessage = (name: string): string | undefined => {
-    const error = invalidFields.find(f => Object.keys(f)[0] === name);
-    if (error) {
-      return Object.values(error)[0];
-    }
-  };
+    const errorMessage = (name: string): string | undefined => {
+        const error = invalidFields.find(f => Object.keys(f)[0] === name);
+        if (error) {
+            return Object.values(error)[0];
+        }
+    };
 
-  useEffect(() => {
-    if (isSuccess) {
-      reset();
-      toast.success('Опис оновлено');
-    }
-  }, [isSuccess, reset]);
+    useEffect(() => {
+        if (isSuccess) {
+            reset();
+            toast.success('Опис оновлено');
+        }
+    }, [isSuccess, reset]);
 
-  return (
-    <ModalBox>
-      <Form onSubmit={handleSubmit}>
-        <CustomFormInput
-          name="desc"
-          type="textarea"
-          value={state.desc}
-          handleChange={handleChange}
-          disabledIcon
-          isValid={errorMessage('desc')}
-        />
+    return (
+        <ModalBox>
+            <Form onSubmit={handleSubmit}>
+                <CustomFormInput
+                    name="desc"
+                    type="textarea"
+                    value={state.desc}
+                    handleChange={handleChange}
+                    disabledIcon
+                    isValid={errorMessage('desc')}
+                />
 
-        <div>
-          <Button
-            disabled={
-              isLoading ||
-              Boolean(errorMessage('desc')) ||
-              state.desc === '' ||
-              state.desc === desc
-            }
-            Icon={HiCloudUpload}
-            type="submit"
-            $colors="accent"
-          >
-            Змінити
-          </Button>
-        </div>
-      </Form>
-    </ModalBox>
-  );
+                <div>
+                    <Button
+                        disabled={
+                            isLoading ||
+                            Boolean(errorMessage('desc')) ||
+                            state.desc === '' ||
+                            state.desc === desc
+                        }
+                        Icon={HiCloudUpload}
+                        type="submit"
+                        $colors="accent"
+                    >
+                        Змінити
+                    </Button>
+                </div>
+            </Form>
+        </ModalBox>
+    );
 };
 
 export default EditDescModal;

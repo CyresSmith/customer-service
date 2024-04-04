@@ -1,5 +1,5 @@
-import { AxiosError } from "axios";
-import { toast } from "react-toastify";
+import { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
 
 const handleError = (error: unknown): string => {
     if (typeof error === 'string') {
@@ -15,7 +15,7 @@ const handleError = (error: unknown): string => {
         }
         return response?.data?.message;
     } else {
-        return 'Unknown error occuped'
+        return 'Unknown error occuped';
     }
 };
 
