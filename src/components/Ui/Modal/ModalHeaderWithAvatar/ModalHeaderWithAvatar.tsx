@@ -1,28 +1,12 @@
-import { HiPhoto } from 'react-icons/hi2';
-import {
-    AvatarBox,
-    ModalHeaderBox,
-    SubTitle,
-    Title,
-    TitleBox,
-} from './ModalHeaderWithAvatar.styled';
+import ItemAvatar from 'components/Ui/ItemsList/ItemAvatar';
+import { ModalHeaderBox, SubTitle, Title, TitleBox } from './ModalHeaderWithAvatar.styled';
 
 type Props = { avatar: string; title: string; subtitle?: string };
 
 const ModalHeaderWithAvatar = ({ avatar, title, subtitle }: Props) => {
     return (
         <ModalHeaderBox>
-            {
-                <AvatarBox>
-                    {avatar ? (
-                        <img src={avatar} alt={`${title} image`} />
-                    ) : title ? (
-                        <span>{title.slice(0, 1)}</span>
-                    ) : (
-                        <HiPhoto />
-                    )}
-                </AvatarBox>
-            }
+            <ItemAvatar avatar={avatar} name={title} />
 
             <TitleBox>
                 <Title>{title}</Title>

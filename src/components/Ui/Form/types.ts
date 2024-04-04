@@ -55,11 +55,13 @@ export type SelectItem = {
     count?: number;
 };
 
+export type SelectHandler = (item: SelectItem, fieldName?: string) => void;
+
 export type SelectProps = {
     width?: string;
     selectItems: SelectItem[];
     selectedItem: SelectItem | SelectItem[];
-    handleSelect: (item: SelectItem, fieldName?: string) => void;
+    handleSelect: SelectHandler;
     closeOnSelect?: boolean;
     fieldName?: string;
     disabled?: boolean;

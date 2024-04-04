@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { Picker, DateBox, Wrapper, PickerIcon, BtnsWrapper } from './DatePicker.styled';
-import Calendar from '../Calendar/Calendar';
-import DateSwitcher from '../DateSwitcher';
-import { useClickOutside, useEscapeKey } from 'hooks';
 import { format } from 'date-fns';
+import { useClickOutside, useEscapeKey } from 'hooks';
 import useMountTransition from 'hooks/useMountTransition';
+import { useState } from 'react';
 import { MdCalendarMonth } from 'react-icons/md';
 import Button from '../Buttons/Button';
+import Calendar from '../Calendar/Calendar';
+import DateSwitcher from '../DateSwitcher';
+import { BtnsWrapper, DateBox, Picker, PickerIcon, Wrapper } from './DatePicker.styled';
 
 type Props = {
     prewDate?: Date;

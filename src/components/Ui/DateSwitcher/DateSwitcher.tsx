@@ -1,10 +1,9 @@
+import { addDays, addMonths, addYears, isSameDay } from 'date-fns';
 import { Dispatch, SetStateAction } from 'react';
-import Button from '../Buttons/Button';
-import { Container, DateWrapper, DateValue, ReturnBtnWrapper } from './DateSwitcher.styled';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
-import { addDays, addMonths, addYears } from 'date-fns';
 import { RiArrowGoBackFill } from 'react-icons/ri';
-import { isSameDay } from 'date-fns';
+import Button from '../Buttons/Button';
+import { Container, DateValue, DateWrapper, ReturnBtnWrapper } from './DateSwitcher.styled';
 
 type Props = {
     date: Date;

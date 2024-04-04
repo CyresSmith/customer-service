@@ -33,11 +33,12 @@ export const ListItem = styled.li<{ $skip: boolean; $isHour: boolean; $break: bo
     }
 
     &:not(:first-child) {
-        border-top: ${theme.borders.normal}
-            ${props =>
-                props.$isHour
-                    ? `${theme.colors.secondary.light}`
-                    : `${theme.colors.secondary.dark}`};
+        border-top: ${props => `${theme.borders.normal}
+                ${
+                    props.$isHour
+                        ? `${theme.colors.secondary.light}`
+                        : `${theme.colors.secondary.dark}`
+                }`};
     }
 `;
 
