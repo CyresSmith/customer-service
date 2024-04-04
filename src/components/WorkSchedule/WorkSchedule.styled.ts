@@ -99,8 +99,8 @@ export const HeaderDay = styled.li<DayProps>`
             $isToday
                 ? `${theme.colors.accent.main}`
                 : $isNotWorkingDay
-                  ? `${theme.colors.white}`
-                  : `${theme.colors.primary.light}`};
+                ? `${theme.colors.white}`
+                : `${theme.colors.primary.light}`};
     }
 `;
 
@@ -110,7 +110,6 @@ export const DayDateBox = styled.div<DayProps>`
     align-items: center;
     opacity: ${({ $isNotWorkingDay }) => ($isNotWorkingDay ? 0.5 : 1)};
     color: ${({ $isToday }) => ($isToday ? `${theme.colors.accent.main}` : 'inherit')};
-
     transition: ${theme.transition.primary};
 `;
 
@@ -149,12 +148,15 @@ export const DayBox = styled.div<{ $selected?: boolean } & DayProps>`
     font-size: ${theme.fontSizes.l};
 
     &:hover {
+        color: ${({ $selected }) =>
+            $selected ? `${theme.colors.bg.dark}` : ` ${theme.colors.white}`};
+
         background-color: ${({ $isNotWorkingDay, $selected }) =>
             $isNotWorkingDay
                 ? 'transparent'
                 : $selected
-                  ? `${theme.colors.secondary.light}`
-                  : ` ${theme.colors.secondary.main}`};
+                ? `${theme.colors.secondary.light}`
+                : ` ${theme.colors.secondary.main}`};
     }
 `;
 
@@ -163,7 +165,5 @@ export const DayBreak = styled.div<{ $selected?: boolean }>`
     align-items: center;
     gap: ${theme.space[1]};
     font-size: ${theme.fontSizes.s};
-    color: ${({ $selected }) =>
-        $selected ? `${theme.colors.bg.main}` : `${theme.colors.secondary.light}`};
-    transition: inherit;
+    color: inherit;
 `;

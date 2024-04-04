@@ -11,6 +11,7 @@ export const ScheduleSection = styled.div`
     display: flex;
     flex-direction: column;
     gap: ${theme.space[3]};
+    width: 300px;
 `;
 
 export const Title = styled.p`
@@ -45,5 +46,6 @@ export const Message = styled.p`
 
 export const ButtonsBox = styled.div`
     display: flex;
-    justify-content: space-between;
+    gap: ${theme.space[4]};
+    justify-content: flex-end;
 `;

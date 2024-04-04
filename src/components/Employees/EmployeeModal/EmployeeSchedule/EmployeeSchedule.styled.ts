@@ -2,9 +2,8 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const EmployeeScheduleBox = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 300px;
     gap: ${theme.space[5]};
     min-height: 534px;
 `;
@@ -26,7 +25,7 @@ export const SelectionSide = styled.div`
     justify-content: space-between;
     height: 100%;
     min-height: 534px;
-    width: 250px;
+    width: 300px;
     gap: ${theme.space[5]};
 `;
 

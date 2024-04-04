@@ -38,7 +38,7 @@ import { IWorkingHours } from 'store/company/company.types';
 
 type Props = { employee: IEmployee };
 
-const EmployeeSchedule = ({ employee }: Props) => {
+const ShcheduleUpdate = ({ employee }: Props) => {
     const today = new Date(Date.now());
     const currentMonthStart = startOfMonth(today);
 
@@ -449,4 +449,4 @@ const EmployeeSchedule = ({ employee }: Props) => {
     );
 };
 
-export default EmployeeSchedule;
+export default ShcheduleUpdate;

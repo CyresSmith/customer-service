@@ -17,7 +17,10 @@ import {
     startOfToday,
 } from 'date-fns';
 
+import ScheduleTimeSelection from 'components/ScheduleTimeSelection';
+import { Message } from 'components/ScheduleTimeSelection/ScheduleTimeSelection.styled';
 import arraysAreEqual from 'helpers/areArrayEqual';
+import { useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { LegacyRef, UIEventHandler, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -46,10 +49,16 @@ type Props = { providers: BasicEmployeeInfo[]; selectedMonth: Date };
 
 const WorkSchedule = ({ providers, selectedMonth }: Props) => {
     const { id, workingHours, employees } = useCompany();
+    const { user, accessToken } = useAuth();
 
     const [selectedDays, setSelectedDays] = useState<{ id: number; dates: Date[] }[]>([]);
-
     const [scrollLeft, setScrollLeft] = useState<number>(0);
+    const [from, setFrom] = useState('');
+    const [to, setTo] = useState('');
+    const [isBreak, setIsBreak] = useState(false);
+    const [breakFrom, setBreakFrom] = useState('');
+    const [breakTo, setBreakTo] = useState('');
+    const [isStateChanged, setIsStateChanged] = useState(false);
 
     const handleScroll: UIEventHandler<HTMLDivElement> = e => {
         const { scrollLeft } = e.target as HTMLDivElement;
@@ -64,7 +73,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
             month: getMonth(selectedMonth),
         },
         {
-            skip: !id || !employees || !providers,
+            skip: !user || !accessToken || !id || !employees || !providers,
             refetchOnMountOrArgChange: true,
         }
     );
@@ -365,7 +374,29 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
                 </SchedulesList>
             </WorkScheduleBox>
 
-            {/* <ScheduleTimeSelection selectedDays={selectedDays.map()} /> */}
+            {selectedDays.length > 0 && workingHours ? (
+                <ScheduleTimeSelection
+                    from={from}
+                    setFrom={time => {}}
+                    to={to}
+                    setTo={time => {}}
+                    breakFrom={breakFrom}
+                    setBreakFrom={time => {}}
+                    breakTo={breakTo}
+                    setBreakTo={time => {}}
+                    isBreak={isBreak}
+                    breakToggle={() => {}}
+                    isEditingAllowed={true}
+                    handleReset={() => {}}
+                    handleUpdate={() => {}}
+                    isUpdateDisabled={!isStateChanged}
+                    isUpdateLoading={isLoading}
+                    isResetLoading={false}
+                    selectedHours={workingHours[0]?.hours}
+                />
+            ) : (
+                <Message>Виберіть дні місяця для налаштування часу роботи.</Message>
+            )}
         </>
     );
 };
