@@ -35,19 +35,21 @@ const RecordLogPage = () => {
                     setAllEmployees(employees);
                 }
 
-                const { data: schedules } = await getSchedules({
-                    companyId: id,
-                    month: chosenMonth,
-                    year: chosenYear,
-                });
-                if (schedules) {
-                    setAllSchedules(schedules);
+                if (allEmployees.length > 0) {
+                    const { data: schedules } = await getSchedules({
+                        companyId: id,
+                        month: chosenMonth,
+                        year: chosenYear,
+                    });
+                    if (schedules) {
+                        setAllSchedules(schedules);
+                    }
                 }
             }
         };
 
         getData();
-    }, [chosenMonth, chosenYear, getEmployees, getSchedules, id]);
+    }, [allEmployees.length, chosenMonth, chosenYear, getEmployees, getSchedules, id]);
 
     const workingProviders = allEmployees.filter(
         e => e.provider && e.status === EmployeeStatusEnum.WORKING

@@ -56,10 +56,19 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
         setIsScroll(schedulesListElementHeight > schedulesContainerElementHeight);
     }, [employees]);
 
+    // if (!workingHours) {
+    //     return (
+    //         <NoDataWrapper>
+    //             <NoSchedule>Не встановлено графік роботи компанії для обраного дня!</NoSchedule>
+    //             <Button $colors="light" children="Перейти до профілю компанії" />
+    //         </NoDataWrapper>
+    //     );
+    // }
+
     const todayCompanySchedule =
         workingHours && workingHours.find(wh => wh.days.includes(chosenDay));
 
-    const { from, to } = todayCompanySchedule?.hours;
+    const { from, to } = todayCompanySchedule!.hours;
 
     const timeArray = generateTimeArray(true);
 
@@ -72,11 +81,6 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
 
     return isGlobalLoading ? (
         <Loader />
-    ) : !todayCompanySchedule ? (
-        <NoDataWrapper>
-            <NoSchedule>Не встановлено графік роботи компанії для обраного дня!</NoSchedule>
-            <Button $colors="light" children="Перейти до профілю компанії" />
-        </NoDataWrapper>
     ) : employees.length > 0 ? (
         <Container>
             <LeftWrapper>
