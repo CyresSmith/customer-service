@@ -16,11 +16,7 @@ export const List = styled.ul<{ $wh: number; $last: boolean }>`
         props.$last ? 'none' : `${theme.borders.normal} ${theme.colors.bg.light}`};
 `;
 
-export const ListItem = styled.li<{
-    $skip: boolean;
-    $isHour: boolean;
-    $break: boolean;
-}>`
+export const ListItem = styled.li<{ $skip: boolean; $isHour: boolean; $break: boolean }>`
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -37,11 +33,12 @@ export const ListItem = styled.li<{
     }
 
     &:not(:first-child) {
-        border-top: ${theme.borders.normal}
-            ${props =>
-                props.$isHour
-                    ? `${theme.colors.secondary.light}`
-                    : `${theme.colors.secondary.dark}`};
+        border-top: ${props => `${theme.borders.normal}
+                ${
+                    props.$isHour
+                        ? `${theme.colors.secondary.light}`
+                        : `${theme.colors.secondary.dark}`
+                }`};
     }
 `;
 

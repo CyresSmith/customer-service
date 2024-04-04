@@ -4,6 +4,7 @@ import Button from 'components/Ui/Buttons/Button';
 import { FormInputLabel, FormInputsListItem } from 'components/Ui/Form/CustomForm.styled';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { InputProps, InputValueType, SelectItem } from 'components/Ui/Form/types';
+import Loader from 'components/Ui/Loader';
 import RadioSelect, { RadioSelectItemType } from 'components/Ui/RadioSelect/RadioSelect';
 import { ServiceOpenModal, ServiceTypeEnum } from 'helpers/enums';
 import { getErrorMessage } from 'helpers/inputsValidation';
@@ -12,6 +13,7 @@ import { useCompany } from 'hooks/useCompany';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { HiArrowRight } from 'react-icons/hi2';
 import { IoIosSave } from 'react-icons/io';
+import { useGetServicesCategoriesQuery } from 'services/categories.api';
 import { useUploadServiceAvatarMutation } from 'services/service.api';
 import { ServiceCategory } from 'services/types/category.types';
 import { ServiceStepProps } from 'services/types/service.type';
@@ -50,10 +52,13 @@ const FirstStep = ({
     serviceId,
     handleServiceUpdate,
     isServiceUpdateLoading,
-    categories,
 }: Props) => {
     const { id } = useCompany();
     const isAdmin = useAdminRights();
+
+    const { data: categories, isLoading: isCategoriesLoading } = useGetServicesCategoriesQuery({
+        companyId: id,
+    });
 
     const [uploadImg, { isLoading: isAvatarLoading }] = useUploadServiceAvatarMutation();
 
@@ -80,20 +85,25 @@ const FirstStep = ({
         desc: serviceData?.desc || '',
     };
 
-    const inputs: Partial<InputProps>[] = [
-        {
-            name: 'category',
-            type: 'select',
-            selectItems: [
-                ...categories
-                    .filter(({ type }) => type === serviceData.type)
-                    .map(({ id, name }) => ({ id, value: name })),
-                addCategoryItem,
-            ],
-        },
-        { name: 'name', type: 'text' },
-        { name: 'desc', type: 'textarea' },
-    ];
+    const inputs: Partial<InputProps>[] = categories
+        ? [
+              {
+                  name: 'category',
+                  type: 'select',
+                  selectItems: [
+                      ...categories
+                          .filter(({ type }) => type === serviceData.type)
+                          .map(({ id, name }) => ({ id, value: name })),
+                      addCategoryItem,
+                  ],
+              },
+              { name: 'name', type: 'text' },
+              { name: 'desc', type: 'textarea' },
+          ]
+        : [
+              { name: 'name', type: 'text' },
+              { name: 'desc', type: 'textarea' },
+          ];
 
     const onSubmit = (state: InitialStateType) => {
         if (state?.category && state.category !== null) {
@@ -179,7 +189,9 @@ const FirstStep = ({
     const saveDisabled =
         invalidFields.length > 0 || checkString === stateString || !state.name || !state.category;
 
-    return (
+    return isCategoriesLoading ? (
+        <Loader />
+    ) : (
         <>
             <FirstStepBox>
                 {openModal === ServiceOpenModal.EDIT_SERVICE && (

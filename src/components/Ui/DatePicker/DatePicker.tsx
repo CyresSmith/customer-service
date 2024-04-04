@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { Picker, DateBox, Wrapper, PickerIcon, BtnsWrapper } from './DatePicker.styled';
-import Calendar from '../Calendar/Calendar';
-import DateSwitcher from '../DateSwitcher';
-import { useClickOutside, useEscapeKey } from 'hooks';
 import { format } from 'date-fns';
+import { useClickOutside, useEscapeKey } from 'hooks';
 import useMountTransition from 'hooks/useMountTransition';
+import { useState } from 'react';
 import { MdCalendarMonth } from 'react-icons/md';
 import Button from '../Buttons/Button';
+import Calendar from '../Calendar/Calendar';
+import DateSwitcher from '../DateSwitcher';
+import { BtnsWrapper, DateBox, Picker, PickerIcon, Wrapper } from './DatePicker.styled';
 
 type Props = {
     prewDate?: Date;
@@ -17,11 +17,7 @@ type Props = {
 
 const DatePicker = ({ bgColor, calendarCellSize = 30, handleDateConfirm, prewDate }: Props) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const mounted = useMountTransition({
-        isMounted: isOpen,
-        mountDelay: 1,
-        unmountDelay: 100,
-    });
+    const mounted = useMountTransition({ isMounted: isOpen, mountDelay: 1, unmountDelay: 100 });
 
     const initialState = new Date(1990, 0, 1);
     const [date, setDate] = useState<Date>(prewDate ? prewDate : initialState);

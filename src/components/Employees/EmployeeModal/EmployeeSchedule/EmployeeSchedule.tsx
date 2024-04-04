@@ -1,28 +1,20 @@
 import Button from 'components/Ui/Buttons/Button';
 import { useEffect, useState } from 'react';
-import { HiArrowLeft, HiArrowRight, HiTrash } from 'react-icons/hi';
+import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
 import { MdToday } from 'react-icons/md';
 import { IEmployee } from 'services/types/employee.types';
 import Calendar from './Calendar';
 import {
-    ButtonsBox,
     CalendarHeader,
     CalendarSide,
     EmployeeScheduleBox,
     Message,
     MonthBox,
     MonthName,
-    ScheduleSection,
-    SelectBox,
-    SelectDaysBox,
-    SelectionBox,
     SelectionSide,
-    Title,
 } from './EmployeeSchedule.styled';
 
-import Checkbox from 'components/Ui/Form/Checkbox';
 import Loader from 'components/Ui/Loader';
-import Select from 'components/Ui/Select';
 import {
     addMonths,
     format,
@@ -31,14 +23,11 @@ import {
     getYear,
     isPast,
     isThisMonth,
-    setDefaultOptions,
     startOfMonth,
 } from 'date-fns';
-import { uk } from 'date-fns/locale';
 import generateTimeArray from 'helpers/generateTimeArray';
 import { useAdminRights, useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { IoIosSave } from 'react-icons/io';
 import { toast } from 'react-toastify';
 import {
     useDeleteEmployeeScheduleMutation,
@@ -47,8 +36,7 @@ import {
 } from 'services/schedules.api';
 import { IDaySchedule, IMonthSchedule } from 'services/types/schedule.types';
 import { IWorkingHours } from 'store/company/company.types';
-
-setDefaultOptions({ locale: uk });
+i;
 
 type Props = { employee: IEmployee };
 
@@ -95,6 +83,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
             year: getYear(selectedMonth),
             month: getMonth(selectedMonth),
             schedule: scheduleState,
+            employee: { id: employee.id },
         };
 
         const { message } = await updateSchedule({
@@ -245,10 +234,12 @@ const EmployeeSchedule = ({ employee }: Props) => {
     const timeArrayFrom = (start: string, end?: string) =>
         timeArray.filter(time => (end ? time >= start && time <= end : time >= start));
 
-    const handleTimeSelect = (time: string | string[], id?: string | undefined) => {
+    const handleTimeSelect = (time: string, id: string) => {
         if (typeof time !== 'string') return;
 
-        if (id === 'from') setFrom(time);
+        if (id === 'from') {
+            setFrom(time);
+        }
         if (id === 'to') setTo(time);
         if (id === 'breakFrom') setBreakFrom(time);
         if (id == 'breakTo') setBreakTo(time);
@@ -326,14 +317,17 @@ const EmployeeSchedule = ({ employee }: Props) => {
 
         if (employeeSchedule && employeeSchedule.id) {
             if (selectedDays.length > 0) {
+                const data = {
+                    year: getYear(selectedMonth),
+                    month: getMonth(selectedMonth),
+                    schedule: scheduleState.filter(({ day }) => !selectedDays.includes(day)),
+                    employee: { id: employee.id },
+                };
+
                 const { message } = await updateSchedule({
                     companyId,
                     employeeId: employee.id,
-                    data: {
-                        year: getYear(selectedMonth),
-                        month: getMonth(selectedMonth) + 1,
-                        schedule: scheduleState.filter(({ day }) => !selectedDays.includes(day)),
-                    },
+                    data,
                 }).unwrap();
 
                 if (message) {
@@ -431,170 +425,171 @@ const EmployeeSchedule = ({ employee }: Props) => {
 
                     {!selectedMonthPassed && isEditingAllowed && (
                         <SelectionSide>
-                            <SelectionBox>
-                                {selectedDays.length > 0 ? (
-                                    <>
-                                        <ScheduleSection>
-                                            <Title>Робочій час</Title>
-
-                                            <SelectDaysBox>
-                                                <SelectBox>
-                                                    <p>з</p>
-                                                    <Select
-                                                        id="from"
-                                                        selectedItem={from}
-                                                        onSelect={handleTimeSelect}
-                                                        $colors="light"
-                                                        items={
-                                                            selectedDayCompanySchedule
-                                                                ? timeArrayFrom(
-                                                                      selectedDayCompanySchedule
-                                                                          .hours.from,
-                                                                      selectedDayCompanySchedule
-                                                                          .hours.to
-                                                                  )
-                                                                : timeArray
-                                                        }
-                                                        disabled={!isEditingAllowed}
-                                                    />
-                                                </SelectBox>
-
-                                                <SelectBox>
-                                                    <p>до</p>
-                                                    <Select
-                                                        id="to"
-                                                        selectedItem={to}
-                                                        onSelect={handleTimeSelect}
-                                                        $colors="light"
-                                                        items={
-                                                            selectedDayCompanySchedule
-                                                                ? timeArrayFrom(
-                                                                      from
-                                                                          ? timeArray[
-                                                                                timeArray.indexOf(
-                                                                                    from
-                                                                                ) + 1
-                                                                            ]
-                                                                          : timeArray[
-                                                                                timeArray.indexOf(
-                                                                                    selectedDayCompanySchedule
-                                                                                        .hours.from
-                                                                                ) + 1
-                                                                            ],
-                                                                      selectedDayCompanySchedule
-                                                                          .hours.to
-                                                                  )
-                                                                : timeArrayFrom(
-                                                                      timeArray[
-                                                                          timeArray.indexOf(from) +
-                                                                              1
-                                                                      ]
-                                                                  )
-                                                        }
-                                                        disabled={!isEditingAllowed || from === ''}
-                                                    />
-                                                </SelectBox>
-                                            </SelectDaysBox>
-                                        </ScheduleSection>
-
-                                        <ScheduleSection>
-                                            <Checkbox
-                                                isChecked={isBreak}
-                                                handleCheck={handleAddBreakHoursClick}
-                                                name="break"
-                                                isReadonly={!isTimeForBreak}
-                                            />
-                                            {isBreak && (
-                                                <SelectDaysBox>
-                                                    <SelectBox>
-                                                        <p>з</p>
-
-                                                        <Select
-                                                            id="breakFrom"
-                                                            selectedItem={breakFrom || ''}
-                                                            onSelect={handleTimeSelect}
-                                                            $colors="light"
-                                                            items={timeArrayFrom(
-                                                                timeArray[
-                                                                    timeArray.indexOf(from) + 1
-                                                                ],
-                                                                timeArray[
-                                                                    timeArray.indexOf(breakTo) - 1
-                                                                ] ||
-                                                                    timeArray[
-                                                                        timeArray.indexOf(to) - 1
-                                                                    ]
-                                                            )}
-                                                            disabled={!isEditingAllowed}
-                                                        />
-                                                    </SelectBox>
-
-                                                    <SelectBox>
-                                                        <p>до</p>
-
-                                                        <Select
-                                                            id="breakTo"
-                                                            selectedItem={breakTo || ''}
-                                                            onSelect={handleTimeSelect}
-                                                            $colors="light"
-                                                            items={timeArrayFrom(
-                                                                timeArray[
-                                                                    timeArray.indexOf(breakFrom) + 1
-                                                                ] || '',
-
-                                                                to
-                                                                    ? timeArray[
-                                                                          timeArray.indexOf(to) - 1
-                                                                      ]
-                                                                    : selectedDayCompanySchedule
-                                                                      ? timeArray[
-                                                                            timeArray.indexOf(
-                                                                                selectedDayCompanySchedule
-                                                                                    .hours.to
-                                                                            ) - 1
-                                                                        ]
-                                                                      : ''
-                                                            )}
-                                                            disabled={
-                                                                !isEditingAllowed ||
-                                                                breakFrom === ''
-                                                            }
-                                                        />
-                                                    </SelectBox>
-                                                </SelectDaysBox>
-                                            )}
-                                        </ScheduleSection>
-                                    </>
-                                ) : (
-                                    <Message>
-                                        Виберіть дні місяця для налаштування часу роботи.
-                                    </Message>
-                                )}
-                            </SelectionBox>
-
-                            {isEditingAllowed && (
-                                <ButtonsBox>
-                                    <Button
-                                        onClick={handleResetClick}
-                                        Icon={HiTrash}
-                                        disabled={isLoading}
-                                        $colors="light"
-                                        $variant="text"
-                                    >
-                                        Скинути
-                                    </Button>
-
-                                    <Button
-                                        isLoading={isLoading}
-                                        onClick={handleScheduleUpdate}
-                                        Icon={IoIosSave}
-                                        disabled={!isStateChanged || isLoading}
-                                        $colors="accent"
-                                    >
-                                        Зберегти
-                                    </Button>
-                                </ButtonsBox>
+                            {selectedDays.length > 0 ? (
+                                <ScheduleTimeSelection
+                                    from={from}
+                                    setFrom={time => handleTimeSelect(time, 'from')}
+                                    to={to}
+                                    setTo={time => handleTimeSelect(time, 'to')}
+                                    breakFrom={breakFrom}
+                                    setBreakFrom={time => handleTimeSelect(time, 'breakFrom')}
+                                    breakTo={breakTo}
+                                    setBreakTo={time => handleTimeSelect(time, 'breakTo')}
+                                    isBreak={isBreak}
+                                    breakToggle={handleAddBreakHoursClick}
+                                    isEditingAllowed={isEditingAllowed}
+                                    handleReset={handleResetClick}
+                                    handleUpdate={handleScheduleUpdate}
+                                    isUpdateDisabled={!isStateChanged}
+                                    isUpdateLoading={isLoading}
+                                    isResetLoading={isDeleteLoading}
+                                    selectedHours={selectedDayCompanySchedule?.hours}
+                                />
+                            ) : (
+                                <Message>Виберіть дні місяця для налаштування часу роботи.</Message>
                             )}
+
+                            {/* <SelectionBox>
+                {selectedDays.length > 0 ? (
+                  <>
+                    <ScheduleSection>
+                      <Title>Робочій час</Title>
+
+                      <SelectDaysBox>
+                        <SelectBox>
+                          <p>з</p>
+                          <Select
+                            id="from"
+                            selectedItem={from}
+                            onSelect={handleTimeSelect}
+                            $colors="light"
+                            items={
+                              selectedDayCompanySchedule
+                                ? timeArrayFrom(
+                                    selectedDayCompanySchedule.hours.from,
+                                    selectedDayCompanySchedule.hours.to
+                                  )
+                                : timeArray
+                            }
+                            disabled={!isEditingAllowed}
+                          />
+                        </SelectBox>
+
+                        <SelectBox>
+                          <p>до</p>
+                          <Select
+                            id="to"
+                            selectedItem={to}
+                            onSelect={handleTimeSelect}
+                            $colors="light"
+                            items={
+                              selectedDayCompanySchedule
+                                ? timeArrayFrom(
+                                    from
+                                      ? timeArray[timeArray.indexOf(from) + 1]
+                                      : timeArray[
+                                          timeArray.indexOf(
+                                            selectedDayCompanySchedule.hours
+                                              .from
+                                          ) + 1
+                                        ],
+                                    selectedDayCompanySchedule.hours.to
+                                  )
+                                : timeArrayFrom(
+                                    timeArray[timeArray.indexOf(from) + 1]
+                                  )
+                            }
+                            disabled={!isEditingAllowed || from === ''}
+                          />
+                        </SelectBox>
+                      </SelectDaysBox>
+                    </ScheduleSection>
+
+                    <ScheduleSection>
+                      <Checkbox
+                        isChecked={isBreak}
+                        handleCheck={handleAddBreakHoursClick}
+                        name="break"
+                        isReadonly={!isTimeForBreak}
+                      />
+                      {isBreak && (
+                        <SelectDaysBox>
+                          <SelectBox>
+                            <p>з</p>
+
+                            <Select
+                              id="breakFrom"
+                              selectedItem={breakFrom || ''}
+                              onSelect={handleTimeSelect}
+                              $colors="light"
+                              items={timeArrayFrom(
+                                timeArray[timeArray.indexOf(from) + 1],
+                                timeArray[timeArray.indexOf(breakTo) - 1] ||
+                                  timeArray[timeArray.indexOf(to) - 1]
+                              )}
+                              disabled={!isEditingAllowed}
+                            />
+                          </SelectBox>
+
+                          <SelectBox>
+                            <p>до</p>
+
+                            <Select
+                              id="breakTo"
+                              selectedItem={breakTo || ''}
+                              onSelect={handleTimeSelect}
+                              $colors="light"
+                              items={timeArrayFrom(
+                                timeArray[timeArray.indexOf(breakFrom) + 1] ||
+                                  '',
+
+                                to
+                                  ? timeArray[timeArray.indexOf(to) - 1]
+                                  : selectedDayCompanySchedule
+                                  ? timeArray[
+                                      timeArray.indexOf(
+                                        selectedDayCompanySchedule.hours.to
+                                      ) - 1
+                                    ]
+                                  : ''
+                              )}
+                              disabled={!isEditingAllowed || breakFrom === ''}
+                            />
+                          </SelectBox>
+                        </SelectDaysBox>
+                      )}
+                    </ScheduleSection>
+                  </>
+                ) : (
+                  <Message>
+                    Виберіть дні місяця для налаштування часу роботи.
+                  </Message>
+                )}
+              </SelectionBox>
+
+              {isEditingAllowed && (
+                <ButtonsBox>
+                  <Button
+                    onClick={handleResetClick}
+                    Icon={HiTrash}
+                    disabled={isLoading}
+                    $colors="light"
+                    $variant="text"
+                  >
+                    Скинути
+                  </Button>
+
+                  <Button
+                    isLoading={isLoading}
+                    onClick={handleScheduleUpdate}
+                    Icon={IoIosSave}
+                    disabled={!isStateChanged || isLoading}
+                    $colors="accent"
+                  >
+                    Зберегти
+                  </Button>
+                </ButtonsBox>
+              )} */}
                         </SelectionSide>
                     )}
                 </>

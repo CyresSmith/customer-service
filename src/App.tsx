@@ -1,13 +1,16 @@
 import MainLayout from 'components/Layout/MainLayout';
 import Loader from 'components/Ui/Loader';
+import { setDefaultOptions } from 'date-fns';
+import { uk } from 'date-fns/locale';
 import PrivateRoute from 'helpers/PrivateRoute';
-import { useActions, useAuth } from 'hooks';
+import { useActions, useAuth, useLoading } from 'hooks';
 import { Suspense, lazy, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Bounce, ToastContainer } from 'react-toastify';
-import { useLazyCurrentQuery } from 'services/auth.api';
-import { useLoading } from 'hooks';
 import 'react-toastify/dist/ReactToastify.min.css';
+import { useLazyCurrentQuery } from 'services/auth.api';
+
+setDefaultOptions({ locale: uk });
 
 const HomePage = lazy(() => import('pages/Home'));
 const ServicesPage = lazy(() => import('pages/ServicesPage'));

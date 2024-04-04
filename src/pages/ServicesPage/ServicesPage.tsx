@@ -6,7 +6,6 @@ import { ServiceOpenModal } from 'helpers/enums';
 import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useGetServicesCategoriesQuery } from 'services/categories.api';
 import { useDeleteServiceMutation, useGetServicesQuery } from 'services/service.api';
 
 const ServicesPage = () => {
@@ -15,11 +14,6 @@ const ServicesPage = () => {
     const [serviceId, setServiceId] = useState<number | undefined>(undefined);
 
     const { data: services, isLoading: servicesLoading } = useGetServicesQuery(
-        { companyId },
-        { skip: !companyId }
-    );
-
-    const { isLoading: categoriesLoading, data: categories } = useGetServicesCategoriesQuery(
         { companyId },
         { skip: !companyId }
     );
@@ -47,7 +41,7 @@ const ServicesPage = () => {
         }
     };
 
-    return categoriesLoading || servicesLoading ? (
+    return servicesLoading ? (
         <Loader />
     ) : services ? (
         <>
@@ -69,25 +63,28 @@ const ServicesPage = () => {
                 isDeleteLoading={isServiceDeleteLoading}
             />
 
-            {openModal && openModal !== ServiceOpenModal.DELETE_SERVICE && categories && (
-                <ServiceModal
-                    categories={categories}
-                    openModal={openModal}
-                    serviceId={serviceId}
-                    handleModalClose={handleModalClose}
-                />
-            )}
+            {openModal && (
+                <>
+                    {openModal !== ServiceOpenModal.DELETE_SERVICE && (
+                        <ServiceModal
+                            openModal={openModal}
+                            serviceId={serviceId}
+                            handleModalClose={handleModalClose}
+                        />
+                    )}
 
-            {openModal === ServiceOpenModal.DELETE_SERVICE && serviceId && (
-                <ConfirmOperation
-                    id="confirmServiceDelete"
-                    callback={handleServiceDelete}
-                    closeConfirm={handleModalClose}
-                    isOpen={openModal === ServiceOpenModal.DELETE_SERVICE}
-                >
-                    Ви дійсно бажаєте видалити сервіс "
-                    {services.find(({ id }) => id === serviceId)?.name}" ?
-                </ConfirmOperation>
+                    {openModal === ServiceOpenModal.DELETE_SERVICE && serviceId && (
+                        <ConfirmOperation
+                            id="confirmServiceDelete"
+                            callback={handleServiceDelete}
+                            closeConfirm={handleModalClose}
+                            isOpen={openModal === ServiceOpenModal.DELETE_SERVICE}
+                        >
+                            Ви дійсно бажаєте видалити сервіс "
+                            {services.find(({ id }) => id === serviceId)?.name}" ?
+                        </ConfirmOperation>
+                    )}
+                </>
             )}
         </>
     ) : null;

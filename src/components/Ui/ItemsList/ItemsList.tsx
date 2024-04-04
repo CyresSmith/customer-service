@@ -12,14 +12,14 @@ import {
     HiSortDescending,
     HiX,
 } from 'react-icons/hi';
-import { HiPhoto, HiTrash } from 'react-icons/hi2';
+import { HiTrash } from 'react-icons/hi2';
 import { TbArrowsSort } from 'react-icons/tb';
 import Button from '../Buttons/Button';
 import { FormInput, FormInputLabel, FormInputsListItem } from '../Form/CustomForm.styled';
 import CustomFormSelect from '../Form/CustomFormSelect';
 import { SelectItem } from '../Form/types';
+import ItemAvatar from './ItemAvatar';
 import {
-    AvatarBox,
     ButtonBox,
     FilterBox,
     ItemBox,
@@ -164,8 +164,8 @@ const ItemsList = <T extends StringRecord>({
                     p[sortKey] === SortTypeEnum.NULL
                         ? SortTypeEnum.ASC
                         : p[sortKey] === SortTypeEnum.ASC
-                          ? SortTypeEnum.DESC
-                          : SortTypeEnum.NULL,
+                        ? SortTypeEnum.DESC
+                        : SortTypeEnum.NULL,
             };
         });
     };
@@ -376,14 +376,14 @@ const ItemsList = <T extends StringRecord>({
                                                         )
                                                             ? undefined
                                                             : sortState[
-                                                                    key as keyof typeof sortState
-                                                                ] === SortTypeEnum.ASC
-                                                              ? HiSortAscending
-                                                              : sortState[
-                                                                      key as keyof typeof sortState
-                                                                  ] === SortTypeEnum.DESC
-                                                                ? HiSortDescending
-                                                                : TbArrowsSort
+                                                                  key as keyof typeof sortState
+                                                              ] === SortTypeEnum.ASC
+                                                            ? HiSortAscending
+                                                            : sortState[
+                                                                  key as keyof typeof sortState
+                                                              ] === SortTypeEnum.DESC
+                                                            ? HiSortDescending
+                                                            : TbArrowsSort
                                                     }
                                                     $iconPosition="r"
                                                 >
@@ -405,21 +405,14 @@ const ItemsList = <T extends StringRecord>({
                                         $selected={selected && selected.includes(+item.id)}
                                         $columnsCount={columnsCount}
                                         $isDeleteButton={Boolean(onItemDeleteClick)}
-                                        onClick={() => handleItemClick(item.id)}
+                                        onClick={() => handleItemClick(+item.id)}
                                     >
                                         <HiCheckCircle id="checkLabel" />
-                                        <AvatarBox>
-                                            {item.avatar ? (
-                                                <img
-                                                    src={String(item.avatar)}
-                                                    alt={`${item.name} image`}
-                                                />
-                                            ) : item.name ? (
-                                                <span>{item.name.slice(0, 1)}</span>
-                                            ) : (
-                                                <HiPhoto />
-                                            )}
-                                        </AvatarBox>
+
+                                        <ItemAvatar
+                                            avatar={item.avatar.toString()}
+                                            name={item.name}
+                                        />
 
                                         {Object.entries(item).map(([key, value]) => {
                                             if (key === 'status') {
