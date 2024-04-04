@@ -4,48 +4,49 @@ import WorkSchedule from 'components/WorkSchedule';
 import WorkScheduleBar from 'components/WorkSchedule/WorkScheduleBar';
 import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
+import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 import { EmployeeStatusEnum } from 'services/types/employee.types';
 
 const WorkSchedulePage = () => {
-  const { employees } = useCompany();
-  const [selectedProviders, setSelectedProviders] = useState<number[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState(new Date(Date.now()));
+    const { id: companyId } = useCompany();
+    const [selectedProviders, setSelectedProviders] = useState<number[]>([]);
+    const [selectedMonth, setSelectedMonth] = useState(new Date(Date.now()));
 
-  const providers = employees.filter(
-    ({ provider, status }) => provider && status === EmployeeStatusEnum.WORKING
-  );
+    const { data: employees } = useGetCompanyEmployeesQuery(companyId, {
+        skip: !companyId,
+        refetchOnMountOrArgChange: true,
+    });
 
-  const providersForRender = providers.filter(({ id }) =>
-    selectedProviders.includes(id)
-  );
+    const providers = employees?.filter(
+        ({ provider, status }) => provider && status === EmployeeStatusEnum.WORKING
+    );
 
-  useEffect(() => {
-    if (!employees) return;
+    const providersForRender = providers?.filter(({ id }) => selectedProviders.includes(id));
 
-    setSelectedProviders(providers.map(({ id }) => id));
-  }, [employees]);
+    useEffect(() => {
+        if (!employees) return;
 
-  return (
-    <PageContentLayout
-      bar={
-        <WorkScheduleBar
-          setSelectedProviders={setSelectedProviders}
-          selectedMonth={selectedMonth}
-          setSelectedMonth={setSelectedMonth}
+        providers && setSelectedProviders(providers.map(({ id }) => id));
+    }, [employees]);
+
+    return (
+        <PageContentLayout
+            bar={
+                <WorkScheduleBar
+                    setSelectedProviders={setSelectedProviders}
+                    selectedMonth={selectedMonth}
+                    setSelectedMonth={setSelectedMonth}
+                />
+            }
+            content={
+                providersForRender && providersForRender.length > 0 ? (
+                    <WorkSchedule selectedMonth={selectedMonth} providers={providersForRender} />
+                ) : (
+                    <Loader />
+                )
+            }
         />
-      }
-      content={
-        providersForRender.length > 0 ? (
-          <WorkSchedule
-            selectedMonth={selectedMonth}
-            providers={providersForRender}
-          />
-        ) : (
-          <Loader />
-        )
-      }
-    />
-  );
+    );
 };
 
 export default WorkSchedulePage;

@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import rootActions from 'store/rootActions';
 
 export const useActions = () => {
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-  return useMemo(() => bindActionCreators(rootActions, dispatch), [dispatch]);
+    return useMemo(() => bindActionCreators(rootActions, dispatch), [dispatch]);
 };

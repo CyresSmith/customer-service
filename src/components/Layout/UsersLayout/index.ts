@@ -1,1 +1,1 @@
-export {default} from './UsersLayout';
+export { default } from './UsersLayout';

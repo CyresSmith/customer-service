@@ -1,4 +1,4 @@
-import { Day, DayDate } from "./Calendar.styled"
+import { Day, DayDate } from './Calendar.styled';
 
 type Props = {
     date: number;
@@ -10,8 +10,15 @@ type Props = {
     disabled?: boolean;
 };
 
-export const CalendarDay = ({ anotherMonth, date, isToday, selected, handleClick, cellSize, disabled = false }: Props) => {
-
+export const CalendarDay = ({
+    anotherMonth,
+    date,
+    isToday,
+    selected,
+    handleClick,
+    cellSize,
+    disabled = false,
+}: Props) => {
     return (
         <Day
             $disabled={disabled}
@@ -25,5 +32,5 @@ export const CalendarDay = ({ anotherMonth, date, isToday, selected, handleClick
                 {date}
             </DayDate>
         </Day>
-    )
+    );
 };

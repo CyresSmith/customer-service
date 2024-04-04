@@ -4,30 +4,30 @@ import { IButton } from './Button.types';
 import buttonStyle from './dynamicButtonStyles';
 
 export interface IButtonStyle
-  extends Pick<
-    IButton,
-    '$colors' | 'size' | '$round' | '$variant' | '$isIcon' | '$iconPosition'
-  > {
-  $isIconThere: boolean;
-  $shake?: boolean;
+    extends Pick<
+        IButton,
+        '$colors' | 'size' | '$round' | '$variant' | '$isIcon' | '$iconPosition'
+    > {
+    $isIconThere: boolean;
+    $shake?: boolean;
 }
 
 export const BTN_DISABLED_OPACITY = 0.65;
 
 export const Btn = styled.button<IButtonStyle>`
-  ${p => {
-    const {
-      color,
-      backgroundColor,
-      fontSize,
-      hoverColor,
-      hoverBackgroundColor,
-      iconSize,
-      padding,
-      iconMargin,
-    } = buttonStyle(p);
+    ${p => {
+        const {
+            color,
+            backgroundColor,
+            fontSize,
+            hoverColor,
+            hoverBackgroundColor,
+            iconSize,
+            padding,
+            iconMargin,
+        } = buttonStyle(p);
 
-    return `
+        return `
       color: ${color()};
       background-color: ${backgroundColor()};      
       font-size: ${fontSize()};
@@ -53,49 +53,48 @@ export const Btn = styled.button<IButtonStyle>`
         ${iconMargin()};
       }
     `;
-  }}
+    }}
 
-  animation: ${({ $shake }) => ($shake ? theme.animation.shaking : 'none')} 2s
+    animation: ${({ $shake }) => ($shake ? theme.animation.shaking : 'none')} 2s
       ease-in-out infinite;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: ${({ $round }) =>
-    $round ? theme.radii.round : theme.radii.s};
-  font-weight: ${theme.fontWeights.bold};
-  transition: ${theme.transition.primary};
-
-  svg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: ${({ $round }) => ($round ? theme.radii.round : theme.radii.s)};
+    font-weight: ${theme.fontWeights.bold};
     transition: ${theme.transition.primary};
-    opacity: ${({ disabled }) => (disabled ? `${BTN_DISABLED_OPACITY}` : 1)};
-  }
 
-  span {
-    color: inherit;
-    pointer-events: none;
-  }
+    svg {
+        transition: ${theme.transition.primary};
+        opacity: ${({ disabled }) => (disabled ? `${BTN_DISABLED_OPACITY}` : 1)};
+    }
 
-  &:hover {
-    animation: none;
-  }
+    span {
+        color: inherit;
+        pointer-events: none;
+    }
 
-  &:disabled {
-    opacity: ${BTN_DISABLED_OPACITY};
-    cursor: default;
-  }
+    &:hover {
+        animation: none;
+    }
+
+    &:disabled {
+        opacity: ${BTN_DISABLED_OPACITY};
+        cursor: default;
+    }
 `;
 
 export const Loader = styled.svg`
-  animation: spin 1.5s linear 0s infinite;
-  transform-origin: center center;
+    animation: spin 1.5s linear 0s infinite;
+    transform-origin: center center;
 
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
 
-    to {
-      transform: rotate(360deg);
+        to {
+            transform: rotate(360deg);
+        }
     }
-  }
 `;

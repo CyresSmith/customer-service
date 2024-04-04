@@ -8,30 +8,30 @@ import { useActions, useAdminRights } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
 import {
-  HiBookOpen,
-  HiBriefcase,
-  HiCalendar,
-  HiOfficeBuilding,
-  HiPencil,
-  HiPhone,
-  HiPlus,
-  HiX,
+    HiBookOpen,
+    HiBriefcase,
+    HiCalendar,
+    HiOfficeBuilding,
+    HiPencil,
+    HiPhone,
+    HiPlus,
+    HiX,
 } from 'react-icons/hi';
 import { HiQueueList, HiTableCells } from 'react-icons/hi2';
 import { toast } from 'react-toastify';
 import { useUploadCompanyAvatarMutation } from 'services/company.api';
 import {
-  AvatarBox,
-  ButtonBox,
-  FlexBox,
-  Info,
-  InfoBlock,
-  InfoList,
-  Name,
-  StyledIcon,
-  Title,
-  TitleBox,
-  Wrapper,
+    AvatarBox,
+    ButtonBox,
+    FlexBox,
+    Info,
+    InfoBlock,
+    InfoList,
+    Name,
+    StyledIcon,
+    Title,
+    TitleBox,
+    Wrapper,
 } from './CompanyProfile.styled';
 import EditActivitiesModal from './EditActivitiesModal';
 import EditAddressModal from './EditAddressModal';
@@ -41,328 +41,331 @@ import RemovePhoneModal from './RemovePhoneModal';
 import SetScheduleModal from './SetScheduleModal';
 
 enum OpenModal {
-  ADD = 1,
-  ADDRESS = 2,
-  PHONE = 3,
-  REMOVE_PHONE = 4,
-  ACTIVITIES = 5,
-  SCHEDULE = 6,
-  DESC = 7,
+    ADD = 1,
+    ADDRESS = 2,
+    PHONE = 3,
+    REMOVE_PHONE = 4,
+    ACTIVITIES = 5,
+    SCHEDULE = 6,
+    DESC = 7,
 }
 
 const CompanyProfile = () => {
-  const { name, avatar, address, phones, activities, id, workingHours, desc } =
-    useCompany();
-  const isAdmin = useAdminRights();
+    const { name, avatar, address, phones, activities, id, workingHours, desc } = useCompany();
+    const isAdmin = useAdminRights();
 
-  const [editedPhone, setEditedPhone] = useState<string | null>(null);
+    const [editedPhone, setEditedPhone] = useState<string | null>(null);
 
-  const [openModal, setOpenModal] = useState<OpenModal | null>(null);
+    const [openModal, setOpenModal] = useState<OpenModal | null>(null);
 
-  const { setCompanyLogo } = useActions();
+    const { setCompanyLogo } = useActions();
 
-  const [uploadImage, { isLoading }] = useUploadCompanyAvatarMutation();
+    const [uploadImage, { isLoading }] = useUploadCompanyAvatarMutation();
 
-  const handleUpload = async (file: File) => {
-    const data = new FormData();
+    const handleUpload = async (file: File) => {
+        const data = new FormData();
 
-    data.append('avatar', file);
+        data.append('avatar', file);
 
-    const { url } = await uploadImage({ id, data }).unwrap();
+        const { url } = await uploadImage({ id, data }).unwrap();
 
-    if (url) {
-      setCompanyLogo({ avatar: url });
-      toast.success('Зображення успішно оновлено');
-    }
-  };
+        if (url) {
+            setCompanyLogo({ avatar: url });
+            toast.success('Зображення успішно оновлено');
+        }
+    };
 
-  const handleModalClose = () => {
-    setOpenModal(null);
-  };
+    const handleModalClose = () => {
+        setOpenModal(null);
+    };
 
-  const handlePhoneModalClose = () => {
-    setEditedPhone(null);
-    handleModalClose();
-  };
+    const handlePhoneModalClose = () => {
+        setEditedPhone(null);
+        handleModalClose();
+    };
 
-  return (
-    <>
-      {!name ? (
-        <Loader />
-      ) : (
+    return (
         <>
-          <Wrapper>
-            <AvatarBox>
-              <Avatar
-                allowChanges={isAdmin}
-                light
-                size={250}
-                alt={`${name} logo`}
-                isLoading={isLoading}
-                currentImageUrl={avatar}
-                handleUpload={handleUpload}
-              />
-            </AvatarBox>
+            {!name ? (
+                <Loader />
+            ) : (
+                <>
+                    <Wrapper>
+                        <AvatarBox>
+                            <Avatar
+                                allowChanges={isAdmin}
+                                light
+                                size={250}
+                                alt={`${name} logo`}
+                                isLoading={isLoading}
+                                currentImageUrl={avatar}
+                                handleUpload={handleUpload}
+                            />
+                        </AvatarBox>
 
-            <Info>
-              <InfoBlock>
-                <p>Компанія</p>
-                <Name>{name}</Name>
-              </InfoBlock>
+                        <Info>
+                            <InfoBlock>
+                                <p>Компанія</p>
+                                <Name>{name}</Name>
+                            </InfoBlock>
 
-              <InfoBlock>
-                <TitleBox>
-                  <StyledIcon as={HiOfficeBuilding} />
-                  <Title>Адреса:</Title>
-                </TitleBox>
+                            <InfoBlock>
+                                <TitleBox>
+                                    <StyledIcon as={HiOfficeBuilding} />
+                                    <Title>Адреса:</Title>
+                                </TitleBox>
 
-                <FlexBox>
-                  <InfoList as="p">{address}</InfoList>
+                                <FlexBox>
+                                    <InfoList as="p">{address}</InfoList>
 
-                  {isAdmin && (
-                    <Button
-                      $round
-                      $variant="text"
-                      size="s"
-                      $colors="light"
-                      Icon={HiPencil}
-                      onClick={() => {
-                        setOpenModal(OpenModal.ADDRESS);
-                      }}
-                    ></Button>
-                  )}
-                </FlexBox>
-              </InfoBlock>
+                                    {isAdmin && (
+                                        <Button
+                                            $round
+                                            $variant="text"
+                                            size="s"
+                                            $colors="light"
+                                            Icon={HiPencil}
+                                            onClick={() => {
+                                                setOpenModal(OpenModal.ADDRESS);
+                                            }}
+                                        ></Button>
+                                    )}
+                                </FlexBox>
+                            </InfoBlock>
 
-              <InfoBlock>
-                <TitleBox>
-                  <StyledIcon as={HiPhone} />
-                  <Title>Телефони:</Title>
-                </TitleBox>
+                            <InfoBlock>
+                                <TitleBox>
+                                    <StyledIcon as={HiPhone} />
+                                    <Title>Телефони:</Title>
+                                </TitleBox>
 
-                <InfoList>
-                  {phones.map((phone: string, i) => (
-                    <li key={i}>
-                      <FlexBox>
-                        <p>{phone}</p>
+                                <InfoList>
+                                    {phones.map((phone: string, i) => (
+                                        <li key={i}>
+                                            <FlexBox>
+                                                <p>{phone}</p>
 
-                        {isAdmin && (
-                          <div>
-                            <Button
-                              $round
-                              $variant="text"
-                              size="s"
-                              $colors="light"
-                              Icon={HiPencil}
-                              onClick={() => {
-                                setEditedPhone(phone);
-                                setOpenModal(OpenModal.PHONE);
-                              }}
-                            ></Button>
+                                                {isAdmin && (
+                                                    <div>
+                                                        <Button
+                                                            $round
+                                                            $variant="text"
+                                                            size="s"
+                                                            $colors="light"
+                                                            Icon={HiPencil}
+                                                            onClick={() => {
+                                                                setEditedPhone(phone);
+                                                                setOpenModal(OpenModal.PHONE);
+                                                            }}
+                                                        ></Button>
 
-                            {phones.length > 1 && (
-                              <Button
-                                $round
-                                $variant="text"
-                                size="s"
-                                $colors="danger"
-                                Icon={HiX}
-                                onClick={() => {
-                                  setEditedPhone(phone);
-                                  setOpenModal(OpenModal.REMOVE_PHONE);
-                                }}
-                              ></Button>
-                            )}
-                          </div>
-                        )}
-                      </FlexBox>
-                    </li>
-                  ))}
-                </InfoList>
+                                                        {phones.length > 1 && (
+                                                            <Button
+                                                                $round
+                                                                $variant="text"
+                                                                size="s"
+                                                                $colors="danger"
+                                                                Icon={HiX}
+                                                                onClick={() => {
+                                                                    setEditedPhone(phone);
+                                                                    setOpenModal(
+                                                                        OpenModal.REMOVE_PHONE
+                                                                    );
+                                                                }}
+                                                            ></Button>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </FlexBox>
+                                        </li>
+                                    ))}
+                                </InfoList>
 
-                {isAdmin && (
-                  <ButtonBox>
-                    <Button
-                      Icon={HiPlus}
-                      size="s"
-                      $colors="light"
-                      onClick={() => setOpenModal(OpenModal.PHONE)}
-                    >
-                      Додати телефон
-                    </Button>
-                  </ButtonBox>
-                )}
-              </InfoBlock>
+                                {isAdmin && (
+                                    <ButtonBox>
+                                        <Button
+                                            Icon={HiPlus}
+                                            size="s"
+                                            $colors="light"
+                                            onClick={() => setOpenModal(OpenModal.PHONE)}
+                                        >
+                                            Додати телефон
+                                        </Button>
+                                    </ButtonBox>
+                                )}
+                            </InfoBlock>
 
-              <InfoBlock>
-                <TitleBox>
-                  <StyledIcon as={HiBriefcase} />
-                  <Title>Напрямки діяльності:</Title>
-                </TitleBox>
+                            <InfoBlock>
+                                <TitleBox>
+                                    <StyledIcon as={HiBriefcase} />
+                                    <Title>Напрямки діяльності:</Title>
+                                </TitleBox>
 
-                <InfoList>
-                  {activities.map(({ id, name }) => (
-                    <li key={id}>
-                      <p>{translateActivityName(name)}</p>
-                    </li>
-                  ))}
-                </InfoList>
+                                <InfoList>
+                                    {activities.map(({ id, name }) => (
+                                        <li key={id}>
+                                            <p>{translateActivityName(name)}</p>
+                                        </li>
+                                    ))}
+                                </InfoList>
 
-                {isAdmin && (
-                  <ButtonBox>
-                    <Button
-                      Icon={HiQueueList}
-                      size="s"
-                      $colors="light"
-                      onClick={() => setOpenModal(OpenModal.ACTIVITIES)}
-                    >
-                      Налаштувати напрямки
-                    </Button>
-                  </ButtonBox>
-                )}
-              </InfoBlock>
+                                {isAdmin && (
+                                    <ButtonBox>
+                                        <Button
+                                            Icon={HiQueueList}
+                                            size="s"
+                                            $colors="light"
+                                            onClick={() => setOpenModal(OpenModal.ACTIVITIES)}
+                                        >
+                                            Налаштувати напрямки
+                                        </Button>
+                                    </ButtonBox>
+                                )}
+                            </InfoBlock>
 
-              <InfoBlock>
-                <TitleBox>
-                  <StyledIcon as={HiCalendar} />
-                  <Title>Графік роботи:</Title>
-                </TitleBox>
+                            <InfoBlock>
+                                <TitleBox>
+                                    <StyledIcon as={HiCalendar} />
+                                    <Title>Графік роботи:</Title>
+                                </TitleBox>
 
-                {workingHours && workingHours.length ? (
-                  <InfoList>
-                    {workingHours.map(({ days, hours }, i) => (
-                      <li key={i}>
-                        <p>
-                          {days.map((day, idx) => (
-                            <span key={day}>
-                              {translateWorkSchedule(day)}
-                              {idx + 1 < days.length && <span>,</span>}{' '}
-                            </span>
-                          ))}
+                                {workingHours && workingHours.length ? (
+                                    <InfoList>
+                                        {workingHours.map(({ days, hours }, i) => (
+                                            <li key={i}>
+                                                <p>
+                                                    {days.map((day, idx) => (
+                                                        <span key={day}>
+                                                            {translateWorkSchedule(day)}
+                                                            {idx + 1 < days.length && (
+                                                                <span>,</span>
+                                                            )}{' '}
+                                                        </span>
+                                                    ))}
 
-                          <span>з {hours?.from} </span>
-                          <span>до {hours?.to} </span>
-                        </p>
-                      </li>
-                    ))}
-                  </InfoList>
-                ) : (
-                  <p>Графік не налаштовано</p>
-                )}
+                                                    <span>з {hours?.from} </span>
+                                                    <span>до {hours?.to} </span>
+                                                </p>
+                                            </li>
+                                        ))}
+                                    </InfoList>
+                                ) : (
+                                    <p>Графік не налаштовано</p>
+                                )}
 
-                {isAdmin && (
-                  <ButtonBox>
-                    <Button
-                      Icon={HiTableCells}
-                      size="s"
-                      $colors="light"
-                      onClick={() => setOpenModal(OpenModal.SCHEDULE)}
-                    >
-                      Налаштувати графік
-                    </Button>
-                  </ButtonBox>
-                )}
-              </InfoBlock>
+                                {isAdmin && (
+                                    <ButtonBox>
+                                        <Button
+                                            Icon={HiTableCells}
+                                            size="s"
+                                            $colors="light"
+                                            onClick={() => setOpenModal(OpenModal.SCHEDULE)}
+                                        >
+                                            Налаштувати графік
+                                        </Button>
+                                    </ButtonBox>
+                                )}
+                            </InfoBlock>
 
-              <InfoBlock>
-                <TitleBox>
-                  <StyledIcon as={HiBookOpen} />
-                  <Title>Опис компанії:</Title>
-                </TitleBox>
+                            <InfoBlock>
+                                <TitleBox>
+                                    <StyledIcon as={HiBookOpen} />
+                                    <Title>Опис компанії:</Title>
+                                </TitleBox>
 
-                <InfoList as="div">
-                  <FlexBox>
-                    <p>{desc ? desc : 'Немає шнформації'}</p>
+                                <InfoList as="div">
+                                    <FlexBox>
+                                        <p>{desc ? desc : 'Немає шнформації'}</p>
 
-                    {isAdmin && (
-                      <Button
-                        $round
-                        $variant="text"
-                        size="s"
-                        $colors="light"
-                        Icon={HiPencil}
-                        onClick={() => setOpenModal(OpenModal.DESC)}
-                      ></Button>
+                                        {isAdmin && (
+                                            <Button
+                                                $round
+                                                $variant="text"
+                                                size="s"
+                                                $colors="light"
+                                                Icon={HiPencil}
+                                                onClick={() => setOpenModal(OpenModal.DESC)}
+                                            ></Button>
+                                        )}
+                                    </FlexBox>
+                                </InfoList>
+                            </InfoBlock>
+                        </Info>
+                    </Wrapper>
+
+                    {openModal === OpenModal.ADDRESS && (
+                        <Modal
+                            title="Змінити адресу"
+                            closeModal={handleModalClose}
+                            $isOpen={openModal === OpenModal.ADDRESS}
+                        >
+                            <EditAddressModal closeModal={handleModalClose} />
+                        </Modal>
                     )}
-                  </FlexBox>
-                </InfoList>
-              </InfoBlock>
-            </Info>
-          </Wrapper>
 
-          {openModal === OpenModal.ADDRESS && (
-            <Modal
-              title="Змінити адресу"
-              closeModal={handleModalClose}
-              $isOpen={openModal === OpenModal.ADDRESS}
-            >
-              <EditAddressModal closeModal={handleModalClose} />
-            </Modal>
-          )}
+                    {openModal === OpenModal.PHONE && (
+                        <Modal
+                            title={
+                                openModal === OpenModal.PHONE && editedPhone
+                                    ? 'Змінити номер'
+                                    : 'Додати номер'
+                            }
+                            closeModal={handlePhoneModalClose}
+                            $isOpen={openModal === OpenModal.PHONE}
+                        >
+                            <EditPhonesModal
+                                phone={editedPhone}
+                                closeModal={handlePhoneModalClose}
+                            />
+                        </Modal>
+                    )}
 
-          {openModal === OpenModal.PHONE && (
-            <Modal
-              title={
-                openModal === OpenModal.PHONE && editedPhone
-                  ? 'Змінити номер'
-                  : 'Додати номер'
-              }
-              closeModal={handlePhoneModalClose}
-              $isOpen={openModal === OpenModal.PHONE}
-            >
-              <EditPhonesModal
-                phone={editedPhone}
-                closeModal={handlePhoneModalClose}
-              />
-            </Modal>
-          )}
+                    {openModal === OpenModal.REMOVE_PHONE && editedPhone && (
+                        <Modal
+                            title="Видалити номер"
+                            closeModal={handlePhoneModalClose}
+                            $isOpen={openModal === OpenModal.REMOVE_PHONE}
+                        >
+                            <RemovePhoneModal
+                                phone={editedPhone}
+                                closeModal={handlePhoneModalClose}
+                            />
+                        </Modal>
+                    )}
 
-          {openModal === OpenModal.REMOVE_PHONE && editedPhone && (
-            <Modal
-              title="Видалити номер"
-              closeModal={handlePhoneModalClose}
-              $isOpen={openModal === OpenModal.REMOVE_PHONE}
-            >
-              <RemovePhoneModal
-                phone={editedPhone}
-                closeModal={handlePhoneModalClose}
-              />
-            </Modal>
-          )}
+                    {openModal === OpenModal.ACTIVITIES && (
+                        <Modal
+                            title="Налаштувати напрямки"
+                            closeModal={handleModalClose}
+                            $isOpen={openModal === OpenModal.ACTIVITIES}
+                        >
+                            <EditActivitiesModal closeModal={handleModalClose} />
+                        </Modal>
+                    )}
 
-          {openModal === OpenModal.ACTIVITIES && (
-            <Modal
-              title="Налаштувати напрямки"
-              closeModal={handleModalClose}
-              $isOpen={openModal === OpenModal.ACTIVITIES}
-            >
-              <EditActivitiesModal closeModal={handleModalClose} />
-            </Modal>
-          )}
+                    {openModal === OpenModal.SCHEDULE && (
+                        <Modal
+                            title="Налаштувати графік роботи"
+                            closeModal={handleModalClose}
+                            $isOpen={openModal === OpenModal.SCHEDULE}
+                        >
+                            <SetScheduleModal closeModal={handleModalClose} />
+                        </Modal>
+                    )}
 
-          {openModal === OpenModal.SCHEDULE && (
-            <Modal
-              title="Налаштувати графік роботи"
-              closeModal={handleModalClose}
-              $isOpen={openModal === OpenModal.SCHEDULE}
-            >
-              <SetScheduleModal closeModal={handleModalClose} />
-            </Modal>
-          )}
-
-          {openModal === OpenModal.DESC && (
-            <Modal
-              title="Змінити опис"
-              closeModal={handleModalClose}
-              $isOpen={openModal === OpenModal.DESC}
-            >
-              <EditDescModal closeModal={handleModalClose} />
-            </Modal>
-          )}
+                    {openModal === OpenModal.DESC && (
+                        <Modal
+                            title="Змінити опис"
+                            closeModal={handleModalClose}
+                            $isOpen={openModal === OpenModal.DESC}
+                        >
+                            <EditDescModal closeModal={handleModalClose} />
+                        </Modal>
+                    )}
+                </>
+            )}
         </>
-      )}
-    </>
-  );
+    );
 };
 
 export default CompanyProfile;

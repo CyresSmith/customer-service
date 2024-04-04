@@ -10,98 +10,95 @@ import { EmployeeRoleEnum } from 'services/types/employee.types';
 import { ButtonBox } from '../AddEmployeeModal.styled';
 
 type Props = {
-  userId: number;
-  handleBackClick: () => void;
-  closeModal: () => void;
+    userId: number;
+    handleBackClick: () => void;
+    closeModal: () => void;
 };
 
 const inputs = [
-  {
-    name: 'jobTitle',
-    type: 'text',
-    isRequired: true,
-  },
-  {
-    name: 'provider',
-    type: 'checkbox',
-    label: false,
-  },
-  {
-    name: 'isAdmin',
-    type: 'checkbox',
-    label: false,
-  },
+    {
+        name: 'jobTitle',
+        type: 'text',
+        isRequired: true,
+    },
+    {
+        name: 'provider',
+        type: 'checkbox',
+        label: false,
+    },
+    {
+        name: 'isAdmin',
+        type: 'checkbox',
+        label: false,
+    },
 ];
 
 const initialState = {
-  jobTitle: '',
-  provider: false,
-  isAdmin: false,
+    jobTitle: '',
+    provider: false,
+    isAdmin: false,
 };
 
 const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
-  const { id: companyId } = useCompany();
-  const [addEmployee, { isLoading, isSuccess }] = useAddExistUserEmployeeMutation();
+    const { id: companyId } = useCompany();
+    const [addEmployee, { isLoading, isSuccess }] = useAddExistUserEmployeeMutation();
 
-  const onSubmit = async ({
-    jobTitle,
-    provider,
-    isAdmin,
-  }: typeof initialState) => {
-    const employee = await addEmployee({
-      companyId,
-      data: {
-        userId,
-        employeeData: {
-          jobTitle,
-          provider,
-          role: isAdmin ? EmployeeRoleEnum.ADMIN : EmployeeRoleEnum.EMPLOYEE,
-        },
-      },
-    }).unwrap();
+    const onSubmit = async ({ jobTitle, provider, isAdmin }: typeof initialState) => {
+        const employee = await addEmployee({
+            companyId,
+            data: {
+                userId,
+                employeeData: {
+                    jobTitle,
+                    provider,
+                    role: isAdmin ? EmployeeRoleEnum.ADMIN : EmployeeRoleEnum.EMPLOYEE,
+                },
+            },
+        }).unwrap();
 
-    if (employee && isSuccess) {
-      closeModal();
-    }
-  };
+        if (employee && isSuccess) {
+            closeModal();
+        }
+    };
 
-  const { state, handleChange, handleSubmit, invalidFields } = useForm<
-    typeof initialState
-  >(initialState, onSubmit);
+    const { state, handleChange, handleSubmit, invalidFields } = useForm<typeof initialState>(
+        initialState,
+        onSubmit
+    );
 
-  return (
-    <>
-      <Form onSubmit={handleSubmit}>
-        <FormInputsList>
-          {inputs.map((item, i) => (
-            <CustomFormInput
-              {...item}
-              key={i}
-              value={state[item.name as keyof typeof initialState]}
-              handleChange={handleChange}
-              isValid={getErrorMessage(item.name, invalidFields)}
-            />
-          ))}
-        </FormInputsList>
+    return (
+        <>
+            <Form onSubmit={handleSubmit}>
+                <FormInputsList>
+                    {inputs.map((item, i) => (
+                        <CustomFormInput
+                            {...item}
+                            key={i}
+                            value={state[item.name as keyof typeof initialState]}
+                            handleChange={handleChange}
+                            isValid={getErrorMessage(item.name, invalidFields)}
+                        />
+                    ))}
+                </FormInputsList>
 
-        <ButtonBox>
-          <Button Icon={HiArrowLeft} $colors="light" onClick={handleBackClick}>
-            Назад
-          </Button>
+                <ButtonBox>
+                    <Button Icon={HiArrowLeft} $colors="light" onClick={handleBackClick}>
+                        Назад
+                    </Button>
 
-          <Button
-            isLoading={isLoading}
-            Icon={HiPlusCircle}
-            type="submit"
-            disabled={Object.values(state).includes('') || isLoading}
-            $colors="accent"
-          >
-            Додать
-          </Button>
-        </ButtonBox>
-      </Form>
-    </>
-  );
+                    <Button
+                        isLoading={isLoading}
+                        Icon={HiPlusCircle}
+                        type="submit"
+                        disabled={Object.values(state).includes('') || isLoading}
+                        $colors="accent"
+                    >
+                        Додать
+                    </Button>
+                </ButtonBox>
+            </Form>
+        </>
+    );
 };
 
 export default ExistAccountForm;

@@ -12,21 +12,21 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     gap: ${theme.space[4]};
-`
+`;
 
 export const BarSkeleton = styled.div`
     width: 100%;
     height: 72px;
     background-color: ${theme.colors.bg.dark};
     border-radius: ${theme.radii.m};
-`
+`;
 
 export const ContentSkeleton = styled.div`
     width: 100%;
     height: 100%;
     background-color: ${theme.colors.bg.dark};
     border-radius: ${theme.radii.m};
-`
+`;
 
 export const Backdrop = styled.div`
     position: fixed;
@@ -37,4 +37,4 @@ export const Backdrop = styled.div`
     z-index: 10;
     pointer-events: none;
     background-color: ${theme.colors.backdrop};
-`
+`;

@@ -2,11 +2,11 @@ import { Dispatch, SetStateAction } from 'react';
 import { CreateCompanyDto } from 'store/company/company.types';
 
 export type Selected = {
-  selected: boolean;
+    selected: boolean;
 };
 
 export interface SelectedItem extends Selected {
-  $itemsCount: number;
+    $itemsCount: number;
 }
 
 export type Step = 1 | 2 | 3 | 4;
@@ -14,8 +14,8 @@ export type Step = 1 | 2 | 3 | 4;
 export type NextStep = '+' | '-';
 
 export type stepProps = {
-  companyData: CreateCompanyDto;
-  setCompanyData: Dispatch<SetStateAction<CreateCompanyDto>>;
-  nextPage: () => void;
-  prevPage: () => void;
+    companyData: CreateCompanyDto;
+    setCompanyData: Dispatch<SetStateAction<CreateCompanyDto>>;
+    nextPage: () => void;
+    prevPage: () => void;
 };

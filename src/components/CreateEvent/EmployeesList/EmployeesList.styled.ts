@@ -9,7 +9,7 @@ export const List = styled.ul`
     gap: ${theme.space[4]};
     flex-wrap: wrap;
     margin-top: ${theme.space[4]};
-`
+`;
 
 export const ListItem = styled.li`
     width: 100%;
@@ -30,7 +30,7 @@ export const ListItem = styled.li`
         border-color: ${theme.colors.secondary.main};
         box-shadow: ${theme.shadow.m};
     }
-`
+`;
 
 export const AvatarWrapper = styled.div`
     position: relative;
@@ -42,7 +42,7 @@ export const AvatarWrapper = styled.div`
     border: ${theme.borders.normal} ${theme.colors.secondary.main};
     border-radius: ${theme.radii.round};
     overflow: hidden;
-`
+`;
 
 export const Avatar = styled.img`
     position: absolute;
@@ -51,17 +51,17 @@ export const Avatar = styled.img`
     width: 100%;
     height: 100%;
     object-fit: cover;
-`
+`;
 
 export const NoAvatarIcon = styled.svg`
     width: 50%;
     height: 50%;
     fill: ${theme.colors.secondary.main};
-`
+`;
 export const TextBox = styled.div`
     width: 100%;
     text-align: center;
-`
+`;
 
 export const Name = styled.p`
     width: 100%;
@@ -71,11 +71,10 @@ export const Name = styled.p`
     margin-bottom: ${theme.space[3]};
     overflow: hidden;
     text-overflow: ellipsis;
-`
+`;
 
 export const Position = styled.p`
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-`
-
+`;

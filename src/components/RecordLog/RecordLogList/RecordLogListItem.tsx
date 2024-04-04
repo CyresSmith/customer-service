@@ -1,4 +1,4 @@
-import { ListItem, Time } from "./RecordLogList.styled";
+import { ListItem, Time } from './RecordLogList.styled';
 
 type Props = {
     hour: string;
@@ -6,10 +6,13 @@ type Props = {
 };
 
 export const RecordLogListItem = ({ hour, index }: Props) => {
-
     return (
-        <ListItem $isHour={index !== 0 && index! % 4 === 0} $skip={hour === 'skip'} $break={hour === 'break'}>
-            <Time $break={hour === 'break'}>{ hour === 'break' ? `Перерва` : hour }</Time>
+        <ListItem
+            $isHour={index !== 0 && index! % 4 === 0}
+            $skip={hour === 'skip'}
+            $break={hour === 'break'}
+        >
+            <Time $break={hour === 'break'}>{hour === 'break' ? `Перерва` : hour}</Time>
         </ListItem>
-    )
+    );
 };

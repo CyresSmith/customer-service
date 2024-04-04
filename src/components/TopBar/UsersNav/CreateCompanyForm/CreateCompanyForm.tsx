@@ -8,51 +8,49 @@ import SecondStep from './SecondStep';
 import ThirdStep from './ThirdStep';
 
 export type Props = {
-  closeModal: () => void;
+    closeModal: () => void;
 };
 
 const CreateCompanyForm = ({ closeModal }: Props) => {
-  const [formStep, setFormStep] = useState<Step>(1);
-  const [activities, setActivities] = useState<Activity[] | []>([]);
-  const [companyData, setCompanyData] = useState<CreateCompanyDto>({
-    name: '',
-    city: '',
-    address: '',
-    index: '',
-    phone: '',
-    category: 0,
-    activities: [],
-    branches: 'one',
-    employeesCount: '2-5',
-  });
+    const [formStep, setFormStep] = useState<Step>(1);
+    const [activities, setActivities] = useState<Activity[] | []>([]);
+    const [companyData, setCompanyData] = useState<CreateCompanyDto>({
+        name: '',
+        city: '',
+        address: '',
+        index: '',
+        phone: '',
+        category: 0,
+        activities: [],
+        branches: 'one',
+        employeesCount: '2-5',
+    });
 
-  const nextStep = (type: NextStep) => {
-    if (type === '+') {
-      if (formStep === 4) return;
-      setFormStep(p => (p + 1) as Step);
-    } else {
-      if (formStep === 1) return;
-      setFormStep(p => (p - 1) as Step);
-    }
-  };
+    const nextStep = (type: NextStep) => {
+        if (type === '+') {
+            if (formStep === 4) return;
+            setFormStep(p => (p + 1) as Step);
+        } else {
+            if (formStep === 1) return;
+            setFormStep(p => (p - 1) as Step);
+        }
+    };
 
-  const stepProps = {
-    companyData,
-    setCompanyData,
-    nextPage: () => nextStep('+'),
-    prevPage: () => nextStep('-'),
-  };
+    const stepProps = {
+        companyData,
+        setCompanyData,
+        nextPage: () => nextStep('+'),
+        prevPage: () => nextStep('-'),
+    };
 
-  return (
-    <FormContainer>
-      {formStep === 1 && (
-        <FirstStep {...stepProps} setActivities={setActivities} />
-      )}
-      {formStep === 2 && <SecondStep {...stepProps} activities={activities} />}
-      {formStep === 3 && <ThirdStep {...stepProps} />}
-      {formStep === 4 && <FourthStep {...stepProps} closeModal={closeModal} />}
-    </FormContainer>
-  );
+    return (
+        <FormContainer>
+            {formStep === 1 && <FirstStep {...stepProps} setActivities={setActivities} />}
+            {formStep === 2 && <SecondStep {...stepProps} activities={activities} />}
+            {formStep === 3 && <ThirdStep {...stepProps} />}
+            {formStep === 4 && <FourthStep {...stepProps} closeModal={closeModal} />}
+        </FormContainer>
+    );
 };
 
 export default CreateCompanyForm;

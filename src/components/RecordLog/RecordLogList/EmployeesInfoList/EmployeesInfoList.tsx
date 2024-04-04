@@ -9,23 +9,22 @@ type Props = {
     columns: number;
     isScroll: boolean;
     schedules: IMonthSchedule[];
-}
+};
 
 const EmployeesInfoList = ({ employees, date, columns, isScroll, schedules }: Props) => {
-
     return (
-        <List $columns={columns}  $isScroll={isScroll}>
-            {employees.map((employee, i) =>
+        <List $columns={columns} $isScroll={isScroll}>
+            {employees.map((employee, i) => (
                 <EmployeesInfoListItem
                     key={i}
                     employee={employee}
                     last={i === employees.length - 1}
                     date={date}
-                    schedules={schedules.filter(s => s.employee.id === +employee.id )}
+                    schedules={schedules.filter(s => s.employee.id === +employee.id)}
                 />
-            )}
+            ))}
         </List>
-    )
+    );
 };
 
 export default EmployeesInfoList;

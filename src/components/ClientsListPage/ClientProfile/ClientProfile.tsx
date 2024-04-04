@@ -8,54 +8,48 @@ import { Container, Skeleton } from './ClientProfile.styled';
 import { Profile } from './ClientProfileComponents/Profile';
 
 type Props = {
-  companyId: number;
-  clientId: number;
-  closeModal: () => void;
+    companyId: number;
+    clientId: number;
+    closeModal: () => void;
 };
 
 enum Sections {
-  PROFILE = 1,
+    PROFILE = 1,
 }
 
-const sectionButtons = [
-  { id: Sections.PROFILE, label: 'Інформація', Icon: HiIdentification },
-];
+const sectionButtons = [{ id: Sections.PROFILE, label: 'Інформація', Icon: HiIdentification }];
 
 const ClientProfile = ({ companyId, clientId, closeModal }: Props) => {
-  const { data, isLoading } = useGetByIdQuery({
-    companyId,
-    id: clientId,
-  });
-  const [section, setSection] = useState<Sections>(Sections.PROFILE);
+    const { data, isLoading } = useGetByIdQuery({
+        companyId,
+        id: clientId,
+    });
+    const [section, setSection] = useState<Sections>(Sections.PROFILE);
 
-  return isLoading || !data || clientId !== data.id ? (
-    <Skeleton>
-      <Loader />
-    </Skeleton>
-  ) : (
-    <Container>
-      <ModalHeaderWithAvatar
-        avatar={data.avatar || ''}
-        title={
-          data.lastName
-            ? data.firstName + ' ' + data.lastName
-            : data.firstName || ''
-        }
-      />
+    return isLoading || !data || clientId !== data.id ? (
+        <Skeleton>
+            <Loader />
+        </Skeleton>
+    ) : (
+        <Container>
+            <ModalHeaderWithAvatar
+                avatar={data.avatar || ''}
+                title={data.lastName ? data.firstName + ' ' + data.lastName : data.firstName || ''}
+            />
 
-      <ModalSectionsList
-        sectionButtons={sectionButtons}
-        currentSection={section}
-        handleSectionSelect={id => setSection(id)}
-      />
+            <ModalSectionsList
+                sectionButtons={sectionButtons}
+                currentSection={section}
+                handleSectionSelect={id => setSection(id)}
+            />
 
-      {section === Sections.PROFILE ? (
-        <Profile companyId={companyId} client={data} closeModal={closeModal} />
-      ) : (
-        <Skeleton />
-      )}
-    </Container>
-  );
+            {section === Sections.PROFILE ? (
+                <Profile companyId={companyId} client={data} closeModal={closeModal} />
+            ) : (
+                <Skeleton />
+            )}
+        </Container>
+    );
 };
 
 export default ClientProfile;

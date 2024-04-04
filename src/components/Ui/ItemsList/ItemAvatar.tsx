@@ -5,17 +5,17 @@ import { AvatarBox } from './ItemsList.styled';
 type Props = { avatar?: string; name?: string };
 
 const ItemAvatar = ({ avatar, name }: Props) => {
-  return (
-    <AvatarBox>
-      {avatar ? (
-        <img src={String(avatar)} alt={`${name} image`} />
-      ) : name ? (
-        <span>{getAvatarLetters(name)}</span>
-      ) : (
-        <HiPhoto />
-      )}
-    </AvatarBox>
-  );
+    return (
+        <AvatarBox>
+            {avatar ? (
+                <img src={String(avatar)} alt={`${name} image`} />
+            ) : name ? (
+                <span>{getAvatarLetters(name)}</span>
+            ) : (
+                <HiPhoto />
+            )}
+        </AvatarBox>
+    );
 };
 
 export default ItemAvatar;

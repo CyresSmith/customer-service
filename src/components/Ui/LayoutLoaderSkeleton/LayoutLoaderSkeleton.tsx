@@ -1,8 +1,7 @@
-import Loader from "../Loader";
-import { Container, BarSkeleton, ContentSkeleton, Backdrop } from "./LayoutLoaderSkeleton.styled"
+import Loader from '../Loader';
+import { Container, BarSkeleton, ContentSkeleton, Backdrop } from './LayoutLoaderSkeleton.styled';
 
 const LayoutLoaderSkeleton = () => {
-
     return (
         <Container>
             <BarSkeleton />
@@ -10,7 +9,7 @@ const LayoutLoaderSkeleton = () => {
             <Backdrop />
             <Loader />
         </Container>
-    )
+    );
 };
 
 export default LayoutLoaderSkeleton;

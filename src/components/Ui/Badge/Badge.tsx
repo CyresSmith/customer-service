@@ -1,11 +1,11 @@
 import { BadgeBox } from './Badge.styled';
 
 type Props = {
-  count: number;
+    count: number;
 };
 
 const Badge = ({ count }: Props) => {
-  return <BadgeBox>{count}</BadgeBox>;
+    return <BadgeBox>{count}</BadgeBox>;
 };
 
 export default Badge;
