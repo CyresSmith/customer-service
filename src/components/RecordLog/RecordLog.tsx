@@ -14,7 +14,7 @@ import {
     ListsWrapper,
     NoDataWrapper,
     NoSchedule,
-    RigthWrapper,
+    RightWrapper,
     SchedulesContainer,
     ScrollWrapper,
 } from './RecordLog.styled';
@@ -155,9 +155,9 @@ const RecordLog = ({ allSchedules, date, workingHours, employees, setDate }: Pro
                     </SchedulesContainer>
                 </ScrollWrapper>
             </LeftWrapper>
-            <RigthWrapper>
+            <RightWrapper>
                 <Calendar cellSize={30} date={date} setDate={setDate} />
-            </RigthWrapper>
+            </RightWrapper>
         </Container>
     ) : (
         <NoDataWrapper>

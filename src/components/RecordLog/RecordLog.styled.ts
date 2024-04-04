@@ -16,7 +16,7 @@ export const LeftWrapper = styled.div`
     border-radius: ${theme.radii.m};
 `;
 
-export const RigthWrapper = styled.div`
+export const RightWrapper = styled.div`
     height: 100%;
 `;
 
