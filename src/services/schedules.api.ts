@@ -36,7 +36,7 @@ export const schedulesApi = createApi({
                 data,
                 params: { companyId },
             }),
-            invalidatesTags: (resp, err, arg) => [{ type: 'schedule', id: arg.employeeId }],
+            invalidatesTags: (_resp, _err, arg) => [{ type: 'schedule', id: arg.employeeId }],
         }),
 
         getEmployeeSchedule: builder.query<IMonthSchedule, IGetEmployeeSchedule>({
@@ -45,7 +45,7 @@ export const schedulesApi = createApi({
                 method: 'GET',
                 params: { companyId, year, month },
             }),
-            providesTags: (resp, err, arg) => [{ type: 'schedule', id: arg.employeeId }],
+            providesTags: (_resp, _err, arg) => [{ type: 'schedule', id: arg.employeeId }],
         }),
 
         deleteEmployeeSchedule: builder.mutation<{ message: string }, DeletingSchedule>({
@@ -54,7 +54,7 @@ export const schedulesApi = createApi({
                 method: 'DELETE',
                 params: { companyId },
             }),
-            invalidatesTags: (resp, err, arg) => [
+            invalidatesTags: (_resp, _err, arg) => [
                 { type: 'schedule', id: arg.employeeId },
                 'schedules',
             ],

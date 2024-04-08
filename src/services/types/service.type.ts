@@ -98,7 +98,7 @@ export type IService = {
 
 export type IServiceUpdate = Omit<IService, 'category' | 'employees' | 'type'> & {
     category: number;
-    employees: string[];
+    employees: number[];
     type: string;
 };
 

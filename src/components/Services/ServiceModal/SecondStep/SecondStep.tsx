@@ -25,13 +25,13 @@ const SecondStep = ({
     const isAdmin = useAdminRights();
     const [addEmployeeOpen, setAddEmployeeOpen] = useState(false);
 
-    const handleSelect = (id: string | number, selected?: number[] | undefined) => {
+    const handleSelect = (_: unknown, selected?: number[] | undefined) => {
         if (!isAdmin) return;
 
         selected &&
             setServiceData(p => ({
                 ...p,
-                employees: selected.map(id => String(id)),
+                employees: selected.map(id => Number(id)),
             }));
     };
 

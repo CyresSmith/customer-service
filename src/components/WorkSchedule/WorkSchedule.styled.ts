@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import theme from 'utils/theme';
 
-type ListProps = { $daysCount: number };
+// type ListProps = { $daysCount: number };
 
-const firstCellWidth = '100px';
+// const firstCellWidth = '100px';
 const cellSize = '100px';
 
 export const WorkScheduleBox = styled.section`

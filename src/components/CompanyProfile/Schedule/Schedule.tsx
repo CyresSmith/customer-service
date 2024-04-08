@@ -11,10 +11,10 @@ const Schedule = ({ schedule }: Props) => {
             {Object.entries(schedule).map(([day, schedule]) => (
                 <li>
                     <p>
-                        <span>{translateWorkSchedule(day)}</span>
+                        <span>{translateWorkSchedule(Number(day))}</span>
                         {Object.entries(schedule).map(([type, time]) => (
                             <>
-                                <span>{translateWorkSchedule(type)}</span>
+                                <span>{translateWorkSchedule(type as 'from' | 'to')}</span>
                                 <span>{time}</span>
                             </>
                         ))}

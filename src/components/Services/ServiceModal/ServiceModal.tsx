@@ -108,7 +108,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
         if (!data) return;
 
         if (openModal === ServiceOpenModal.EDIT_SERVICE && data) {
-            let { id, createdAt, updatedAt, ...state } = data;
+            let { id, ...state } = data;
 
             const hours = millisecondsToHours(data.duration);
             const minutes = millisecondsToMinutes(data.duration - hoursToMilliseconds(hours));

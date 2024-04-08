@@ -34,7 +34,7 @@ import {
 type StringRecord = Record<string, string | number>;
 
 type ItemType<T extends StringRecord> = {
-    id: number | string;
+    id: number;
     name: string;
 } & T;
 
@@ -109,9 +109,7 @@ const ItemsList = <T extends StringRecord>({
 
     const sort = () => {
         setItemsState(p => {
-            const sort = Object.entries(sortState).find(
-                ([key, value]) => value !== SortTypeEnum.NULL
-            );
+            const sort = Object.values(sortState).find(value => value !== SortTypeEnum.NULL);
 
             if (sort) {
                 return [...p].sort((a, b) => {

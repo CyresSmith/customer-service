@@ -37,7 +37,7 @@ export const clientsApi = createApi({
                     method: 'GET',
                     params: { companyId },
                 }),
-                providesTags: (resp, err, arg) => [{ type: 'client', id: arg.id }],
+                providesTags: (_resp, _err, arg) => [{ type: 'client', id: arg.id }],
             }),
 
             updateClient: builder.mutation<Client, UpdateClient>({
@@ -47,7 +47,7 @@ export const clientsApi = createApi({
                     data,
                     params: { companyId },
                 }),
-                invalidatesTags: (resp, err, arg) => [
+                invalidatesTags: (_resp, _err, arg) => [
                     { type: 'client', id: arg.id },
                     { type: 'clients', id: arg.id },
                 ],
@@ -60,7 +60,7 @@ export const clientsApi = createApi({
                     data,
                     params: { companyId },
                 }),
-                invalidatesTags: (resp, err, arg) => [
+                invalidatesTags: (_resp, _err, arg) => [
                     { type: 'client', id: arg.id },
                     { type: 'clients', id: arg.id },
                 ],
@@ -72,7 +72,7 @@ export const clientsApi = createApi({
                     method: 'DELETE',
                     params: { companyId },
                 }),
-                invalidatesTags: (resp, err, arg) => [
+                invalidatesTags: (_resp, _err, arg) => [
                     { type: 'client', id: arg.id },
                     { type: 'clients', id: arg.id },
                 ],

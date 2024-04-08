@@ -70,15 +70,15 @@ const EmployeeServices = ({ employee }: Props) => {
                 employeeSetting && employeeSetting.duration
                     ? millisecondsToHours(employeeSetting.duration)
                     : service?.duration
-                      ? millisecondsToHours(service?.duration)
-                      : 0;
+                    ? millisecondsToHours(service?.duration)
+                    : 0;
 
             const minutes =
                 employeeSetting && employeeSetting.duration
                     ? millisecondsToMinutes(employeeSetting?.duration - hoursToMilliseconds(hours))
                     : service?.duration
-                      ? millisecondsToMinutes(service?.duration - hoursToMilliseconds(hours))
-                      : 0;
+                    ? millisecondsToMinutes(service?.duration - hoursToMilliseconds(hours))
+                    : 0;
 
             const serviceState = {
                 durationHours: { id: hours, value: `${hours} г.` },
@@ -191,11 +191,7 @@ const EmployeeServices = ({ employee }: Props) => {
             )}
 
             {openModal === ServiceOpenModal.ADD && categories && (
-                <ServiceModal
-                    openModal={openModal}
-                    handleModalClose={handleModalClose}
-                    categories={categories}
-                />
+                <ServiceModal openModal={openModal} handleModalClose={handleModalClose} />
             )}
 
             {openModal === ServiceOpenModal.EDIT_SERVICE && service && (

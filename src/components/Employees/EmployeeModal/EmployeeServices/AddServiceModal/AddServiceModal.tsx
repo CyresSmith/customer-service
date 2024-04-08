@@ -36,7 +36,7 @@ const AddServiceModal = ({
         employeeServices?.length !== newServices.length ||
         newServices.some(item => !employeeServices.includes(item));
 
-    const handleServiceAdd = (id: string | number, selected?: number[]) => {
+    const handleServiceAdd = (_: unknown, selected?: number[]) => {
         selected && setNewServices(selected);
     };
 

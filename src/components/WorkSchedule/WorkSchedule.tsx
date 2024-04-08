@@ -62,7 +62,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
     const [selectedDayCompanySchedule, setSelectedDayCompanySchedule] =
         useState<IWorkingHours | null>(null);
 
-    const [isStateChanged, setIsStateChanged] = useState(false);
+    const [isStateChanged] = useState(false);
 
     const handleScroll: UIEventHandler<HTMLDivElement> = e => {
         const { scrollLeft } = e.target as HTMLDivElement;
@@ -436,13 +436,13 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
             {selectedDays.length > 0 && workingHours ? (
                 <ScheduleTimeSelection
                     from={from}
-                    setFrom={time => {}}
+                    setFrom={time => console.log(time)}
                     to={to}
-                    setTo={time => {}}
+                    setTo={time => console.log(time)}
                     breakFrom={breakFrom}
-                    setBreakFrom={time => {}}
+                    setBreakFrom={time => console.log(time)}
                     breakTo={breakTo}
-                    setBreakTo={time => {}}
+                    setBreakTo={time => console.log(time)}
                     isBreak={isBreak}
                     breakToggle={() => {}}
                     isEditingAllowed={true}

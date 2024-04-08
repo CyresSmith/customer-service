@@ -15,7 +15,6 @@ import { HiArrowRight } from 'react-icons/hi2';
 import { IoIosSave } from 'react-icons/io';
 import { useGetServicesCategoriesQuery } from 'services/categories.api';
 import { useUploadServiceAvatarMutation } from 'services/service.api';
-import { ServiceCategory } from 'services/types/category.types';
 import { ServiceStepProps } from 'services/types/service.type';
 import { ButtonBox, FirstStepBox, FormSide, StepFormBox } from '../ServiceModal.styled';
 
@@ -40,7 +39,6 @@ type InitialStateType = {
 
 interface Props extends ServiceStepProps {
     serviceId?: number;
-    categories: ServiceCategory[];
 }
 
 const FirstStep = ({

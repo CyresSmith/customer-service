@@ -63,7 +63,7 @@ export const employeeApi = createApi({
                 method: 'GET',
                 params: { companyId },
             }),
-            providesTags: (result, err, arg) => [{ type: 'employee', id: arg.id }],
+            providesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.id }],
         }),
 
         getCompanyEmployees: builder.query<BasicEmployeeInfo[], number>({
@@ -85,7 +85,7 @@ export const employeeApi = createApi({
                 data,
                 params: { companyId },
             }),
-            invalidatesTags: (result, err, arg) => [
+            invalidatesTags: (_result, _err, arg) => [
                 { type: 'employee', id: arg.employeeId },
                 { type: 'allEmployees', id: arg.employeeId },
             ],
@@ -101,7 +101,7 @@ export const employeeApi = createApi({
                 data,
                 params: { companyId },
             }),
-            invalidatesTags: (result, err, arg) => [
+            invalidatesTags: (_result, _err, arg) => [
                 { type: 'employee', id: arg.employeeId },
                 { type: 'allEmployees', id: arg.employeeId },
             ],
@@ -113,7 +113,7 @@ export const employeeApi = createApi({
                 method: 'PATCH',
                 data,
             }),
-            invalidatesTags: (result, err, arg) => [{ type: 'employee', id: arg.employeeId }],
+            invalidatesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.employeeId }],
         }),
 
         getEmployeeSchedule: builder.query<IMonthSchedule, IGetEmployeeSchedule>({
@@ -121,7 +121,7 @@ export const employeeApi = createApi({
                 url: `company/${companyId}/employee/${employeeId}/schedule?year=${year}&month=${month}`,
                 method: 'GET',
             }),
-            providesTags: (result, err, arg) => [{ type: 'employee', id: arg.employeeId }],
+            providesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.employeeId }],
         }),
 
         deleteEmployeeSchedule: builder.mutation<
@@ -132,7 +132,7 @@ export const employeeApi = createApi({
                 url: `company/${companyId}/employee/${employeeId}/schedule/${scheduleId}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, err, arg) => [{ type: 'employee', id: arg.employeeId }],
+            invalidatesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.employeeId }],
         }),
 
         removeEmployeeService: builder.mutation<
@@ -144,7 +144,7 @@ export const employeeApi = createApi({
                 params: { companyId },
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, err, arg) => [
+            invalidatesTags: (_result, _err, arg) => [
                 { type: 'employee', id: arg.employeeId },
                 { type: 'allEmployees', id: arg.employeeId },
             ],
@@ -160,7 +160,7 @@ export const employeeApi = createApi({
                 method: 'PATCH',
                 data,
             }),
-            invalidatesTags: (result, err, arg) => [
+            invalidatesTags: (_result, _err, arg) => [
                 { type: 'employee', id: arg.employeeId },
                 { type: 'allEmployees', id: arg.employeeId },
             ],

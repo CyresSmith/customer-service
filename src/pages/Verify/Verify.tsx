@@ -24,7 +24,7 @@ const Verify = () => {
             if (data) {
                 setLoading(false);
                 setMessage('User successfully verified!');
-                logIn(data);
+                logIn({ ...data, isLoggedIn: true });
 
                 toast.success(`Вітаю, ${data.user?.firstName}`);
 
