@@ -1,6 +1,7 @@
 import { ButtonBox } from 'components/Services/ServiceModal/ServiceModal.styled';
 import Button from 'components/Ui/Buttons/Button';
 import ItemsList from 'components/Ui/ItemsList';
+import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
 import { useAdminRights } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
@@ -8,6 +9,7 @@ import { useState } from 'react';
 import { IoIosSave } from 'react-icons/io';
 import { toast } from 'react-toastify';
 import { useAddEmployeeServiceMutation } from 'services/employee.api';
+import { useGetServicesQuery } from 'services/service.api';
 import { AddServiceModalBox } from '../EmployeeServices.styled';
 
 type Props = {
@@ -26,10 +28,17 @@ const AddServiceModal = ({
     openCreateServiceModal,
 }: Props) => {
     const isAdmin = useAdminRights();
-    const { id: companyId, services } = useCompany();
+    const { id: companyId } = useCompany();
     const [newServices, setNewServices] = useState<number[]>(employeeServices || []);
 
     const [addServices, { isLoading }] = useAddEmployeeServiceMutation();
+
+    const { data: services, isLoading: isServicesLoading } = useGetServicesQuery(
+        {
+            companyId,
+        },
+        { skip: !companyId }
+    );
 
     const editingAllowed = isAdmin;
     const servicesChanged =
@@ -60,36 +69,51 @@ const AddServiceModal = ({
                 closeModal={handleModalClose}
                 title="Обрати послуги"
             >
-                <AddServiceModalBox>
-                    <ItemsList
-                        items={services.map(
-                            ({ id = 0, avatar = '', name = '', category, type = '' }) => ({
-                                id,
-                                avatar,
-                                name,
-                                category: category?.name || '',
-                                type: type === 'individual' ? 'Індівідуальна' : 'Групова',
-                            })
+                {isServicesLoading ? (
+                    <Loader />
+                ) : (
+                    <>
+                        {services && (
+                            <AddServiceModalBox>
+                                <ItemsList
+                                    items={services.map(
+                                        ({
+                                            id = 0,
+                                            avatar = '',
+                                            name = '',
+                                            category,
+                                            type = '',
+                                        }) => ({
+                                            id,
+                                            avatar,
+                                            name,
+                                            category: category?.name || '',
+                                            type:
+                                                type === 'individual' ? 'Індівідуальна' : 'Групова',
+                                        })
+                                    )}
+                                    keyForSelect="category"
+                                    onItemClick={handleServiceAdd}
+                                    addButtonTitle={editingAllowed ? 'Створити послугу' : undefined}
+                                    onAddClick={openCreateServiceModal}
+                                    selection={newServices}
+                                />
+                            </AddServiceModalBox>
                         )}
-                        keyForSelect="category"
-                        onItemClick={handleServiceAdd}
-                        addButtonTitle={editingAllowed ? 'Створити послугу' : undefined}
-                        onAddClick={openCreateServiceModal}
-                        selection={newServices}
-                    />
-                </AddServiceModalBox>
 
-                <ButtonBox>
-                    <Button
-                        disabled={!servicesChanged}
-                        onClick={handleSave}
-                        $colors="accent"
-                        Icon={IoIosSave}
-                        isLoading={isLoading}
-                    >
-                        Зберегти
-                    </Button>
-                </ButtonBox>
+                        <ButtonBox>
+                            <Button
+                                disabled={!servicesChanged}
+                                onClick={handleSave}
+                                $colors="accent"
+                                Icon={IoIosSave}
+                                isLoading={isLoading}
+                            >
+                                Зберегти
+                            </Button>
+                        </ButtonBox>
+                    </>
+                )}
             </Modal>
         </>
     );

@@ -52,8 +52,7 @@ const SecondStep = ({
     };
 
     const saveDisabled =
-        JSON.stringify(stateToCheck?.employees) === JSON.stringify(serviceData?.employees) ||
-        serviceData.employees?.length === 0;
+        JSON.stringify(stateToCheck?.employees) === JSON.stringify(serviceData?.employees);
 
     return (
         <>
@@ -74,7 +73,11 @@ const SecondStep = ({
                             keyForSelect="jobTitle"
                             onItemClick={handleSelect}
                             selection={
-                                serviceData.employees ? serviceData.employees.map(id => +id) : []
+                                isAdmin
+                                    ? serviceData.employees
+                                        ? serviceData.employees.map(id => +id)
+                                        : []
+                                    : undefined
                             }
                         />
                     ))}

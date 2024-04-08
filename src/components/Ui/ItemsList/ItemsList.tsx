@@ -109,7 +109,7 @@ const ItemsList = <T extends StringRecord>({
 
     const sort = () => {
         setItemsState(p => {
-            const sort = Object.values(sortState).find(value => value !== SortTypeEnum.NULL);
+            const sort = Object.entries(sortState).find(item => item[1] !== SortTypeEnum.NULL);
 
             if (sort) {
                 return [...p].sort((a, b) => {
@@ -162,8 +162,8 @@ const ItemsList = <T extends StringRecord>({
                     p[sortKey] === SortTypeEnum.NULL
                         ? SortTypeEnum.ASC
                         : p[sortKey] === SortTypeEnum.ASC
-                          ? SortTypeEnum.DESC
-                          : SortTypeEnum.NULL,
+                        ? SortTypeEnum.DESC
+                        : SortTypeEnum.NULL,
             };
         });
     };
@@ -374,14 +374,14 @@ const ItemsList = <T extends StringRecord>({
                                                         )
                                                             ? undefined
                                                             : sortState[
-                                                                    key as keyof typeof sortState
-                                                                ] === SortTypeEnum.ASC
-                                                              ? HiSortAscending
-                                                              : sortState[
-                                                                      key as keyof typeof sortState
-                                                                  ] === SortTypeEnum.DESC
-                                                                ? HiSortDescending
-                                                                : TbArrowsSort
+                                                                  key as keyof typeof sortState
+                                                              ] === SortTypeEnum.ASC
+                                                            ? HiSortAscending
+                                                            : sortState[
+                                                                  key as keyof typeof sortState
+                                                              ] === SortTypeEnum.DESC
+                                                            ? HiSortDescending
+                                                            : TbArrowsSort
                                                     }
                                                     $iconPosition="r"
                                                 >

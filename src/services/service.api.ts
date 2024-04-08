@@ -22,7 +22,7 @@ export const serviceApi = createApi({
                 data,
                 params: { companyId },
             }),
-            invalidatesTags: resp => (resp ? [{ type: 'services', id: resp.id }] : ['services']),
+            invalidatesTags: ['services'],
         }),
 
         getServices: builder.query<ServiceBasicInfo[], { companyId: number }>({

@@ -264,12 +264,14 @@ const FirstStep = ({
                     isOpen={addCategoryModalOpen}
                     closeModal={() => setAddCategoryModalOpen(false)}
                     type={serviceData.type as ServiceTypeEnum}
-                    onCategoryAdd={({ id, name }) =>
+                    onCategoryAdd={({ id, name }) => {
                         setState(p => ({
                             ...p,
                             category: { id, value: name },
-                        }))
-                    }
+                        }));
+
+                        setServiceData(p => ({ ...p, category: { id, value: name } }));
+                    }}
                 />
             )}
         </>

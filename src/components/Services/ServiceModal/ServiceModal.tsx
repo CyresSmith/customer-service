@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { FaInfoCircle } from 'react-icons/fa';
 import { HiCurrencyDollar, HiUserGroup } from 'react-icons/hi';
 import { toast } from 'react-toastify';
+import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 import { useGetServiceDataQuery, useUpdateServiceDataMutation } from 'services/service.api';
 import { EmployeeStatusEnum } from 'services/types/employee.types';
 import { IServiceUpdate, ServiceDataType } from 'services/types/service.type';
@@ -49,14 +50,18 @@ const sectionButtons = [
 
 const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
     const { accessToken, user } = useAuth();
-    const { id, employees } = useCompany();
+    const { id } = useCompany();
     const [step, setStep] = useState(1);
     const [serviceData, setServiceData] = useState(initialState);
     const [stateToCheck, setStateToCheck] = useState<ServiceDataType | null>(null);
+    const { data: employees, isLoading: isEmployeesLoading } = useGetCompanyEmployeesQuery(id, {
+        skip: !id,
+    });
 
-    const providers = employees.filter(
-        ({ provider, status }) => provider && status === EmployeeStatusEnum.WORKING
-    );
+    const providers =
+        employees?.filter(
+            ({ provider, status }) => provider && status === EmployeeStatusEnum.WORKING
+        ) || [];
 
     const title = () => {
         switch (step) {
@@ -173,7 +178,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
         }
     }, [data, openModal]);
 
-    return IsServiceDataLoading ? (
+    return IsServiceDataLoading || isEmployeesLoading ? (
         <Loader />
     ) : (
         <Modal

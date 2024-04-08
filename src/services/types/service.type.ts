@@ -1,7 +1,7 @@
 import { SelectItem } from 'components/Ui/Form/types';
 import { ServiceOpenModal, ServiceTypeEnum } from 'helpers/enums';
 import { Dispatch, SetStateAction } from 'react';
-import { IEmployee } from './employee.types';
+import { BasicEmployeeInfo, IEmployee } from './employee.types';
 
 export type EmployeeSettings = {
     employeeId: number;
@@ -63,7 +63,7 @@ export type IAddNewServiceDto = {
 
 export type ServiceStepProps = {
     openModal: ServiceOpenModal;
-    providers?: IEmployee[];
+    providers?: BasicEmployeeInfo[];
     setStep: Dispatch<SetStateAction<number>>;
     serviceData: ServiceDataType;
     setServiceData: Dispatch<SetStateAction<ServiceDataType>>;

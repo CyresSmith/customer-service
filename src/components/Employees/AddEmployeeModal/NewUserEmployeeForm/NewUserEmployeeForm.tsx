@@ -98,7 +98,7 @@ function NewUserEmployeeForm({ handleBackClick, closeModal }: Props) {
             },
         }).unwrap();
 
-        if (employee && isSuccess) {
+        if (employee) {
             closeModal();
         }
     };
