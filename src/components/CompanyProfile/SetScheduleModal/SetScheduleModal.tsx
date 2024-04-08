@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { HiCalendar } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { useUpdateCompanyProfileMutation } from 'services/company.api';
+import { ITime } from 'services/types/schedule.types';
 import { IWorkingHours } from 'store/company/company.types';
 import { ButtonBox, ScheduleModalBox } from './SetScheduleModal.styled';
 import SetWorkSchedule from './SetWorkSchedule';

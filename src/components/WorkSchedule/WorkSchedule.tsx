@@ -17,12 +17,15 @@ import {
     startOfToday,
 } from 'date-fns';
 
-import arraysAreEqual from 'helpers/areArrayEqual';
+import ScheduleTimeSelection from 'components/ScheduleTimeSelection';
+import { Message } from 'components/ScheduleTimeSelection/ScheduleTimeSelection.styled';
+import { useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { LegacyRef, UIEventHandler, useEffect, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
 import { useGetAllCompanySchedulesQuery } from 'services/schedules.api';
 import { BasicEmployeeInfo } from 'services/types/employee.types';
+import { IMonthSchedule } from 'services/types/schedule.types';
+import { IWorkingHours } from 'store/company/company.types';
 import {
     Day,
     DayBox,
@@ -46,10 +49,20 @@ type Props = { providers: BasicEmployeeInfo[]; selectedMonth: Date };
 
 const WorkSchedule = ({ providers, selectedMonth }: Props) => {
     const { id, workingHours, employees } = useCompany();
+    const { user, accessToken } = useAuth();
 
-    const [selectedDays, setSelectedDays] = useState<{ id: number; dates: Date[] }[]>([]);
-
+    const [scheduleState, setScheduleState] = useState<IMonthSchedule[]>([]);
+    const [selectedDays, setSelectedDays] = useState<{ employeeId: number; dates: Date[] }[]>([]);
     const [scrollLeft, setScrollLeft] = useState<number>(0);
+    const [from, setFrom] = useState('');
+    const [to, setTo] = useState('');
+    const [isBreak, setIsBreak] = useState(false);
+    const [breakFrom, setBreakFrom] = useState('');
+    const [breakTo, setBreakTo] = useState('');
+    const [selectedDayCompanySchedule, setSelectedDayCompanySchedule] =
+        useState<IWorkingHours | null>(null);
+
+    const [isStateChanged, setIsStateChanged] = useState(false);
 
     const handleScroll: UIEventHandler<HTMLDivElement> = e => {
         const { scrollLeft } = e.target as HTMLDivElement;
@@ -64,7 +77,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
             month: getMonth(selectedMonth),
         },
         {
-            skip: !id || !employees || !providers,
+            skip: !user || !accessToken || !id || !employees || !providers,
             refetchOnMountOrArgChange: true,
         }
     );
@@ -72,131 +85,163 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
     const scrollRef: LegacyRef<HTMLDivElement> | undefined = useRef(null);
 
     const monthDaysCount = getDaysInMonth(selectedMonth);
+
     const monthDays = eachDayOfInterval({
         start: startOfMonth(selectedMonth),
         end: endOfMonth(selectedMonth),
     });
 
-    const isNotWorkingDay = (date: Date): boolean =>
-        workingHours?.findIndex(({ days }) => days.includes(getDay(date))) === -1;
-
-    const handleSelect = (date?: Date, id?: number) => {
-        if (date) {
-            if (date < startOfToday()) return;
-
-            if (isNotWorkingDay(date)) {
-                return toast.info('Нині свято, робити гріх');
-            }
-
-            if (id) {
-                setSelectedDays(p => {
-                    const idx = p.findIndex(item => item.id === id);
-
-                    if (idx === -1) {
-                        return [...p, { id, dates: [date] }];
-                    } else {
-                        const dateIdx = p[idx].dates.findIndex(selected =>
-                            isSameDay(selected, date)
-                        );
-
-                        if (dateIdx === -1) {
-                            return p.map((item, index) =>
-                                index === idx ? { ...item, dates: [...item.dates, date] } : item
-                            );
-                        } else {
-                            const newDates = [...p[idx].dates];
-                            newDates.splice(dateIdx, 1);
-
-                            const newSelectedDays =
-                                newDates.length > 0
-                                    ? p.map((item, index) =>
-                                          index === idx ? { ...item, dates: newDates } : item
-                                      )
-                                    : p.filter((_, index) => index !== idx);
-
-                            return newSelectedDays;
-                        }
-                    }
-                });
-            } else {
-                const allProvidersSelect =
-                    selectedDays.length === providers.length
-                        ? selectedDays.every(item =>
-                              item.dates.some(selectedDate => isSameDay(selectedDate, date))
-                          )
-                        : false;
-
-                setSelectedDays(p => {
-                    let newState = [...p];
-
-                    if (allProvidersSelect) {
-                        return newState.reduce((acc: typeof newState, item) => {
-                            item.dates = item.dates.filter(
-                                selectedDate => !isSameDay(selectedDate, date)
-                            );
-
-                            if (item.dates.length === 0) {
-                                acc = acc.filter(({ id }) => id !== item.id);
-                            }
-
-                            return acc;
-                        }, newState);
-                    }
-
-                    for (const { id } of providers) {
-                        const idx = newState.findIndex(item => item?.id === id);
-
-                        if (idx === -1) {
-                            newState = [...newState, { id, dates: [date] }];
-                        } else {
-                            const dateIdx = newState[idx]?.dates.findIndex(selected =>
-                                isSameDay(selected, date)
-                            );
-
-                            if (dateIdx === -1) {
-                                newState[idx].dates = [...newState[idx].dates, date];
-                            }
-                        }
-                    }
-
-                    return newState;
-                });
-            }
-        } else if (id) {
-            setSelectedDays(p => {
-                let newState = [...p];
-
-                const idx = newState.findIndex(item => item.id === id);
-
-                const monthWorkingDays = monthDays.filter(date => !isNotWorkingDay(date));
-
-                if (idx !== -1) {
-                    if (
-                        newState[idx].dates.length !== monthWorkingDays.length ||
-                        !arraysAreEqual(monthWorkingDays, newState[idx].dates)
-                    ) {
-                        newState = newState.filter(item => item.id !== id);
-                    } else {
-                        newState[idx].dates = monthWorkingDays;
-                    }
-
-                    return newState;
-                } else {
-                    return [...newState, { id, dates: monthWorkingDays }];
-                }
-            });
+    const isNotWorkingDay = (date: Date): boolean => {
+        if (selectedDayCompanySchedule) {
+            return !selectedDayCompanySchedule.days.includes(getDay(date));
         }
+
+        return workingHours?.findIndex(({ days }) => days.includes(getDay(date))) === -1;
     };
 
-    useEffect(() => {
-        setSelectedDays([]);
-    }, [selectedMonth]);
+    const handleDaySelect = (date: Date, employeeId: number) => {
+        if (date < startOfToday() || isNotWorkingDay(date)) return;
 
-    const handleEmployeeClick = (id: number) =>
+        let currentDayCompanySchedule: IWorkingHours | undefined = undefined;
+
+        const monthScheduleIdx = scheduleState.findIndex(
+            ({ employee }) => employee.id === employeeId
+        );
+
+        const dayScheduleIdx = scheduleState[monthScheduleIdx]?.schedule.findIndex(
+            ({ day }) => day === getDate(date)
+        );
+
+        if (!selectedDayCompanySchedule) {
+            currentDayCompanySchedule = workingHours?.find(({ days }) =>
+                days.includes(getDay(date))
+            );
+        }
+
+        setScheduleState(p => {
+            const newState = [...p];
+
+            if (dayScheduleIdx > -1) {
+                const daySchedule = scheduleState[monthScheduleIdx]?.schedule[dayScheduleIdx];
+
+                if (daySchedule) {
+                    const { hours, breakHours } = daySchedule;
+
+                    setFrom(hours.from);
+                    setTo(hours.to);
+
+                    if (breakHours) {
+                        setIsBreak(true);
+                        setBreakFrom(breakHours.from);
+                        setBreakTo(breakHours.to);
+                    }
+                }
+            } else if (currentDayCompanySchedule) {
+                const { hours } = currentDayCompanySchedule;
+
+                setFrom(hours.from);
+                setTo(hours.to);
+
+                newState[monthScheduleIdx] = {
+                    ...newState[monthScheduleIdx],
+
+                    schedule: [{ hours, day: getDate(date) }],
+                };
+            }
+
+            return newState;
+        });
+
+        setSelectedDays(p => {
+            const idx = p.findIndex(item => item.employeeId === employeeId);
+
+            if (idx === -1) {
+                currentDayCompanySchedule &&
+                    setSelectedDayCompanySchedule(currentDayCompanySchedule);
+
+                return [...p, { employeeId, dates: [date] }];
+            } else {
+                const dateIdx = p[idx].dates.findIndex(selected => isSameDay(selected, date));
+
+                if (dateIdx === -1) {
+                    return p.map((item, index) =>
+                        index === idx ? { ...item, dates: [...item.dates, date] } : item
+                    );
+                } else {
+                    const newDates = [...p[idx].dates];
+                    newDates.splice(dateIdx, 1);
+
+                    const newSelectedDays =
+                        newDates.length > 0
+                            ? p.map((item, index) =>
+                                  index === idx ? { ...item, dates: newDates } : item
+                              )
+                            : p.filter((_, index) => index !== idx);
+
+                    return newSelectedDays;
+                }
+            }
+        });
+    };
+
+    const handleHeaderDateClick = (date: Date) => {
+        if (date < startOfToday() || isNotWorkingDay(date)) return;
+
+        const allProvidersSelect =
+            selectedDays.length === providers.length
+                ? selectedDays.every(item =>
+                      item.dates.some(selectedDate => isSameDay(selectedDate, date))
+                  )
+                : false;
+
+        const currentDayCompanySchedule = workingHours?.find(({ days }) =>
+            days.includes(getDay(date))
+        );
+
+        setSelectedDays(p => {
+            let newState = [...p];
+
+            if (allProvidersSelect) {
+                setSelectedDayCompanySchedule(null);
+
+                return newState.reduce((acc: typeof newState, item) => {
+                    item.dates = item.dates.filter(selectedDate => !isSameDay(selectedDate, date));
+
+                    if (item.dates.length === 0) {
+                        acc = acc.filter(({ employeeId }) => employeeId !== item.employeeId);
+                    }
+
+                    return acc;
+                }, newState);
+            }
+
+            currentDayCompanySchedule && setSelectedDayCompanySchedule(currentDayCompanySchedule);
+
+            for (const { id } of providers) {
+                const idx = newState.findIndex(item => item?.employeeId === id);
+
+                if (idx === -1) {
+                    newState = [...newState, { employeeId: id, dates: [date] }];
+                } else {
+                    const dateIdx = newState[idx]?.dates.findIndex(selected =>
+                        isSameDay(selected, date)
+                    );
+
+                    if (dateIdx === -1) {
+                        newState[idx].dates = [...newState[idx].dates, date];
+                    }
+                }
+            }
+
+            return newState;
+        });
+    };
+
+    const handleEmployeeClick = (id: number) => {
         setSelectedDays(p => {
             const newState = [...p];
 
-            const idx = newState.findIndex(item => item.id === id);
+            const idx = newState.findIndex(item => item.employeeId === id);
 
             const monthWorkingDays = monthDays.filter(
                 date => (isToday(date) || !isPast(startOfDay(date))) && !isNotWorkingDay(date)
@@ -211,9 +256,25 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
 
                 return newState;
             } else {
-                return [...newState, { id, dates: monthWorkingDays }];
+                return [...newState, { employeeId: id, dates: monthWorkingDays }];
             }
         });
+    };
+
+    useEffect(() => {
+        if (!allSchedules) return;
+
+        setScheduleState(allSchedules);
+    }, [allSchedules]);
+
+    useEffect(() => {
+        setSelectedDays([]);
+        setSelectedDayCompanySchedule(null);
+    }, [selectedMonth]);
+
+    useEffect(() => {
+        if (selectedDays.length === 0) setSelectedDayCompanySchedule(null);
+    }, [selectedDays]);
 
     useEffect(() => {
         if (!scrollRef.current || isLoading) return;
@@ -229,7 +290,14 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
     }, [scrollRef, selectedMonth, isLoading]);
 
     return (
-        <>
+        <div
+            style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 300px',
+                gap: '16px',
+                height: '100%',
+            }}
+        >
             <WorkScheduleBox onScroll={handleScroll}>
                 {isThisMonth(selectedMonth) && (
                     <Today
@@ -255,7 +323,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
 
                             return (
                                 <HeaderDay
-                                    onClick={() => handleSelect(item)}
+                                    onClick={() => handleHeaderDateClick(item)}
                                     key={i}
                                     $isNotWorkingDay={isNotWorking}
                                     $isToday={today}
@@ -266,7 +334,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
                                     </DayDateBox>
 
                                     {hours && (
-                                        <WorkHours>
+                                        <WorkHours $isToday={today}>
                                             <span>{hours.hours.from}</span>
                                             {' - '}
                                             <span>{hours.hours.to}</span>
@@ -292,7 +360,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
                         </EmployeesList>
 
                         {providers.map(({ id }) => {
-                            const employeeSchedule = allSchedules?.find(
+                            const employeeSchedule = scheduleState?.find(
                                 ({ employee }) => employee.id === id
                             );
 
@@ -304,7 +372,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
                                         const isSelected =
                                             selectedDays?.findIndex(
                                                 selected =>
-                                                    selected?.id === id &&
+                                                    selected?.employeeId === id &&
                                                     selected?.dates?.findIndex(selected =>
                                                         isSameDay(selected, item)
                                                     ) !== -1
@@ -327,7 +395,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
                                             <Day
                                                 $isNotWorkingDay={isNotWorking}
                                                 ref={dayRef ? scrollRef : null}
-                                                onClick={() => handleSelect(item, id)}
+                                                onClick={() => handleDaySelect(item, id)}
                                                 key={i}
                                             >
                                                 <DayBox
@@ -365,8 +433,30 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
                 </SchedulesList>
             </WorkScheduleBox>
 
-            {/* <ScheduleTimeSelection selectedDays={selectedDays.map()} /> */}
-        </>
+            {selectedDays.length > 0 && workingHours ? (
+                <ScheduleTimeSelection
+                    from={from}
+                    setFrom={time => {}}
+                    to={to}
+                    setTo={time => {}}
+                    breakFrom={breakFrom}
+                    setBreakFrom={time => {}}
+                    breakTo={breakTo}
+                    setBreakTo={time => {}}
+                    isBreak={isBreak}
+                    breakToggle={() => {}}
+                    isEditingAllowed={true}
+                    handleReset={() => {}}
+                    handleUpdate={() => {}}
+                    isUpdateDisabled={!isStateChanged}
+                    isUpdateLoading={isLoading}
+                    isResetLoading={false}
+                    selectedHours={selectedDayCompanySchedule?.hours}
+                />
+            ) : (
+                <Message>Виберіть дні місяця для налаштування часу роботи.</Message>
+            )}
+        </div>
     );
 };
 

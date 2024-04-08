@@ -3,7 +3,7 @@ import handleError from 'helpers/errorHandler';
 import rootActions from 'store/rootActions';
 import { store } from 'store/store';
 
-export const URL = 'http://localhost:8989/api';
+export const URL = import.meta.env.VITE_API_URL;
 
 const instance = axios.create({
     baseURL: URL,

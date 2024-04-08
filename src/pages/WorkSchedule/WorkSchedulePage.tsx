@@ -2,6 +2,7 @@ import Loader from 'components/Ui/Loader';
 import PageContentLayout from 'components/Ui/PageContentLayout';
 import WorkSchedule from 'components/WorkSchedule';
 import WorkScheduleBar from 'components/WorkSchedule/WorkScheduleBar';
+import { useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
@@ -9,11 +10,12 @@ import { EmployeeStatusEnum } from 'services/types/employee.types';
 
 const WorkSchedulePage = () => {
     const { id: companyId } = useCompany();
+    const { user, accessToken } = useAuth();
     const [selectedProviders, setSelectedProviders] = useState<number[]>([]);
     const [selectedMonth, setSelectedMonth] = useState(new Date(Date.now()));
 
     const { data: employees } = useGetCompanyEmployeesQuery(companyId, {
-        skip: !companyId,
+        skip: !user || !accessToken || !companyId,
         refetchOnMountOrArgChange: true,
     });
 
@@ -39,7 +41,10 @@ const WorkSchedulePage = () => {
                 />
             }
             content={
-                providersForRender && providersForRender.length > 0 ? (
+                employees &&
+                employees.length > 0 &&
+                providersForRender &&
+                providersForRender.length > 0 ? (
                     <WorkSchedule selectedMonth={selectedMonth} providers={providersForRender} />
                 ) : (
                     <Loader />

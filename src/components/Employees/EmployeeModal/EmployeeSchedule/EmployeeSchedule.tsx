@@ -11,11 +11,9 @@ import {
     Message,
     MonthBox,
     MonthName,
-    SelectionSide,
 } from './EmployeeSchedule.styled';
 
 import ScheduleTimeSelection from 'components/ScheduleTimeSelection';
-import Loader from 'components/Ui/Loader';
 import {
     addMonths,
     format,
@@ -49,7 +47,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
     const { id: companyId, workingHours } = useCompany();
     const [selectedMonth, setSelectedMonth] = useState(currentMonthStart);
 
-    const { isLoading: isScheduleLoading, data: employeeSchedule } = useGetEmployeeScheduleQuery(
+    const { data: employeeSchedule } = useGetEmployeeScheduleQuery(
         {
             companyId,
             employeeId: +employee.id,
@@ -236,10 +234,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
 
     const handleTimeSelect = (time: string, id: string) => {
         if (typeof time !== 'string') return;
-
-        if (id === 'from') {
-            setFrom(time);
-        }
+        if (id === 'from') setFrom(time);
         if (id === 'to') setTo(time);
         if (id === 'breakFrom') setBreakFrom(time);
         if (id == 'breakTo') setBreakTo(time);
@@ -371,60 +366,56 @@ const EmployeeSchedule = ({ employee }: Props) => {
             {workingHours && workingHours?.length > 0 ? (
                 <>
                     <CalendarSide>
-                        {isScheduleLoading || isDeleteLoading || isLoading ? (
-                            <Loader />
-                        ) : (
-                            <>
-                                <CalendarHeader>
-                                    <MonthBox>
-                                        <Button
-                                            onClick={handlePrevMonthClick}
-                                            Icon={HiArrowLeft}
-                                            $round
-                                            $colors="light"
-                                        />
-                                        <MonthName>
-                                            {format(selectedMonth, 'LLLL yyyy').toLocaleUpperCase()}
-                                        </MonthName>
-                                        <Button
-                                            onClick={handleNextMonthClick}
-                                            Icon={HiArrowRight}
-                                            $round
-                                            $colors="light"
-                                        />
-                                    </MonthBox>
+                        <>
+                            <CalendarHeader>
+                                <MonthBox>
+                                    <Button
+                                        onClick={handlePrevMonthClick}
+                                        Icon={HiArrowLeft}
+                                        $round
+                                        $colors="light"
+                                    />
+                                    <MonthName>
+                                        {format(selectedMonth, 'LLLL yyyy').toLocaleUpperCase()}
+                                    </MonthName>
+                                    <Button
+                                        onClick={handleNextMonthClick}
+                                        Icon={HiArrowRight}
+                                        $round
+                                        $colors="light"
+                                    />
+                                </MonthBox>
 
-                                    {!isThisMonth(selectedMonth) && (
-                                        <Button
-                                            onClick={toToday}
-                                            Icon={MdToday}
-                                            $round
-                                            $colors="light"
-                                        />
-                                    )}
-                                </CalendarHeader>
+                                {!isThisMonth(selectedMonth) && (
+                                    <Button
+                                        onClick={toToday}
+                                        Icon={MdToday}
+                                        $round
+                                        $colors="light"
+                                    />
+                                )}
+                            </CalendarHeader>
 
-                                <Calendar
-                                    monthSchedule={scheduleState}
-                                    selectedMonth={selectedMonth}
-                                    selectedDays={selectedDays}
-                                    disabledDays={disabledDays(
-                                        new Date(
-                                            getYear(selectedMonth),
-                                            getMonth(selectedMonth),
-                                            selectedDays[0]
-                                        )
-                                    )}
-                                    handleDayClick={handleDayClick}
-                                    toNextMonth={handleNextMonthClick}
-                                    toPrevMonth={handlePrevMonthClick}
-                                />
-                            </>
-                        )}
+                            <Calendar
+                                monthSchedule={scheduleState}
+                                selectedMonth={selectedMonth}
+                                selectedDays={selectedDays}
+                                disabledDays={disabledDays(
+                                    new Date(
+                                        getYear(selectedMonth),
+                                        getMonth(selectedMonth),
+                                        selectedDays[0]
+                                    )
+                                )}
+                                handleDayClick={handleDayClick}
+                                toNextMonth={handleNextMonthClick}
+                                toPrevMonth={handlePrevMonthClick}
+                            />
+                        </>
                     </CalendarSide>
 
                     {!selectedMonthPassed && isEditingAllowed && (
-                        <SelectionSide>
+                        <>
                             {selectedDays.length > 0 ? (
                                 <ScheduleTimeSelection
                                     from={from}
@@ -448,149 +439,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
                             ) : (
                                 <Message>Виберіть дні місяця для налаштування часу роботи.</Message>
                             )}
-
-                            {/* <SelectionBox>
-                {selectedDays.length > 0 ? (
-                  <>
-                    <ScheduleSection>
-                      <Title>Робочій час</Title>
-
-                      <SelectDaysBox>
-                        <SelectBox>
-                          <p>з</p>
-                          <Select
-                            id="from"
-                            selectedItem={from}
-                            onSelect={handleTimeSelect}
-                            $colors="light"
-                            items={
-                              selectedDayCompanySchedule
-                                ? timeArrayFrom(
-                                    selectedDayCompanySchedule.hours.from,
-                                    selectedDayCompanySchedule.hours.to
-                                  )
-                                : timeArray
-                            }
-                            disabled={!isEditingAllowed}
-                          />
-                        </SelectBox>
-
-                        <SelectBox>
-                          <p>до</p>
-                          <Select
-                            id="to"
-                            selectedItem={to}
-                            onSelect={handleTimeSelect}
-                            $colors="light"
-                            items={
-                              selectedDayCompanySchedule
-                                ? timeArrayFrom(
-                                    from
-                                      ? timeArray[timeArray.indexOf(from) + 1]
-                                      : timeArray[
-                                          timeArray.indexOf(
-                                            selectedDayCompanySchedule.hours
-                                              .from
-                                          ) + 1
-                                        ],
-                                    selectedDayCompanySchedule.hours.to
-                                  )
-                                : timeArrayFrom(
-                                    timeArray[timeArray.indexOf(from) + 1]
-                                  )
-                            }
-                            disabled={!isEditingAllowed || from === ''}
-                          />
-                        </SelectBox>
-                      </SelectDaysBox>
-                    </ScheduleSection>
-
-                    <ScheduleSection>
-                      <Checkbox
-                        isChecked={isBreak}
-                        handleCheck={handleAddBreakHoursClick}
-                        name="break"
-                        isReadonly={!isTimeForBreak}
-                      />
-                      {isBreak && (
-                        <SelectDaysBox>
-                          <SelectBox>
-                            <p>з</p>
-
-                            <Select
-                              id="breakFrom"
-                              selectedItem={breakFrom || ''}
-                              onSelect={handleTimeSelect}
-                              $colors="light"
-                              items={timeArrayFrom(
-                                timeArray[timeArray.indexOf(from) + 1],
-                                timeArray[timeArray.indexOf(breakTo) - 1] ||
-                                  timeArray[timeArray.indexOf(to) - 1]
-                              )}
-                              disabled={!isEditingAllowed}
-                            />
-                          </SelectBox>
-
-                          <SelectBox>
-                            <p>до</p>
-
-                            <Select
-                              id="breakTo"
-                              selectedItem={breakTo || ''}
-                              onSelect={handleTimeSelect}
-                              $colors="light"
-                              items={timeArrayFrom(
-                                timeArray[timeArray.indexOf(breakFrom) + 1] ||
-                                  '',
-
-                                to
-                                  ? timeArray[timeArray.indexOf(to) - 1]
-                                  : selectedDayCompanySchedule
-                                  ? timeArray[
-                                      timeArray.indexOf(
-                                        selectedDayCompanySchedule.hours.to
-                                      ) - 1
-                                    ]
-                                  : ''
-                              )}
-                              disabled={!isEditingAllowed || breakFrom === ''}
-                            />
-                          </SelectBox>
-                        </SelectDaysBox>
-                      )}
-                    </ScheduleSection>
-                  </>
-                ) : (
-                  <Message>
-                    Виберіть дні місяця для налаштування часу роботи.
-                  </Message>
-                )}
-              </SelectionBox>
-
-              {isEditingAllowed && (
-                <ButtonsBox>
-                  <Button
-                    onClick={handleResetClick}
-                    Icon={HiTrash}
-                    disabled={isLoading}
-                    $colors="light"
-                    $variant="text"
-                  >
-                    Скинути
-                  </Button>
-
-                  <Button
-                    isLoading={isLoading}
-                    onClick={handleScheduleUpdate}
-                    Icon={IoIosSave}
-                    disabled={!isStateChanged || isLoading}
-                    $colors="accent"
-                  >
-                    Зберегти
-                  </Button>
-                </ButtonsBox>
-              )} */}
-                        </SelectionSide>
+                        </>
                     )}
                 </>
             ) : (

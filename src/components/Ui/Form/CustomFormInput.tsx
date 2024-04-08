@@ -15,10 +15,10 @@ import {
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { IoMdClose } from 'react-icons/io';
 import { MdOutlineDone } from 'react-icons/md';
+import DatePicker from '../DatePicker';
 import Checkbox from './Checkbox';
 import CustomFormSelect from './CustomFormSelect';
 import { InputProps, SelectItem } from './types';
-import DatePicker from '../DatePicker';
 
 const CustomFormInput = ({
     name,
