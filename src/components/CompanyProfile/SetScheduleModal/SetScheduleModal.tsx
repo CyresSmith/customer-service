@@ -9,6 +9,7 @@ import { ITime } from 'services/types/schedule.types';
 import { IWorkingHours } from 'store/company/company.types';
 import { ButtonBox, ScheduleModalBox } from './SetScheduleModal.styled';
 import SetWorkSchedule from './SetWorkSchedule';
+import { ITime } from 'services/types/schedule.types';
 
 export type ICompanySchedule = {
     id: number;

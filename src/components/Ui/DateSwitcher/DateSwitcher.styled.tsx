@@ -21,8 +21,8 @@ export const Container = styled.div<SwitcherType>`
         props.$border === 'light'
             ? `${theme.colors.secondary.dark}`
             : props.$border === 'dark'
-            ? `${theme.colors.bg.main}`
-            : null};
+              ? `${theme.colors.bg.main}`
+              : null};
 `;
 
 export const DateWrapper = styled.div<Pick<SwitcherType, '$border' | '$type'>>`
@@ -34,8 +34,8 @@ export const DateWrapper = styled.div<Pick<SwitcherType, '$border' | '$type'>>`
                   $border === 'light'
                       ? `${theme.colors.secondary.dark}`
                       : $border === 'dark'
-                      ? `${theme.colors.bg.main}`
-                      : ''
+                        ? `${theme.colors.bg.main}`
+                        : ''
               }`
             : 'none'};
 
@@ -45,8 +45,8 @@ export const DateWrapper = styled.div<Pick<SwitcherType, '$border' | '$type'>>`
                   $border === 'light'
                       ? `${theme.colors.secondary.dark}`
                       : $border === 'dark'
-                      ? `${theme.colors.bg.main}`
-                      : ''
+                        ? `${theme.colors.bg.main}`
+                        : ''
               }`
             : 'none'};
 

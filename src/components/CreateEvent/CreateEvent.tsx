@@ -9,6 +9,7 @@ import ChooseServices from './ChooseServices';
 import Create from './Create/Create';
 import { BtnsBox, ChosenServices, Container, ContentBox } from './CreateEvent.styled';
 import EmployeesList from './EmployeesList';
+import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 
 type Props = {
     step: string;
@@ -16,14 +17,17 @@ type Props = {
 };
 
 const CreateEvent = ({ step, handleEventStep }: Props) => {
-    const { employees } = useCompany();
-    const providersWithServices = employees.filter(e => e.provider && e.services?.length > 0);
+    const { id } = useCompany();
     const [chosenEmployee, setChosenEmployee] = useState<IEmployee | null>(null);
     const [chosenServices, setChosenServices] = useState<Partial<IService>[] | undefined>(
         undefined
     );
     const [eventDate, setEventDate] = useState<Date>(new Date());
     const [eventTime, setEventTime] = useState<string>('');
+
+    const { data: employees, isLoading } = useGetCompanyEmployeesQuery(id);
+
+    const providersWithServices = employees.filter(e => e.provider && e.services?.length > 0);
 
     const handleGoBackClick = () => {
         if (step === 'services' && chosenEmployee) {

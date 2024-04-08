@@ -6,7 +6,7 @@ export const Container = styled.div`
     overflow: hidden;
     display: flex;
     gap: ${theme.space[4]};
-    /* height: 100%; */
+    height: 100%;
 `;
 
 export const LeftWrapper = styled.div`
@@ -16,7 +16,7 @@ export const LeftWrapper = styled.div`
     border-radius: ${theme.radii.m};
 `;
 
-export const RigthWrapper = styled.div`
+export const RightWrapper = styled.div`
     height: 100%;
 `;
 
