@@ -2,14 +2,13 @@ import Button from 'components/Ui/Buttons/Button';
 import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
+import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 import { IEmployee } from 'services/types/employee.types';
 import { IService } from 'services/types/service.type';
 import ChooseDate from './ChooseDate/ChooseDate';
 import ChooseServices from './ChooseServices';
 import Create from './Create/Create';
 import { BtnsBox, ChosenServices, Container, ContentBox } from './CreateEvent.styled';
-import EmployeesList from './EmployeesList';
-import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 
 type Props = {
     step: string;
@@ -25,9 +24,11 @@ const CreateEvent = ({ step, handleEventStep }: Props) => {
     const [eventDate, setEventDate] = useState<Date>(new Date());
     const [eventTime, setEventTime] = useState<string>('');
 
-    const { data: employees, isLoading } = useGetCompanyEmployeesQuery(id);
+    const { data: employees } = useGetCompanyEmployeesQuery(id);
 
-    const providersWithServices = employees.filter(e => e.provider && e.services?.length > 0);
+    const providersWithServices = employees?.filter(
+        e => e.provider && e.servicesCount && e.servicesCount > 0
+    );
 
     const handleGoBackClick = () => {
         if (step === 'services' && chosenEmployee) {
@@ -86,17 +87,17 @@ const CreateEvent = ({ step, handleEventStep }: Props) => {
         return duration;
     };
 
-    return (
+    return providersWithServices ? (
         <Container>
             <ContentBox>
                 {step === 'create' && <Create setStep={handleEventStep} />}
-                {step === 'employees' && (
+                {/* {step === 'employees' && (
                     <EmployeesList
                         setStep={handleEventStep}
                         employees={providersWithServices}
                         chooseEmployee={setChosenEmployee}
                     />
-                )}
+                )} */}
                 {step === 'services' && (
                     <ChooseServices
                         chosenEmployee={chosenEmployee}
@@ -139,7 +140,7 @@ const CreateEvent = ({ step, handleEventStep }: Props) => {
                 </BtnsBox>
             )}
         </Container>
-    );
+    ) : null;
 };
 
 export default CreateEvent;
