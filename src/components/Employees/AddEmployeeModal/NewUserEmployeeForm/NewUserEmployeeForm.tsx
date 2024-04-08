@@ -68,7 +68,7 @@ const initialState = {
 
 function NewUserEmployeeForm({ handleBackClick, closeModal }: Props) {
     const { id } = useCompany();
-    const [addNewEmployee, { isLoading, isSuccess }] = useAddNewUserEmployeeMutation();
+    const [addNewEmployee, { isLoading }] = useAddNewUserEmployeeMutation();
 
     const onSubmit = async ({
         isAdmin,
