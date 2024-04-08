@@ -93,14 +93,16 @@ export const HeaderDay = styled.li<DayProps>`
     padding: ${theme.space[4]} 0;
     font-weight: ${theme.fontWeights.light};
     cursor: ${({ $isNotWorkingDay }) => ($isNotWorkingDay ? 'default' : 'pointer')};
+    opacity: ${({ $isNotWorkingDay }) => ($isNotWorkingDay ? 0.5 : 1)};
+    transition: ${theme.transition.primary};
 
     &:hover {
         color: ${({ $isNotWorkingDay, $isToday }) =>
             $isToday
-                ? `${theme.colors.accent.main}`
+                ? theme.colors.accent.main
                 : $isNotWorkingDay
-                ? `${theme.colors.white}`
-                : `${theme.colors.primary.light}`};
+                ? theme.colors.white
+                : theme.colors.primary.light};
     }
 `;
 
@@ -108,8 +110,7 @@ export const DayDateBox = styled.div<DayProps>`
     display: flex;
     flex-direction: column;
     align-items: center;
-    opacity: ${({ $isNotWorkingDay }) => ($isNotWorkingDay ? 0.5 : 1)};
-    color: ${({ $isToday }) => ($isToday ? `${theme.colors.accent.main}` : 'inherit')};
+    color: ${({ $isToday }) => ($isToday ? theme.colors.accent.main : 'inherit')};
     transition: ${theme.transition.primary};
 `;
 
@@ -121,8 +122,8 @@ export const DayName = styled.span`
     font-size: ${theme.fontSizes.l};
 `;
 
-export const WorkHours = styled.div`
-    color: ${theme.colors.secondary.main};
+export const WorkHours = styled.div<DayProps>`
+    color: ${({ $isToday }) => ($isToday ? theme.colors.accent.main : theme.colors.secondary.main)};
 `;
 
 export const Day = styled.div<DayProps>`
@@ -130,15 +131,17 @@ export const Day = styled.div<DayProps>`
     cursor: pointer;
     padding: ${theme.space[2]};
     cursor: ${({ $isNotWorkingDay }) => ($isNotWorkingDay ? 'default' : 'pointer')};
+    opacity: ${({ $isNotWorkingDay }) => ($isNotWorkingDay ? '0.5' : '1')};
+    transition: ${theme.transition.primary};
 `;
 
 export const DayBox = styled.div<{ $selected?: boolean } & DayProps>`
     width: 100%;
     height: 100%;
     border-radius: ${theme.radii.s};
-    color: ${({ $selected }) => ($selected ? `${theme.colors.bg.dark}` : `${theme.colors.white}`)};
+    color: ${({ $selected }) => ($selected ? theme.colors.bg.dark : theme.colors.white)};
     background-color: ${({ $selected }) =>
-        $selected ? `${theme.colors.secondary.light}` : 'transparent'};
+        $selected ? theme.colors.secondary.light : 'transparent'};
     transition: ${theme.transition.primary};
     display: flex;
     flex-direction: column;
@@ -148,15 +151,13 @@ export const DayBox = styled.div<{ $selected?: boolean } & DayProps>`
     font-size: ${theme.fontSizes.l};
 
     &:hover {
-        color: ${({ $selected }) =>
-            $selected ? `${theme.colors.bg.dark}` : ` ${theme.colors.white}`};
-
+        color: ${({ $selected }) => ($selected ? theme.colors.bg.dark : theme.colors.white)};
         background-color: ${({ $isNotWorkingDay, $selected }) =>
             $isNotWorkingDay
                 ? 'transparent'
                 : $selected
-                ? `${theme.colors.secondary.light}`
-                : ` ${theme.colors.secondary.main}`};
+                ? theme.colors.secondary.light
+                : theme.colors.secondary.main};
     }
 `;
 
