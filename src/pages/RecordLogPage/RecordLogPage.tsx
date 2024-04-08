@@ -12,6 +12,7 @@ import { IMonthSchedule } from 'services/types/schedule.types';
 import { BasicEmployeeInfo } from 'services/types/employee.types';
 import { EmployeeStatusEnum } from 'services/types/employee.types';
 import { getDate, getMonth, getYear } from 'date-fns';
+import Loader from 'components/Ui/Loader';
 
 const initialSelection = [{ id: 'all', value: `Всі працівники` }];
 
@@ -24,32 +25,42 @@ const RecordLogPage = () => {
     const [allEmployees, setAllEmployees] = useState<BasicEmployeeInfo[]>([]);
     const [getEmployees] = useLazyGetCompanyEmployeesQuery();
     const [getSchedules] = useLazyGetAllCompanySchedulesQuery();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const chosenYear = getYear(date);
     const chosenMonth = getMonth(date);
 
     useEffect(() => {
         const getData = async () => {
-            if (id) {
-                const { data: employees } = await getEmployees(id);
-                if (employees) {
-                    setAllEmployees(employees);
-                }
+            try {
+                setIsLoading(true);
 
-                if (allEmployees.length > 0) {
-                    const { data: schedules } = await getSchedules({
-                        companyId: id,
-                        month: chosenMonth,
-                        year: chosenYear,
-                    });
-                    if (schedules) {
-                        setAllSchedules(schedules);
+                if (id) {
+                    const { data: employees } = await getEmployees(id);
+
+                    if (employees) {
+                        setAllEmployees(employees);
+                    }
+
+                    if (employees && employees.length > 0) {
+                        const { data: schedules } = await getSchedules({
+                            companyId: id,
+                            month: chosenMonth,
+                            year: chosenYear,
+                        });
+                        if (schedules) {
+                            setAllSchedules(schedules);
+                        }
                     }
                 }
+            } catch (e) {
+                console.log(e);
+            } finally {
+                setIsLoading(false);
             }
         };
 
         getData();
-    }, [allEmployees.length, chosenMonth, chosenYear, getEmployees, getSchedules, id]);
+    }, [chosenMonth, chosenYear, getEmployees, getSchedules, id]);
 
     const workingProviders = allEmployees.filter(
         e => e.provider && e.status === EmployeeStatusEnum.WORKING
@@ -109,51 +120,49 @@ const RecordLogPage = () => {
             ? employeesWithThisDaySchedule.filter(p => selectedItem.find(s => s.id === p.id))
             : employeesWithThisDaySchedule;
 
-    return (
-        allEmployees && (
-            <>
-                <PageContentLayout
-                    bar={
-                        <RecordLogBar
-                            date={date}
-                            selectItems={[...initialSelection, ...providersForSelect]}
-                            selected={selectedItem}
-                            setDate={setDate}
-                            handleSelect={handleSelect}
-                            openEventModal={handleEventStep}
-                        />
-                    }
-                    content={
-                        <RecordLog
-                            allSchedules={allSchedules}
-                            date={date}
-                            setDate={setDate}
-                            workingHours={workingHours}
-                            employees={filteredProvidersList}
-                        />
-                    }
-                />
-                {eventStep !== null && (
-                    <Modal
-                        titleMargin="10px"
-                        closeModal={closeEventModal}
-                        $isOpen={eventStep !== null}
-                        title={
-                            eventStep === 'employees'
-                                ? 'Оберіть працівника'
-                                : eventStep === 'services'
-                                  ? 'Оберіть послугу'
-                                  : eventStep === 'date'
-                                    ? 'Оберіть дату та час'
-                                    : 'Створення запису'
-                        }
-                        children={
-                            <CreateEvent step={eventStep} handleEventStep={handleEventStep} />
-                        }
+    return isLoading ? (
+        <Loader />
+    ) : (
+        <>
+            <PageContentLayout
+                bar={
+                    <RecordLogBar
+                        date={date}
+                        selectItems={[...initialSelection, ...providersForSelect]}
+                        selected={selectedItem}
+                        setDate={setDate}
+                        handleSelect={handleSelect}
+                        openEventModal={handleEventStep}
                     />
-                )}
-            </>
-        )
+                }
+                content={
+                    <RecordLog
+                        allSchedules={allSchedules}
+                        date={date}
+                        setDate={setDate}
+                        workingHours={workingHours}
+                        employees={filteredProvidersList}
+                    />
+                }
+            />
+            {eventStep !== null && (
+                <Modal
+                    titleMargin="10px"
+                    closeModal={closeEventModal}
+                    $isOpen={eventStep !== null}
+                    title={
+                        eventStep === 'employees'
+                            ? 'Оберіть працівника'
+                            : eventStep === 'services'
+                              ? 'Оберіть послугу'
+                              : eventStep === 'date'
+                                ? 'Оберіть дату та час'
+                                : 'Створення запису'
+                    }
+                    children={<CreateEvent step={eventStep} handleEventStep={handleEventStep} />}
+                />
+            )}
+        </>
     );
 };
 

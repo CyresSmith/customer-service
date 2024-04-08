@@ -6,7 +6,7 @@ export const Container = styled.div`
     overflow: hidden;
     display: flex;
     gap: ${theme.space[4]};
-    /* height: 100%; */
+    height: 100%;
 `;
 
 export const LeftWrapper = styled.div`
