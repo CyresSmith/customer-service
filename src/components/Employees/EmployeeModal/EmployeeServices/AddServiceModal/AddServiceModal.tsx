@@ -63,7 +63,7 @@ const AddServiceModal = ({
                 <AddServiceModalBox>
                     <ItemsList
                         items={services.map(
-                            ({ id = '', avatar = '', name = '', category, type = '' }) => ({
+                            ({ id = 0, avatar = '', name = '', category, type = '' }) => ({
                                 id,
                                 avatar,
                                 name,

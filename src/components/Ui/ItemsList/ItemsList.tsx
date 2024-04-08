@@ -202,8 +202,8 @@ const ItemsList = <T extends StringRecord>({
 
                 const existingIndex = acc.findIndex(({ value: val }) => val === value);
 
-                if (existingIndex !== -1 && acc[existingIndex].count !== undefined) {
-                    acc[existingIndex].count++;
+                if (existingIndex !== -1 && acc[existingIndex] !== undefined) {
+                    acc[existingIndex].count = (acc[existingIndex].count ?? 0) + 1;
                 } else {
                     acc.push({
                         id: i,
