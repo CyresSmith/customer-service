@@ -3,7 +3,7 @@ import { FormInputLabel, FormInputsListItem } from 'components/Ui/Form/CustomFor
 import CustomFormSelect from 'components/Ui/Form/CustomFormSelect';
 import { SelectItem } from 'components/Ui/Form/types';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { BasicEmployeeInfo, EmployeeStatusEnum } from 'services/types/employee.types';
+import { BasicEmployeeInfo } from 'services/types/employee.types';
 
 type Props = {
     providers: BasicEmployeeInfo[];
