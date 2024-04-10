@@ -94,7 +94,7 @@ const RecordLog = ({ companyId, allSchedules, date, workingHours, employees, set
 
     return (
         <Container>
-            {!chosenDayCompanySchedule ? (
+            {!chosenDayCompanySchedule && !isGlobalLoading ? (
                 <NoDataWrapper>
                     <NoSchedule>Не встановлено графік роботи компанії для обраного дня!</NoSchedule>
                     <Button
