@@ -41,7 +41,7 @@ const UsersNav = () => {
     const { pathname } = useLocation();
     const [dropOpen, setDropOpen] = useState<boolean>(false);
     const [modalOpen, setModalOpen] = useState(false);
-    const [apiLogout, { isError, isLoading, isSuccess, error }] = useLogOutMutation();
+    const [apiLogout, { isLoading, isSuccess }] = useLogOutMutation();
 
     const setMenuItems = () => {
         return companies?.length > 0
@@ -66,32 +66,14 @@ const UsersNav = () => {
     };
 
     useEffect(() => {
-        if (isLoading) {
-            console.log('isLoading');
-        }
-
         if (isSuccess) {
-            console.log('isSuccess');
             logOut();
             resetCompanyState();
             setDropOpen(false);
             toast.info(`До зустрічі, ${user?.firstName}!`);
             navigate('/', { replace: true });
         }
-
-        if (isError) {
-            console.log(error);
-        }
-    }, [
-        error,
-        isError,
-        isLoading,
-        isSuccess,
-        logOut,
-        navigate,
-        resetCompanyState,
-        user?.firstName,
-    ]);
+    }, [isSuccess, logOut, navigate, resetCompanyState, user?.firstName]);
 
     return (
         <NavWrapper>

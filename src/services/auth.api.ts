@@ -11,13 +11,14 @@ import {
     UserRegister,
     UserState,
 } from '../store/user/user.types';
+import { MessageResponse } from './types';
 
 export const authApi = createApi({
     reducerPath: 'authApi',
 
     baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-    tagTypes: ['auth'],
+    tagTypes: ['auth', 'register', 'user'],
 
     endpoints: builder => ({
         register: builder.mutation<RegisterResponse, UserRegister>({
@@ -26,7 +27,7 @@ export const authApi = createApi({
                 method: 'POST',
                 data,
             }),
-            invalidatesTags: ['auth'],
+            invalidatesTags: ['register'],
         }),
 
         verify: builder.query<AuthState, unknown>({
@@ -34,7 +35,7 @@ export const authApi = createApi({
                 url: `/users/verify/${token}`,
                 method: 'GET',
             }),
-            providesTags: ['auth'],
+            providesTags: ['register', 'auth'],
         }),
 
         logIn: builder.mutation<UserState, UserLogin>({
@@ -60,7 +61,7 @@ export const authApi = createApi({
                 method: 'PATCH',
                 data,
             }),
-            invalidatesTags: ['auth'],
+            invalidatesTags: ['user'],
         }),
 
         logOut: builder.mutation({
@@ -77,7 +78,7 @@ export const authApi = createApi({
                 method: 'POST',
                 data,
             }),
-            invalidatesTags: ['auth'],
+            invalidatesTags: ['user'],
         }),
 
         updatePassword: builder.mutation<Pick<RegisterResponse, 'message'>, UpdatePassword>({
@@ -85,6 +86,14 @@ export const authApi = createApi({
                 url: `/users/update-password/${id}`,
                 method: 'PATCH',
                 data,
+            }),
+            invalidatesTags: ['user'],
+        }),
+
+        deleteUser: builder.mutation<MessageResponse, { id: number }>({
+            query: ({ id }) => ({
+                url: `/users/${id}`,
+                method: 'DELETE',
             }),
             invalidatesTags: ['auth'],
         }),
@@ -101,4 +110,5 @@ export const {
     useUpdateUserMutation,
     useUploadAvatarMutation,
     useUpdatePasswordMutation,
+    useDeleteUserMutation,
 } = authApi;

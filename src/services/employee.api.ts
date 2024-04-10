@@ -43,7 +43,9 @@ export const employeeApi = createApi({
                 params: { companyId },
             }),
             invalidatesTags: result =>
-                result ? [{ type: 'employee', id: result?.id }] : ['employee'],
+                result
+                    ? [{ type: 'employee', id: result?.id }, 'allEmployees']
+                    : ['employee', 'allEmployees'],
         }),
 
         addNewUserEmployee: builder.mutation<IEmployee, addNewUserEmployeeData>({
@@ -165,6 +167,21 @@ export const employeeApi = createApi({
                 { type: 'allEmployees', id: arg.employeeId },
             ],
         }),
+
+        deleteEmployee: builder.mutation<
+            { message: string },
+            { companyId: number; employeeId: number }
+        >({
+            query: ({ companyId, employeeId }) => ({
+                url: `employees/${employeeId}`,
+                params: { companyId },
+                method: 'DELETE',
+            }),
+            invalidatesTags: (_result, _err, arg) => [
+                { type: 'employee', id: arg.employeeId },
+                { type: 'allEmployees', id: arg.employeeId },
+            ],
+        }),
     }),
 });
 
@@ -179,4 +196,5 @@ export const {
     useGetOneEmployeeQuery,
     useRemoveEmployeeServiceMutation,
     useAddEmployeeServiceMutation,
+    useDeleteEmployeeMutation,
 } = employeeApi;

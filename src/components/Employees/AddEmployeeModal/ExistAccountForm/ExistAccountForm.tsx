@@ -41,7 +41,7 @@ const initialState = {
 
 const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
     const { id: companyId } = useCompany();
-    const [addEmployee, { isLoading, isSuccess }] = useAddExistUserEmployeeMutation();
+    const [addEmployee, { isLoading }] = useAddExistUserEmployeeMutation();
 
     const onSubmit = async ({ jobTitle, provider, isAdmin }: typeof initialState) => {
         const employee = await addEmployee({
@@ -56,7 +56,7 @@ const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
             },
         }).unwrap();
 
-        if (employee && isSuccess) {
+        if (employee) {
             closeModal();
         }
     };

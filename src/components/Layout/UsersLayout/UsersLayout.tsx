@@ -12,7 +12,7 @@ const UsersLayout = () => {
     const { setCompany, setUserRole } = useActions();
     const { user } = useAuth();
 
-    const { isSuccess, data } = useGetCompanyByIdQuery(
+    const { data, isError } = useGetCompanyByIdQuery(
         { companyId },
         {
             skip: !companyId || !user,
@@ -26,7 +26,13 @@ const UsersLayout = () => {
     }, [companyId, match, navigate]);
 
     useEffect(() => {
-        if (isSuccess && data) {
+        if (isError) {
+            navigate('/');
+        }
+    }, [isError]);
+
+    useEffect(() => {
+        if (data) {
             setCompany(data);
 
             if (user && user.id) {
@@ -35,7 +41,7 @@ const UsersLayout = () => {
                 role && setUserRole(role);
             }
         }
-    }, [data, isSuccess, setCompany, setUserRole, user]);
+    }, [data, setCompany, setUserRole, user]);
 
     return (
         <MainSection>

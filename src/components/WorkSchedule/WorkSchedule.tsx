@@ -301,7 +301,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
             <WorkScheduleBox onScroll={handleScroll}>
                 {isThisMonth(selectedMonth) && (
                     <Today
-                        left={
+                        $left={
                             eachDayOfInterval({
                                 start: startOfMonth(selectedMonth),
                                 end: startOfToday(),

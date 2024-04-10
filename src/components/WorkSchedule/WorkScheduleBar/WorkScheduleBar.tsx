@@ -2,11 +2,11 @@ import DateSwitcher from 'components/Ui/DateSwitcher';
 import { FormInputLabel, FormInputsListItem } from 'components/Ui/Form/CustomForm.styled';
 import CustomFormSelect from 'components/Ui/Form/CustomFormSelect';
 import { SelectItem } from 'components/Ui/Form/types';
-import { useCompany } from 'hooks/useCompany';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { EmployeeStatusEnum } from 'services/types/employee.types';
+import { BasicEmployeeInfo, EmployeeStatusEnum } from 'services/types/employee.types';
 
 type Props = {
+    providers: BasicEmployeeInfo[];
     setSelectedProviders: Dispatch<SetStateAction<number[]>>;
     selectedMonth: Date;
     setSelectedMonth: Dispatch<SetStateAction<Date>>;
@@ -17,16 +17,15 @@ const selectAll = {
     value: 'Всі',
 };
 
-const WorkScheduleBar = ({ setSelectedProviders, selectedMonth, setSelectedMonth }: Props) => {
-    const { employees } = useCompany();
-
+const WorkScheduleBar = ({
+    providers,
+    setSelectedProviders,
+    selectedMonth,
+    setSelectedMonth,
+}: Props) => {
     const initialSelection = [selectAll];
 
     const [selectedKeys, setSelectedKeys] = useState<SelectItem[]>(initialSelection);
-
-    const providers = employees.filter(
-        ({ provider, status }) => provider && status === EmployeeStatusEnum.WORKING
-    );
 
     const selectItems = [
         selectAll,

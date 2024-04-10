@@ -16,14 +16,14 @@ export const WorkScheduleBox = styled.section`
     padding: ${theme.space[3]};
 `;
 
-export const Today = styled.div<{ left: number }>`
+export const Today = styled.div<{ $left: number }>`
     height: calc(100% - (${theme.space[3]} * 2));
     width: ${cellSize};
     border: ${theme.borders.bold} ${theme.colors.accent.main};
     border-radius: ${theme.radii.m};
     position: absolute;
     top: ${theme.space[3]};
-    left: ${({ left }) => `calc((${cellSize} * ${left}) + ${theme.space[3]})`};
+    left: ${({ $left }) => `calc((${cellSize} * ${$left}) + ${theme.space[3]})`};
     z-index: 3;
     pointer-events: none;
 `;

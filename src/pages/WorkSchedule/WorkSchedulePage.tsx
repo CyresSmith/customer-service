@@ -35,6 +35,7 @@ const WorkSchedulePage = () => {
         <PageContentLayout
             bar={
                 <WorkScheduleBar
+                    providers={providers || []}
                     setSelectedProviders={setSelectedProviders}
                     selectedMonth={selectedMonth}
                     setSelectedMonth={setSelectedMonth}

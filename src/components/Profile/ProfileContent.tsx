@@ -1,37 +1,44 @@
-import { useAuth } from 'hooks';
-import { Container, ContentWrapper, Title } from './ProfileContent.styled';
-import UpdateDataForm from './UpdateForm';
-import { Auth, UpdatePassword, User } from 'store/user/user.types';
+import { useActions, useAuth } from 'hooks';
+import { toast } from 'react-toastify';
 import {
+    useDeleteUserMutation,
     useUpdatePasswordMutation,
     useUpdateUserMutation,
     useUploadAvatarMutation,
 } from 'services/auth.api';
-import { useActions } from 'hooks';
-import { toast } from 'react-toastify';
+import { Auth, UpdatePassword, User } from 'store/user/user.types';
+import { Container, ContentWrapper, Title } from './ProfileContent.styled';
+import UpdateDataForm from './UpdateForm';
 // import Avatar from "./Avatar";
 import Avatar from 'components/Avatar';
-import { RiLockPasswordLine } from 'react-icons/ri';
 import Button from 'components/Ui/Buttons/Button';
+import ConfirmOperation from 'components/Ui/ConfirmOperation';
 import Modal from 'components/Ui/Modal/Modal';
 import { useEffect, useState } from 'react';
+import { HiTrash } from 'react-icons/hi2';
+import { RiLockPasswordLine } from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom';
 import UpdatePassForm from './UpdateForm/UpdatePassForm';
+
+enum OpenModalEnum {
+    CHANGE_PASS = 1,
+    DELETE = 2,
+}
 
 const ProfileContent = () => {
     const { user } = useAuth();
-    const { updateUser } = useActions();
+    const { updateUser, logOut } = useActions();
+    const navigate = useNavigate();
     const [updateMutation, { isLoading }] = useUpdateUserMutation();
-    const [updatePasswordMutation, { isLoading: isPassLoading, isSuccess }] =
-        useUpdatePasswordMutation();
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [
+        updatePasswordMutation,
+        { isLoading: isPassLoading, isSuccess: isPasswordUpdateSuccess },
+    ] = useUpdatePasswordMutation();
+    const [isOpen, setIsOpen] = useState<OpenModalEnum | null>(null);
 
-    const toggleModal = (): void => {
-        if (isOpen) {
-            setIsOpen(false);
-        } else {
-            setIsOpen(true);
-        }
-    };
+    const [deleteUser, { isLoading: isDeleteUserLoading }] = useDeleteUserMutation();
+
+    const toggleModal = (id?: OpenModalEnum): void => setIsOpen(id ? id : null);
 
     const handleDataUpdate = async (newData: Partial<User>): Promise<void> => {
         if (user) {
@@ -47,6 +54,18 @@ const ProfileContent = () => {
                 updateUser(data);
                 toast.success(`Ваш профіль успішно оновлено`);
             }
+        }
+    };
+
+    const handleUserDelete = async () => {
+        if (!user) return;
+
+        const { message } = await deleteUser({ id: user.id }).unwrap();
+
+        if (message) {
+            logOut();
+            navigate('/');
+            toast.success(message);
         }
     };
 
@@ -92,11 +111,11 @@ const ProfileContent = () => {
     };
 
     useEffect(() => {
-        if (isSuccess) {
-            setIsOpen(false);
+        if (isPasswordUpdateSuccess) {
+            toggleModal();
             toast.success('Пароль успішно оновлено.');
         }
-    }, [isSuccess]);
+    }, [isPasswordUpdateSuccess]);
 
     if (!user) {
         return;
@@ -129,11 +148,20 @@ const ProfileContent = () => {
                     type="button"
                     Icon={RiLockPasswordLine}
                     $colors="light"
-                    onClick={toggleModal}
+                    onClick={() => toggleModal(OpenModalEnum.CHANGE_PASS)}
                 >
                     Змінити пароль
                 </Button>
-                {isOpen && (
+                <Button
+                    id="deleteUser"
+                    type="button"
+                    Icon={HiTrash}
+                    $colors="light"
+                    onClick={() => toggleModal(OpenModalEnum.DELETE)}
+                >
+                    Видалити
+                </Button>
+                {isOpen === OpenModalEnum.CHANGE_PASS && (
                     <Modal
                         children={
                             <UpdatePassForm
@@ -141,9 +169,20 @@ const ProfileContent = () => {
                                 handleSubmit={handlePassUpdate}
                             />
                         }
-                        $isOpen={isOpen}
+                        $isOpen={isOpen === OpenModalEnum.CHANGE_PASS}
                         closeModal={toggleModal}
                     />
+                )}
+                {isOpen === OpenModalEnum.DELETE && (
+                    <ConfirmOperation
+                        id="deleteUserConfirm"
+                        callback={handleUserDelete}
+                        closeConfirm={toggleModal}
+                        isOpen={isOpen === OpenModalEnum.DELETE}
+                        isLoading={isDeleteUserLoading}
+                    >
+                        Ви дійсно бажаєте видалити профіль?
+                    </ConfirmOperation>
                 )}
             </ContentWrapper>
         </Container>

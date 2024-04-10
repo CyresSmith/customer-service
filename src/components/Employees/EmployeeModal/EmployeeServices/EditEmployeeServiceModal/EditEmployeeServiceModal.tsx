@@ -6,18 +6,17 @@ import {
 } from 'components/Services/ServiceModal/ThirdStep/ThirdStep.styled';
 import Button from 'components/Ui/Buttons/Button';
 import { SelectItem } from 'components/Ui/Form/types';
-import { AvatarBox } from 'components/Ui/ItemsList/ItemsList.styled';
 import Modal from 'components/Ui/Modal/Modal';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import generateSelectTimeArray from 'helpers/generateSelectTimeArray';
 import { useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { HiPhoto } from 'react-icons/hi2';
 import { IoIosSave } from 'react-icons/io';
 import { toast } from 'react-toastify';
 import { useUpdateServiceDataMutation } from 'services/service.api';
 import { EmployeesServiceSettings } from 'services/types/service.type';
 import { ServiceDataBox, ServiceName } from '../EmployeeServices.styled';
+import ItemAvatar from 'components/Ui/ItemsList/ItemAvatar';
 
 type Props = {
     openModal: boolean;
@@ -123,15 +122,7 @@ const EditEmployeeServiceModal = ({ openModal, handleModalClose, service }: Prop
                     employeeId={1}
                 >
                     <ServiceDataBox>
-                        <AvatarBox>
-                            {service.avatar ? (
-                                <img src={String(service.avatar)} alt={`${service.name} image`} />
-                            ) : service.name ? (
-                                <span>{service.name.slice(0, 1)}</span>
-                            ) : (
-                                <HiPhoto />
-                            )}
-                        </AvatarBox>
+                        <ItemAvatar avatar={service.avatar.toString()} name={service.name} />
 
                         <ServiceName>{service.name}</ServiceName>
                     </ServiceDataBox>
