@@ -103,7 +103,7 @@ const RecordLog = ({ companyId, allSchedules, date, workingHours, employees, set
                         children="Перейти до профілю компанії"
                     />
                 </NoDataWrapper>
-            ) : allSchedules && providersToRender.length > 0 ? (
+            ) : allSchedules && providersToRender.length > 0 && chosenDayCompanySchedule ? (
                 <LeftWrapper>
                     <EmployeesListWrapper>
                         {startIndex !== 0 && employees.length > SCHEDULES_PER_PAGE && (
