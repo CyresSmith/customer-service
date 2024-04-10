@@ -34,7 +34,6 @@ function App() {
     useEffect(() => {
         const fetchData = async () => {
             const { data, isSuccess } = await getCurrentUser(undefined);
-
             if (data && isSuccess) {
                 setCurrentUser(data);
             }

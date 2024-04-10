@@ -6,6 +6,7 @@ export const Container = styled.div`
     overflow: hidden;
     display: flex;
     gap: ${theme.space[4]};
+    justify-content: end;
     height: 100%;
 `;
 

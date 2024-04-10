@@ -67,11 +67,11 @@ const UsersNav = () => {
 
     useEffect(() => {
         if (isSuccess) {
+            navigate('/', { replace: true });
             logOut();
             resetCompanyState();
             setDropOpen(false);
             toast.info(`До зустрічі, ${user?.firstName}!`);
-            navigate('/', { replace: true });
         }
     }, [isSuccess, logOut, navigate, resetCompanyState, user?.firstName]);
 

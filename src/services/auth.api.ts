@@ -52,7 +52,7 @@ export const authApi = createApi({
                 url: '/users/current',
                 method: 'GET',
             }),
-            providesTags: ['auth'],
+            providesTags: ['user'],
         }),
 
         updateUser: builder.mutation<User, UpdateUser>({
