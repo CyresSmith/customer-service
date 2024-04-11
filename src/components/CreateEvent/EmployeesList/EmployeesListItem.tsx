@@ -1,5 +1,5 @@
 import { HiFaceSmile } from 'react-icons/hi2';
-import { IEmployee } from 'services/types/employee.types';
+import { BasicEmployeeInfo } from 'services/types/employee.types';
 import {
     Avatar,
     AvatarWrapper,
@@ -11,8 +11,8 @@ import {
 } from './EmployeesList.styled';
 
 type Props = {
-    employee: IEmployee;
-    handleClick: (e: IEmployee) => void;
+    employee: BasicEmployeeInfo;
+    handleClick: (e: BasicEmployeeInfo) => void;
 };
 
 export const EmployeesListItem = ({ employee, handleClick }: Props) => {

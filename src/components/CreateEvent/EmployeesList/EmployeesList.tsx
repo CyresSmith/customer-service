@@ -1,15 +1,15 @@
-import { IEmployee } from 'services/types/employee.types';
+import { BasicEmployeeInfo } from 'services/types/employee.types';
 import { List } from './EmployeesList.styled';
 import { EmployeesListItem } from './EmployeesListItem';
 
 type Props = {
-    employees: IEmployee[];
-    chooseEmployee: React.Dispatch<React.SetStateAction<IEmployee | null>>;
+    employees: BasicEmployeeInfo[];
+    chooseEmployee: React.Dispatch<React.SetStateAction<BasicEmployeeInfo | null>>;
     setStep: (step: string) => void;
 };
 
 const EmployeesList = ({ employees, chooseEmployee, setStep }: Props) => {
-    const handleEmployeeClick = (e: IEmployee) => {
+    const handleEmployeeClick = (e: BasicEmployeeInfo) => {
         chooseEmployee(e);
         setStep('services');
     };

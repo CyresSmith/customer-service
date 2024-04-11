@@ -1,30 +1,56 @@
 import Button from 'components/Ui/Buttons/Button';
 import { useCompany } from 'hooks/useCompany';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
-import { useGetCompanyEmployeesQuery } from 'services/employee.api';
-import { IEmployee } from 'services/types/employee.types';
-import { IService } from 'services/types/service.type';
+import {
+    useGetCompanyEmployeesQuery,
+    useLazyGetEmployeeScheduleQuery,
+} from 'services/employee.api';
+import { BasicEmployeeInfo } from 'services/types/employee.types';
+import { ServiceBasicInfo } from 'services/types/service.type';
 import ChooseDate from './ChooseDate/ChooseDate';
 import ChooseServices from './ChooseServices';
 import Create from './Create/Create';
 import { BtnsBox, ChosenServices, Container, ContentBox } from './CreateEvent.styled';
+import EmployeesList from './EmployeesList';
+import { IMonthSchedule } from 'services/types/schedule.types';
+import { getMonth, getYear } from 'date-fns';
 
 type Props = {
     step: string;
     handleEventStep: (step: string) => void;
+    date: Date;
 };
 
-const CreateEvent = ({ step, handleEventStep }: Props) => {
+const CreateEvent = ({ step, date, handleEventStep }: Props) => {
     const { id } = useCompany();
-    const [chosenEmployee, setChosenEmployee] = useState<IEmployee | null>(null);
-    const [chosenServices, setChosenServices] = useState<Partial<IService>[] | undefined>(
-        undefined
+    const [chosenEmployee, setChosenEmployee] = useState<BasicEmployeeInfo | null>(null);
+    const [chosenServices, setChosenServices] = useState<ServiceBasicInfo[] | undefined>(undefined);
+    const [chosenEmployeeSchedule, setChoseEmployeeSchedule] = useState<IMonthSchedule | null>(
+        null
     );
     const [eventDate, setEventDate] = useState<Date>(new Date());
     const [eventTime, setEventTime] = useState<string>('');
+    const month = getMonth(date);
+    const year = getYear(date);
+    const [getEmployeeSchedule] = useLazyGetEmployeeScheduleQuery();
 
     const { data: employees } = useGetCompanyEmployeesQuery(id);
+
+    useEffect(() => {
+        if (id && chosenEmployee && year && month) {
+            const schedule = getEmployeeSchedule({
+                companyId: id,
+                employeeId: chosenEmployee.id,
+                year,
+                month,
+            });
+
+            if (schedule) {
+                setChoseEmployeeSchedule(schedule);
+            }
+        }
+    }, [chosenEmployee, getEmployeeSchedule, id, month, year]);
 
     const providersWithServices = employees?.filter(
         e => e.provider && e.servicesCount && e.servicesCount > 0
@@ -56,6 +82,7 @@ const CreateEvent = ({ step, handleEventStep }: Props) => {
 
     const isNotForwardBtn =
         step === 'create' || step === 'employees' || (step === 'services' && !chosenEmployee);
+
     const disabledForwardBtn =
         step === 'services' && chosenEmployee && chosenServices && chosenServices.length > 0
             ? false
@@ -91,13 +118,13 @@ const CreateEvent = ({ step, handleEventStep }: Props) => {
         <Container>
             <ContentBox>
                 {step === 'create' && <Create setStep={handleEventStep} />}
-                {/* {step === 'employees' && (
+                {step === 'employees' && (
                     <EmployeesList
                         setStep={handleEventStep}
                         employees={providersWithServices}
                         chooseEmployee={setChosenEmployee}
                     />
-                )} */}
+                )}
                 {step === 'services' && (
                     <ChooseServices
                         chosenEmployee={chosenEmployee}

@@ -67,5 +67,6 @@ export const {
     useLazyGetAllCompanySchedulesQuery,
     useUpdateEmployeeScheduleMutation,
     useGetEmployeeScheduleQuery,
+    useLazyGetEmployeeScheduleQuery,
     useDeleteEmployeeScheduleMutation,
 } = schedulesApi;

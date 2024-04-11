@@ -197,4 +197,6 @@ export const {
     useRemoveEmployeeServiceMutation,
     useAddEmployeeServiceMutation,
     useDeleteEmployeeMutation,
+    useGetEmployeeScheduleQuery,
+    useLazyGetEmployeeScheduleQuery,
 } = employeeApi;

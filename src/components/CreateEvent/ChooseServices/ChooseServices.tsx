@@ -5,15 +5,15 @@ import Search from 'components/Ui/Search/Search';
 import { useCompany } from 'hooks/useCompany';
 import { ChangeEvent, useState } from 'react';
 import { useGetServicesCategoriesQuery } from 'services/categories.api';
-import { IEmployee } from 'services/types/employee.types';
-import { IService } from 'services/types/service.type';
+import { BasicEmployeeInfo } from 'services/types/employee.types';
+import { ServiceBasicInfo } from 'services/types/service.type';
 import ServicesList from '../ServicesList';
 import { Container, ScrollWrapper, SearchBox, TopContainer } from './ChooseServices.styled';
 
 type Props = {
-    chosenEmployee: IEmployee | null;
-    setServices: React.Dispatch<React.SetStateAction<Partial<IService>[] | undefined>>;
-    chosenServices: Partial<IService>[] | undefined;
+    chosenEmployee: BasicEmployeeInfo | null;
+    setServices: React.Dispatch<React.SetStateAction<ServiceBasicInfo[] | undefined>>;
+    chosenServices: ServiceBasicInfo[] | undefined;
 };
 
 const ChooseServices = ({ chosenEmployee, setServices, chosenServices }: Props) => {
