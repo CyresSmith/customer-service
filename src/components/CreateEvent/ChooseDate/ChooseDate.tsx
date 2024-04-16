@@ -9,8 +9,9 @@ type Props = {
     eventTime: string;
     setEventDate: React.Dispatch<React.SetStateAction<Date>>;
     setEventTime: React.Dispatch<React.SetStateAction<string>>;
-    employeeSchedules: IMonthSchedule[];
+    employeeSchedules: IMonthSchedule;
     eventDuration: number;
+    companyId: number;
 };
 
 const ChooseDate = ({
@@ -19,29 +20,31 @@ const ChooseDate = ({
     eventTime,
     setEventDate,
     setEventTime,
+    companyId,
     employeeSchedules,
 }: Props) => {
-    const enableDays = employeeSchedules
-        .map(es => {
-            return es.schedule.map(s => {
-                return new Date(es.year, es.month, s.day);
-            });
-        })
-        .flat()
-        .filter(d => !isPast(d));
+    console.log(employeeSchedules);
+    // const enableDays = employeeSchedules
+    //     .map(es => {
+    //         return es.schedule.map(s => {
+    //             return new Date(es.year, es.month, s.day);
+    //         });
+    //     })
+    //     .flat()
+    //     .filter(d => !isPast(d));
 
-    const getDaySchedule = () => {
-        const day = getDate(eventDate);
-        const thisMonthSchedules = employeeSchedules.find(
-            es => es.month === getMonth(eventDate) && es.year === getYear(eventDate)
-        )?.schedule;
+    // const getDaySchedule = () => {
+    //     const day = getDate(eventDate);
+    //     const thisMonthSchedules = employeeSchedules.find(
+    //         es => es.month === getMonth(eventDate) && es.year === getYear(eventDate)
+    //     )?.schedule;
 
-        return thisMonthSchedules?.find(tms => tms.day === day);
-    };
+    //     return thisMonthSchedules?.find(tms => tms.day === day);
+    // };
 
     return (
         <Container>
-            <SelectBox>
+            {/* <SelectBox>
                 <ChooseTime
                     eventDate={eventDate}
                     eventTime={eventTime}
@@ -57,7 +60,7 @@ const ChooseDate = ({
                     setDate={setEventDate}
                     enableDays={enableDays}
                 />
-            </CalendarBox>
+            </CalendarBox> */}
         </Container>
     );
 };

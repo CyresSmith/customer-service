@@ -1,6 +1,7 @@
 import { ICompanySchedule } from 'components/CompanyProfile/SetScheduleModal/SetScheduleModal';
 import { IEmployee } from 'services/types/employee.types';
-import { ServiceBasicInfo } from 'services/types/service.type';
+// import { IEmployee } from 'services/types/employee.types';
+// import { ServiceBasicInfo } from 'services/types/service.type';
 
 export type IWorkTime = {
     from: number;
@@ -28,8 +29,8 @@ export type Company = {
     avatar: string;
     images: string[];
     activities: Activity[];
-    employees: IEmployee[];
-    services: ServiceBasicInfo[];
+    employees: Pick<IEmployee, 'id' | 'role' | 'user'>[];
+    // services: ServiceBasicInfo[];
 };
 
 export type CreateCompany = Pick<Company, 'name' | 'city' | 'index' | 'address' | 'phones'> & {

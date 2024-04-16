@@ -98,6 +98,7 @@ export const {
     useUploadServiceAvatarMutation,
     useAddNewServiceMutation,
     useGetServicesQuery,
+    useLazyGetServicesQuery,
     useGetServiceDataQuery,
     useDeleteServiceMutation,
 } = serviceApi;

@@ -1,7 +1,7 @@
 import { SelectItem } from 'components/Ui/Form/types';
 import { ServiceOpenModal, ServiceTypeEnum } from 'helpers/enums';
 import { Dispatch, SetStateAction } from 'react';
-import { BasicEmployeeInfo, IEmployee } from './employee.types';
+import { BasicEmployeeInfo } from './employee.types';
 
 export type EmployeeSettings = {
     employeeId: number;
@@ -89,7 +89,7 @@ export type IService = {
     employeesSettings: EmployeesServiceSettings[];
     images: string[];
     category: { id: number; name: string; type: string };
-    employees: IEmployee[];
+    employees: BasicEmployeeInfo[];
     resources?: unknown;
     type: ServiceTypeEnum;
     capacity: number;
@@ -104,5 +104,5 @@ export type IServiceUpdate = Omit<IService, 'category' | 'employees' | 'type'> &
 
 export type ServiceBasicInfo = Pick<
     IService,
-    'id' | 'name' | 'avatar' | 'duration' | 'price' | 'type' | 'category'
+    'id' | 'name' | 'avatar' | 'duration' | 'price' | 'type' | 'category' | 'employeesSettings'
 >;

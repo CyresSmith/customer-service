@@ -1,7 +1,7 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from 'services/instance';
 import { UserData } from 'store/user/user.types';
-import { MessageResponse } from './types';
+// import { MessageResponse } from './types';
 import {
     BasicEmployeeInfo,
     IEmployee,
@@ -10,11 +10,11 @@ import {
     addExistUserEmployeeData,
     addNewUserEmployeeData,
 } from './types/employee.types';
-import {
-    IGetEmployeeSchedule,
-    IMonthSchedule,
-    IUpdateEmployeeSchedule,
-} from './types/schedule.types';
+// import {
+//     IGetEmployeeSchedule,
+//     IMonthSchedule,
+//     IUpdateEmployeeSchedule,
+// } from './types/schedule.types';
 
 export const employeeApi = createApi({
     reducerPath: 'employeeApi',
@@ -109,33 +109,33 @@ export const employeeApi = createApi({
             ],
         }),
 
-        updateEmployeeSchedule: builder.mutation<MessageResponse, IUpdateEmployeeSchedule>({
-            query: ({ companyId, employeeId, data }) => ({
-                url: `company/${companyId}/employee/${employeeId}/schedule`,
-                method: 'PATCH',
-                data,
-            }),
-            invalidatesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.employeeId }],
-        }),
+        // updateEmployeeSchedule: builder.mutation<MessageResponse, IUpdateEmployeeSchedule>({
+        //     query: ({ companyId, employeeId, data }) => ({
+        //         url: `company/${companyId}/employee/${employeeId}/schedule`,
+        //         method: 'PATCH',
+        //         data,
+        //     }),
+        //     invalidatesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.employeeId }],
+        // }),
 
-        getEmployeeSchedule: builder.query<IMonthSchedule, IGetEmployeeSchedule>({
-            query: ({ companyId, employeeId, year, month }) => ({
-                url: `company/${companyId}/employee/${employeeId}/schedule?year=${year}&month=${month}`,
-                method: 'GET',
-            }),
-            providesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.employeeId }],
-        }),
+        // getEmployeeSchedule: builder.query<IMonthSchedule, IGetEmployeeSchedule>({
+        //     query: ({ companyId, employeeId, year, month }) => ({
+        //         url: `company/${companyId}/employee/${employeeId}/schedule?year=${year}&month=${month}`,
+        //         method: 'GET',
+        //     }),
+        //     providesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.employeeId }],
+        // }),
 
-        deleteEmployeeSchedule: builder.mutation<
-            { message: string },
-            { companyId: number; employeeId: number; scheduleId: number }
-        >({
-            query: ({ companyId, employeeId, scheduleId }) => ({
-                url: `company/${companyId}/employee/${employeeId}/schedule/${scheduleId}`,
-                method: 'DELETE',
-            }),
-            invalidatesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.employeeId }],
-        }),
+        // deleteEmployeeSchedule: builder.mutation<
+        //     { message: string },
+        //     { companyId: number; employeeId: number; scheduleId: number }
+        // >({
+        //     query: ({ companyId, employeeId, scheduleId }) => ({
+        //         url: `company/${companyId}/employee/${employeeId}/schedule/${scheduleId}`,
+        //         method: 'DELETE',
+        //     }),
+        //     invalidatesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.employeeId }],
+        // }),
 
         removeEmployeeService: builder.mutation<
             { message: string },
@@ -194,9 +194,10 @@ export const {
     useGetCompanyEmployeesQuery,
     useLazyGetCompanyEmployeesQuery,
     useGetOneEmployeeQuery,
+    useLazyGetOneEmployeeQuery,
     useRemoveEmployeeServiceMutation,
     useAddEmployeeServiceMutation,
     useDeleteEmployeeMutation,
-    useGetEmployeeScheduleQuery,
-    useLazyGetEmployeeScheduleQuery,
+    // useGetEmployeeScheduleQuery,
+    // useLazyGetEmployeeScheduleQuery,
 } = employeeApi;
