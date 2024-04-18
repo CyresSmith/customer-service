@@ -29,7 +29,7 @@ import {
     useUpdateEmployeeScheduleMutation,
 } from 'services/schedules.api';
 import { BasicEmployeeInfo } from 'services/types/employee.types';
-import { IDaySchedule, IMonthSchedule } from 'services/types/schedule.types';
+import { IDaySchedule, IMonthSchedule, ITime } from 'services/types/schedule.types';
 import { IWorkingHours } from 'store/company/company.types';
 import {
     Day,
@@ -438,18 +438,23 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
     const handleEmployeeClick = (id: number) => {
         if (!isEditingAllowed) return;
 
+        const monthWorkingDays = monthDays.filter(
+            date => (isToday(date) || !isPast(startOfDay(date))) && !isNotWorkingDay(date)
+        );
+
+        const selectionIdx = selectedDays.findIndex(({ employeeId }) => employeeId === id);
+
+        const isAllDaysSelected =
+            monthWorkingDays.length === selectedDays[selectionIdx]?.dates.length;
+
         setSelectedDays(p => {
-            const newState = [...p];
+            let newState = [...p];
 
             const idx = newState.findIndex(item => item.employeeId === id);
 
-            const monthWorkingDays = monthDays.filter(
-                date => (isToday(date) || !isPast(startOfDay(date))) && !isNotWorkingDay(date)
-            );
-
             if (idx !== -1) {
                 if (monthWorkingDays.length === newState[idx].dates.length) {
-                    newState[idx].dates = [];
+                    newState = newState.filter((_, i) => i !== idx);
                 } else {
                     newState[idx].dates = monthWorkingDays;
                 }
@@ -459,6 +464,85 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
                 return [...newState, { employeeId: id, dates: monthWorkingDays }];
             }
         });
+
+        const allDaysSchedule = workingHours?.reduce((acc: ITime, item) => {
+            const timeIdx = (time: string) => timeArray.indexOf(time);
+
+            if (timeIdx(acc.from) < timeIdx(item.hours.from)) {
+                acc = { ...acc, from: item.hours.from };
+            }
+
+            if (timeIdx(acc.to) > timeIdx(item.hours.to)) {
+                acc = { ...acc, to: item.hours.to };
+            }
+
+            return acc;
+        }, workingHours[0].hours);
+
+        if (allDaysSchedule) {
+            if (!selectedDayCompanySchedule) {
+                setFrom(allDaysSchedule.from);
+                setTo(allDaysSchedule.to);
+            }
+
+            setScheduleState(p => {
+                let newState = [...p];
+
+                const employeeScheduleIdx = newState.findIndex(
+                    ({ employee }) => employee.id === id
+                );
+
+                if (isAllDaysSelected) {
+                    const initialSchedule = allSchedules?.find(
+                        ({ employee }) => employee.id === id
+                    );
+
+                    if (initialSchedule) {
+                        newState[employeeScheduleIdx] = initialSchedule;
+                    } else {
+                        newState.filter((_, i) => i !== employeeScheduleIdx);
+                    }
+                } else {
+                    if (employeeScheduleIdx !== undefined && employeeScheduleIdx !== -1) {
+                        const currentSchedule = newState[employeeScheduleIdx];
+
+                        newState[employeeScheduleIdx] = {
+                            ...currentSchedule,
+                            schedule: [
+                                ...currentSchedule.schedule.filter(({ day }) => {
+                                    const date = new Date(
+                                        currentSchedule.year,
+                                        currentSchedule.month,
+                                        day + 1
+                                    );
+
+                                    return isToday(date) || isPast(date);
+                                }),
+                                ...monthWorkingDays.map(date => ({
+                                    day: getDate(date),
+                                    hours: selectedDayCompanySchedule?.hours || allDaysSchedule,
+                                })),
+                            ],
+                        };
+                    } else {
+                        newState = [
+                            ...newState,
+                            {
+                                year: getYear(selectedMonth),
+                                month: getMonth(selectedMonth),
+                                schedule: monthWorkingDays.map(date => ({
+                                    day: getDate(date),
+                                    hours: selectedDayCompanySchedule?.hours || allDaysSchedule,
+                                })),
+                                employee: { id },
+                            },
+                        ];
+                    }
+                }
+
+                return newState;
+            });
+        }
     };
 
     const isTimeForBreak = (fromValue = from, toValue = to) =>
