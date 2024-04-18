@@ -36,7 +36,10 @@ export const schedulesApi = createApi({
                 data,
                 params: { companyId },
             }),
-            invalidatesTags: (_resp, _err, arg) => [{ type: 'schedule', id: arg.employeeId }],
+            invalidatesTags: (_resp, _err, arg) => [
+                { type: 'schedule', id: arg.employeeId },
+                'schedules',
+            ],
         }),
 
         getEmployeeSchedule: builder.query<IMonthSchedule, IGetEmployeeSchedule>({
