@@ -1,7 +1,7 @@
 // import { IMonthSchedule, ITime } from './schedule.types';
 
 import { IMonthSchedule } from './schedule.types';
-import { IService } from './service.type';
+import { ServiceBasicInfo } from './service.type';
 
 export type IEmployeeUser = {
     id: number;
@@ -39,7 +39,7 @@ export type IEmployee = {
     birthday: Date;
     user: IEmployeeUser;
     schedules: IMonthSchedule[];
-    services: IService[];
+    services: ServiceBasicInfo[];
 };
 
 export type BasicEmployeeInfo = Pick<

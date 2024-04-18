@@ -19,12 +19,13 @@ import {
 
 import ScheduleTimeSelection from 'components/ScheduleTimeSelection';
 import { Message } from 'components/ScheduleTimeSelection/ScheduleTimeSelection.styled';
+import generateTimeArray from 'helpers/generateTimeArray';
 import { useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { LegacyRef, UIEventHandler, useEffect, useRef, useState } from 'react';
 import { useGetAllCompanySchedulesQuery } from 'services/schedules.api';
 import { BasicEmployeeInfo } from 'services/types/employee.types';
-import { IMonthSchedule } from 'services/types/schedule.types';
+import { IDaySchedule, IMonthSchedule } from 'services/types/schedule.types';
 import { IWorkingHours } from 'store/company/company.types';
 import {
     Day,
@@ -46,6 +47,8 @@ import {
 } from './WorkSchedule.styled';
 
 type Props = { providers: BasicEmployeeInfo[]; selectedMonth: Date };
+
+const timeArray = generateTimeArray();
 
 const WorkSchedule = ({ providers, selectedMonth }: Props) => {
     const { id, workingHours, employees } = useCompany();
@@ -99,17 +102,26 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
         return workingHours?.findIndex(({ days }) => days.includes(getDay(date))) === -1;
     };
 
+    const resetState = () => {
+        setSelectedDays([]);
+        setFrom('');
+        setTo('');
+        setBreakFrom('');
+        setBreakTo('');
+        setIsBreak(false);
+    };
+
     const handleDaySelect = (date: Date, employeeId: number) => {
         if (date < startOfToday() || isNotWorkingDay(date)) return;
 
         let currentDayCompanySchedule: IWorkingHours | undefined = undefined;
 
         const monthScheduleIdx = scheduleState.findIndex(
-            ({ employee }) => employee.id === employeeId
+            schedule => schedule?.employee.id === employeeId
         );
 
         const dayScheduleIdx = scheduleState[monthScheduleIdx]?.schedule.findIndex(
-            ({ day }) => day === getDate(date)
+            schedule => schedule?.day === getDate(date)
         );
 
         if (!selectedDayCompanySchedule) {
@@ -118,69 +130,148 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
             );
         }
 
+        const initialMonthSchedule = allSchedules?.find(
+            ({ employee }) => employee.id === employeeId
+        );
+
+        const initialSchedule = initialMonthSchedule?.schedule.find(
+            schedule => schedule?.day === getDate(date)
+        );
+
+        const employeeSelectionIdx = selectedDays.findIndex(
+            selected => selected.employeeId === employeeId
+        );
+        const employeeSelectedDays = selectedDays[employeeSelectionIdx]?.dates;
+        const isDateSelected = employeeSelectedDays?.find(selected => isSameDay(selected, date));
+
         setScheduleState(p => {
-            const newState = [...p];
+            let newState: IMonthSchedule[] = [...p];
 
-            if (dayScheduleIdx > -1) {
-                const daySchedule = scheduleState[monthScheduleIdx]?.schedule[dayScheduleIdx];
+            if (selectedDays.length > 0) {
+                if (isDateSelected) {
+                    if (initialSchedule) {
+                        newState[monthScheduleIdx] = {
+                            ...newState[monthScheduleIdx],
+                            schedule: newState[monthScheduleIdx].schedule.map((schedule, i) =>
+                                i === dayScheduleIdx ? initialSchedule : schedule
+                            ),
+                        };
+                    } else {
+                        if (dayScheduleIdx !== undefined && dayScheduleIdx !== -1) {
+                            newState[monthScheduleIdx].schedule = newState[
+                                monthScheduleIdx
+                            ].schedule.filter((_, i) => i !== dayScheduleIdx);
+                        } else {
+                            if (initialMonthSchedule) {
+                                newState[monthScheduleIdx] = initialMonthSchedule;
+                            } else {
+                                newState = newState.filter((_, i) => i !== monthScheduleIdx);
+                            }
+                        }
+                    }
+                } else {
+                    let daySchedule: IDaySchedule = {
+                        hours: { from, to },
+                        day: getDate(date),
+                    };
 
-                if (daySchedule) {
-                    const { hours, breakHours } = daySchedule;
+                    if (isBreak && breakFrom && breakTo) {
+                        daySchedule = {
+                            ...daySchedule,
+                            breakHours: { from: breakFrom, to: breakTo },
+                        };
+                    }
 
-                    setFrom(hours.from);
-                    setTo(hours.to);
+                    if (monthScheduleIdx !== undefined && monthScheduleIdx !== -1) {
+                        if (dayScheduleIdx !== undefined && dayScheduleIdx !== -1) {
+                            newState[monthScheduleIdx] = {
+                                ...newState[monthScheduleIdx],
+                                schedule: newState[monthScheduleIdx].schedule.map((item, i) => {
+                                    if (i === dayScheduleIdx) {
+                                        return daySchedule;
+                                    }
 
-                    if (breakHours) {
-                        setIsBreak(true);
-                        setBreakFrom(breakHours.from);
-                        setBreakTo(breakHours.to);
+                                    return item;
+                                }),
+                            };
+                        } else {
+                            newState[monthScheduleIdx] = {
+                                ...newState[monthScheduleIdx],
+                                schedule: [...newState[monthScheduleIdx].schedule, daySchedule],
+                            };
+                        }
+                    } else {
+                        newState = [
+                            ...newState,
+                            {
+                                year: getYear(selectedMonth),
+                                month: getMonth(selectedMonth),
+                                schedule: [daySchedule],
+                                employee: { id: employeeId },
+                            },
+                        ];
                     }
                 }
-            } else if (currentDayCompanySchedule) {
-                const { hours } = currentDayCompanySchedule;
+            } else {
+                if (initialSchedule) {
+                    setFrom(initialSchedule.hours.from);
+                    setTo(initialSchedule.hours.to);
 
-                setFrom(hours.from);
-                setTo(hours.to);
+                    if (initialSchedule.breakHours) {
+                        setIsBreak(true);
+                        setBreakFrom(initialSchedule.breakHours.from);
+                        setBreakTo(initialSchedule.breakHours.to);
+                    }
+                } else if (currentDayCompanySchedule) {
+                    setFrom(currentDayCompanySchedule.hours.from);
+                    setTo(currentDayCompanySchedule.hours.to);
 
-                newState[monthScheduleIdx] = {
-                    ...newState[monthScheduleIdx],
+                    const newDaySchedule = {
+                        day: getDate(date),
+                        hours: currentDayCompanySchedule.hours,
+                    };
 
-                    schedule: [{ hours, day: getDate(date) }],
-                };
+                    if (monthScheduleIdx && monthScheduleIdx !== -1) {
+                        newState[monthScheduleIdx] = {
+                            ...newState[monthScheduleIdx],
+                            schedule: [...newState[monthScheduleIdx].schedule, newDaySchedule],
+                        };
+                    } else {
+                        const newSchedule = {
+                            year: getYear(selectedMonth),
+                            month: getMonth(selectedMonth),
+                            employee: { id: employeeId },
+                            schedule: [newDaySchedule],
+                        };
+
+                        newState = [...newState, newSchedule];
+                    }
+                }
             }
 
             return newState;
         });
 
         setSelectedDays(p => {
-            const idx = p.findIndex(item => item.employeeId === employeeId);
+            let newState = [...p];
 
-            if (idx === -1) {
-                currentDayCompanySchedule &&
-                    setSelectedDayCompanySchedule(currentDayCompanySchedule);
-
-                return [...p, { employeeId, dates: [date] }];
-            } else {
-                const dateIdx = p[idx].dates.findIndex(selected => isSameDay(selected, date));
-
-                if (dateIdx === -1) {
-                    return p.map((item, index) =>
-                        index === idx ? { ...item, dates: [...item.dates, date] } : item
-                    );
-                } else {
-                    const newDates = [...p[idx].dates];
-                    newDates.splice(dateIdx, 1);
-
-                    const newSelectedDays =
-                        newDates.length > 0
-                            ? p.map((item, index) =>
-                                  index === idx ? { ...item, dates: newDates } : item
-                              )
-                            : p.filter((_, index) => index !== idx);
-
-                    return newSelectedDays;
-                }
+            if (newState.length === 0 && currentDayCompanySchedule) {
+                setSelectedDayCompanySchedule(currentDayCompanySchedule);
             }
+
+            if (employeeSelectionIdx !== undefined && employeeSelectionIdx !== -1) {
+                newState[employeeSelectionIdx].dates = isDateSelected
+                    ? employeeSelectedDays.filter(selected => !isSameDay(selected, date))
+                    : [...employeeSelectedDays, date];
+
+                if (newState[employeeSelectionIdx].dates.length === 0) {
+                    newState = newState.filter((_, i) => i !== employeeSelectionIdx);
+                }
+            } else {
+                newState = [...newState, { employeeId, dates: [date] }];
+            }
+
+            return newState;
         });
     };
 
@@ -261,6 +352,150 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
         });
     };
 
+    const isTimeForBreak = (fromValue = from, toValue = to) =>
+        fromValue !== '' &&
+        toValue !== '' &&
+        toValue >= timeArray[timeArray.indexOf(fromValue) + 3];
+
+    const timeArrayFrom = (start: string, end?: string) =>
+        timeArray.filter(time => (end ? time >= start && time <= end : time >= start));
+
+    const handleTimeSelect = (time: string, id: string) => {
+        if (typeof time !== 'string') return;
+
+        if (id === 'from') {
+            setFrom(time);
+            removeSelectedDaysBreakHours();
+            setIsBreak(false);
+            setBreakFrom('');
+            setBreakTo('');
+        }
+        if (id === 'to') {
+            setTo(time);
+            removeSelectedDaysBreakHours();
+            setIsBreak(false);
+            setBreakFrom('');
+            setBreakTo('');
+        }
+        if (id === 'breakFrom') setBreakFrom(time);
+        if (id == 'breakTo') setBreakTo(time);
+
+        const key = id === 'from' || id === 'to' ? 'hours' : 'breakHours';
+        const param = id === 'from' || id === 'breakFrom' ? 'from' : 'to';
+
+        setScheduleState(p =>
+            p.map(monthSchedule => {
+                const isSelected = selectedDays.findIndex(
+                    selected => selected.employeeId === monthSchedule.employee.id
+                );
+
+                if (isSelected !== undefined && isSelected !== -1) {
+                    const newSchedule = { ...monthSchedule };
+
+                    newSchedule.schedule = newSchedule.schedule.map(schedule =>
+                        selectedDays[isSelected].dates
+                            .map(date => getDate(date))
+                            .includes(schedule.day)
+                            ? { ...schedule, [key]: { ...schedule[key], [param]: time } }
+                            : schedule
+                    );
+
+                    return newSchedule;
+                } else {
+                    return monthSchedule;
+                }
+            })
+        );
+    };
+
+    const setBreakTime = (workingHoursFrom: string, workingHoursTo: string) => {
+        if (isTimeForBreak()) {
+            const breakTime = timeArrayFrom(workingHoursFrom, workingHoursTo);
+            const breakFromIdx = Math.floor(breakTime.length / 2) - 1;
+            const breakFrom = breakTime[breakFromIdx];
+            const breakTo = breakTime[breakFromIdx + 1];
+
+            setIsBreak(true);
+            setBreakFrom(breakFrom);
+            setBreakTo(breakTo);
+
+            return { breakHours: { from: breakFrom, to: breakTo } };
+        }
+    };
+
+    const removeSelectedDaysBreakHours = () => {
+        setScheduleState(p =>
+            p.map(monthSchedule => {
+                const isSelected = selectedDays.findIndex(
+                    selected => selected.employeeId === monthSchedule.employee.id
+                );
+
+                if (isSelected !== undefined && isSelected !== -1) {
+                    const newSchedule = { ...monthSchedule };
+
+                    newSchedule.schedule = newSchedule.schedule.map(schedule => {
+                        if (
+                            !selectedDays[isSelected].dates
+                                .map(date => getDate(date))
+                                .includes(schedule.day)
+                        ) {
+                            return schedule;
+                        }
+
+                        const newItem = { ...schedule };
+                        delete newItem.breakHours;
+                        return newItem;
+                    });
+
+                    return newSchedule;
+                } else {
+                    return monthSchedule;
+                }
+            })
+        );
+    };
+
+    const handleAddBreakHoursClick = () => {
+        // if (!isEditingAllowed) return;
+
+        if (isBreak) {
+            setIsBreak(false);
+            setBreakFrom('');
+            setBreakTo('');
+            removeSelectedDaysBreakHours();
+        } else {
+            const breakHours = setBreakTime(from, to);
+
+            if (breakHours) {
+                setScheduleState(p =>
+                    p.map(monthSchedule => {
+                        const isSelected = selectedDays.findIndex(
+                            selected => selected.employeeId === monthSchedule.employee.id
+                        );
+
+                        if (isSelected !== undefined && isSelected !== -1) {
+                            const newSchedule = { ...monthSchedule };
+
+                            newSchedule.schedule = newSchedule.schedule.map(schedule =>
+                                selectedDays[isSelected].dates
+                                    .map(date => getDate(date))
+                                    .includes(schedule.day)
+                                    ? { ...schedule, ...breakHours }
+                                    : schedule
+                            );
+
+                            return newSchedule;
+                        } else {
+                            return monthSchedule;
+                        }
+                    })
+                );
+            }
+        }
+
+        // setIsStateChanged(true);
+    };
+
     useEffect(() => {
         if (!allSchedules) return;
 
@@ -273,7 +508,14 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
     }, [selectedMonth]);
 
     useEffect(() => {
-        if (selectedDays.length === 0) setSelectedDayCompanySchedule(null);
+        if (selectedDays.length === 0) {
+            setSelectedDayCompanySchedule(null);
+            setFrom('');
+            setTo('');
+            setIsBreak(false);
+            setBreakFrom('');
+            setBreakTo('');
+        }
     }, [selectedDays]);
 
     useEffect(() => {
@@ -361,7 +603,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
 
                         {providers.map(({ id }) => {
                             const employeeSchedule = scheduleState?.find(
-                                ({ employee }) => employee.id === id
+                                schedule => schedule?.employee.id === id
                             );
 
                             return (
@@ -379,7 +621,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
                                             ) !== -1;
 
                                         const daySchedule = employeeSchedule?.schedule.find(
-                                            ({ day }) => day === getDate(item)
+                                            schedule => schedule?.day === getDate(item)
                                         );
 
                                         const today = isToday(item);
@@ -436,15 +678,15 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
             {selectedDays.length > 0 && workingHours ? (
                 <ScheduleTimeSelection
                     from={from}
-                    setFrom={time => console.log(time)}
+                    setFrom={time => handleTimeSelect(time, 'from')}
                     to={to}
-                    setTo={time => console.log(time)}
+                    setTo={time => handleTimeSelect(time, 'to')}
                     breakFrom={breakFrom}
-                    setBreakFrom={time => console.log(time)}
+                    setBreakFrom={time => handleTimeSelect(time, 'breakFrom')}
                     breakTo={breakTo}
-                    setBreakTo={time => console.log(time)}
+                    setBreakTo={time => handleTimeSelect(time, 'breakTo')}
                     isBreak={isBreak}
-                    breakToggle={() => {}}
+                    breakToggle={handleAddBreakHoursClick}
                     isEditingAllowed={true}
                     handleReset={() => {}}
                     handleUpdate={() => {}}
