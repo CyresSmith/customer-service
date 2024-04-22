@@ -1,8 +1,5 @@
 import { IMonthSchedule } from 'services/types/schedule.types';
-import { CalendarBox, Container, SelectBox } from './ChooseDate.styled';
-import Calendar from 'components/Ui/Calendar/Calendar';
-import { getDate, getMonth, getYear, isPast } from 'date-fns';
-import ChooseTime from '../ChooseTime';
+import { Container } from './ChooseDate.styled';
 
 type Props = {
     eventDate: Date;
@@ -14,15 +11,7 @@ type Props = {
     companyId: number;
 };
 
-const ChooseDate = ({
-    eventDuration,
-    eventDate,
-    eventTime,
-    setEventDate,
-    setEventTime,
-    companyId,
-    employeeSchedules,
-}: Props) => {
+const ChooseDate = ({ employeeSchedules }: Props) => {
     console.log(employeeSchedules);
     // const enableDays = employeeSchedules
     //     .map(es => {

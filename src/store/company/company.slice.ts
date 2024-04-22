@@ -20,7 +20,6 @@ const initialCompanyState: Company = {
     images: [],
     activities: [],
     employees: [],
-    services: [],
 };
 
 const initialState: ICompanyInitialState = {
