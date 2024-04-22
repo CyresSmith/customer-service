@@ -156,7 +156,11 @@ const RecordLogPage = () => {
                                     : 'Створення запису'
                         }
                         children={
-                            <CreateEvent step={eventStep} handleEventStep={handleEventStep} />
+                            <CreateEvent
+                                date={date}
+                                step={eventStep}
+                                handleEventStep={handleEventStep}
+                            />
                         }
                     />
                 )}

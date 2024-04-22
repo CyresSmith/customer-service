@@ -1,8 +1,6 @@
 import { SelectItem } from 'components/Ui/Form/types';
 import { millisecondsToTime } from 'helpers/millisecondsToTime';
-import { useCompany } from 'hooks/useCompany';
-import { IEmployee } from 'services/types/employee.types';
-import { IService } from 'services/types/service.type';
+// import { IEmployee } from 'services/types/employee.types';
 import {
     List,
     ListItem,
@@ -11,40 +9,37 @@ import {
     ServicePrice,
     ServiceTime,
 } from './ServicesList.styled';
+import { ServiceBasicInfo } from 'services/types/service.type';
 
 type Props = {
     searchQuery: string;
     chosenCategory: SelectItem;
-    chosenEmployee: IEmployee | null;
-    setServices: React.Dispatch<React.SetStateAction<Partial<IService>[] | undefined>>;
-    chosenServices: Partial<IService>[] | undefined;
+    // chosenEmployee: IEmployee | null;
+    setServices: React.Dispatch<React.SetStateAction<ServiceBasicInfo[] | undefined>>;
+    chosenServices: ServiceBasicInfo[] | undefined;
+    servicesList: ServiceBasicInfo[];
 };
 
 const ServicesList = ({
     searchQuery,
     chosenCategory,
-    chosenEmployee,
+    // chosenEmployee,
     setServices,
     chosenServices,
+    servicesList,
 }: Props) => {
-    const { services } = useCompany();
     const { id } = chosenCategory;
 
-    const filteredByEmployee =
-        chosenEmployee !== null
-            ? services.filter(s => chosenEmployee.services.find(es => es.id === s.id))
-            : services;
-
     const filteredByCategory =
-        id !== 'start' && id !== 'all'
-            ? filteredByEmployee.filter(s => s.category.id === id)
-            : filteredByEmployee;
+        servicesList && id !== 'start' && id !== 'all'
+            ? servicesList.filter(s => s.category.id === id)
+            : servicesList;
 
-    const filteredServices = filteredByCategory.filter(s =>
-        s.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredServices =
+        filteredByCategory &&
+        filteredByCategory.filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    const handleServiceChoose = (service: Partial<IService>) => {
+    const handleServiceChoose = (service: ServiceBasicInfo): void => {
         setServices(s => {
             if (s) {
                 if (s.find(ss => ss.id === service.id)) {
@@ -67,17 +62,23 @@ const ServicesList = ({
     };
 
     return (
-        <List>
-            {filteredServices.map((s, i) => (
-                <ListItem $chosen={isChosen(s.id)} key={i} onClick={() => handleServiceChoose(s)}>
-                    <ServiceName>{s.name}</ServiceName>
-                    <RightWrapper>
-                        <ServiceTime>{millisecondsToTime(s.duration)}</ServiceTime>
-                        <ServicePrice>{s.price + ' грн.'}</ServicePrice>
-                    </RightWrapper>
-                </ListItem>
-            ))}
-        </List>
+        filteredServices && (
+            <List>
+                {filteredServices.map((s, i) => (
+                    <ListItem
+                        $chosen={isChosen(s.id)}
+                        key={i}
+                        onClick={() => handleServiceChoose(s)}
+                    >
+                        <ServiceName>{s.name}</ServiceName>
+                        <RightWrapper>
+                            <ServiceTime>{millisecondsToTime(s.duration)}</ServiceTime>
+                            <ServicePrice>{s.price + ' грн.'}</ServicePrice>
+                        </RightWrapper>
+                    </ListItem>
+                ))}
+            </List>
+        )
     );
 };
 

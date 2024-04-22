@@ -2,31 +2,53 @@ import CustomFormSelect from 'components/Ui/Form/CustomFormSelect';
 import { SelectItem } from 'components/Ui/Form/types';
 import Loader from 'components/Ui/Loader';
 import Search from 'components/Ui/Search/Search';
-import { useCompany } from 'hooks/useCompany';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useGetServicesCategoriesQuery } from 'services/categories.api';
 import { IEmployee } from 'services/types/employee.types';
-import { IService } from 'services/types/service.type';
 import ServicesList from '../ServicesList';
 import { Container, ScrollWrapper, SearchBox, TopContainer } from './ChooseServices.styled';
+import { useLazyGetServicesQuery } from 'services/service.api';
+import { ServiceBasicInfo } from 'services/types/service.type';
 
 type Props = {
     chosenEmployee: IEmployee | null;
-    setServices: React.Dispatch<React.SetStateAction<Partial<IService>[] | undefined>>;
-    chosenServices: Partial<IService>[] | undefined;
+    setServices: React.Dispatch<React.SetStateAction<ServiceBasicInfo[] | undefined>>;
+    chosenServices: ServiceBasicInfo[] | undefined;
+    companyId: number;
 };
 
-const ChooseServices = ({ chosenEmployee, setServices, chosenServices }: Props) => {
-    const { id: companyId } = useCompany();
+const ChooseServices = ({ companyId, chosenEmployee, setServices, chosenServices }: Props) => {
     const [searchQuery, setSearchQuery] = useState<string>('');
-    const { isLoading: isCategoriesLoading, data } = useGetServicesCategoriesQuery(
-        { companyId },
+    const [servicesList, setServicesList] = useState<ServiceBasicInfo[] | null>(null);
+    const { isLoading: isCategoriesLoading, data: categories } = useGetServicesCategoriesQuery(
+        { companyId: companyId },
         { skip: !companyId }
     );
     const [chosenCategory, setChosenCategory] = useState<SelectItem>({
         value: 'Обрати категорію',
         id: 'start',
     });
+
+    const [
+        getCompanyServices,
+        { isSuccess: successGetCompanyServices, isLoading: isServicesLoading },
+    ] = useLazyGetServicesQuery();
+
+    useEffect(() => {
+        const getServices = async () => {
+            const { data: companyServices } = await getCompanyServices({ companyId });
+
+            if (companyServices && successGetCompanyServices) {
+                setServicesList(companyServices);
+            }
+        };
+
+        if (chosenEmployee) {
+            setServicesList(chosenEmployee.services);
+        } else {
+            getServices();
+        }
+    }, [chosenEmployee, companyId, getCompanyServices, successGetCompanyServices]);
 
     const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(event.target.value);
@@ -37,20 +59,18 @@ const ChooseServices = ({ chosenEmployee, setServices, chosenServices }: Props) 
     };
 
     const categoriesForSelect: SelectItem[] | undefined =
-        data &&
-        data.map(c => {
+        categories &&
+        categories.map(c => {
             return { value: c.name, id: c.id };
         });
 
-    const filteredByEmployeeCategories = chosenEmployee
-        ? categoriesForSelect?.filter(c =>
-              chosenEmployee.services.find(es => es.category!.id === c.id)
-          )
+    const filteredByEmployeeCategories = servicesList
+        ? categoriesForSelect?.filter(c => servicesList.find(es => es.category.id === c.id))
         : categoriesForSelect;
 
     const selectAll = { value: 'Всі категорії', id: 'all' };
 
-    return isCategoriesLoading ? (
+    return isCategoriesLoading || isServicesLoading ? (
         <Loader />
     ) : (
         <Container>
@@ -72,13 +92,16 @@ const ChooseServices = ({ chosenEmployee, setServices, chosenServices }: Props) 
                 </SearchBox>
             </TopContainer>
             <ScrollWrapper>
-                <ServicesList
-                    setServices={setServices}
-                    chosenEmployee={chosenEmployee}
-                    searchQuery={searchQuery}
-                    chosenCategory={chosenCategory}
-                    chosenServices={chosenServices}
-                />
+                {servicesList && (
+                    <ServicesList
+                        servicesList={servicesList}
+                        setServices={setServices}
+                        // chosenEmployee={chosenEmployee}
+                        searchQuery={searchQuery}
+                        chosenCategory={chosenCategory}
+                        chosenServices={chosenServices}
+                    />
+                )}
             </ScrollWrapper>
         </Container>
     );
