@@ -37,11 +37,13 @@ const ChooseServices = ({ companyId, chosenEmployee, setServices, chosenServices
     useEffect(() => {
         const getServices = async () => {
             const { data: companyServices } = await getCompanyServices({ companyId });
-
+            // console.log('get services');
             if (companyServices && successGetCompanyServices) {
                 setServicesList(companyServices);
             }
         };
+
+        // console.log(chosenEmployee);
 
         if (chosenEmployee) {
             setServicesList(chosenEmployee.services);

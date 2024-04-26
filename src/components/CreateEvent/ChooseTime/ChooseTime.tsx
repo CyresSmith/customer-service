@@ -39,6 +39,7 @@ const ChooseTime = ({ eventDate, eventDuration, eventTime, daySchedule, setEvent
                 handleSelect={handleTimeSelect}
                 selectItems={forSelect}
                 selectedItem={{ value: eventTime }}
+                disabled={forSelect.length < 1}
             />
         </>
     );

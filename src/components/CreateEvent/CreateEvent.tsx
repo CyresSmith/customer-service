@@ -3,14 +3,14 @@ import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
-import { useLazyGetEmployeeScheduleQuery } from 'services/schedules.api';
+import { useLazyGetEmployeeAllSchedulesQuery } from 'services/schedules.api';
 import ChooseDate from './ChooseDate/ChooseDate';
 import ChooseServices from './ChooseServices';
 import Create from './Create/Create';
 import { BtnsBox, ChosenServices, Container, ContentBox } from './CreateEvent.styled';
 import EmployeesList from './EmployeesList';
 import { IMonthSchedule } from 'services/types/schedule.types';
-import { getMonth, getYear } from 'date-fns';
+// import { getMonth, getYear } from 'date-fns';
 import { ServiceBasicInfo } from 'services/types/service.type';
 import { IEmployee } from 'services/types/employee.types';
 
@@ -20,28 +20,26 @@ type Props = {
     date: Date;
 };
 
-const CreateEvent = ({ step, date, handleEventStep }: Props) => {
+const CreateEvent = ({ step, handleEventStep }: Props) => {
     const { id } = useCompany();
     const [chosenEmployee, setChosenEmployee] = useState<IEmployee | null>(null);
     const [chosenServices, setChosenServices] = useState<ServiceBasicInfo[] | undefined>(undefined);
-    const [chosenEmployeeSchedule, setChosenEmployeeSchedule] = useState<IMonthSchedule | null>(
+    const [chosenEmployeeSchedule, setChosenEmployeeSchedule] = useState<IMonthSchedule[] | null>(
         null
     );
     const [eventDate, setEventDate] = useState<Date>(new Date());
     const [eventTime, setEventTime] = useState<string>('');
-    const month = getMonth(date);
-    const year = getYear(date);
-    const [getEmployeeSchedule] = useLazyGetEmployeeScheduleQuery();
+    // const month = getMonth(date);
+    // const year = getYear(date);
+    const [getEmployeeSchedules] = useLazyGetEmployeeAllSchedulesQuery();
 
     const { data: employees } = useGetCompanyEmployeesQuery(id);
 
     useEffect(() => {
         const getSchedule = async (employeeId: number) => {
-            const { data, isSuccess } = await getEmployeeSchedule({
+            const { data, isSuccess } = await getEmployeeSchedules({
                 companyId: id,
                 employeeId,
-                year,
-                month,
             });
 
             if (data && isSuccess) {
@@ -52,7 +50,7 @@ const CreateEvent = ({ step, date, handleEventStep }: Props) => {
         if (chosenEmployee) {
             getSchedule(chosenEmployee.id);
         }
-    }, [chosenEmployee, getEmployeeSchedule, id, month, year]);
+    }, [chosenEmployee, getEmployeeSchedules, id]);
 
     const providersWithServices = employees?.filter(
         e => e.provider && e.servicesCount && e.servicesCount > 0
@@ -138,6 +136,7 @@ const CreateEvent = ({ step, date, handleEventStep }: Props) => {
                 )}
                 {step === 'date' && chosenEmployee && chosenEmployeeSchedule && (
                     <ChooseDate
+                        chosenEmployee={chosenEmployee}
                         companyId={id}
                         employeeSchedules={chosenEmployeeSchedule}
                         eventDate={eventDate}

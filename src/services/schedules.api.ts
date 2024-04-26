@@ -62,6 +62,17 @@ export const schedulesApi = createApi({
                 'schedules',
             ],
         }),
+
+        getEmployeeAllSchedules: builder.query<
+            IMonthSchedule[],
+            Pick<IGetEmployeeSchedule, 'companyId' | 'employeeId'>
+        >({
+            query: ({ companyId, employeeId }) => ({
+                url: `schedules/${employeeId}/get-all`,
+                method: 'GET',
+                params: { companyId },
+            }),
+        }),
     }),
 });
 
@@ -71,5 +82,7 @@ export const {
     useUpdateEmployeeScheduleMutation,
     useGetEmployeeScheduleQuery,
     useLazyGetEmployeeScheduleQuery,
+    useGetEmployeeAllSchedulesQuery,
+    useLazyGetEmployeeAllSchedulesQuery,
     useDeleteEmployeeScheduleMutation,
 } = schedulesApi;
