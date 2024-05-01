@@ -70,7 +70,7 @@ export const employeeApi = createApi({
 
         getCompanyEmployees: builder.query<BasicEmployeeInfo[], number>({
             query: companyId => ({
-                url: `employees/get-all-from-company`,
+                url: `employees/get-all-company-employees`,
                 method: 'GET',
                 params: { companyId },
             }),

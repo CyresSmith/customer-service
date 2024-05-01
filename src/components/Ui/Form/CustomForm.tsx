@@ -1,4 +1,5 @@
 import { getErrorMessage } from 'helpers/inputsValidation';
+import { FormEvent } from 'react';
 import { useForm } from '../../../hooks';
 import { Form, FormInputsList, FormInputsListItem, FormTitle } from './CustomForm.styled';
 import CustomFormButtons from './CustomFormButtons';
@@ -38,8 +39,13 @@ const CustomForm = <T extends { [k: string]: InputValueType }>({
             ? true
             : false;
 
+    const submitHandle = (e: FormEvent<Element>) => {
+        handleSubmit(e);
+        reset();
+    };
+
     return (
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={submitHandle}>
             {title && <FormTitle>{title}</FormTitle>}
             <FormInputsList>
                 {inputs.map(({ name, type, isRequired = false, isReadonly = false }, i) => (

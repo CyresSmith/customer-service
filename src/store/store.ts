@@ -14,9 +14,10 @@ import { categoriesApi } from 'services/categories.api';
 import { clientsApi } from 'services/clients.api';
 import { companyApi } from 'services/company.api';
 import { employeeApi } from 'services/employee.api';
-import { serviceApi } from 'services/service.api';
 import { schedulesApi } from 'services/schedules.api';
+import { serviceApi } from 'services/service.api';
 import { authApi } from '../services/auth.api';
+import chatSlice from './chat/chat.slice';
 import companySlice from './company/company.slice';
 import loadingSlice from './loading/loading.slice';
 import userSlice from './user/user.slice';
@@ -32,6 +33,7 @@ const persistedUserReducer = persistReducer(persistUserConfig, userSlice.reducer
 const rootReducer = combineReducers({
     loading: loadingSlice.reducer,
     company: companySlice.reducer,
+    chat: chatSlice.reducer,
     user: persistedUserReducer,
     [authApi.reducerPath]: authApi.reducer,
     [companyApi.reducerPath]: companyApi.reducer,

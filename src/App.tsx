@@ -9,6 +9,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Bounce, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useLazyCurrentQuery } from 'services/auth.api';
+import { createSocketConnection, socket } from 'store/chat/socket';
 
 setDefaultOptions({ locale: uk });
 
@@ -43,6 +44,22 @@ function App() {
             fetchData();
         }
     }, [accessToken, getCurrentUser, setCurrentUser, user]);
+
+    useEffect(() => {
+        if (!user || !accessToken) {
+            if (socket) {
+                socket.disconnect();
+            }
+
+            return;
+        }
+
+        createSocketConnection(accessToken);
+
+        return () => {
+            socket.disconnect();
+        };
+    }, [accessToken, user]);
 
     return (
         <>

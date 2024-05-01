@@ -40,13 +40,15 @@ export type IEmployee = {
     user: IEmployeeUser;
     schedules: IMonthSchedule[];
     services: ServiceBasicInfo[];
+    isOnline: boolean;
 };
 
 export type BasicEmployeeInfo = Pick<
     IEmployee,
-    'id' | 'avatar' | 'firstName' | 'lastName' | 'status' | 'jobTitle' | 'provider'
+    'id' | 'avatar' | 'firstName' | 'lastName' | 'status' | 'jobTitle' | 'provider' | 'isOnline'
 > & {
     servicesCount?: number;
+    userId: number;
 };
 
 export type EmployeesState = {

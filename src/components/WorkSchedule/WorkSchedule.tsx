@@ -22,7 +22,8 @@ import { Message } from 'components/ScheduleTimeSelection/ScheduleTimeSelection.
 import generateTimeArray from 'helpers/generateTimeArray';
 import { useAdminRights, useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
-import { LegacyRef, UIEventHandler, useEffect, useRef, useState } from 'react';
+import { useScrollIntoView } from 'hooks/useScrollIntoView';
+import { UIEventHandler, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
     useGetAllCompanySchedulesQuery,
@@ -58,6 +59,8 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
     const { id, workingHours, employees } = useCompany();
     const { user, accessToken } = useAuth();
     const isAdmin = useAdminRights();
+    const { scrollRef } = useScrollIntoView();
+
     const [scheduleState, setScheduleState] = useState<IMonthSchedule[]>([]);
     const [selectedDays, setSelectedDays] = useState<{ employeeId: number; dates: Date[] }[]>([]);
     const [scrollLeft, setScrollLeft] = useState<number>(0);
@@ -77,7 +80,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
         setScrollLeft(scrollLeft);
     };
 
-    const { data: allSchedules, isLoading } = useGetAllCompanySchedulesQuery(
+    const { data: allSchedules } = useGetAllCompanySchedulesQuery(
         {
             companyId: id,
             year: getYear(selectedMonth),
@@ -91,8 +94,6 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
 
     const [updateSchedule, { isLoading: isUpdateScheduleLoading }] =
         useUpdateEmployeeScheduleMutation();
-
-    const scrollRef: LegacyRef<HTMLDivElement> | undefined = useRef(null);
 
     const monthDaysCount = getDaysInMonth(selectedMonth);
 
@@ -765,19 +766,6 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
             setBreakTo('');
         }
     }, [selectedDays]);
-
-    useEffect(() => {
-        if (!scrollRef.current || isLoading) return;
-
-        const timeout = setTimeout(() => {
-            scrollRef.current?.scrollIntoView({
-                inline: 'center',
-                behavior: 'smooth',
-            });
-        }, 100);
-
-        return () => clearTimeout(timeout);
-    }, [scrollRef, selectedMonth, isLoading]);
 
     return (
         <div

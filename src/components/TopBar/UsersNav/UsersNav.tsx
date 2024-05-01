@@ -1,3 +1,5 @@
+import Chat from 'components/Chat';
+import Badge from 'components/Ui/Badge';
 import Button from 'components/Ui/Buttons/Button/Button';
 import Dropdown from 'components/Ui/Dropdown';
 import Menu from 'components/Ui/Menu';
@@ -7,10 +9,12 @@ import { useActions } from 'hooks';
 import { useAuth } from 'hooks/useAuth';
 import { useEffect, useState } from 'react';
 import { HiLogout, HiMenu } from 'react-icons/hi';
+import { HiChatBubbleLeftEllipsis } from 'react-icons/hi2';
 import { IoMdAddCircle } from 'react-icons/io';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useLogOutMutation } from 'services/auth.api';
+import { socket } from 'store/chat/socket';
 import CreateCompanyForm from './CreateCompanyForm';
 import {
     NavWrapper,
@@ -36,10 +40,11 @@ const menuItems: MenuLink[] = [
 
 const UsersNav = () => {
     const { user, companies } = useAuth();
-    const { logOut, resetCompanyState } = useActions();
+    const { logOut, resetCompanyState, removeOnlineUser } = useActions();
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const [dropOpen, setDropOpen] = useState<boolean>(false);
+    const [chatOpen, setChatOpen] = useState<boolean>(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [apiLogout, { isLoading, isSuccess }] = useLogOutMutation();
 
@@ -62,6 +67,12 @@ const UsersNav = () => {
     };
 
     const handleLogout = (): void => {
+        if (user) {
+            removeOnlineUser(user.id);
+        }
+
+        socket.emit('user:offline');
+
         apiLogout({});
     };
 
@@ -97,13 +108,26 @@ const UsersNav = () => {
 
                 <UsersEmail>{user?.firstName ? user?.firstName : user?.email}</UsersEmail>
 
+                <Badge count={2}>
+                    <Button
+                        onClick={() => setChatOpen(p => !p)}
+                        Icon={HiChatBubbleLeftEllipsis}
+                        $variant="text"
+                        $colors="accent"
+                        $round
+                        size="l"
+                    />
+                </Badge>
+
                 <Button
-                    onClick={() => setDropOpen(true)}
+                    onClick={() => setDropOpen(p => !p)}
                     Icon={HiMenu}
                     $variant="text"
                     $colors="accent"
                     $round
                 />
+
+                <Chat isChatOpen={chatOpen} closeChat={() => setChatOpen(false)} />
 
                 {dropOpen && (
                     <Dropdown $isOpen={dropOpen} closeDropdown={() => setDropOpen(false)}>

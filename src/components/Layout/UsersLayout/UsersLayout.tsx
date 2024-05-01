@@ -1,3 +1,4 @@
+import ChatPanel from 'components/Chat/ChatPanel';
 import { useActions, useAuth } from 'hooks';
 import { Suspense, useEffect } from 'react';
 import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';

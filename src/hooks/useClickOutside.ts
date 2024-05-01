@@ -10,10 +10,10 @@ export const useClickOutside = (callback: (e: MouseEvent) => void) => {
             }
         };
 
-        document.addEventListener('mousedown', handleClick);
+        document.addEventListener('click', handleClick);
 
         return () => {
-            document.removeEventListener('mousedown', handleClick);
+            document.removeEventListener('click', handleClick);
             document.body.style.overflow = 'unset';
         };
     }, [callback]);
