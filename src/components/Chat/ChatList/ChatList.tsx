@@ -16,7 +16,7 @@ type Props = {
 const ChatList = ({ selectedCompany, selectCompany, selectedUser, setSelectedUser }: Props) => {
     const { companies, user } = useAuth();
     const { channels, onlineUsers } = useChat();
-    const { setSelectedChannel } = useActions();
+    const { setSelectedChannel, resetUnread } = useActions();
     const [getEmployees] = useLazyGetCompanyEmployeesQuery();
 
     const [contacts, setContacts] = useState<BasicEmployeeInfo[]>([]);
@@ -26,22 +26,26 @@ const ChatList = ({ selectedCompany, selectCompany, selectedUser, setSelectedUse
         setSelectedChannel(null);
     };
 
+    const usersPrivateChannel = (user1: number, user2: number) =>
+        channels.find(
+            ({ users, type }) =>
+                users.includes(user1) && users.includes(user2) && type === 'private'
+        );
+
     const handleChannelSelect = (channelId?: number, userId?: number) => {
         if (channelId) {
             setSelectedChannel(channelId);
             setSelectedUser(null);
-        }
-
-        if (userId) {
+            resetUnread(channelId);
+        } else if (userId) {
             if (user?.id) {
-                const channel = channels.find(
-                    ({ users, type }) =>
-                        users.includes(userId) && users.includes(user.id) && type === 'private'
-                );
+                const channel = usersPrivateChannel(userId, user.id);
 
                 if (channel) {
                     setSelectedUser(userId);
-                    return setSelectedChannel(channel.id);
+                    resetUnread(channel.id);
+                    setSelectedChannel(channel.id);
+                    return;
                 }
             }
 
@@ -77,18 +81,26 @@ const ChatList = ({ selectedCompany, selectCompany, selectedUser, setSelectedUse
 
             {selectedCompany && contacts.length > 0 && (
                 <List>
-                    {contacts.map(({ id, firstName, lastName, avatar, userId }) => (
-                        <li key={id}>
-                            <button onClick={() => handleChannelSelect(undefined, userId)}>
-                                <Badge show={onlineUsers.includes(userId)} style="success">
-                                    <ItemAvatar
-                                        avatar={avatar}
-                                        name={`${firstName} ${lastName && lastName}`}
-                                    />
-                                </Badge>
-                            </button>
-                        </li>
-                    ))}
+                    {contacts.map(({ id, firstName, lastName, avatar, userId }) => {
+                        const channel = user ? usersPrivateChannel(userId, user.id) : undefined;
+
+                        return (
+                            <li key={id}>
+                                <button onClick={() => handleChannelSelect(undefined, userId)}>
+                                    <Badge
+                                        show={onlineUsers.includes(userId)}
+                                        count={channel?.unreadCount || undefined}
+                                        style="success"
+                                    >
+                                        <ItemAvatar
+                                            avatar={avatar}
+                                            name={`${firstName} ${lastName && lastName}`}
+                                        />
+                                    </Badge>
+                                </button>
+                            </li>
+                        );
+                    })}
                 </List>
             )}
         </ListBox>

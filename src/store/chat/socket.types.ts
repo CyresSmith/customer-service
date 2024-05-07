@@ -41,7 +41,7 @@ export type Message = {
     createdAt: string;
 };
 
-export type CreateMessageDto = Pick<Message, 'channelId' | 'userId' | 'content'>;
+export type CreateMessageDto = Pick<Message, 'channel' | 'from' | 'content'>;
 
 export type Channel = {
     id: number;
@@ -49,11 +49,11 @@ export type Channel = {
     type: ChannelType;
     avatar: string;
     users: number[];
-    company: number;
     messages: Message[];
     unreadCount: 0;
 };
 
-export type CreateChannelDto = Pick<Channel, 'type' | 'users' | 'company'> & {
+export type CreateChannelDto = Pick<Channel, 'type' | 'users'> & {
     name?: string;
+    company: number;
 };

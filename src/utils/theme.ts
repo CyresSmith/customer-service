@@ -113,6 +113,7 @@ const theme = {
         primary: 'all 250ms ease-in-out',
         modal: 'all 350ms ease-in-out',
         drop: 'all 500ms ease-in-out',
+        toast: 'all 500ms ease-in-out',
     },
 
     animation: {

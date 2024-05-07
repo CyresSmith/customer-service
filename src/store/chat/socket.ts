@@ -4,8 +4,14 @@ import { store } from 'store/store';
 import socketSlice from './chat.slice';
 import { Channel, ClientToServerEvents, Message, ServerToClientEvents } from './socket.types';
 
-const { addChannel, joinOnlineUser, removeOnlineUser, addMessage, setSelectedChannel } =
-    socketSlice.actions;
+const {
+    addChannel,
+    joinOnlineUser,
+    removeOnlineUser,
+    addMessage,
+    setSelectedChannel,
+    unreadInChannel,
+} = socketSlice.actions;
 
 const API_HOST = import.meta.env.VITE_API_HOST;
 
@@ -20,23 +26,6 @@ export const createSocketConnection = (token: string, userId: number) => {
         },
     });
 
-    const errorHandler = (handler: any) => {
-        const handleError = (err: unknown) => {
-            console.error('please handle me', err);
-        };
-
-        return (...args: unknown[]) => {
-            try {
-                const ret = handler.apply(this, args);
-                if (ret && typeof ret.catch === 'function') {
-                    ret.catch(handleError);
-                }
-            } catch (e) {
-                handleError(e);
-            }
-        };
-    };
-
     socket.on('connect', async () => {
         console.log('socket connected');
 
@@ -44,7 +33,9 @@ export const createSocketConnection = (token: string, userId: number) => {
         const { channels, onlineUsers } = await socket.emitWithAck('channel:list');
 
         if (channels.length > 0) {
-            channels.forEach((channel: Channel) => store.dispatch(addChannel(channel)));
+            channels.forEach((channel: Channel) =>
+                store.dispatch(addChannel({ ...channel, unreadCount: 0 }))
+            );
         }
 
         if (onlineUsers.length > 0) {
@@ -58,21 +49,18 @@ export const createSocketConnection = (token: string, userId: number) => {
 
     socket.on('channel:created', channel => {
         store.dispatch(addChannel(channel));
+        // store.dispatch(setSelectedChannel(channel.id));
     });
 
     socket.on('user:hello', data => {
         if (data) {
             store.dispatch(joinOnlineUser(data.id));
-            toast.success(`${data.name} на зв'язку`);
         }
     });
 
     socket.on('user:bye', data => {
-        console.log('🚀 ~ createSocketConnection ~ data:', data);
-
         if (data) {
             store.dispatch(removeOnlineUser(data.id));
-            toast.info(`${data.name} тепер офлайн`);
         }
     });
 
@@ -80,7 +68,13 @@ export const createSocketConnection = (token: string, userId: number) => {
         store.dispatch(addMessage(message));
         store.dispatch(setSelectedChannel(message.channel.id));
 
-        toast.info(`${message.content}`);
+        const state = store.getState();
+        const { isOpen, selectedChannelId } = state.chat;
+
+        if (!isOpen || (isOpen && selectedChannelId !== message.channel.id)) {
+            store.dispatch(unreadInChannel(message.channel.id));
+            toast.info(`${message.content}`);
+        }
     });
 
     socket.on('exception', async e => {

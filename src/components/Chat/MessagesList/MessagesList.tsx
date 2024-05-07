@@ -28,7 +28,7 @@ const MessagesList = ({ companyId, userId }: Props) => {
             channelId,
         });
 
-        addMessage(newMessage);
+        if (newMessage) addMessage(newMessage);
     };
 
     const onSubmit = async ({ message }: typeof initialState) => {
@@ -77,7 +77,9 @@ const MessagesList = ({ companyId, userId }: Props) => {
                     return (
                         <>
                             {(i === 0 || isNextDate) && (
-                                <DateBadge>{DateForBadge(message.createdAt)}</DateBadge>
+                                <DateBadge key={message.id + message.createdAt}>
+                                    {DateForBadge(message.createdAt)}
+                                </DateBadge>
                             )}
 
                             <MessageItem
