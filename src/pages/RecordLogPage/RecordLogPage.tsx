@@ -143,6 +143,7 @@ const RecordLogPage = () => {
                 />
                 {eventStep !== null && (
                     <Modal
+                        id="createEvent"
                         titleMargin="10px"
                         closeModal={closeEventModal}
                         $isOpen={eventStep !== null}
