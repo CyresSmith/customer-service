@@ -1,32 +1,27 @@
 import { IMonthSchedule } from 'services/types/schedule.types';
 import { CalendarBox, Container, SelectBox } from './ChooseDate.styled';
-import { IEmployee } from 'services/types/employee.types';
 import { getDate, getMonth, getYear, isPast } from 'date-fns';
 import ChooseTime from '../ChooseTime';
 import Calendar from 'components/Ui/Calendar/Calendar';
 
 type Props = {
     eventDate: Date;
-    eventTime: string;
+    eventTime: string | null;
     setEventDate: React.Dispatch<React.SetStateAction<Date>>;
-    setEventTime: React.Dispatch<React.SetStateAction<string>>;
+    setEventTime: React.Dispatch<React.SetStateAction<string | null>>;
     employeeSchedules: IMonthSchedule[];
     eventDuration: number;
     companyId: number;
-    chosenEmployee: IEmployee | null;
 };
 
 const ChooseDate = ({
     employeeSchedules,
-    chosenEmployee,
     eventDate,
     eventDuration,
     eventTime,
     setEventDate,
     setEventTime,
 }: Props) => {
-    console.log(chosenEmployee);
-
     const enableDays = employeeSchedules
         .map(es => {
             const { year, month, schedule } = es;

@@ -150,17 +150,15 @@ const RecordLogPage = () => {
                             eventStep === 'employees'
                                 ? 'Оберіть працівника'
                                 : eventStep === 'services'
-                                  ? 'Оберіть послугу'
-                                  : eventStep === 'date'
-                                    ? 'Оберіть дату та час'
-                                    : 'Створення запису'
+                                ? 'Оберіть послугу'
+                                : eventStep === 'date'
+                                ? 'Оберіть дату та час'
+                                : eventStep === 'confirm'
+                                ? 'Перевірте деталі запису'
+                                : 'Створення запису'
                         }
                         children={
-                            <CreateEvent
-                                date={date}
-                                step={eventStep}
-                                handleEventStep={handleEventStep}
-                            />
+                            <CreateEvent date={date} step={eventStep} setStep={handleEventStep} />
                         }
                     />
                 )}

@@ -7,8 +7,8 @@ import { NoEnableHours, SelectWrapper } from './ChooseTime.styled';
 
 type Props = {
     eventDate: Date;
-    eventTime: string;
-    setEventTime: React.Dispatch<React.SetStateAction<string>>;
+    eventTime: string | null;
+    setEventTime: React.Dispatch<React.SetStateAction<string | null>>;
     daySchedule: IDaySchedule | undefined;
     eventDuration: number;
 };
@@ -40,7 +40,7 @@ const ChooseTime = ({ eventDate, eventDuration, eventTime, daySchedule, setEvent
                     width="fit-content"
                     handleSelect={handleTimeSelect}
                     selectItems={forSelect}
-                    selectedItem={{ value: eventTime }}
+                    selectedItem={{ value: eventTime ? eventTime : '' }}
                 />
             ) : (
                 <NoEnableHours>Час для запису у обраний день недоступний :(</NoEnableHours>

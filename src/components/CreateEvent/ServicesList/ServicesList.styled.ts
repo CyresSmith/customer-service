@@ -6,7 +6,7 @@ export const List = styled.ul`
     padding: 0 ${theme.space[2]};
 `;
 
-export const ListItem = styled.li<{ $chosen: boolean }>`
+export const ListItem = styled.li<{ $chosen?: boolean }>`
     width: 100%;
     padding: ${theme.space[2]} ${theme.space[3]};
     display: grid;
