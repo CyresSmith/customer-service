@@ -42,10 +42,7 @@ export const employeeApi = createApi({
                 data,
                 params: { companyId },
             }),
-            invalidatesTags: result =>
-                result
-                    ? [{ type: 'employee', id: result?.id }, 'allEmployees']
-                    : ['employee', 'allEmployees'],
+            invalidatesTags: ['allEmployees'],
         }),
 
         addNewUserEmployee: builder.mutation<IEmployee, addNewUserEmployeeData>({
@@ -56,7 +53,9 @@ export const employeeApi = createApi({
                 params: { companyId },
             }),
             invalidatesTags: result =>
-                result ? [{ type: 'employee', id: result?.id }] : ['employee'],
+                result
+                    ? [{ type: 'employee', id: result?.id }, 'allEmployees']
+                    : ['employee', 'allEmployees'],
         }),
 
         getOneEmployee: builder.query<IEmployee, { companyId: number; id: number }>({
@@ -68,16 +67,17 @@ export const employeeApi = createApi({
             providesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.id }],
         }),
 
-        getCompanyEmployees: builder.query<BasicEmployeeInfo[], number>({
-            query: companyId => ({
-                url: `employees/get-all-company-employees`,
-                method: 'GET',
-                params: { companyId },
-            }),
-            providesTags: result =>
-                result
-                    ? result.map(item => ({ type: 'allEmployees', id: item.id }))
-                    : ['allEmployees'],
+        getCompanyEmployees: builder.query<BasicEmployeeInfo[], number | null>({
+            query: companyId => {
+                if (!companyId) return;
+
+                return {
+                    url: `employees/get-all-company-employees`,
+                    method: 'GET',
+                    params: { companyId },
+                };
+            },
+            providesTags: ['allEmployees'],
         }),
 
         uploadEmployeeAvatar: builder.mutation<{ url: string }, UpdateEmployeeAvatar>({
@@ -89,7 +89,7 @@ export const employeeApi = createApi({
             }),
             invalidatesTags: (_result, _err, arg) => [
                 { type: 'employee', id: arg.employeeId },
-                { type: 'allEmployees', id: arg.employeeId },
+                'allEmployees',
             ],
         }),
 
@@ -177,10 +177,7 @@ export const employeeApi = createApi({
                 params: { companyId },
                 method: 'DELETE',
             }),
-            invalidatesTags: (_result, _err, arg) => [
-                { type: 'employee', id: arg.employeeId },
-                { type: 'allEmployees', id: arg.employeeId },
-            ],
+            invalidatesTags: ['allEmployees'],
         }),
     }),
 });

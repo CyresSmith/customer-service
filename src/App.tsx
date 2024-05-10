@@ -55,10 +55,6 @@ function App() {
         }
 
         createSocketConnection(accessToken, user.id);
-
-        return () => {
-            socket.disconnect();
-        };
     }, [accessToken, user]);
 
     return (

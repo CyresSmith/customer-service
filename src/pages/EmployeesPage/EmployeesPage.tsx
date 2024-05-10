@@ -74,6 +74,7 @@ const EmployeesPage = () => {
                 onAddClick={() => setOpenModal(OpenModal.ADD)}
                 isDeleteLoading={isEmployeeDeleteLoading}
                 onItemDeleteClick={isAdmin ? handleEmployeeDeleteModalOpen : undefined}
+                nameColumnTitle="Ім'я"
             />
 
             {openModal === OpenModal.ADD && (

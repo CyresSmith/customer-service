@@ -23,6 +23,7 @@ export type UserLogin = Pick<User, 'email'> & Pick<Auth, 'password'>;
 export type Company = {
     id: number;
     name: string;
+    avatar: string;
 };
 
 export type UserState = {

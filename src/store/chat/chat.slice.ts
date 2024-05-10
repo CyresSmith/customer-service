@@ -5,6 +5,7 @@ type IChatInitialState = {
     isInitialized: boolean;
     channels: Channel[];
     onlineUsers: number[];
+    typingUsers: number[];
     selectedChannelId: null | number;
     isOpen: boolean;
 };
@@ -13,6 +14,7 @@ const initialState: IChatInitialState = {
     isInitialized: false,
     channels: [],
     onlineUsers: [],
+    typingUsers: [],
     selectedChannelId: null,
     isOpen: false,
 };
@@ -23,6 +25,13 @@ const chatSlice = createSlice({
     reducers: {
         toggleChatOpen(state, { payload }: PayloadAction<boolean>) {
             state.isOpen = payload;
+        },
+        toggleTypingUser({ typingUsers }, { payload }: PayloadAction<number>) {
+            if (typingUsers.includes(payload)) {
+                typingUsers.splice(typingUsers.indexOf(payload), 1);
+            } else {
+                typingUsers.push(payload);
+            }
         },
         joinOnlineUser(state, { payload }: PayloadAction<number>) {
             if (state.onlineUsers.includes(payload)) return;

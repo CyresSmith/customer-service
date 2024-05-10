@@ -35,6 +35,8 @@ const CustomFormInput = ({
     placeholder = '',
     selectItems,
     disabled = false,
+    onKeyDown,
+    onKeyUp,
 }: InputProps) => {
     const [hidden, setHidden] = useState(true);
     const valueRef = useRef(value).current;
@@ -78,6 +80,8 @@ const CustomFormInput = ({
                     />
                 ) : (
                     <FormInput
+                        onKeyDown={onKeyDown}
+                        onKeyUp={onKeyUp}
                         disabled={disabled}
                         type={type !== 'password' ? type : hidden ? type : 'text'}
                         name={name}

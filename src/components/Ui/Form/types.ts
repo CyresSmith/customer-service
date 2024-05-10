@@ -19,6 +19,9 @@ export type InputProps = {
     selectItems?: SelectItem[];
     selected?: SelectItem;
     disabled?: boolean;
+    onInput?: () => void;
+    onKeyDown?: () => void;
+    onKeyUp?: () => void;
 };
 
 export type FormProps<T> = {

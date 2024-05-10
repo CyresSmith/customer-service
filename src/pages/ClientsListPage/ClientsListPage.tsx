@@ -96,6 +96,7 @@ const ClientsListPage = () => {
                 keyForSelect="gender"
                 keyForSearch="phone"
                 notSortedKeys={['phone', 'email']}
+                nameColumnTitle="Ім'я"
             />
 
             {modalOpen === OpenModal.ADD && (

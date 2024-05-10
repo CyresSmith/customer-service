@@ -1,13 +1,20 @@
 import styled from 'styled-components';
 import theme from 'utils/theme';
 
+export const ListBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.space[4]};
+    height: 100%;
+`;
+
 export const ListBar = styled.div`
     display: flex;
     align-items: end;
     justify-content: space-between;
     gap: ${theme.space[5]};
     width: 100%;
-    margin-bottom: ${theme.space[4]};
+    /* margin-bottom: ${theme.space[4]}; */
 `;
 
 export const FilterBox = styled.div`
@@ -74,6 +81,7 @@ type ListGridProps = {
     $columnsCount: number;
     $isDeleteButton: boolean;
     $selected?: boolean;
+    $isActive?: boolean;
 };
 
 export const ListHeader = styled.ul<ListGridProps>`
@@ -108,6 +116,7 @@ export const ListHeaderItem = styled.li`
 
 export const List = styled.ul`
     height: calc(100% - 101px);
+    flex-grow: 1;
     overflow-y: auto;
 `;
 
@@ -130,7 +139,8 @@ export const ItemBox = styled.li<ListGridProps>`
     animation: ${theme.animation.appear};
     animation-duration: 500ms;
     transition: ${theme.transition.primary};
-    background-color: ${theme.colors.bg.light};
+    background-color: ${({ $isActive }) =>
+        $isActive ? theme.colors.primary.main : theme.colors.bg.light};
     overflow: hidden;
     box-shadow: ${theme.shadow.s};
 
@@ -151,7 +161,8 @@ export const ItemBox = styled.li<ListGridProps>`
     }
 
     &:hover {
-        background-color: ${theme.colors.secondary.dark};
+        background-color: ${({ $isActive }) =>
+            $isActive ? theme.colors.primary.main : theme.colors.secondary.dark};
     }
 `;
 

@@ -5,7 +5,7 @@ export type MessageStyled = {
     $isMy: boolean;
 };
 
-export const MessageBox = styled.li<MessageStyled>`
+export const MessageBox = styled.div<MessageStyled>`
     max-width: 85%;
     padding: ${theme.space[3]} ${theme.space[4]};
     border-radius: ${({ $isMy }) =>
@@ -15,9 +15,11 @@ export const MessageBox = styled.li<MessageStyled>`
     background-color: ${({ $isMy }) => ($isMy ? theme.colors.bg.main : theme.colors.bg.light)};
     align-self: ${({ $isMy }) => ($isMy ? 'end' : 'start')};
     font-size: ${theme.fontSizes.l};
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 35px;
     gap: ${theme.space[4]};
     align-items: end;
+    word-break: break-all;
 `;
 
 export const MessageTime = styled.span`

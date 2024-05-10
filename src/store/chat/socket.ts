@@ -9,6 +9,7 @@ const {
     joinOnlineUser,
     removeOnlineUser,
     addMessage,
+    toggleTypingUser,
     setSelectedChannel,
     unreadInChannel,
 } = socketSlice.actions;
@@ -48,7 +49,7 @@ export const createSocketConnection = (token: string, userId: number) => {
     });
 
     socket.on('channel:created', channel => {
-        store.dispatch(addChannel(channel));
+        store.dispatch(addChannel({ ...channel, unreadCount: 0 }));
         // store.dispatch(setSelectedChannel(channel.id));
     });
 
@@ -64,9 +65,16 @@ export const createSocketConnection = (token: string, userId: number) => {
         }
     });
 
+    socket.on('user:startTyping', id => {
+        if (id) store.dispatch(toggleTypingUser(id));
+    });
+
+    socket.on('user:stopTyping', id => {
+        if (id) store.dispatch(toggleTypingUser(id));
+    });
+
     socket.on('message:sent', (message: Message) => {
         store.dispatch(addMessage(message));
-        store.dispatch(setSelectedChannel(message.channel.id));
 
         const state = store.getState();
         const { isOpen, selectedChannelId } = state.chat;

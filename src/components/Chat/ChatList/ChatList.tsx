@@ -1,36 +1,43 @@
-import Badge from 'components/Ui/Badge';
+import ItemsList from 'components/Ui/ItemsList';
 import ItemAvatar from 'components/Ui/ItemsList/ItemAvatar';
 import { useActions, useAuth, useChat } from 'hooks';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useLazyGetCompanyEmployeesQuery } from 'services/employee.api';
-import { BasicEmployeeInfo } from 'services/types/employee.types';
-import { List, ListBox } from './ChatList.styled';
+import { Dispatch, SetStateAction, useEffect } from 'react';
+import { useGetCompanyEmployeesQuery } from 'services/employee.api';
+import { CompanyItem, List, ListBox } from './ChatList.styled';
 
 type Props = {
     selectedCompany: number | null;
-    selectCompany: Dispatch<SetStateAction<number | null>>;
+    setSelectedCompany: Dispatch<SetStateAction<number | null>>;
     selectedUser: number | null;
     setSelectedUser: Dispatch<SetStateAction<number | null>>;
 };
 
-const ChatList = ({ selectedCompany, selectCompany, selectedUser, setSelectedUser }: Props) => {
+const ChatList = ({
+    selectedCompany,
+    setSelectedCompany,
+    selectedUser,
+    setSelectedUser,
+}: Props) => {
     const { companies, user } = useAuth();
-    const { channels, onlineUsers } = useChat();
+    const { channels, onlineUsers, selectedChannelId } = useChat();
     const { setSelectedChannel, resetUnread } = useActions();
-    const [getEmployees] = useLazyGetCompanyEmployeesQuery();
 
-    const [contacts, setContacts] = useState<BasicEmployeeInfo[]>([]);
+    const { data } = useGetCompanyEmployeesQuery(selectedCompany, {
+        skip: !selectedCompany,
+    });
 
     const handleCompanySelect = (companyId: number) => {
-        selectCompany(companyId);
+        setSelectedCompany(p => (p === companyId ? null : companyId));
         setSelectedChannel(null);
+        setSelectedUser(null);
     };
 
-    const usersPrivateChannel = (user1: number, user2: number) =>
-        channels.find(
+    const usersPrivateChannel = (user1: number, user2: number) => {
+        return channels.find(
             ({ users, type }) =>
                 users.includes(user1) && users.includes(user2) && type === 'private'
         );
+    };
 
     const handleChannelSelect = (channelId?: number, userId?: number) => {
         if (channelId) {
@@ -54,55 +61,62 @@ const ChatList = ({ selectedCompany, selectCompany, selectedUser, setSelectedUse
         }
     };
 
+    const contacts =
+        data
+            ?.filter(({ userId }) => userId !== user?.id)
+            ?.sort((a, b) => {
+                if (a.isOnline === b.isOnline) return 0;
+                if (a.isOnline && !b.isOnline) return -1;
+                if (!a.isOnline && b.isOnline) return 1;
+                return 0;
+            }) || [];
+
     useEffect(() => {
-        if (!selectedCompany) return;
+        if (!companies || companies.length > 0) return;
 
-        const setCompanyContacts = async () => {
-            const employees = (await getEmployees(selectedCompany))?.data;
-
-            if (employees && employees.length > 0)
-                setContacts(employees.filter(({ userId }) => userId !== user?.id));
-        };
-
-        setCompanyContacts();
-    }, [getEmployees, selectedCompany]);
+        setSelectedCompany(companies[0]?.id);
+    }, [companies, setSelectedCompany]);
 
     return (
         <ListBox>
             <List>
-                {companies.map(({ id, name }) => (
+                {companies.map(({ id, name, avatar }) => (
                     <li key={id}>
-                        <button onClick={() => handleCompanySelect(id)}>
-                            <ItemAvatar name={name} />
-                        </button>
+                        <CompanyItem
+                            onClick={() => handleCompanySelect(id)}
+                            $isSelected={selectedCompany === id}
+                        >
+                            <ItemAvatar name={name} avatar={avatar} />
+
+                            <p>{name}</p>
+                        </CompanyItem>
+
+                        {selectedCompany === id && user && (
+                            <ItemsList
+                                items={contacts.map(
+                                    ({ avatar, firstName, lastName, userId, isOnline }) => {
+                                        const channel = usersPrivateChannel(userId, user.id);
+                                        return {
+                                            id: userId,
+                                            avatar,
+                                            name: `${firstName} ${lastName}`,
+                                            isOnline:
+                                                channel && channel.unreadCount > 0
+                                                    ? channel.unreadCount
+                                                    : isOnline,
+                                        };
+                                    }
+                                )}
+                                onItemClick={id => handleChannelSelect(undefined, id)}
+                                nameColumnTitle="Ім'я"
+                                activeItem={selectedUser || undefined}
+                                listSortPanel={false}
+                                listHeader={contacts && contacts.length > 0}
+                            />
+                        )}
                     </li>
                 ))}
             </List>
-
-            {selectedCompany && contacts.length > 0 && (
-                <List>
-                    {contacts.map(({ id, firstName, lastName, avatar, userId }) => {
-                        const channel = user ? usersPrivateChannel(userId, user.id) : undefined;
-
-                        return (
-                            <li key={id}>
-                                <button onClick={() => handleChannelSelect(undefined, userId)}>
-                                    <Badge
-                                        show={onlineUsers.includes(userId)}
-                                        count={channel?.unreadCount || undefined}
-                                        style="success"
-                                    >
-                                        <ItemAvatar
-                                            avatar={avatar}
-                                            name={`${firstName} ${lastName && lastName}`}
-                                        />
-                                    </Badge>
-                                </button>
-                            </li>
-                        );
-                    })}
-                </List>
-            )}
         </ListBox>
     );
 };

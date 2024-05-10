@@ -12,22 +12,29 @@ type Props = {
 const Chat = ({ isChatOpen, closeChat }: Props) => {
     useEscapeKey(closeChat);
     const chatRef = useClickOutside(closeChat);
-    const { selectedChannelId } = useChat();
+    const { selectedChannelId, channels } = useChat();
 
     const [selectedCompany, setSelectedCompany] = useState<number | null>(null);
     const [selectedUser, setSelectedUser] = useState<number | null>(null);
+
+    const messages = channels.find(({ id }) => id === selectedChannelId)?.messages || [];
 
     return (
         <ChatBox $isOpen={isChatOpen} ref={chatRef}>
             <ChatList
                 selectedCompany={selectedCompany}
-                selectCompany={setSelectedCompany}
+                setSelectedCompany={setSelectedCompany}
                 selectedUser={selectedUser}
                 setSelectedUser={setSelectedUser}
             />
 
             {selectedCompany && (selectedChannelId || selectedUser) && (
-                <MessagesList companyId={selectedCompany} userId={selectedUser} />
+                <MessagesList
+                    messages={messages}
+                    selectedCompany={selectedCompany}
+                    userId={selectedUser}
+                    isChatOpen={isChatOpen}
+                />
             )}
         </ChatBox>
     );

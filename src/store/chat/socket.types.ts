@@ -6,6 +6,8 @@ export type ServerToClientEvents = {
     'channel:created': (channel: Channel) => void;
     'user:hello': (data: { id: number; name: string }) => void;
     'user:bye': (data: { id: number; name: string }) => void;
+    'user:startTyping': (id: number) => void;
+    'user:stopTyping': (id: number) => void;
     'message:sent': (message: Message) => void;
     exception: (e: unknown) => void;
 };
@@ -15,6 +17,8 @@ export type ClientToServerEvents = {
     'user:offline': () => void;
     'channel:list': () => { channels: Channel[]; onlineUsers: number[] };
     // 'message:send': (data: { content: string; channelId: number }) => void;
+    'message:typing': (channelId: number) => void;
+    'message:stopTyping': (channelId: number) => void;
     'message:send': (
         data: { content: string; channelId: number },
         callback: (message: Message) => void
