@@ -72,11 +72,11 @@ const RecordLogList = ({ companySchedule, schedules, date, last, events }: Props
                     <RecordLogListItem key={i} index={i} hour={hour} />
                 ))}
             </List>
-            {/* {eventsToRender &&
+            {eventsToRender &&
                 eventsToRender?.length > 0 &&
                 eventsToRender.map((e, i) => (
                     <EmployeeEvent key={i} event={e} employeeSchedule={employeeSchedule} />
-                ))} */}
+                ))}
         </ListWrapper>
     );
 };

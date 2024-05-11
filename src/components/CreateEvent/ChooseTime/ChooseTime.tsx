@@ -1,10 +1,7 @@
 import CustomFormSelect from 'components/Ui/Form/CustomFormSelect';
 import { SelectItem } from 'components/Ui/Form/types';
-import generateTimeArray, {
-    getSchedule,
-    getScheduleWithoutEvents,
-} from 'helpers/generateTimeArray';
-import { isTimeEnableForEvent } from 'helpers/isTimeEnableForEvent';
+import generateTimeArray, { getSchedule } from 'helpers/generateTimeArray';
+import { getScheduleWithoutEvents, isTimeEnableForEvent } from 'helpers/isTimeEnableForEvent';
 import { IDaySchedule } from 'services/types/schedule.types';
 import { NoEnableHours, SelectWrapper } from './ChooseTime.styled';
 import { EventType } from 'services/types/event.types';
@@ -37,7 +34,13 @@ const ChooseTime = ({
     const scheduleWithoutEvents = getScheduleWithoutEvents(eventDate, timeArray, events);
 
     const enableHours = scheduleWithoutEvents.filter(t =>
-        isTimeEnableForEvent(eventDate, eventDuration, t, timeArray[timeArray.length - 1])
+        isTimeEnableForEvent(
+            scheduleWithoutEvents,
+            eventDate,
+            eventDuration,
+            t,
+            scheduleWithoutEvents[scheduleWithoutEvents.length - 1]
+        )
     );
 
     const forSelect = enableHours.map(eh => {
