@@ -24,6 +24,7 @@ import TimeList from './RecordLogList/TimeList';
 import { IMonthSchedule } from 'services/types/schedule.types';
 import { useNavigate } from 'react-router-dom';
 import { useLoading } from 'hooks';
+import { EventType } from 'services/types/event.types';
 
 type Props = {
     date: Date;
@@ -32,9 +33,18 @@ type Props = {
     setDate: React.Dispatch<React.SetStateAction<Date>>;
     allSchedules: IMonthSchedule[] | null;
     companyId: number;
+    allEvents: EventType[] | [];
 };
 
-const RecordLog = ({ companyId, allSchedules, date, workingHours, employees, setDate }: Props) => {
+const RecordLog = ({
+    companyId,
+    allSchedules,
+    date,
+    workingHours,
+    employees,
+    setDate,
+    allEvents,
+}: Props) => {
     const chosenDay = new Date(date).getDay();
     const [startIndex, setStartIndex] = useState<number>(0);
     const [isScroll, setIsScroll] = useState<boolean>(false);
@@ -144,6 +154,13 @@ const RecordLog = ({ companyId, allSchedules, date, workingHours, employees, set
                             <ListsWrapper id="schedulesList" $columns={providersToRender.length}>
                                 {providersToRender.map((provider, i) => (
                                     <RecordLogList
+                                        events={
+                                            allEvents.length > 0
+                                                ? allEvents.filter(
+                                                      e => e.employee.id === provider.id
+                                                  )
+                                                : null
+                                        }
                                         schedules={allSchedules.filter(
                                             s => s.employee.id === provider.id
                                         )}

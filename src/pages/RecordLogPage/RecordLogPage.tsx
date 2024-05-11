@@ -12,6 +12,20 @@ import { IMonthSchedule } from 'services/types/schedule.types';
 import { BasicEmployeeInfo } from 'services/types/employee.types';
 import { EmployeeStatusEnum } from 'services/types/employee.types';
 import { getDate, getMonth, getYear } from 'date-fns';
+import { useLazyGetCompanyEventsQuery } from 'services/events.api';
+import { EventType } from 'services/types/event.types';
+
+const getModalTitles = (step: string) => {
+    return step === 'employees'
+        ? 'Оберіть працівника'
+        : step === 'services'
+        ? 'Оберіть послугу'
+        : step === 'date'
+        ? 'Оберіть дату та час'
+        : step === 'confirm'
+        ? 'Перевірте деталі запису'
+        : 'Створення запису';
+};
 
 const initialSelection = [{ id: 'all', value: `Всі працівники` }];
 
@@ -22,8 +36,10 @@ const RecordLogPage = () => {
     const [selectedItem, setSelectedItem] = useState<SelectItem[]>(initialSelection);
     const [allSchedules, setAllSchedules] = useState<IMonthSchedule[] | null>(null);
     const [allEmployees, setAllEmployees] = useState<BasicEmployeeInfo[] | null>(null);
+    const [allEvents, setAllEvents] = useState<EventType[] | []>([]);
     const [getEmployees] = useLazyGetCompanyEmployeesQuery();
     const [getSchedules] = useLazyGetAllCompanySchedulesQuery();
+    const [getEvents] = useLazyGetCompanyEventsQuery();
     const chosenYear = getYear(date);
     const chosenMonth = getMonth(date);
 
@@ -46,12 +62,23 @@ const RecordLogPage = () => {
                                 setAllSchedules(response.data);
                             }
                         });
+                    })
+                    .then(async () => {
+                        await getEvents({
+                            companyId: id,
+                            year: chosenYear,
+                            month: chosenMonth,
+                        }).then(response => {
+                            if (Array.isArray(response.data)) {
+                                setAllEvents(response.data);
+                            }
+                        });
                     });
             }
         };
 
         getData();
-    }, [chosenMonth, chosenYear, getEmployees, getSchedules, id]);
+    }, [chosenMonth, chosenYear, getEmployees, getEvents, getSchedules, id]);
 
     const workingProviders =
         allEmployees &&
@@ -132,6 +159,7 @@ const RecordLogPage = () => {
                     }
                     content={
                         <RecordLog
+                            allEvents={allEvents}
                             allSchedules={allSchedules}
                             date={date}
                             setDate={setDate}
@@ -147,19 +175,14 @@ const RecordLogPage = () => {
                         titleMargin="10px"
                         closeModal={closeEventModal}
                         $isOpen={eventStep !== null}
-                        title={
-                            eventStep === 'employees'
-                                ? 'Оберіть працівника'
-                                : eventStep === 'services'
-                                ? 'Оберіть послугу'
-                                : eventStep === 'date'
-                                ? 'Оберіть дату та час'
-                                : eventStep === 'confirm'
-                                ? 'Перевірте деталі запису'
-                                : 'Створення запису'
-                        }
+                        title={getModalTitles(eventStep)}
                         children={
-                            <CreateEvent date={date} step={eventStep} setStep={handleEventStep} />
+                            <CreateEvent
+                                events={allEvents}
+                                date={date}
+                                step={eventStep}
+                                setStep={handleEventStep}
+                            />
                         }
                     />
                 )}

@@ -16,14 +16,19 @@ import { IEmployee } from 'services/types/employee.types';
 import ConfirmEvent from './ConfirmEvent';
 import ChooseClient from './ChooseClient';
 import { Client } from 'services/types/clients.types';
+import { getDate, getMonth, getYear } from 'date-fns';
+import { useCreateEventMutation } from 'services/events.api';
+import { toast } from 'react-toastify';
+import { EventType } from 'services/types/event.types';
 
 type Props = {
     step: string;
     setStep: (step: string) => void;
     date: Date;
+    events: EventType[] | null;
 };
 
-const CreateEvent = ({ step, setStep }: Props) => {
+const CreateEvent = ({ step, setStep, events }: Props) => {
     const { id } = useCompany();
     const [chosenClient, setChosenClient] = useState<Client | null>(null);
     const [chosenEmployee, setChosenEmployee] = useState<IEmployee | null>(null);
@@ -35,6 +40,7 @@ const CreateEvent = ({ step, setStep }: Props) => {
     const [eventTime, setEventTime] = useState<string | null>(null);
 
     const [getEmployeeSchedules] = useLazyGetEmployeeAllSchedulesQuery();
+    const [createEventMutation] = useCreateEventMutation();
 
     const { data: employees } = useGetCompanyEmployeesQuery(id);
 
@@ -59,17 +65,39 @@ const CreateEvent = ({ step, setStep }: Props) => {
         e => e.provider && e.servicesCount && e.servicesCount > 0
     );
 
-    const handleEventSave = () => {
-        console.log([
-            {
-                employeeId: chosenEmployee?.id,
-                clientId: chosenClient?.id,
-                date: eventDate,
+    const calculateEventDuration = (): number => {
+        let duration: number = 0;
+
+        if (chosenServices) {
+            chosenServices.forEach(service => {
+                if (service.duration) {
+                    duration += service.duration;
+                }
+            });
+        }
+
+        return duration;
+    };
+
+    const handleEventSave = async () => {
+        if (chosenClient && chosenEmployee && chosenServices && eventDate && eventTime) {
+            const newEvent = {
+                employee: chosenEmployee.id,
+                client: chosenClient.id,
+                year: getYear(eventDate),
+                month: getMonth(eventDate),
+                day: getDate(eventDate),
                 time: eventTime,
                 services: chosenServices?.map(s => s.id),
                 duration: calculateEventDuration(),
-            },
-        ]);
+            };
+
+            const result = await createEventMutation({ data: newEvent, companyId: id });
+
+            if (result) {
+                toast.success('Запис успішно збережено!');
+            }
+        }
     };
 
     const handleGoBackClick = () => {
@@ -130,20 +158,6 @@ const CreateEvent = ({ step, setStep }: Props) => {
         }
     };
 
-    const calculateEventDuration = (): number => {
-        let duration: number = 0;
-
-        if (chosenServices) {
-            chosenServices.forEach(service => {
-                if (service.duration) {
-                    duration += service.duration;
-                }
-            });
-        }
-
-        return duration;
-    };
-
     return providersWithServices ? (
         <Container>
             <ContentBox>
@@ -169,6 +183,7 @@ const CreateEvent = ({ step, setStep }: Props) => {
                 )}
                 {step === 'date' && chosenEmployee && chosenEmployeeSchedule && (
                     <ChooseDate
+                        events={events}
                         companyId={id}
                         employeeSchedules={chosenEmployeeSchedule}
                         eventDate={eventDate}

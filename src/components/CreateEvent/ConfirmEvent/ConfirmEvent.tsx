@@ -43,16 +43,6 @@ const ConfirmEvent = ({
     chosenClient,
     eventDuration,
 }: Props) => {
-    // const getTotalDuration = () => {
-    //     let total = 0;
-
-    //     chosenServices.forEach(({ duration }) => {
-    //         total += duration;
-    //     });
-
-    //     return millisecondsToTime(total);
-    // };
-
     return (
         <Container>
             <EventInfoList>

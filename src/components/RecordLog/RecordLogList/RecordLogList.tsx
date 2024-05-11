@@ -3,31 +3,18 @@ import { getSchedule } from 'helpers/generateTimeArray';
 import { IMonthSchedule } from 'services/types/schedule.types';
 import { List, ListWrapper } from './RecordLogList.styled';
 import { RecordLogListItem } from './RecordLogListItem';
-
-export type EventType = {
-    id: number;
-    time: {
-        from: string;
-        to: string;
-    };
-};
+import { EventType } from 'services/types/event.types';
+import { EmployeeEvent } from './EmployeeEvent';
 
 type Props = {
     companySchedule: string[];
-    // item: {
-    //     day: number,
-    //     hours: {
-    //         from: string,
-    //         to: string
-    //     },
-    //     events?: EventType[],
-    // }
+    events: EventType[] | null;
     schedules: IMonthSchedule[];
     date: Date;
     last: boolean;
 };
 
-const RecordLogList = ({ companySchedule, schedules, date, last }: Props) => {
+const RecordLogList = ({ companySchedule, schedules, date, last, events }: Props) => {
     const chosenDay = new Date(date).getDate();
     const chosenMonth = new Date(date).getMonth();
     const chosenYear = new Date(date).getFullYear();
@@ -74,16 +61,22 @@ const RecordLogList = ({ companySchedule, schedules, date, last }: Props) => {
         return fullSchedule;
     };
 
-    const employeesSchedule = getEmployeeSchedule();
+    const employeeSchedule = getEmployeeSchedule();
+
+    const eventsToRender = events?.filter(e => e.day === chosenDay);
 
     return (
         <ListWrapper>
-            <List $wh={employeesSchedule.length} $last={last}>
-                {employeesSchedule.map((hour, i) => (
+            <List $wh={employeeSchedule.length} $last={last}>
+                {employeeSchedule.map((hour, i) => (
                     <RecordLogListItem key={i} index={i} hour={hour} />
                 ))}
             </List>
-            {/* {events && events?.length > 0 && events.map((e, i) => <EmployeeEvent key={i} event={e} employeeSchedule={employeeSchedule} />)} */}
+            {/* {eventsToRender &&
+                eventsToRender?.length > 0 &&
+                eventsToRender.map((e, i) => (
+                    <EmployeeEvent key={i} event={e} employeeSchedule={employeeSchedule} />
+                ))} */}
         </ListWrapper>
     );
 };

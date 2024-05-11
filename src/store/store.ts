@@ -20,6 +20,7 @@ import { authApi } from '../services/auth.api';
 import companySlice from './company/company.slice';
 import loadingSlice from './loading/loading.slice';
 import userSlice from './user/user.slice';
+import { eventsApi } from 'services/events.api';
 
 const persistUserConfig = {
     key: 'service',
@@ -40,6 +41,7 @@ const rootReducer = combineReducers({
     [serviceApi.reducerPath]: serviceApi.reducer,
     [categoriesApi.reducerPath]: categoriesApi.reducer,
     [schedulesApi.reducerPath]: schedulesApi.reducer,
+    [eventsApi.reducerPath]: eventsApi.reducer,
 });
 
 export const store = configureStore({
@@ -56,7 +58,8 @@ export const store = configureStore({
             .concat(employeeApi.middleware)
             .concat(serviceApi.middleware)
             .concat(categoriesApi.middleware)
-            .concat(schedulesApi.middleware),
+            .concat(schedulesApi.middleware)
+            .concat(eventsApi.middleware),
 });
 
 export type TypeRootState = ReturnType<typeof rootReducer>;

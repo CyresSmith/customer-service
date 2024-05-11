@@ -1,11 +1,16 @@
 import CustomFormSelect from 'components/Ui/Form/CustomFormSelect';
 import { SelectItem } from 'components/Ui/Form/types';
-import generateTimeArray, { getSchedule } from 'helpers/generateTimeArray';
+import generateTimeArray, {
+    getSchedule,
+    getScheduleWithoutEvents,
+} from 'helpers/generateTimeArray';
 import { isTimeEnableForEvent } from 'helpers/isTimeEnableForEvent';
 import { IDaySchedule } from 'services/types/schedule.types';
 import { NoEnableHours, SelectWrapper } from './ChooseTime.styled';
+import { EventType } from 'services/types/event.types';
 
 type Props = {
+    events: EventType[] | null;
     eventDate: Date;
     eventTime: string | null;
     setEventTime: React.Dispatch<React.SetStateAction<string | null>>;
@@ -13,7 +18,14 @@ type Props = {
     eventDuration: number;
 };
 
-const ChooseTime = ({ eventDate, eventDuration, eventTime, daySchedule, setEventTime }: Props) => {
+const ChooseTime = ({
+    eventDate,
+    eventDuration,
+    eventTime,
+    daySchedule,
+    setEventTime,
+    events,
+}: Props) => {
     if (!daySchedule) {
         return;
     }
@@ -21,7 +33,10 @@ const ChooseTime = ({ eventDate, eventDuration, eventTime, daySchedule, setEvent
     const { hours } = daySchedule;
 
     const timeArray = getSchedule(generateTimeArray(true), hours.from, hours.to);
-    const enableHours = timeArray.filter(t =>
+
+    const scheduleWithoutEvents = getScheduleWithoutEvents(eventDate, timeArray, events);
+
+    const enableHours = scheduleWithoutEvents.filter(t =>
         isTimeEnableForEvent(eventDate, eventDuration, t, timeArray[timeArray.length - 1])
     );
 
@@ -37,7 +52,7 @@ const ChooseTime = ({ eventDate, eventDuration, eventTime, daySchedule, setEvent
         <SelectWrapper>
             {forSelect.length > 1 ? (
                 <CustomFormSelect
-                    width="fit-content"
+                    width="50%"
                     handleSelect={handleTimeSelect}
                     selectItems={forSelect}
                     selectedItem={{ value: eventTime ? eventTime : '' }}

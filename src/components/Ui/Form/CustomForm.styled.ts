@@ -171,7 +171,7 @@ export const SelectList = styled.ul<{ $open: boolean }>`
     position: absolute;
     top: calc(100% + ${theme.space[2]});
     right: 0;
-    z-index: 101;
+    z-index: 102;
     display: flex;
     flex-direction: column;
     align-items: center;

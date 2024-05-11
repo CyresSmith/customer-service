@@ -10,7 +10,7 @@ export const Container = styled.div`
 `;
 
 export const SelectBox = styled.div`
-    margin: 0 auto;
+    /* margin: 0 auto; */
 `;
 
 export const CalendarBox = styled.div`

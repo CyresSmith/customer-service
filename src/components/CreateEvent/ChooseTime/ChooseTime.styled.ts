@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const SelectWrapper = styled.div`
-    height: 20px;
+    /* height: 20px; */
     display: flex;
     align-items: center;
     justify-content: center;

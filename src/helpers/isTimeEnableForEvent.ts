@@ -17,7 +17,5 @@ export const isTimeEnableForEvent = (
     const startDateTime = new Date(year, month, day, startHour, startMinutes).getTime();
     const endDateTime = new Date(year, month, day, endHour, endMinutes + 1).getTime();
 
-    // console.log(isPast(startDateTime));
-
     return !isPast(startDateTime) && eventDuration < endDateTime - startDateTime;
 };

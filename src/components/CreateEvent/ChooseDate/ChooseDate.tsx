@@ -3,6 +3,7 @@ import { CalendarBox, Container, SelectBox } from './ChooseDate.styled';
 import { getDate, getMonth, getYear, isPast } from 'date-fns';
 import ChooseTime from '../ChooseTime';
 import Calendar from 'components/Ui/Calendar/Calendar';
+import { EventType } from 'services/types/event.types';
 
 type Props = {
     eventDate: Date;
@@ -12,6 +13,7 @@ type Props = {
     employeeSchedules: IMonthSchedule[];
     eventDuration: number;
     companyId: number;
+    events: EventType[] | null;
 };
 
 const ChooseDate = ({
@@ -21,6 +23,7 @@ const ChooseDate = ({
     eventTime,
     setEventDate,
     setEventTime,
+    events,
 }: Props) => {
     const enableDays = employeeSchedules
         .map(es => {
@@ -45,15 +48,6 @@ const ChooseDate = ({
 
     return (
         <Container>
-            <SelectBox>
-                <ChooseTime
-                    eventDate={eventDate}
-                    eventTime={eventTime}
-                    setEventTime={setEventTime}
-                    daySchedule={getDaySchedule()}
-                    eventDuration={eventDuration}
-                />
-            </SelectBox>
             <CalendarBox>
                 <Calendar
                     cellSize={30}
@@ -62,6 +56,16 @@ const ChooseDate = ({
                     enableDays={enableDays}
                 />
             </CalendarBox>
+            <SelectBox>
+                <ChooseTime
+                    events={events}
+                    eventDate={eventDate}
+                    eventTime={eventTime}
+                    setEventTime={setEventTime}
+                    daySchedule={getDaySchedule()}
+                    eventDuration={eventDuration}
+                />
+            </SelectBox>
         </Container>
     );
 };
