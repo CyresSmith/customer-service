@@ -5,6 +5,7 @@ import { getScheduleWithoutEvents, isTimeEnableForEvent } from 'helpers/isTimeEn
 import { IDaySchedule } from 'services/types/schedule.types';
 import { NoEnableHours, SelectWrapper } from './ChooseTime.styled';
 import { EventType } from 'services/types/event.types';
+import { getDate } from 'date-fns';
 
 type Props = {
     events: EventType[] | null;
@@ -29,23 +30,33 @@ const ChooseTime = ({
 
     const { hours } = daySchedule;
 
-    const timeArray = getSchedule(generateTimeArray(true), hours.from, hours.to);
+    const employeeDaySchedule = getSchedule(generateTimeArray(true), hours.from, hours.to);
 
-    const scheduleWithoutEvents = getScheduleWithoutEvents(eventDate, timeArray, events);
+    const scheduleWithoutEvents = getScheduleWithoutEvents(
+        eventDate,
+        employeeDaySchedule,
+        events?.filter(e => e.day === getDate(eventDate))
+    );
 
-    const enableHours = scheduleWithoutEvents.filter(t =>
+    console.log(scheduleWithoutEvents);
+
+    const enableHours = employeeDaySchedule.filter(time =>
         isTimeEnableForEvent(
             scheduleWithoutEvents,
             eventDate,
             eventDuration,
-            t,
+            time,
             scheduleWithoutEvents[scheduleWithoutEvents.length - 1]
         )
     );
 
+    // console.log(enableHours);
+
     const forSelect = enableHours.map(eh => {
         return { value: eh };
     });
+
+    // console.log(forSelect);
 
     const handleTimeSelect = (item: SelectItem) => {
         setEventTime(item.value);

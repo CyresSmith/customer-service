@@ -1,4 +1,4 @@
-import { isPast, addHours, addMinutes, getHours, getMinutes } from 'date-fns';
+import { isPast, getHours, getMinutes, setMinutes, setHours } from 'date-fns';
 import { EventType } from 'services/types/event.types';
 import generateTimeArray, { getSchedule } from './generateTimeArray';
 
@@ -9,8 +9,8 @@ const getEventEndTime = (
 ): string => {
     const endDate = new Date(
         new Date(
-            addMinutes(
-                addHours(eventDate, +eventStartTime!.split(':')[0]),
+            setMinutes(
+                setHours(eventDate, +eventStartTime!.split(':')[0]),
                 +eventStartTime!.split(':')[1]
             )
         ).getTime() + eventDuration
@@ -24,27 +24,24 @@ const getEventEndTime = (
 export const getScheduleWithoutEvents = (
     date: Date,
     employeeSchedule: string[],
-    events: EventType[] | null
+    events: EventType[] | undefined
 ) => {
-    const schedule = employeeSchedule;
-    const timeArray = generateTimeArray(true);
-
-    console.log(events);
+    const schedule = [...employeeSchedule];
+    // const eventsSchedule: string[] = [];
 
     if (!events) {
         return employeeSchedule;
     }
-
     events.forEach(e => {
         const eventTimeArray = getSchedule(
-            timeArray,
+            generateTimeArray(true),
             e.time,
             getEventEndTime(date, e.time, e.duration)
         );
-
-        schedule.splice(schedule.indexOf(eventTimeArray[0]), eventTimeArray.length - 1);
+        // console.log(eventTimeArray);
+        // eventsSchedule.push(...eventTimeArray);
+        schedule.splice(schedule.indexOf(eventTimeArray[1]), eventTimeArray.length - 2);
     });
-
     return schedule;
 };
 
@@ -56,23 +53,21 @@ export const isTimeEnableForEvent = (
     lastEnableEventEnd: string
 ): boolean => {
     const startDateTime = new Date(
-        addMinutes(
-            addHours(eventDate, +potentialEventStart.split(':')[0]),
+        setMinutes(
+            setHours(eventDate, +potentialEventStart.split(':')[0]),
             +potentialEventStart.split(':')[1]
         )
     ).getTime();
     const endDateTime = new Date(
-        addMinutes(
-            addHours(eventDate, +lastEnableEventEnd.split(':')[0]),
+        setMinutes(
+            setHours(eventDate, +lastEnableEventEnd.split(':')[0]),
             +lastEnableEventEnd.split(':')[1]
         )
     ).getTime();
 
-    // console.log(getEventEndTime(eventDate, potentialEventStart, eventDuration));
-
     return (
         !isPast(startDateTime) &&
-        eventDuration < endDateTime - startDateTime &&
+        eventDuration <= endDateTime - startDateTime &&
         schedule.includes(getEventEndTime(eventDate, potentialEventStart, eventDuration))
     );
 };

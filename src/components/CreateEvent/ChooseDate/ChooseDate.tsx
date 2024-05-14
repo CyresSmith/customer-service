@@ -39,6 +39,7 @@ const ChooseDate = ({
 
     const getDaySchedule = () => {
         const day = getDate(eventDate);
+
         const thisMonthSchedules = employeeSchedules.find(
             es => es.month === getMonth(eventDate) && es.year === getYear(eventDate)
         )?.schedule;

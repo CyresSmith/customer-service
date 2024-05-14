@@ -24,11 +24,12 @@ import { EventType } from 'services/types/event.types';
 type Props = {
     step: string;
     setStep: (step: string) => void;
+    closeModal: () => void;
     date: Date;
     events: EventType[] | null;
 };
 
-const CreateEvent = ({ step, setStep, events }: Props) => {
+const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
     const { id } = useCompany();
     const [chosenClient, setChosenClient] = useState<Client | null>(null);
     const [chosenEmployee, setChosenEmployee] = useState<IEmployee | null>(null);
@@ -95,6 +96,11 @@ const CreateEvent = ({ step, setStep, events }: Props) => {
             const result = await createEventMutation({ data: newEvent, companyId: id });
 
             if (result) {
+                setChosenClient(null);
+                setChosenEmployee(null);
+                setChosenServices(undefined);
+                setChosenEmployeeSchedule(null);
+                closeModal();
                 toast.success('Запис успішно збережено!');
             }
         }
