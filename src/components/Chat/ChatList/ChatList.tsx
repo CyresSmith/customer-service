@@ -19,10 +19,10 @@ const ChatList = ({
     setSelectedUser,
 }: Props) => {
     const { companies, user } = useAuth();
-    const { channels, onlineUsers, selectedChannelId } = useChat();
+    const { channels } = useChat();
     const { setSelectedChannel, resetUnread } = useActions();
 
-    const { data } = useGetCompanyEmployeesQuery(selectedCompany, {
+    const { data, isLoading } = useGetCompanyEmployeesQuery(selectedCompany, {
         skip: !selectedCompany,
     });
 
@@ -91,7 +91,7 @@ const ChatList = ({
                             <p>{name}</p>
                         </CompanyItem>
 
-                        {selectedCompany === id && user && (
+                        {!isLoading && selectedCompany === id && user && (
                             <ItemsList
                                 items={contacts.map(
                                     ({ avatar, firstName, lastName, userId, isOnline }) => {

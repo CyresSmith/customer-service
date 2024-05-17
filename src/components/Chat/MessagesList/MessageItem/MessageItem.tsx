@@ -1,23 +1,21 @@
 import { format } from 'date-fns';
 import { useAuth } from 'hooks';
-import { useScrollIntoView } from 'hooks/useScrollIntoView';
 import { Message } from 'store/chat/socket.types';
 import { MessageBox, MessageTime } from './MessageItem.styled';
 
-type Props = { message: Message; messagesCount: number; messagePosition: number };
+type Props = {
+    message: Message;
+};
 
-const MessageItem = ({ messagesCount, messagePosition, message }: Props) => {
-    const { scrollRef } = useScrollIntoView<HTMLLIElement>(messagesCount);
+const MessageItem = ({ message }: Props) => {
     const { user } = useAuth();
-
-    const isLastMessage = messagePosition === messagesCount;
 
     const timeForMessage = (str: string) => format(new Date(str), 'p');
 
     const isMy = user?.id === message.from.id;
 
     return (
-        <MessageBox $isMy={isMy} ref={isLastMessage ? scrollRef : undefined}>
+        <MessageBox $isMy={isMy}>
             <p>{message.content}</p>
 
             <MessageTime>{timeForMessage(message.createdAt)}</MessageTime>

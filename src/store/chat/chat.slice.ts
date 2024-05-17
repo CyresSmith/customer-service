@@ -52,7 +52,16 @@ const chatSlice = createSlice({
         addMessage(state, { payload }: PayloadAction<Message>) {
             const channelIdx = state.channels.findIndex(({ id }) => id === payload.channel.id);
             if (channelIdx === -1) return;
-            state.channels[channelIdx].messages.push(payload);
+            state.channels[channelIdx].messages = [payload, ...state.channels[channelIdx].messages];
+        },
+        addChannelMessages(state, { payload }: PayloadAction<{ id: number; messages: Message[] }>) {
+            const channelIdx = state.channels.findIndex(({ id }) => id === payload.id);
+
+            if (channelIdx === -1) return;
+
+            state.channels[channelIdx].messages = state.channels[channelIdx].messages.concat(
+                payload.messages
+            );
         },
         setSelectedChannel(state, { payload }: PayloadAction<number | null>) {
             state.selectedChannelId = payload;

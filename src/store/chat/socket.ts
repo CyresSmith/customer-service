@@ -9,6 +9,7 @@ const {
     joinOnlineUser,
     removeOnlineUser,
     addMessage,
+    increaseNewMessagesCount,
     toggleTypingUser,
     setSelectedChannel,
     unreadInChannel,
@@ -75,6 +76,7 @@ export const createSocketConnection = (token: string, userId: number) => {
 
     socket.on('message:sent', (message: Message) => {
         store.dispatch(addMessage(message));
+        store.dispatch(increaseNewMessagesCount(message.channel.id));
 
         const state = store.getState();
         const { isOpen, selectedChannelId } = state.chat;

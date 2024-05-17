@@ -62,8 +62,9 @@ export const CurrentDate = styled.div`
     color: ${theme.colors.secondary.light};
     background-color: rgba(17, 17, 20, 0.5);
     position: fixed;
-    padding: ${theme.space[4]} ${theme.space[2]};
+    padding: ${theme.space[1]} ${theme.space[3]};
     border-radius: ${theme.radii.m};
+    align-self: center;
 `;
 
 export const MessageForm = styled.form`

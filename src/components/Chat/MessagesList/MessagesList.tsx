@@ -2,14 +2,14 @@ import Button from 'components/Ui/Buttons/Button';
 import { FormInput } from 'components/Ui/Form/CustomForm.styled';
 import TypingDots from 'components/Ui/TypingDots';
 import { format, startOfDay } from 'date-fns';
-import { useActions, useChat, useForm } from 'hooks';
+import { useActions, useChat, useForm, useObserver } from 'hooks';
+import { useScrollIntoView } from 'hooks/useScrollIntoView';
 import debounce from 'lodash.debounce';
 import throttle from 'lodash.throttle';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { LegacyRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { HiMiniPaperAirplane } from 'react-icons/hi2';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 import { socket } from 'store/chat/socket';
-import { Message } from 'store/chat/socket.types';
 import MessageItem from './MessageItem';
 import {
     DateBadge,
@@ -20,24 +20,43 @@ import {
     OnlineBadge,
 } from './MessagesList.styled';
 
+import { take } from 'store/chat/socket.types';
+
 type Props = {
     selectedCompany: number;
     userId: number | null;
-    messages: Message[];
     isChatOpen: boolean;
 };
 
 const initialState = { message: '' };
 
-const MessagesList = ({ selectedCompany, userId, messages, isChatOpen }: Props) => {
-    const { addChannel, addMessage, setSelectedChannel } = useActions();
-    const { selectedChannelId, onlineUsers, typingUsers } = useChat();
+const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
+    const { addChannel, addMessage, addChannelMessages, setSelectedChannel } = useActions();
+    const { selectedChannelId, onlineUsers, typingUsers, channels } = useChat();
+    const [lastMessageRef, isMessageIntersecting, messageObserver] = useObserver<HTMLLIElement>({});
+    // const [currentDateRef, isCurrentDateIntersecting, currentDateObserver] =
+    //     useObserver<HTMLDivElement>({});
+
+    const channel = channels.find(({ id }) => id === selectedChannelId);
+    const messages = channel?.messages || [];
+
+    const messageDate = (dateStr: string) => new Date(dateStr);
+    const DateForBadge = (dateStr: string) => format(messageDate(dateStr), 'PPP');
 
     const [isTyping, setIsTyping] = useState(false);
+    const [firstMessageId, setFirstMessageId] = useState<number | null>(messages[0]?.id || null);
+    // const [currentDate, setCurrentDate] = useState<null | string>(messagesDates[0] || null);
+
+    const { scrollRef } = useScrollIntoView<HTMLLIElement>({
+        behavior: 'smooth',
+        dependence: firstMessageId,
+    });
 
     const { data: users } = useGetCompanyEmployeesQuery(selectedCompany, {
         skip: !selectedCompany,
     });
+
+    const listContainerRef: LegacyRef<HTMLUListElement> | null = useRef(null);
 
     const sendMessage = async (content: string, channelId: number) => {
         const newMessage = await socket.emitWithAck('message:send', {
@@ -45,7 +64,10 @@ const MessagesList = ({ selectedCompany, userId, messages, isChatOpen }: Props) 
             channelId,
         });
 
-        if (newMessage) addMessage(newMessage);
+        if (newMessage) {
+            setFirstMessageId(newMessage.id);
+            addMessage(newMessage);
+        }
     };
 
     const onSubmit = async () => {
@@ -72,9 +94,6 @@ const MessagesList = ({ selectedCompany, userId, messages, isChatOpen }: Props) 
 
     const selectedUser = users?.find(({ userId: id }) => id === userId);
 
-    const messageDate = (dateStr: string) => new Date(dateStr);
-    const DateForBadge = (dateStr: string) => format(messageDate(dateStr), 'PPP');
-
     const startTyping = useCallback(() => {
         if (isTyping) return;
 
@@ -88,7 +107,6 @@ const MessagesList = ({ selectedCompany, userId, messages, isChatOpen }: Props) 
     }, [isChatOpen, selectedChannelId]);
 
     const throttledStartTyping = useMemo(() => throttle(startTyping, 250), [startTyping]);
-
     const debouncedStopTyping = useMemo(() => debounce(stopTyping, 300), [stopTyping]);
 
     useEffect(() => {
@@ -97,6 +115,39 @@ const MessagesList = ({ selectedCompany, userId, messages, isChatOpen }: Props) 
             debouncedStopTyping.cancel();
         };
     }, [debouncedStopTyping, throttledStartTyping]);
+
+    useEffect(() => {
+        const loadMore = async () => {
+            if (selectedChannelId) {
+                const newMessages = await socket.emitWithAck('channel:messages', {
+                    id: selectedChannelId,
+                    fromDate: messages[messages.length - 1].createdAt,
+                    take,
+                });
+
+                if (newMessages && newMessages.length > 0) {
+                    addChannelMessages({ id: selectedChannelId, messages: newMessages });
+                }
+            }
+
+            messageObserver?.disconnect();
+        };
+
+        if (isMessageIntersecting && messageObserver && selectedChannelId) loadMore();
+    }, [isMessageIntersecting]);
+
+    // useEffect(() => {
+    //     if (isCurrentDateIntersecting && currentDateObserver && selectedChannelId) {
+    //         console.log('🚀 ~ useEffect ~ currentDateObserver:', currentDateObserver);
+    //         setCurrentDate(messagesDates[1]);
+    //     }
+    // }, [isCurrentDateIntersecting]);
+
+    useEffect(() => {
+        if (listContainerRef.current) {
+            listContainerRef.current.scrollTop = listContainerRef.current.scrollHeight;
+        }
+    }, [selectedChannelId]);
 
     return (
         <MessagesBox>
@@ -110,25 +161,29 @@ const MessagesList = ({ selectedCompany, userId, messages, isChatOpen }: Props) 
                 {userId && onlineUsers.includes(userId) && <OnlineBadge />}
             </MessagesHeader>
 
-            <MessagesListBox>
-                {messages.length > 0 &&
-                    messages.map((message, i) => {
-                        const prevDate = messageDate(messages[i - 1]?.createdAt);
+            <MessagesListBox ref={listContainerRef}>
+                {/* <CurrentDate>{currentDate}</CurrentDate> */}
 
+                {messages.length > 0 &&
+                    messages.toReversed().map((message, i) => {
+                        const prevDate = messageDate(messages.toReversed()[i - 1]?.createdAt);
                         const isNextDate =
                             startOfDay(prevDate) < startOfDay(messageDate(message.createdAt));
+                        const isLast = i === 0;
+                        const isNewDate = isLast || isNextDate;
+                        const isFirst = i === messages.length - 1;
 
                         return (
-                            <li key={message.id}>
-                                {(i === 0 || isNextDate) && (
+                            <li
+                                key={message.id}
+                                ref={isLast ? lastMessageRef : isFirst ? scrollRef : undefined}
+                            >
+                                {isNewDate && (
                                     <DateBadge>{DateForBadge(message.createdAt)}</DateBadge>
                                 )}
 
-                                <MessageItem
-                                    message={message}
-                                    messagePosition={i + 1}
-                                    messagesCount={messages.length}
-                                />
+                                {/* <div ref={isNewDate ? currentDateRef : undefined} /> */}
+                                <MessageItem message={message} />
                             </li>
                         );
                     })}

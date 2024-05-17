@@ -7,3 +7,4 @@ export { useDebounce } from './useDebounce';
 export { useEscapeKey } from './useEscKey';
 export { useForm } from './useForm';
 export { useLoading } from './useLoading';
+export { useObserver } from './useObserver';

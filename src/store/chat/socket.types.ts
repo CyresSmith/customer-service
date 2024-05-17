@@ -24,6 +24,10 @@ export type ClientToServerEvents = {
         callback: (message: Message) => void
     ) => void;
     'channel:create': (data: CreateChannelDto, callback: (channel: Channel) => void) => void;
+    'channel:messages': (
+        data: GetChannelMessagesFromDateDto,
+        callback: (messages: Message[]) => void
+    ) => void;
 };
 
 export type InterServerEvents = {
@@ -61,3 +65,6 @@ export type CreateChannelDto = Pick<Channel, 'type' | 'users'> & {
     name?: string;
     company: number;
 };
+
+export const take = 20;
+export type GetChannelMessagesFromDateDto = { id: number; fromDate: string; take: number };
