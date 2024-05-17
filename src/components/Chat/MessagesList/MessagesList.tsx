@@ -116,7 +116,7 @@ const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
 
     const handleKeyDown = useCallback(
         (event: KeyboardEvent<HTMLInputElement>) => {
-            const isAlphanumeric = /^[a-zA-Z0-9]$/.test(event.key);
+            const isAlphanumeric = /^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ'0-9]$/.test(event.key);
             if (isAlphanumeric) throttledStartTyping();
         },
         [throttledStartTyping]
