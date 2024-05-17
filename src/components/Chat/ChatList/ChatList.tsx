@@ -19,7 +19,7 @@ const ChatList = ({
     setSelectedUser,
 }: Props) => {
     const { companies, user } = useAuth();
-    const { channels } = useChat();
+    const { channels, onlineUsers } = useChat();
     const { setSelectedChannel, resetUnread } = useActions();
 
     const { data, isLoading } = useGetCompanyEmployeesQuery(selectedCompany, {
@@ -93,20 +93,19 @@ const ChatList = ({
 
                         {!isLoading && selectedCompany === id && user && (
                             <ItemsList
-                                items={contacts.map(
-                                    ({ avatar, firstName, lastName, userId, isOnline }) => {
-                                        const channel = usersPrivateChannel(userId, user.id);
-                                        return {
-                                            id: userId,
-                                            avatar,
-                                            name: `${firstName} ${lastName}`,
-                                            isOnline:
-                                                channel && channel.unreadCount > 0
-                                                    ? channel.unreadCount
-                                                    : isOnline,
-                                        };
-                                    }
-                                )}
+                                items={contacts.map(({ avatar, firstName, lastName, userId }) => {
+                                    const channel = usersPrivateChannel(userId, user.id);
+
+                                    return {
+                                        id: userId,
+                                        avatar,
+                                        name: `${firstName} ${lastName}`,
+                                        isOnline:
+                                            channel && channel.unreadCount > 0
+                                                ? channel.unreadCount
+                                                : onlineUsers.includes(userId),
+                                    };
+                                })}
                                 onItemClick={id => handleChannelSelect(undefined, id)}
                                 nameColumnTitle="Ім'я"
                                 activeItem={selectedUser || undefined}

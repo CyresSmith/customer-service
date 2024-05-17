@@ -34,22 +34,17 @@ const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
     const { addChannel, addMessage, addChannelMessages, setSelectedChannel } = useActions();
     const { selectedChannelId, onlineUsers, typingUsers, channels } = useChat();
     const [lastMessageRef, isMessageIntersecting, messageObserver] = useObserver<HTMLLIElement>({});
-    // const [currentDateRef, isCurrentDateIntersecting, currentDateObserver] =
-    //     useObserver<HTMLDivElement>({});
 
     const channel = channels.find(({ id }) => id === selectedChannelId);
     const messages = channel?.messages || [];
 
     const messageDate = (dateStr: string) => new Date(dateStr);
     const DateForBadge = (dateStr: string) => format(messageDate(dateStr), 'PPP');
-
     const [isTyping, setIsTyping] = useState(false);
-    const [firstMessageId, setFirstMessageId] = useState<number | null>(messages[0]?.id || null);
-    // const [currentDate, setCurrentDate] = useState<null | string>(messagesDates[0] || null);
 
     const { scrollRef } = useScrollIntoView<HTMLLIElement>({
         behavior: 'smooth',
-        dependence: firstMessageId,
+        dependence: messages.length,
     });
 
     const { data: users } = useGetCompanyEmployeesQuery(selectedCompany, {
@@ -64,10 +59,7 @@ const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
             channelId,
         });
 
-        if (newMessage) {
-            setFirstMessageId(newMessage.id);
-            addMessage(newMessage);
-        }
+        if (newMessage) addMessage(newMessage);
     };
 
     const onSubmit = async () => {
@@ -98,13 +90,19 @@ const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
         if (isTyping) return;
 
         setIsTyping(true);
-        isChatOpen && selectedChannelId && socket.emit('message:typing', selectedChannelId);
-    }, [isChatOpen, isTyping, selectedChannelId]);
+        if (isChatOpen && selectedChannelId) {
+            socket.emit('message:typing', selectedChannelId);
+        }
+    }, [isTyping, isChatOpen, selectedChannelId]);
 
     const stopTyping = useCallback(() => {
+        if (!isTyping) return;
+
         setIsTyping(false);
-        isChatOpen && selectedChannelId && socket.emit('message:stopTyping', selectedChannelId);
-    }, [isChatOpen, selectedChannelId]);
+        if (isChatOpen && selectedChannelId) {
+            socket.emit('message:stopTyping', selectedChannelId);
+        }
+    }, [isTyping, isChatOpen, selectedChannelId]);
 
     const throttledStartTyping = useMemo(() => throttle(startTyping, 250), [startTyping]);
     const debouncedStopTyping = useMemo(() => debounce(stopTyping, 300), [stopTyping]);
@@ -115,6 +113,9 @@ const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
             debouncedStopTyping.cancel();
         };
     }, [debouncedStopTyping, throttledStartTyping]);
+
+    const handleKeyDown = useCallback(() => throttledStartTyping(), [throttledStartTyping]);
+    const handleKeyUp = useCallback(() => debouncedStopTyping(), [debouncedStopTyping]);
 
     useEffect(() => {
         const loadMore = async () => {
@@ -136,13 +137,6 @@ const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
         if (isMessageIntersecting && messageObserver && selectedChannelId) loadMore();
     }, [isMessageIntersecting]);
 
-    // useEffect(() => {
-    //     if (isCurrentDateIntersecting && currentDateObserver && selectedChannelId) {
-    //         console.log('🚀 ~ useEffect ~ currentDateObserver:', currentDateObserver);
-    //         setCurrentDate(messagesDates[1]);
-    //     }
-    // }, [isCurrentDateIntersecting]);
-
     useEffect(() => {
         if (listContainerRef.current) {
             listContainerRef.current.scrollTop = listContainerRef.current.scrollHeight;
@@ -153,7 +147,7 @@ const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
         <MessagesBox>
             <MessagesHeader>
                 <span>
-                    {selectedUser?.firstName} {selectedUser?.lastName}
+                    {selectedUser?.firstName} {selectedUser?.lastName || ''}
                 </span>
 
                 {userId && typingUsers.includes(userId) && <TypingDots />}
@@ -162,8 +156,6 @@ const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
             </MessagesHeader>
 
             <MessagesListBox ref={listContainerRef}>
-                {/* <CurrentDate>{currentDate}</CurrentDate> */}
-
                 {messages.length > 0 &&
                     messages.toReversed().map((message, i) => {
                         const prevDate = messageDate(messages.toReversed()[i - 1]?.createdAt);
@@ -176,13 +168,12 @@ const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
                         return (
                             <li
                                 key={message.id}
-                                ref={isLast ? lastMessageRef : isFirst ? scrollRef : undefined}
+                                ref={isFirst ? scrollRef : isLast ? lastMessageRef : undefined}
                             >
                                 {isNewDate && (
                                     <DateBadge>{DateForBadge(message.createdAt)}</DateBadge>
                                 )}
 
-                                {/* <div ref={isNewDate ? currentDateRef : undefined} /> */}
                                 <MessageItem message={message} />
                             </li>
                         );
@@ -191,8 +182,8 @@ const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
 
             <MessageForm onSubmit={handleSubmit}>
                 <FormInput
-                    onKeyDown={throttledStartTyping}
-                    onKeyUp={debouncedStopTyping}
+                    onKeyDown={handleKeyDown}
+                    onKeyUp={handleKeyUp}
                     type="text"
                     name="message"
                     value={state.message}
