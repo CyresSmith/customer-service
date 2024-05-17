@@ -22,7 +22,7 @@ export const createSocketConnection = (token: string) => {
         path: '/socket-gate',
         withCredentials: true,
         extraHeaders: {
-            authorization: `bearer ${token}`,
+            Authorization: `bearer ${token}`,
         },
     });
 
