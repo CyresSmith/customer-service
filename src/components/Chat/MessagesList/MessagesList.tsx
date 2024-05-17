@@ -63,10 +63,6 @@ const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
     };
 
     const onSubmit = async () => {
-        console.log('state.message: ', state.message);
-        console.log('🚀 ~ onSubmit ~ selectedChannelId:', selectedChannelId);
-        console.log('🚀 ~ onSubmit ~ userId:', userId);
-
         if (state.message.length > 0) {
             if (selectedChannelId) {
                 sendMessage(state.message, selectedChannelId);
@@ -76,8 +72,6 @@ const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
                     type: 'private',
                     users: [userId],
                 });
-
-                console.log('🚀 ~ onSubmit ~ channel:', channel);
 
                 addChannel({ ...channel, unreadCount: 0 });
                 setSelectedChannel(channel.id);
