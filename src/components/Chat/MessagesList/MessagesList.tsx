@@ -6,7 +6,7 @@ import { useActions, useChat, useForm, useObserver } from 'hooks';
 import { useScrollIntoView } from 'hooks/useScrollIntoView';
 import debounce from 'lodash.debounce';
 import throttle from 'lodash.throttle';
-import { LegacyRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { KeyboardEvent, LegacyRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { HiMiniPaperAirplane } from 'react-icons/hi2';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 import { socket } from 'store/chat/socket';
@@ -120,7 +120,13 @@ const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
         };
     }, [debouncedStopTyping, throttledStartTyping]);
 
-    const handleKeyDown = useCallback(() => throttledStartTyping(), [throttledStartTyping]);
+    const handleKeyDown = useCallback(
+        (event: KeyboardEvent<HTMLInputElement>) => {
+            const isAlphanumeric = /^[a-zA-Z0-9]$/.test(event.key);
+            if (isAlphanumeric) throttledStartTyping();
+        },
+        [throttledStartTyping]
+    );
     const handleKeyUp = useCallback(() => debouncedStopTyping(), [debouncedStopTyping]);
 
     useEffect(() => {
