@@ -117,16 +117,18 @@ const UsersNav = () => {
 
                 <UsersEmail>{user?.firstName ? user?.firstName : user?.email}</UsersEmail>
 
-                <Badge show={totalUnreadCount > 0} count={totalUnreadCount}>
-                    <Button
-                        onClick={() => setChatOpen(p => !p)}
-                        Icon={HiChatBubbleLeftEllipsis}
-                        $variant="text"
-                        $colors="accent"
-                        $round
-                        size="l"
-                    />
-                </Badge>
+                {companies?.length > 0 && (
+                    <Badge show={totalUnreadCount > 0} count={totalUnreadCount}>
+                        <Button
+                            onClick={() => setChatOpen(p => !p)}
+                            Icon={HiChatBubbleLeftEllipsis}
+                            $variant="text"
+                            $colors="accent"
+                            $round
+                            size="l"
+                        />
+                    </Badge>
+                )}
 
                 <Button
                     onClick={() => setDropOpen(p => !p)}
