@@ -456,7 +456,7 @@ const ThirdStep = ({
                                 >
                                     <Employee>
                                         <EmployeeData
-                                            {...(userData as IEmployee)}
+                                            {...(userData as unknown as IEmployee)}
                                             checkIcon={false}
                                         />
                                     </Employee>

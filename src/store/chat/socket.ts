@@ -17,7 +17,7 @@ const API_HOST = import.meta.env.VITE_API_HOST;
 
 export let socket: Socket<ServerToClientEvents, ClientToServerEvents>;
 
-export const createSocketConnection = (token: string, userId: number) => {
+export const createSocketConnection = (token: string) => {
     socket = io(API_HOST, {
         path: '/socket-gate',
         withCredentials: true,
@@ -49,7 +49,6 @@ export const createSocketConnection = (token: string, userId: number) => {
 
     socket.on('channel:created', channel => {
         store.dispatch(addChannel({ ...channel, unreadCount: 0 }));
-        // store.dispatch(setSelectedChannel(channel.id));
     });
 
     socket.on('user:hello', data => {

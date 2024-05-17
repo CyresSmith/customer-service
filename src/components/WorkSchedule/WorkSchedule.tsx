@@ -59,7 +59,6 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
     const { id, workingHours, employees } = useCompany();
     const { user, accessToken } = useAuth();
     const isAdmin = useAdminRights();
-    const { scrollRef } = useScrollIntoView();
 
     const [scheduleState, setScheduleState] = useState<IMonthSchedule[]>([]);
     const [selectedDays, setSelectedDays] = useState<{ employeeId: number; dates: Date[] }[]>([]);
@@ -101,6 +100,8 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
         start: startOfMonth(selectedMonth),
         end: endOfMonth(selectedMonth),
     });
+
+    const { scrollRef } = useScrollIntoView<HTMLDivElement>({ dependence: monthDays.length });
 
     const isNotWorkingDay = (date: Date): boolean => {
         if (selectedDayCompanySchedule) {
