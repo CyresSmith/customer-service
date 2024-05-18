@@ -1,8 +1,9 @@
 import { toast } from 'react-toastify';
 import { io, Socket } from 'socket.io-client';
+import companySlice from 'store/company/company.slice';
 import { store } from 'store/store';
-import socketSlice from './chat.slice';
-import { Channel, ClientToServerEvents, Message, ServerToClientEvents } from './socket.types';
+import socketSlice from '../store/chat/chat.slice';
+import { Channel, ClientToServerEvents, Message, ServerToClientEvents } from './types/socket.types';
 
 const {
     addChannel,
@@ -12,6 +13,8 @@ const {
     toggleTypingUser,
     unreadInChannel,
 } = socketSlice.actions;
+
+const { updateCompanyData } = companySlice.actions;
 
 const API_HOST = import.meta.env.VITE_API_HOST;
 
@@ -81,6 +84,12 @@ export const createSocketConnection = (token: string) => {
             store.dispatch(unreadInChannel(message.channel.id));
             toast.info(`${message.content}`);
         }
+    });
+
+    socket.on('company:update', (data: unknown) => {
+        store.dispatch(updateCompanyData(data));
+
+        toast.info('Профіль компанії оновлено!');
     });
 
     socket.on('exception', async e => {

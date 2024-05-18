@@ -9,7 +9,8 @@ import throttle from 'lodash.throttle';
 import { KeyboardEvent, LegacyRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { HiMiniPaperAirplane } from 'react-icons/hi2';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
-import { socket } from 'store/chat/socket';
+import { socket } from 'services/socket';
+import { take } from 'services/types/socket.types';
 import MessageItem from './MessageItem';
 import {
     DateBadge,
@@ -19,8 +20,6 @@ import {
     MessagesListBox,
     OnlineBadge,
 } from './MessagesList.styled';
-
-import { take } from 'store/chat/socket.types';
 
 type Props = {
     selectedCompany: number;

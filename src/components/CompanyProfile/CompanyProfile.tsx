@@ -53,12 +53,10 @@ enum OpenModal {
 const CompanyProfile = () => {
     const { name, avatar, address, phones, activities, id, workingHours, desc } = useCompany();
     const isAdmin = useAdminRights();
+    const { setCompanyLogo } = useActions();
 
     const [editedPhone, setEditedPhone] = useState<string | null>(null);
-
     const [openModal, setOpenModal] = useState<OpenModal | null>(null);
-
-    const { setCompanyLogo } = useActions();
 
     const [uploadImage, { isLoading }] = useUploadCompanyAvatarMutation();
 

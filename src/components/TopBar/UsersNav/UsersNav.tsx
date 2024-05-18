@@ -14,7 +14,7 @@ import { IoMdAddCircle } from 'react-icons/io';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useLogOutMutation } from 'services/auth.api';
-import { socket } from 'store/chat/socket';
+import { socket } from 'services/socket';
 import CreateCompanyForm from './CreateCompanyForm';
 import {
     NavWrapper,

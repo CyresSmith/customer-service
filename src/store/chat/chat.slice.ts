@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Channel, Message } from './socket.types';
+import { Channel, Message } from '../../services/types/socket.types';
 
 type IChatInitialState = {
     isInitialized: boolean;

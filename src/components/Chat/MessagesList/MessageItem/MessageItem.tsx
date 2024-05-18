@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { useAuth } from 'hooks';
-import { Message } from 'store/chat/socket.types';
+import { Message } from 'services/types/socket.types';
 import { MessageBox, MessageTime } from './MessageItem.styled';
 
 type Props = {

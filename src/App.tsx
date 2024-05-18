@@ -9,7 +9,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Bounce, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useLazyCurrentQuery } from 'services/auth.api';
-import { createSocketConnection, socket } from 'store/chat/socket';
+import { createSocketConnection, socket } from 'services/socket';
 
 setDefaultOptions({ locale: uk });
 
