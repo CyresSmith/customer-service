@@ -9,7 +9,7 @@ type Props = {
 export const EmployeeEvent = ({ event, employeeSchedule }: Props) => {
     const { time, duration } = event;
 
-    const start = employeeSchedule.indexOf(time);
+    const start = employeeSchedule.indexOf(time.from);
     const height = duration / 1000 / 60;
 
     return (

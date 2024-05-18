@@ -2,12 +2,17 @@ import { Client } from './clients.types';
 import { IEmployee } from './employee.types';
 import { ServiceBasicInfo } from './service.type';
 
+export type EventTime = {
+    from: string;
+    to: string;
+};
+
 export type EventType = {
     id: number;
     year: number;
     month: number;
     day: number;
-    time: string;
+    time: EventTime;
     duration: number;
     comments?: string | null;
     employee: Partial<IEmployee>;

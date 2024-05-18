@@ -20,6 +20,7 @@ import { getDate, getMonth, getYear } from 'date-fns';
 import { useCreateEventMutation } from 'services/events.api';
 import { toast } from 'react-toastify';
 import { EventType } from 'services/types/event.types';
+import { getEventEndTime } from 'helpers/isTimeEnableForEvent';
 
 type Props = {
     step: string;
@@ -88,7 +89,10 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
                 year: getYear(eventDate),
                 month: getMonth(eventDate),
                 day: getDate(eventDate),
-                time: eventTime,
+                time: {
+                    from: eventTime,
+                    to: getEventEndTime(eventDate, eventTime, calculateEventDuration()),
+                },
                 services: chosenServices?.map(s => s.id),
                 duration: calculateEventDuration(),
             };
