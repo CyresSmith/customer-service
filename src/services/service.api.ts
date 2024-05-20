@@ -12,7 +12,7 @@ export const serviceApi = createApi({
 
     baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-    tagTypes: ['services', 'service'],
+    tagTypes: ['services'],
 
     endpoints: builder => ({
         addNewService: builder.mutation<ServiceBasicInfo, IAddNewServiceDto>({
@@ -22,7 +22,7 @@ export const serviceApi = createApi({
                 data,
                 params: { companyId },
             }),
-            invalidatesTags: ['services'],
+            invalidatesTags: [{ type: 'services', id: 'LIST' }],
         }),
 
         getServices: builder.query<ServiceBasicInfo[], { companyId: number }>({
@@ -32,7 +32,12 @@ export const serviceApi = createApi({
                 params: { companyId },
             }),
             providesTags: resp =>
-                resp ? resp.map(item => ({ type: 'services', id: item.id })) : ['services'],
+                resp
+                    ? [
+                          ...resp.map(({ id }) => ({ type: 'services' as const, id })),
+                          { type: 'services', id: 'LIST' },
+                      ]
+                    : [{ type: 'services', id: 'LIST' }],
         }),
 
         uploadServiceAvatar: builder.mutation<
@@ -45,9 +50,9 @@ export const serviceApi = createApi({
                 data,
                 params: { companyId },
             }),
-            invalidatesTags: (_resp, _err, arg) => [
-                { type: 'services', id: arg.serviceId },
-                { type: 'service', id: arg.serviceId },
+            invalidatesTags: (_resp, _err, { serviceId: id }) => [
+                { type: 'services', id },
+                { type: 'services', id: 'LIST' },
             ],
         }),
 
@@ -57,7 +62,7 @@ export const serviceApi = createApi({
                 params: { companyId },
                 method: 'GET',
             }),
-            providesTags: (_resp, _err, arg) => [{ type: 'service', id: arg.serviceId }],
+            providesTags: (_resp, _err, { serviceId: id }) => [{ type: 'services', id }],
         }),
 
         updateServiceData: builder.mutation<
@@ -70,9 +75,9 @@ export const serviceApi = createApi({
                 params: { companyId },
                 data,
             }),
-            invalidatesTags: (_resp, _err, arg) => [
-                { type: 'services', id: arg.serviceId },
-                { type: 'service', id: arg.serviceId },
+            invalidatesTags: (_resp, _err, { serviceId: id }) => [
+                { type: 'services', id },
+                { type: 'services', id: 'LIST' },
             ],
         }),
 
@@ -85,9 +90,9 @@ export const serviceApi = createApi({
                 method: 'DELETE',
                 params: { companyId },
             }),
-            invalidatesTags: (_resp, _err, arg) => [
-                { type: 'services', id: arg.serviceId },
-                { type: 'service', id: arg.serviceId },
+            invalidatesTags: (_resp, _err, { serviceId: id }) => [
+                { type: 'services', id },
+                { type: 'services', id: 'LIST' },
             ],
         }),
     }),

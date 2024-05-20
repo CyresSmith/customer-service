@@ -1,12 +1,12 @@
-import { useCreateClientMutation, useGetAllClientsQuery } from 'services/clients.api';
-import { Container } from './ChooseClient.styled';
+import ClientForm from 'components/ClientsListPage/ClientForm';
 import ItemsList from 'components/Ui/ItemsList';
 import Loader from 'components/Ui/Loader';
-import { Client } from 'services/types/clients.types';
 import Modal from 'components/Ui/Modal/Modal';
 import { useState } from 'react';
-import ClientForm from 'components/ClientsListPage/ClientForm';
 import { toast } from 'react-toastify';
+import { useCreateClientMutation, useGetAllClientsQuery } from 'services/clients.api';
+import { Client } from 'services/types/clients.types';
+import { Container } from './ChooseClient.styled';
 
 type Props = {
     companyId: number;
@@ -98,7 +98,6 @@ const ChooseClient = ({ companyId, setClient, setStep }: Props) => {
                         onItemClick={handleClientChoose}
                         addButtonTitle="Додати клієнта"
                         onAddClick={() => setModalOpen(true)}
-                        // keyForSelect="gender"
                         keyForSearch="phone"
                         notSortedKeys={['phone']}
                     />

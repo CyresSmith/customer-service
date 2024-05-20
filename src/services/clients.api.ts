@@ -7,7 +7,7 @@ export const clientsApi = createApi({
 
     baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-    tagTypes: ['clients', 'client'],
+    tagTypes: ['clients'],
 
     endpoints: builder => {
         return {
@@ -18,7 +18,7 @@ export const clientsApi = createApi({
                     data,
                     params: { companyId },
                 }),
-                invalidatesTags: ['clients'],
+                invalidatesTags: [{ type: 'clients', id: 'LIST' }],
             }),
 
             getAllClients: builder.query<Client[], unknown>({
@@ -28,7 +28,12 @@ export const clientsApi = createApi({
                     params: { companyId },
                 }),
                 providesTags: resp =>
-                    resp ? resp.map(item => ({ type: 'clients', id: item.id })) : ['clients'],
+                    resp
+                        ? [
+                              ...resp.map(({ id }) => ({ type: 'clients' as const, id })),
+                              { type: 'clients', id: 'LIST' },
+                          ]
+                        : [{ type: 'clients', id: 'LIST' }],
             }),
 
             getById: builder.query<Client, { companyId: number; id: number }>({
@@ -37,16 +42,16 @@ export const clientsApi = createApi({
                     method: 'GET',
                     params: { companyId },
                 }),
-                providesTags: (_resp, _err, arg) => [{ type: 'client', id: arg.id }],
+                providesTags: (_resp, _err, { id }) => [{ type: 'clients', id }],
             }),
 
-            getByPhone: builder.query<Client, { companyId: number; phone: string }>({
+            getByPhone: builder.query<Client, { companyId: number; phone: string; id: number }>({
                 query: ({ companyId, phone }) => ({
                     url: `clients/${phone}/one-by-phone`,
                     method: 'GET',
                     params: { companyId },
                 }),
-                providesTags: (_resp, _err, arg) => [{ type: 'client', phone: arg.phone }],
+                providesTags: (_resp, _err, { id }) => [{ type: 'clients', id }],
             }),
 
             updateClient: builder.mutation<Client, UpdateClient>({
@@ -56,9 +61,9 @@ export const clientsApi = createApi({
                     data,
                     params: { companyId },
                 }),
-                invalidatesTags: (_resp, _err, arg) => [
-                    { type: 'client', id: arg.id },
-                    { type: 'clients', id: arg.id },
+                invalidatesTags: (_resp, _err, { id }) => [
+                    { type: 'clients', id },
+                    { type: 'clients', id: 'LIST' },
                 ],
             }),
 
@@ -69,9 +74,9 @@ export const clientsApi = createApi({
                     data,
                     params: { companyId },
                 }),
-                invalidatesTags: (_resp, _err, arg) => [
-                    { type: 'client', id: arg.id },
-                    { type: 'clients', id: arg.id },
+                invalidatesTags: (_resp, _err, { id }) => [
+                    { type: 'clients', id },
+                    { type: 'clients', id: 'LIST' },
                 ],
             }),
 
@@ -81,9 +86,9 @@ export const clientsApi = createApi({
                     method: 'DELETE',
                     params: { companyId },
                 }),
-                invalidatesTags: (_resp, _err, arg) => [
-                    { type: 'client', id: arg.id },
-                    { type: 'clients', id: arg.id },
+                invalidatesTags: (_resp, _err, { id }) => [
+                    { type: 'clients', id },
+                    { type: 'clients', id: 'LIST' },
                 ],
             }),
         };

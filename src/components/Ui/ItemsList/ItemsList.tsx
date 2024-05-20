@@ -308,9 +308,10 @@ const ItemsList = <T extends StringRecord>({
                                     value={filter}
                                     onChange={handleChange}
                                     placeholder={
-                                        translateLabels(String(keyForSearch)) || nameColumnTitle
+                                        nameColumnTitle
                                             ? `Введіть ${nameColumnTitle}`
-                                            : 'Введіть назву'
+                                            : translateLabels(String(keyForSearch)) ||
+                                              'Введіть назву'
                                     }
                                     disabled={items.length === 0}
                                 />
