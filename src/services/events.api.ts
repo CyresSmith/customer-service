@@ -18,7 +18,7 @@ export const eventsApi = createApi({
                     data,
                     params: { companyId },
                 }),
-                invalidatesTags: ['event'],
+                invalidatesTags: ['events'],
             }),
 
             getCompanyEvents: builder.query<EventType[], GetMonthEvents>({
@@ -27,6 +27,8 @@ export const eventsApi = createApi({
                     method: 'GET',
                     params: { companyId, year, month },
                 }),
+                providesTags: resp =>
+                    resp ? resp.map(item => ({ type: 'events', id: item.id })) : ['events'],
             }),
         };
     },

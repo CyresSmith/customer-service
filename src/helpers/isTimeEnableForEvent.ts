@@ -16,7 +16,7 @@ export const getEventEndTime = (
         ).getTime() + eventDuration
     );
 
-    return `${getHours(endDate)}:${
+    return `${String(getHours(endDate)).length < 2 ? '0' + getHours(endDate) : getHours(endDate)}:${
         String(getMinutes(endDate)).length < 2 ? '00' : getMinutes(endDate)
     }`;
 };
@@ -45,13 +45,11 @@ export const isTimeEnableForEvent = (
     ).getTime();
 
     const eventEndTime = getEventEndTime(eventDate, potentialEventStart, eventDuration);
-    const allEventsTime =
+    const allEventsTimeArray =
         events &&
         events
             .map(e => {
                 const eventSchedule = getSchedule(defaultTimeArray, e.time.from, e.time.to);
-                eventSchedule.shift();
-                eventSchedule.pop();
 
                 return eventSchedule;
             })
@@ -61,14 +59,22 @@ export const isTimeEnableForEvent = (
     newEventTimeArray.shift();
     newEventTimeArray.pop();
 
-    return !isPast(startDateTime) &&
+    const isEnableEndTime = () => {
+        if (!events || events.length < 1) {
+            return schedule.includes(eventEndTime);
+        } else {
+            return (
+                schedule.includes(eventEndTime) || events.some(e => e.time.from === eventEndTime)
+            );
+        }
+    };
+
+    return (
+        !isPast(startDateTime) &&
         eventDuration <= endDateTime - startDateTime &&
-        newEventTimeArray.every(t => !allEventsTime?.includes(t)) &&
-        schedule.includes(eventEndTime)
-        ? schedule.includes(eventEndTime)
-        : events
-        ? events.some(e => e.time.from === eventEndTime)
-        : false;
+        newEventTimeArray.every(t => !allEventsTimeArray?.includes(t)) &&
+        isEnableEndTime()
+    );
 };
 
 export const getScheduleWithoutEvents = (
@@ -90,14 +96,25 @@ export const getScheduleWithoutEvents = (
         schedule.splice(schedule.indexOf(from), schedule.indexOf(to) - schedule.indexOf(from));
     });
 
-    return schedule.filter(t =>
-        isTimeEnableForEvent(
+    return schedule.filter(t => {
+        // console.log(
+        //     t,
+        //     isTimeEnableForEvent(
+        //         date,
+        //         schedule,
+        //         eventDuration,
+        //         t,
+        //         schedule[schedule.length - 1],
+        //         events
+        //     )
+        // );
+        return isTimeEnableForEvent(
             date,
             schedule,
             eventDuration,
             t,
             schedule[schedule.length - 1],
             events
-        )
-    );
+        );
+    });
 };

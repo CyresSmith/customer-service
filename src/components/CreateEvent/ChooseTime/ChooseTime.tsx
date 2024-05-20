@@ -49,7 +49,7 @@ const ChooseTime = ({
 
     return (
         <SelectWrapper>
-            {forSelect.length > 1 ? (
+            {forSelect.length > 0 ? (
                 <CustomFormSelect
                     width="50%"
                     handleSelect={handleTimeSelect}
