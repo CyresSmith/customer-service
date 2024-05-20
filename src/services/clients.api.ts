@@ -40,6 +40,15 @@ export const clientsApi = createApi({
                 providesTags: (_resp, _err, arg) => [{ type: 'client', id: arg.id }],
             }),
 
+            getByPhone: builder.query<Client, { companyId: number; phone: string }>({
+                query: ({ companyId, phone }) => ({
+                    url: `clients/${phone}/one-by-phone`,
+                    method: 'GET',
+                    params: { companyId },
+                }),
+                providesTags: (_resp, _err, arg) => [{ type: 'client', phone: arg.phone }],
+            }),
+
             updateClient: builder.mutation<Client, UpdateClient>({
                 query: ({ companyId, id, data }) => ({
                     url: `clients/${id}/update`,
@@ -88,4 +97,6 @@ export const {
     useUpdateClientMutation,
     useUploadAvatarMutation,
     useDeleteMutation,
+    useGetByPhoneQuery,
+    useLazyGetByPhoneQuery,
 } = clientsApi;

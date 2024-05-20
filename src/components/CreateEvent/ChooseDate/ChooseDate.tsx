@@ -1,47 +1,54 @@
 import { IMonthSchedule } from 'services/types/schedule.types';
-import { Container } from './ChooseDate.styled';
+import { CalendarBox, Container, SelectBox } from './ChooseDate.styled';
+import { getDate, getMonth, getYear, isPast } from 'date-fns';
+import ChooseTime from '../ChooseTime';
+import Calendar from 'components/Ui/Calendar/Calendar';
+import { EventType } from 'services/types/event.types';
 
 type Props = {
     eventDate: Date;
-    eventTime: string;
+    eventTime: string | null;
     setEventDate: React.Dispatch<React.SetStateAction<Date>>;
-    setEventTime: React.Dispatch<React.SetStateAction<string>>;
-    employeeSchedules: IMonthSchedule;
+    setEventTime: React.Dispatch<React.SetStateAction<string | null>>;
+    employeeSchedules: IMonthSchedule[];
     eventDuration: number;
     companyId: number;
+    events: EventType[] | null;
 };
 
-const ChooseDate = ({ employeeSchedules }: Props) => {
-    console.log(employeeSchedules);
-    // const enableDays = employeeSchedules
-    //     .map(es => {
-    //         return es.schedule.map(s => {
-    //             return new Date(es.year, es.month, s.day);
-    //         });
-    //     })
-    //     .flat()
-    //     .filter(d => !isPast(d));
+const ChooseDate = ({
+    employeeSchedules,
+    eventDate,
+    eventDuration,
+    eventTime,
+    setEventDate,
+    setEventTime,
+    events,
+}: Props) => {
+    const enableDays = employeeSchedules
+        .map(es => {
+            const { year, month, schedule } = es;
 
-    // const getDaySchedule = () => {
-    //     const day = getDate(eventDate);
-    //     const thisMonthSchedules = employeeSchedules.find(
-    //         es => es.month === getMonth(eventDate) && es.year === getYear(eventDate)
-    //     )?.schedule;
+            return schedule
+                .map(es => {
+                    return new Date(year, month, es.day);
+                })
+                .filter(d => !isPast(d));
+        })
+        .flat();
 
-    //     return thisMonthSchedules?.find(tms => tms.day === day);
-    // };
+    const getDaySchedule = () => {
+        const day = getDate(eventDate);
+
+        const thisMonthSchedules = employeeSchedules.find(
+            es => es.month === getMonth(eventDate) && es.year === getYear(eventDate)
+        )?.schedule;
+
+        return thisMonthSchedules?.find(tms => tms.day === day);
+    };
 
     return (
         <Container>
-            {/* <SelectBox>
-                <ChooseTime
-                    eventDate={eventDate}
-                    eventTime={eventTime}
-                    setEventTime={setEventTime}
-                    daySchedule={getDaySchedule()}
-                    eventDuration={eventDuration}
-                />
-            </SelectBox>
             <CalendarBox>
                 <Calendar
                     cellSize={30}
@@ -49,7 +56,17 @@ const ChooseDate = ({ employeeSchedules }: Props) => {
                     setDate={setEventDate}
                     enableDays={enableDays}
                 />
-            </CalendarBox> */}
+            </CalendarBox>
+            <SelectBox>
+                <ChooseTime
+                    events={events}
+                    eventDate={eventDate}
+                    eventTime={eventTime}
+                    setEventTime={setEventTime}
+                    daySchedule={getDaySchedule()}
+                    eventDuration={eventDuration}
+                />
+            </SelectBox>
         </Container>
     );
 };

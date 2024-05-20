@@ -6,13 +6,13 @@ import {
     FirstStepChooseIcon,
     FirstStepChooseText,
     FirstStepChooseTitle,
-} from './Create.styled';
+} from './ChooseWay.styled';
 
 type Props = {
     setStep: (step: string) => void;
 };
 
-const Create = ({ setStep }: Props) => {
+const ChooseWay = ({ setStep }: Props) => {
     return (
         <Container>
             <FirstStepChoose onClick={() => setStep('employees')}>
@@ -37,4 +37,4 @@ const Create = ({ setStep }: Props) => {
     );
 };
 
-export default Create;
+export default ChooseWay;

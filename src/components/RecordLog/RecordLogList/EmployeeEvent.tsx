@@ -1,4 +1,4 @@
-import { EventType } from './RecordLogList';
+import { EventType } from 'services/types/event.types';
 import { Event, EventWrapper } from './RecordLogList.styled';
 
 type Props = {
@@ -7,13 +7,13 @@ type Props = {
 };
 
 export const EmployeeEvent = ({ event, employeeSchedule }: Props) => {
-    const { from, to } = event.time;
+    const { time, duration } = event;
 
-    const start = employeeSchedule.indexOf(from);
-    const end = employeeSchedule.indexOf(to);
+    const start = employeeSchedule.indexOf(time.from);
+    const height = duration / 1000 / 60;
 
     return (
-        <EventWrapper $top={start} $height={end - start}>
+        <EventWrapper $top={start} $height={height}>
             <Event />
         </EventWrapper>
     );

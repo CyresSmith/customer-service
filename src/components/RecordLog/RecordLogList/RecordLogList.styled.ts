@@ -57,7 +57,8 @@ export const EventWrapper = styled.div<{ $top: number; $height: number }>`
     position: absolute;
     z-index: 5;
     top: calc(${props => props.$top} * ${theme.timeStep}px + 1px);
-    height: calc(${props => props.$height} * ${theme.timeStep}px);
+    /* height: calc(${props => props.$height} * ${theme.timeStep}px); */
+    height: ${props => props.$height * 2}px;
     width: 100%;
     padding: ${theme.space[1]};
 `;

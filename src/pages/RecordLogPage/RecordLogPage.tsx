@@ -6,12 +6,26 @@ import Modal from 'components/Ui/Modal/Modal';
 import PageContentLayout from 'components/Ui/PageContentLayout';
 import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
-import { useLazyGetCompanyEmployeesQuery } from 'services/employee.api';
-import { useLazyGetAllCompanySchedulesQuery } from 'services/schedules.api';
+import { useGetCompanyEmployeesQuery } from 'services/employee.api';
+import { useGetAllCompanySchedulesQuery } from 'services/schedules.api';
 import { IMonthSchedule } from 'services/types/schedule.types';
 import { BasicEmployeeInfo } from 'services/types/employee.types';
 import { EmployeeStatusEnum } from 'services/types/employee.types';
 import { getDate, getMonth, getYear } from 'date-fns';
+import { useGetCompanyEventsQuery } from 'services/events.api';
+import { EventType } from 'services/types/event.types';
+
+const getModalTitles = (step: string) => {
+    return step === 'employees'
+        ? 'Оберіть працівника'
+        : step === 'services'
+        ? 'Оберіть послугу'
+        : step === 'date'
+        ? 'Оберіть дату та час'
+        : step === 'confirm'
+        ? 'Перевірте деталі запису'
+        : 'Створення запису';
+};
 
 const initialSelection = [{ id: 'all', value: `Всі працівники` }];
 
@@ -22,36 +36,79 @@ const RecordLogPage = () => {
     const [selectedItem, setSelectedItem] = useState<SelectItem[]>(initialSelection);
     const [allSchedules, setAllSchedules] = useState<IMonthSchedule[] | null>(null);
     const [allEmployees, setAllEmployees] = useState<BasicEmployeeInfo[] | null>(null);
-    const [getEmployees] = useLazyGetCompanyEmployeesQuery();
-    const [getSchedules] = useLazyGetAllCompanySchedulesQuery();
+    const [allEvents, setAllEvents] = useState<EventType[] | []>([]);
     const chosenYear = getYear(date);
     const chosenMonth = getMonth(date);
+    const { data: employeesData, isFetching: fetchingEmployees } = useGetCompanyEmployeesQuery(id, {
+        skip: !id,
+    });
+    const { data: schedulesData, isFetching: fetchingSchedules } = useGetAllCompanySchedulesQuery(
+        {
+            companyId: id,
+            year: chosenYear,
+            month: chosenMonth,
+        },
+        { skip: !id || fetchingEmployees }
+    );
+    const { data: eventsData } = useGetCompanyEventsQuery(
+        {
+            companyId: id,
+            year: chosenYear,
+            month: chosenMonth,
+        },
+        { skip: !id || fetchingSchedules }
+    );
 
     useEffect(() => {
-        const getData = async () => {
-            if (id) {
-                await getEmployees(id)
-                    .then(response => {
-                        if (Array.isArray(response.data)) {
-                            setAllEmployees(response.data);
-                        }
-                    })
-                    .then(async () => {
-                        await getSchedules({
-                            companyId: id,
-                            month: chosenMonth,
-                            year: chosenYear,
-                        }).then(response => {
-                            if (Array.isArray(response.data)) {
-                                setAllSchedules(response.data);
-                            }
-                        });
-                    });
-            }
-        };
+        if (employeesData) {
+            setAllEmployees(employeesData);
+        }
 
-        getData();
-    }, [chosenMonth, chosenYear, getEmployees, getSchedules, id]);
+        if (schedulesData) {
+            setAllSchedules(schedulesData);
+        }
+
+        if (eventsData) {
+            setAllEvents(eventsData);
+        }
+    }, [employeesData, eventsData, schedulesData]);
+
+    // useEffect(() => {
+    //     const getData = async () => {
+    //         if (id) {
+    //             await getEmployees(id)
+    //                 .then(response => {
+    //                     if (Array.isArray(response.data)) {
+    //                         setAllEmployees(response.data);
+    //                     }
+    //                 })
+    //                 .then(async () => {
+    //                     await getSchedules({
+    //                         companyId: id,
+    //                         month: chosenMonth,
+    //                         year: chosenYear,
+    //                     }).then(response => {
+    //                         if (Array.isArray(response.data)) {
+    //                             setAllSchedules(response.data);
+    //                         }
+    //                     });
+    //                 })
+    //                 .then(async () => {
+    //                     await getEvents({
+    //                         companyId: id,
+    //                         year: chosenYear,
+    //                         month: chosenMonth,
+    //                     }).then(response => {
+    //                         if (Array.isArray(response.data)) {
+    //                             setAllEvents(response.data);
+    //                         }
+    //                     });
+    //                 });
+    //         }
+    //     };
+
+    //     getData();
+    // }, [chosenMonth, chosenYear, getEmployees, getEvents, getSchedules, id]);
 
     const workingProviders =
         allEmployees &&
@@ -132,6 +189,7 @@ const RecordLogPage = () => {
                     }
                     content={
                         <RecordLog
+                            allEvents={allEvents}
                             allSchedules={allSchedules}
                             date={date}
                             setDate={setDate}
@@ -143,23 +201,18 @@ const RecordLogPage = () => {
                 />
                 {eventStep !== null && (
                     <Modal
+                        id="createEvent"
                         titleMargin="10px"
                         closeModal={closeEventModal}
                         $isOpen={eventStep !== null}
-                        title={
-                            eventStep === 'employees'
-                                ? 'Оберіть працівника'
-                                : eventStep === 'services'
-                                  ? 'Оберіть послугу'
-                                  : eventStep === 'date'
-                                    ? 'Оберіть дату та час'
-                                    : 'Створення запису'
-                        }
+                        title={getModalTitles(eventStep)}
                         children={
                             <CreateEvent
+                                events={allEvents}
                                 date={date}
                                 step={eventStep}
-                                handleEventStep={handleEventStep}
+                                setStep={handleEventStep}
+                                closeModal={closeEventModal}
                             />
                         }
                     />
