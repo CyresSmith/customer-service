@@ -1,3 +1,5 @@
+import { Company } from 'store/company/company.types';
+
 export type ServerToClientEvents = {
     noArg: () => void;
     basicEmit: (a: number, b: string, c: Buffer) => void;
@@ -10,6 +12,7 @@ export type ServerToClientEvents = {
     'user:stopTyping': (id: number) => void;
     'message:sent': (message: Message) => void;
     exception: (e: unknown) => void;
+    'company:update': (data: Partial<Company>) => void;
 };
 
 export type ClientToServerEvents = {

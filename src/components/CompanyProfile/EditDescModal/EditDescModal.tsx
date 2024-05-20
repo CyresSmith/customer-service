@@ -49,7 +49,7 @@ const EditDescModal = ({ closeModal }: Props) => {
             reset();
             toast.success('Опис оновлено');
         }
-    }, [isSuccess, reset]);
+    }, [isSuccess]);
 
     return (
         <ModalBox>
