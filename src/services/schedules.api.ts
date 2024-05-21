@@ -13,7 +13,7 @@ export const schedulesApi = createApi({
 
     baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-    tagTypes: ['schedule', 'schedules'],
+    tagTypes: ['schedules'],
 
     endpoints: builder => ({
         getAllCompanySchedules: builder.query<
@@ -26,20 +26,34 @@ export const schedulesApi = createApi({
                 params: { companyId, year, month },
             }),
             providesTags: resp =>
-                resp ? resp.map(item => ({ type: 'schedules', id: item.id })) : ['schedules'],
+                resp
+                    ? [
+                          ...resp.map(({ id }) => ({
+                              type: 'schedules' as const,
+                              id,
+                          })),
+                          { type: 'schedules', id: 'LIST' },
+                      ]
+                    : [{ type: 'schedules', id: 'LIST' }],
         }),
 
-        updateEmployeeSchedule: builder.mutation<MessageResponse, IUpdateEmployeeSchedule>({
+        updateEmployeeSchedule: builder.mutation<
+            MessageResponse & { scheduleId: number },
+            IUpdateEmployeeSchedule
+        >({
             query: ({ companyId, employeeId, data }) => ({
                 url: `schedules/${employeeId}/update`,
                 method: 'PATCH',
                 data,
                 params: { companyId },
             }),
-            invalidatesTags: (_resp, _err, arg) => [
-                { type: 'schedule', id: arg.employeeId },
-                'schedules',
-            ],
+            invalidatesTags: resp =>
+                resp
+                    ? [
+                          { type: 'schedules', id: resp.scheduleId },
+                          { type: 'schedules', id: 'LIST' },
+                      ]
+                    : [{ type: 'schedules', id: 'LIST' }],
         }),
 
         getEmployeeSchedule: builder.query<IMonthSchedule, IGetEmployeeSchedule>({
@@ -48,7 +62,7 @@ export const schedulesApi = createApi({
                 method: 'GET',
                 params: { companyId, year, month },
             }),
-            providesTags: (_resp, _err, arg) => [{ type: 'schedule', id: arg.employeeId }],
+            providesTags: resp => [{ type: 'schedules', id: resp?.id }],
         }),
 
         deleteEmployeeSchedule: builder.mutation<{ message: string }, DeletingSchedule>({
@@ -57,10 +71,7 @@ export const schedulesApi = createApi({
                 method: 'DELETE',
                 params: { companyId },
             }),
-            invalidatesTags: (_resp, _err, arg) => [
-                { type: 'schedule', id: arg.employeeId },
-                'schedules',
-            ],
+            invalidatesTags: () => [{ type: 'schedules', id: 'LIST' }],
         }),
 
         getEmployeeAllSchedules: builder.query<
@@ -72,6 +83,13 @@ export const schedulesApi = createApi({
                 method: 'GET',
                 params: { companyId },
             }),
+            providesTags: resp =>
+                resp
+                    ? [
+                          ...resp.map(({ id }) => ({ type: 'schedules' as const, id })),
+                          { type: 'schedules', id: 'LIST' },
+                      ]
+                    : [{ type: 'schedules', id: 'LIST' }],
         }),
     }),
 });

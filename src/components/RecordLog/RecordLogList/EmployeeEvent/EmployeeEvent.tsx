@@ -1,12 +1,12 @@
 import { EventType } from 'services/types/event.types';
-import { Event, EventWrapper } from './RecordLogList.styled';
+import { Event, EventWrapper } from './EmployeeEvent.styled';
 
 type Props = {
     event: EventType;
     employeeSchedule: string[];
 };
 
-export const EmployeeEvent = ({ event, employeeSchedule }: Props) => {
+const EmployeeEvent = ({ event, employeeSchedule }: Props) => {
     const { time, duration } = event;
 
     const start = employeeSchedule.indexOf(time.from);
@@ -18,3 +18,5 @@ export const EmployeeEvent = ({ event, employeeSchedule }: Props) => {
         </EventWrapper>
     );
 };
+
+export default EmployeeEvent;

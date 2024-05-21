@@ -1,10 +1,10 @@
 // import { EmployeeEvent } from "./EmployeeEvent";
 import { getSchedule } from 'helpers/generateTimeArray';
+import { EventType } from 'services/types/event.types';
 import { IMonthSchedule } from 'services/types/schedule.types';
+import EmployeeEvent from './EmployeeEvent';
 import { List, ListWrapper } from './RecordLogList.styled';
 import { RecordLogListItem } from './RecordLogListItem';
-import { EventType } from 'services/types/event.types';
-import { EmployeeEvent } from './EmployeeEvent';
 
 type Props = {
     companySchedule: string[];
