@@ -26,7 +26,7 @@ const TopBar = () => {
             <TopBarWrapper>
                 {!match || isNaN(Number(match?.params?.companyId)) ? (
                     <Logo to="/">
-                        <span>Logo</span>
+                        <span>Тут буде лого</span>
                     </Logo>
                 ) : (
                     <Logo to={`/${id}`}>

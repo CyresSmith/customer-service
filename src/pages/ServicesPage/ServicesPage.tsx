@@ -3,6 +3,7 @@ import ConfirmOperation from 'components/Ui/ConfirmOperation';
 import ItemsList from 'components/Ui/ItemsList';
 import Loader from 'components/Ui/Loader';
 import { ServiceOpenModal } from 'helpers/enums';
+import { useAdminRights } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -12,6 +13,7 @@ const ServicesPage = () => {
     const { id: companyId } = useCompany();
     const [openModal, setOpenModal] = useState<ServiceOpenModal | null>(null);
     const [serviceId, setServiceId] = useState<number | undefined>(undefined);
+    const isAdmin = useAdminRights();
 
     const { data: services, isLoading: servicesLoading } = useGetServicesQuery(
         { companyId },
@@ -58,8 +60,12 @@ const ServicesPage = () => {
                 keyForSelect="category"
                 onItemClick={id => handleModalOpen(ServiceOpenModal.EDIT_SERVICE, +id)}
                 addButtonTitle="Додати послугу"
-                onAddClick={() => handleModalOpen(ServiceOpenModal.ADD)}
-                onItemDeleteClick={id => handleModalOpen(ServiceOpenModal.DELETE_SERVICE, +id)}
+                onAddClick={isAdmin ? () => handleModalOpen(ServiceOpenModal.ADD) : undefined}
+                onItemDeleteClick={
+                    isAdmin
+                        ? id => handleModalOpen(ServiceOpenModal.DELETE_SERVICE, +id)
+                        : undefined
+                }
                 isDeleteLoading={isServiceDeleteLoading}
             />
 

@@ -20,7 +20,7 @@ const items = [
         Icon: PiUsersThree,
         children: [
             { id: 1, to: 'clients-list', label: 'Список клієнтів' },
-            { id: 2, to: 'clients-statistic', label: 'Статистика' },
+            // { id: 2, to: 'clients-statistic', label: 'Статистика' },
         ],
     },
     {

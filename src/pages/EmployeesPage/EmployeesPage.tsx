@@ -71,7 +71,7 @@ const EmployeesPage = () => {
                 keyForSelect="jobTitle"
                 onItemClick={handleItemClick}
                 addButtonTitle="Додати співробітника"
-                onAddClick={() => setOpenModal(OpenModal.ADD)}
+                onAddClick={isAdmin ? () => setOpenModal(OpenModal.ADD) : undefined}
                 isDeleteLoading={isEmployeeDeleteLoading}
                 onItemDeleteClick={isAdmin ? handleEmployeeDeleteModalOpen : undefined}
                 nameColumnTitle="Ім'я"

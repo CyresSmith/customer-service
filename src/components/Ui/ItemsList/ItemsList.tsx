@@ -71,7 +71,7 @@ const ItemsList = <T extends StringRecord>({
     items,
     onItemClick,
     keyForSelect,
-    keyForSearch,
+    keyForSearch = 'name',
     notSortedKeys = [],
     addButtonTitle,
     onAddClick,
@@ -311,10 +311,11 @@ const ItemsList = <T extends StringRecord>({
                                     value={filter}
                                     onChange={handleChange}
                                     placeholder={
-                                        nameColumnTitle
-                                            ? `Введіть ${nameColumnTitle}`
-                                            : translateLabels(String(keyForSearch)) ||
-                                              'Введіть назву'
+                                        keyForSearch === 'name'
+                                            ? nameColumnTitle
+                                                ? `Введіть ${nameColumnTitle}`
+                                                : 'Введіть назву'
+                                            : translateLabels(String(keyForSearch))
                                     }
                                     disabled={items.length === 0}
                                 />

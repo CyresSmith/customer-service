@@ -54,6 +54,11 @@ const SecondStep = ({
     const saveDisabled =
         JSON.stringify(stateToCheck?.employees) === JSON.stringify(serviceData?.employees);
 
+    const employeesToRender =
+        (providers && isAdmin
+            ? providers
+            : providers?.filter(({ id }) => serviceData.employees.includes(id))) || [];
+
     return (
         <>
             <SecondStepBox>
@@ -62,7 +67,7 @@ const SecondStep = ({
                         <Message>Немає працівників що надають послуги</Message>
                     ) : (
                         <ItemsList
-                            items={providers.map(
+                            items={employeesToRender.map(
                                 ({ id, avatar, firstName, lastName, jobTitle }) => ({
                                     id,
                                     avatar,
