@@ -21,6 +21,7 @@ import CustomFormSelect from '../Form/CustomFormSelect';
 import { SelectItem } from '../Form/types';
 import ItemAvatar from './ItemAvatar';
 import {
+    AvatarSize,
     ButtonBox,
     FilterBox,
     ItemBox,
@@ -55,6 +56,7 @@ type Props<T extends StringRecord> = {
     activeItem?: number;
     listHeader?: boolean;
     listSortPanel?: boolean;
+    avatarSize?: AvatarSize;
 };
 
 enum SortTypeEnum {
@@ -80,6 +82,7 @@ const ItemsList = <T extends StringRecord>({
     activeItem,
     listHeader = true,
     listSortPanel = true,
+    avatarSize = AvatarSize.M,
 }: Props<T>) => {
     const [itemsState, setItemsState] = useState<ItemType<T>[]>([]);
     const [initialSortState, setInitialSortState] = useState<Record<string, SortTypeEnum>>({});
@@ -290,7 +293,7 @@ const ItemsList = <T extends StringRecord>({
 
     const columnsCount =
         itemsState && itemsState.length > 0
-            ? Object.keys(itemsState[0]).length - NOT_SORT_KEYS.length
+            ? Object.keys(itemsState[0]).filter(key => !NOT_SORT_KEYS.includes(key)).length
             : 0;
 
     return (
@@ -367,6 +370,7 @@ const ItemsList = <T extends StringRecord>({
                                 <ListHeader
                                     $columnsCount={columnsCount}
                                     $isDeleteButton={Boolean(onItemDeleteClick)}
+                                    $avatarSize={avatarSize}
                                 >
                                     <div></div>
                                     {Object.keys(itemsState[0]).map(key => {
@@ -431,12 +435,14 @@ const ItemsList = <T extends StringRecord>({
                                         $columnsCount={columnsCount}
                                         $isDeleteButton={Boolean(onItemDeleteClick)}
                                         onClick={() => handleItemClick(+item.id)}
+                                        $avatarSize={avatarSize}
                                     >
                                         <HiCheckCircle id="checkLabel" />
 
                                         <ItemAvatar
-                                            avatar={item.avatar.toString()}
+                                            avatar={item.avatar?.toString()}
                                             name={item.name}
+                                            size={avatarSize}
                                         />
 
                                         {Object.entries(item).map(([key, value]) => {

@@ -15,9 +15,9 @@ export type EventType = {
     time: EventTime;
     duration: number;
     comments?: string | null;
-    employee: Partial<IEmployee>;
-    client: Partial<Client>;
-    services: Partial<ServiceBasicInfo>[];
+    employee: Pick<IEmployee, 'id' | 'firstName' | 'lastName' | 'jobTitle' | 'avatar'>;
+    client: Pick<Client, 'id' | 'firstName' | 'lastName' | 'phone' | 'avatar'>;
+    services: Pick<ServiceBasicInfo, 'id' | 'name' | 'price' | 'employeesSettings'>[];
 };
 
 export type CreateEventType = {

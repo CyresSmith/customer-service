@@ -1,111 +1,66 @@
-import CustomFormSelect from 'components/Ui/Form/CustomFormSelect';
-import { SelectItem } from 'components/Ui/Form/types';
-import Loader from 'components/Ui/Loader';
-import Search from 'components/Ui/Search/Search';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { useGetServicesCategoriesQuery } from 'services/categories.api';
+import ServiceModal from 'components/Services/ServiceModal';
+import ItemsList from 'components/Ui/ItemsList';
+import { ServiceOpenModal } from 'helpers/enums';
+import { useCompany } from 'hooks/useCompany';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { useGetEmployeeServicesQuery } from 'services/service.api';
 import { IEmployee } from 'services/types/employee.types';
-import ServicesList from '../ServicesList';
-import { Container, ScrollWrapper, SearchBox, TopContainer } from './ChooseServices.styled';
-import { useLazyGetServicesQuery } from 'services/service.api';
 import { ServiceBasicInfo } from 'services/types/service.type';
+import { Container } from './ChooseServices.styled';
 
 type Props = {
-    chosenEmployee: IEmployee | null;
-    setServices: React.Dispatch<React.SetStateAction<ServiceBasicInfo[] | undefined>>;
-    chosenServices: ServiceBasicInfo[] | undefined;
-    companyId: number;
+    chosenEmployee: IEmployee;
+    setServices: Dispatch<SetStateAction<ServiceBasicInfo[]>>;
+    chosenServices: ServiceBasicInfo[];
 };
 
-const ChooseServices = ({ companyId, chosenEmployee, setServices, chosenServices }: Props) => {
-    const [searchQuery, setSearchQuery] = useState<string>('');
-    const [servicesList, setServicesList] = useState<ServiceBasicInfo[] | null>(null);
-    const { isLoading: isCategoriesLoading, data: categories } = useGetServicesCategoriesQuery(
-        { companyId: companyId },
-        { skip: !companyId }
-    );
-    const [chosenCategory, setChosenCategory] = useState<SelectItem>({
-        value: 'Обрати категорію',
-        id: 'start',
+const ChooseServices = ({ chosenEmployee, setServices, chosenServices }: Props) => {
+    const { id: companyId } = useCompany();
+    const [openModal, setOpenModal] = useState<ServiceOpenModal | null>(null);
+
+    const { data: employeeServices, isLoading } = useGetEmployeeServicesQuery({
+        companyId,
+        employeeId: chosenEmployee.id,
     });
 
-    const [
-        getCompanyServices,
-        { isSuccess: successGetCompanyServices, isLoading: isServicesLoading },
-    ] = useLazyGetServicesQuery();
+    const handleServiceSelect = (serviceId: number) => {
+        const service = employeeServices?.find(({ id }) => id === serviceId);
 
-    useEffect(() => {
-        const getServices = async () => {
-            const { data: companyServices } = await getCompanyServices({ companyId });
-            // console.log('get services');
-            if (companyServices && successGetCompanyServices) {
-                setServicesList(companyServices);
-            }
-        };
-
-        // console.log(chosenEmployee);
-
-        if (chosenEmployee) {
-            setServicesList(chosenEmployee.services);
-        } else {
-            getServices();
+        if (service) {
+            setServices(p =>
+                p.find(({ id }) => id === serviceId)
+                    ? p.filter(({ id }) => id !== serviceId)
+                    : [...p, service]
+            );
         }
-    }, [chosenEmployee, companyId, getCompanyServices, successGetCompanyServices]);
-
-    const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(event.target.value);
     };
 
-    const handleCategorySelect = (item: SelectItem) => {
-        setChosenCategory(item);
-    };
-
-    const categoriesForSelect: SelectItem[] | undefined =
-        categories &&
-        categories.map(c => {
-            return { value: c.name, id: c.id };
-        });
-
-    const filteredByEmployeeCategories = servicesList
-        ? categoriesForSelect?.filter(c => servicesList.find(es => es.category.id === c.id))
-        : categoriesForSelect;
-
-    const selectAll = { value: 'Всі категорії', id: 'all' };
-
-    return isCategoriesLoading || isServicesLoading ? (
-        <Loader />
-    ) : (
-        <Container>
-            <TopContainer>
-                {filteredByEmployeeCategories && (
-                    <CustomFormSelect
-                        selectItems={[selectAll, ...filteredByEmployeeCategories]}
-                        selectedItem={chosenCategory}
-                        handleSelect={handleCategorySelect}
-                        width="200px"
+    return (
+        <>
+            <Container>
+                {!isLoading && employeeServices && (
+                    <ItemsList
+                        items={employeeServices.map(({ avatar, id, name, category }) => ({
+                            avatar,
+                            id,
+                            name,
+                            category: category.name,
+                        }))}
+                        onItemClick={handleServiceSelect}
+                        selection={chosenServices?.map(({ id }) => id) || []}
+                        keyForSelect="category"
+                        addButtonTitle="Додати послугу"
+                        onAddClick={() => {
+                            setOpenModal(ServiceOpenModal.ADD);
+                        }}
                     />
                 )}
-                <SearchBox>
-                    <Search
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                        placeholder="Пошук послуг"
-                    />
-                </SearchBox>
-            </TopContainer>
-            <ScrollWrapper>
-                {servicesList && (
-                    <ServicesList
-                        servicesList={servicesList}
-                        setServices={setServices}
-                        // chosenEmployee={chosenEmployee}
-                        searchQuery={searchQuery}
-                        chosenCategory={chosenCategory}
-                        chosenServices={chosenServices}
-                    />
-                )}
-            </ScrollWrapper>
-        </Container>
+            </Container>
+
+            {openModal && (
+                <ServiceModal openModal={openModal} handleModalClose={() => setOpenModal(null)} />
+            )}
+        </>
     );
 };
 

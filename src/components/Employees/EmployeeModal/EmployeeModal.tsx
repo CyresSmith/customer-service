@@ -1,3 +1,4 @@
+import { ModalHeaderBox } from 'components/Ui/Modal/Modal.styled';
 import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
 import ModalSectionsList from 'components/Ui/Modal/ModalSectionsList';
 import translateEmployee from 'helpers/translateEmployee';
@@ -45,21 +46,23 @@ const EmployeeModal = ({ id }: Props) => {
 
     return (
         <EmployeeModalContent>
-            <ModalHeaderWithAvatar
-                avatar={avatar || user.avatar}
-                title={`${firstName}  ${lastName && lastName}`}
-                subtitle={translateEmployee(role) || jobTitle}
-            />
+            <ModalHeaderBox>
+                <ModalHeaderWithAvatar
+                    avatar={avatar || user.avatar}
+                    title={`${firstName}  ${lastName && lastName}`}
+                    subtitle={translateEmployee(role) || jobTitle}
+                />
 
-            <ModalSectionsList
-                sectionButtons={
-                    data.provider
-                        ? sectionButtons
-                        : sectionButtons.filter(({ id }) => id !== OpenModalEnum.SERVICES)
-                }
-                currentSection={activeSection}
-                handleSectionSelect={setActiveSection}
-            />
+                <ModalSectionsList
+                    sectionButtons={
+                        data.provider
+                            ? sectionButtons
+                            : sectionButtons.filter(({ id }) => id !== OpenModalEnum.SERVICES)
+                    }
+                    currentSection={activeSection}
+                    handleSectionSelect={setActiveSection}
+                />
+            </ModalHeaderBox>
 
             {activeSection === OpenModalEnum.PROFILE && <EmployeeProfile employee={data} />}
             {activeSection === OpenModalEnum.SCHEDULE && <EmployeeSchedule employee={data} />}

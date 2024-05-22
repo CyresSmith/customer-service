@@ -8,6 +8,7 @@ export const Container = styled.div`
     gap: ${theme.space[4]};
     align-items: center;
     justify-content: center;
+    /* margin-top: ${theme.space[4]}; */
 `;
 
 export const FirstStepChoose = styled.div`

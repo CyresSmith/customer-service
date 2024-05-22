@@ -1,5 +1,6 @@
 import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
+import { ModalHeaderBox } from 'components/Ui/Modal/Modal.styled';
 import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
 import ModalSectionsList from 'components/Ui/Modal/ModalSectionsList';
 import { hoursToMilliseconds, millisecondsToHours, millisecondsToMinutes } from 'date-fns';
@@ -201,7 +202,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
                     )}
 
                     {openModal === ServiceOpenModal.EDIT_SERVICE && (
-                        <>
+                        <ModalHeaderBox>
                             <ModalHeaderWithAvatar
                                 avatar={serviceData.avatar || data?.avatar || ''}
                                 title={serviceData.name}
@@ -213,7 +214,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
                                 currentSection={step}
                                 handleSectionSelect={setStep}
                             />
-                        </>
+                        </ModalHeaderBox>
                     )}
                 </div>
 

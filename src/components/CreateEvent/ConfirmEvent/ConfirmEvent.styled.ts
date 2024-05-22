@@ -2,20 +2,29 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const Container = styled.div`
-    padding: ${theme.space[4]};
+    padding: ${theme.space[4]} 0;
+    min-width: 500px;
 `;
 
-export const EventInfoList = styled.ul``;
+export const EventInfoList = styled.ul`
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.space[4]};
+`;
 
-export const EventInfoListItem = styled.li`
+export const EventInfoBox = styled.li`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
     &:not(:last-child) {
-        margin-bottom: ${theme.space[3]};
+        margin-bottom: ${theme.space[2]};
     }
 `;
 
-export const ListItemTitle = styled.p`
+export const ListItemTitle = styled.p<{ mb?: boolean }>`
     font-size: ${theme.fontSizes.l};
-    margin-bottom: ${theme.space[1]};
+    margin-bottom: ${({ mb = true }) => (mb ? theme.space[1] : 0)};
     color: ${theme.colors.accent.light};
 `;
 
@@ -25,54 +34,31 @@ export const ListItemText = styled.p`
     font-size: ${theme.fontSizes.l};
 `;
 
-export const SubjectDetails = styled.div`
-    padding: ${theme.space[2]} ${theme.space[3]};
+export const SubjectDetails = styled.button`
+    padding: ${theme.space[3]} ${theme.space[4]};
     background-color: ${theme.colors.bg.light};
-    border-radius: ${theme.radii.l};
+    border-radius: ${theme.radii.s};
     width: 100%;
+    color: inherit;
+    transition: ${theme.transition.primary};
+
+    &:hover {
+        background-color: ${theme.colors.secondary.dark};
+    }
+`;
+
+export const Total = styled.p`
+    margin-top: ${theme.space[6]};
+    border-top: 1px solid ${theme.colors.white};
+    padding-top: ${theme.space[3]};
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    justify-content: space-between;
+    font-size: ${theme.fontSizes.xxl};
 `;
 
-export const SubjectInfoWrapper = styled.div`
-    margin-left: ${theme.space[3]};
-`;
-
-export const SubjectName = styled.p`
-    font-size: ${theme.fontSizes.l};
-`;
-
-export const SubjectDesc = styled.p`
-    font-size: ${theme.fontSizes.m};
-    color: ${theme.colors.secondary.light};
-`;
-
-export const AvatarBox = styled.div`
-    width: 30px;
-    height: 30px;
-    border-radius: ${theme.radii.round};
-    overflow: hidden;
-    background-color: ${theme.colors.secondary.light};
+export const TotalInfo = styled.span`
     display: flex;
-    align-items: center;
-    justify-content: center;
-
-    > svg {
-        width: 35px;
-        height: 35px;
-        fill: ${theme.colors.bg.main};
-    }
-
-    > img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    > span {
-        font-size: 15px;
-        font-weight: ${theme.fontWeights.light};
-        text-transform: uppercase;
-        color: ${theme.colors.bg.main};
-    }
+    gap: ${theme.space[2]};
+    align-items: baseline;
 `;

@@ -1,12 +1,12 @@
 import getAvatarLetters from 'helpers/getAvatarLetters';
 import { HiPhoto } from 'react-icons/hi2';
-import { AvatarBox } from './ItemsList.styled';
+import { AvatarBox, AvatarSize } from './ItemsList.styled';
 
-type Props = { avatar?: string; name?: string };
+type Props = { avatar?: string; name?: string; size?: AvatarSize };
 
-const ItemAvatar = ({ avatar, name }: Props) => {
+const ItemAvatar = ({ avatar, name, size = AvatarSize.M }: Props) => {
     return (
-        <AvatarBox>
+        <AvatarBox size={size}>
             {avatar ? (
                 <img src={String(avatar)} alt={`${name} image`} />
             ) : name ? (

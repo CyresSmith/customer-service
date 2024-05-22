@@ -6,6 +6,7 @@ import { HiIdentification } from 'react-icons/hi2';
 import { useGetByIdQuery } from 'services/clients.api';
 import { Container, Skeleton } from './ClientProfile.styled';
 import { Profile } from './ClientProfileComponents/Profile';
+import { ModalHeaderBox } from 'components/Ui/Modal/Modal.styled';
 
 type Props = {
     companyId: number;
@@ -32,16 +33,20 @@ const ClientProfile = ({ companyId, clientId, closeModal }: Props) => {
         </Skeleton>
     ) : (
         <Container>
-            <ModalHeaderWithAvatar
-                avatar={data.avatar || ''}
-                title={data.lastName ? data.firstName + ' ' + data.lastName : data.firstName || ''}
-            />
+            <ModalHeaderBox>
+                <ModalHeaderWithAvatar
+                    avatar={data.avatar || ''}
+                    title={
+                        data.lastName ? data.firstName + ' ' + data.lastName : data.firstName || ''
+                    }
+                />
 
-            <ModalSectionsList
-                sectionButtons={sectionButtons}
-                currentSection={section}
-                handleSectionSelect={id => setSection(id)}
-            />
+                <ModalSectionsList
+                    sectionButtons={sectionButtons}
+                    currentSection={section}
+                    handleSectionSelect={id => setSection(id)}
+                />
+            </ModalHeaderBox>
 
             {section === Sections.PROFILE ? (
                 <Profile companyId={companyId} client={data} closeModal={closeModal} />

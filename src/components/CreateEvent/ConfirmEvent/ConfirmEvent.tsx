@@ -1,30 +1,28 @@
+import ClientProfile from 'components/ClientsListPage/ClientProfile';
+import EmployeeModal from 'components/Employees/EmployeeModal';
+import ServiceModal from 'components/Services/ServiceModal';
+import ItemsList from 'components/Ui/ItemsList';
+import { AvatarSize } from 'components/Ui/ItemsList/ItemsList.styled';
+import Modal from 'components/Ui/Modal/Modal';
+import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
+import { format } from 'date-fns';
+import { ServiceOpenModal } from 'helpers/enums';
+import { millisecondsToTime } from 'helpers/millisecondsToTime';
+import { useCompany } from 'hooks/useCompany';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { Client } from 'services/types/clients.types';
 import { IEmployee } from 'services/types/employee.types';
-import { HiPhoto } from 'react-icons/hi2';
 import { ServiceBasicInfo } from 'services/types/service.type';
 import {
-    AvatarBox,
     Container,
+    EventInfoBox,
     EventInfoList,
-    EventInfoListItem,
     ListItemText,
     ListItemTitle,
-    SubjectDesc,
     SubjectDetails,
-    SubjectInfoWrapper,
-    SubjectName,
+    Total,
+    TotalInfo,
 } from './ConfirmEvent.styled';
-import { format } from 'date-fns';
-import { millisecondsToTime } from 'helpers/millisecondsToTime';
-import {
-    List,
-    ListItem,
-    RightWrapper,
-    ServiceName,
-    ServicePrice,
-    ServiceTime,
-} from '../ServicesList/ServicesList.styled';
-import getAvatarLetters from 'helpers/getAvatarLetters';
-import { Client } from 'services/types/clients.types';
 
 type Props = {
     chosenEmployee: IEmployee;
@@ -33,7 +31,14 @@ type Props = {
     eventTime: string;
     chosenClient: Client;
     eventDuration: number;
+    setServices?: Dispatch<SetStateAction<ServiceBasicInfo[]>>;
 };
+
+enum openModal {
+    CLIENT = 'c',
+    EMPLOYEE = 'e',
+    SERVICE = 's',
+}
 
 const ConfirmEvent = ({
     chosenEmployee,
@@ -42,84 +47,130 @@ const ConfirmEvent = ({
     eventTime,
     chosenClient,
     eventDuration,
+    setServices,
 }: Props) => {
+    const { avatar, firstName, lastName, phone, id: clientId } = chosenClient;
+    const {
+        avatar: employeeAvatar,
+        firstName: employeeFirsName,
+        lastName: employeeLastName,
+        jobTitle,
+        id: employeeId,
+    } = chosenEmployee;
+
+    const { id: companyId } = useCompany();
+    const [modalOpen, setModalOpen] = useState<openModal | ServiceOpenModal | null>(null);
+    const [serviceId, setServiceId] = useState<number | null>(null);
+
+    const closeModal = () => setModalOpen(null);
+
+    const handleServiceDelete = (serviceId: number) => {
+        setServices && setServices(p => p.filter(({ id }) => id !== serviceId));
+    };
+
+    const totalPrice = (): number => {
+        return chosenServices?.reduce((acc, cs) => (cs.price ? acc + +cs.price : acc), 0) || 0;
+    };
+
     return (
-        <Container>
-            <EventInfoList>
-                <EventInfoListItem>
-                    <ListItemTitle>Клієнт:</ListItemTitle>
-                    <SubjectDetails>
-                        <AvatarBox>
-                            {chosenClient.avatar ? (
-                                <img
-                                    src={String(chosenClient.avatar)}
-                                    alt={`${chosenClient.firstName} image`}
-                                />
-                            ) : chosenClient.firstName ? (
-                                <span>{getAvatarLetters(chosenClient.firstName)}</span>
-                            ) : (
-                                <HiPhoto />
-                            )}
-                        </AvatarBox>
-                        <SubjectInfoWrapper>
-                            <SubjectName>
-                                {chosenClient.firstName + ' ' + chosenClient.lastName}
-                            </SubjectName>
-                            <SubjectDesc>{chosenClient.phone}</SubjectDesc>
-                        </SubjectInfoWrapper>
-                    </SubjectDetails>
-                </EventInfoListItem>
-                <EventInfoListItem>
-                    <ListItemTitle>Дата:</ListItemTitle>
-                    <ListItemText>{format(eventDate, 'MM.dd.yyyy')}</ListItemText>
-                </EventInfoListItem>
-                <EventInfoListItem>
-                    <ListItemTitle>Час:</ListItemTitle>
-                    <ListItemText>{eventTime}</ListItemText>
-                </EventInfoListItem>
-                <EventInfoListItem>
-                    <ListItemTitle>Тривалість:</ListItemTitle>
-                    <ListItemText>{millisecondsToTime(eventDuration)}</ListItemText>
-                </EventInfoListItem>
-                <EventInfoListItem>
-                    <ListItemTitle>Послуги:</ListItemTitle>
-                    <List>
-                        {chosenServices.map(({ name, duration, price, id }) => (
-                            <ListItem key={id}>
-                                <ServiceName>{name}</ServiceName>
-                                <RightWrapper>
-                                    <ServiceTime>{millisecondsToTime(duration)}</ServiceTime>
-                                    <ServicePrice>{price + ' грн.'}</ServicePrice>
-                                </RightWrapper>
-                            </ListItem>
-                        ))}
-                    </List>
-                </EventInfoListItem>
-                <EventInfoListItem>
-                    <ListItemTitle>Виконавець:</ListItemTitle>
-                    <SubjectDetails>
-                        <AvatarBox>
-                            {chosenEmployee.avatar ? (
-                                <img
-                                    src={String(chosenEmployee.avatar)}
-                                    alt={`${chosenEmployee.firstName} image`}
-                                />
-                            ) : chosenEmployee.firstName ? (
-                                <span>{getAvatarLetters(chosenEmployee.firstName)}</span>
-                            ) : (
-                                <HiPhoto />
-                            )}
-                        </AvatarBox>
-                        <SubjectInfoWrapper>
-                            <SubjectName>
-                                {chosenEmployee.firstName + ' ' + chosenEmployee.lastName}
-                            </SubjectName>
-                            <SubjectDesc>{chosenEmployee.jobTitle}</SubjectDesc>
-                        </SubjectInfoWrapper>
-                    </SubjectDetails>
-                </EventInfoListItem>
-            </EventInfoList>
-        </Container>
+        <>
+            <Container>
+                <EventInfoList>
+                    <div>
+                        <EventInfoBox>
+                            <ListItemTitle mb={false}>Дата:</ListItemTitle>
+                            <ListItemText>{format(eventDate, 'PPPP')}</ListItemText>
+                        </EventInfoBox>
+                        <EventInfoBox>
+                            <ListItemTitle mb={false}>Час:</ListItemTitle>
+                            <ListItemText>{eventTime}</ListItemText>
+                        </EventInfoBox>
+                    </div>
+                    <li>
+                        <ListItemTitle>Виконавець:</ListItemTitle>
+
+                        <SubjectDetails onClick={() => setModalOpen(openModal.EMPLOYEE)}>
+                            <ModalHeaderWithAvatar
+                                avatar={employeeAvatar}
+                                title={employeeFirsName + ' ' + employeeLastName}
+                                subtitle={jobTitle}
+                                avatarSize={AvatarSize.S}
+                            />
+                        </SubjectDetails>
+                    </li>
+                    <li>
+                        <ListItemTitle>Клієнт:</ListItemTitle>
+
+                        <SubjectDetails onClick={() => setModalOpen(openModal.CLIENT)}>
+                            <ModalHeaderWithAvatar
+                                avatar={avatar}
+                                title={firstName + ' ' + lastName}
+                                subtitle={phone}
+                                avatarSize={AvatarSize.S}
+                            />
+                        </SubjectDetails>
+                    </li>
+                    <li>
+                        <ListItemTitle>
+                            Послуги:{' '}
+                            {chosenServices.length > 0 && <span>{chosenServices.length}</span>}
+                        </ListItemTitle>
+
+                        <ItemsList
+                            items={chosenServices.map(({ name, duration, price, id }) => ({
+                                id,
+                                name,
+                                duration,
+                                price,
+                            }))}
+                            listHeader={false}
+                            listSortPanel={false}
+                            notSortedKeys={['name', 'duration', 'price']}
+                            onItemClick={id => {
+                                setServiceId(id);
+                                setModalOpen(ServiceOpenModal.EDIT_SERVICE);
+                            }}
+                            avatarSize={AvatarSize.S}
+                            onItemDeleteClick={setServices ? handleServiceDelete : undefined}
+                        />
+                    </li>
+                </EventInfoList>
+
+                <Total>
+                    <span>Загалом:</span>
+                    <TotalInfo>
+                        <span>{millisecondsToTime(eventDuration)}</span>
+                    </TotalInfo>
+                    <TotalInfo>
+                        <span>{totalPrice()} грн</span>
+                    </TotalInfo>
+                </Total>
+            </Container>
+
+            {modalOpen === openModal.CLIENT && (
+                <Modal $isOpen={modalOpen === openModal.CLIENT} closeModal={closeModal}>
+                    <ClientProfile
+                        clientId={clientId}
+                        companyId={companyId}
+                        closeModal={closeModal}
+                    />
+                </Modal>
+            )}
+
+            {modalOpen === openModal.EMPLOYEE && (
+                <Modal $isOpen={modalOpen === openModal.EMPLOYEE} closeModal={closeModal}>
+                    <EmployeeModal id={employeeId} />
+                </Modal>
+            )}
+
+            {modalOpen === ServiceOpenModal.EDIT_SERVICE && serviceId && (
+                <ServiceModal
+                    openModal={modalOpen}
+                    serviceId={serviceId}
+                    handleModalClose={closeModal}
+                />
+            )}
+        </>
     );
 };
 

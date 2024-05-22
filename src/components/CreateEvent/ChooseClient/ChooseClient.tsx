@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCreateClientMutation, useGetAllClientsQuery } from 'services/clients.api';
 import { Client } from 'services/types/clients.types';
-import { Container } from './ChooseClient.styled';
 
 type Props = {
     companyId: number;
@@ -64,7 +63,7 @@ const ChooseClient = ({ companyId, setClient, setStep }: Props) => {
 
     return (
         <>
-            <Container>
+            <div>
                 {isLoading ? (
                     <Loader />
                 ) : (
@@ -72,37 +71,22 @@ const ChooseClient = ({ companyId, setClient, setStep }: Props) => {
                         items={
                             !data
                                 ? []
-                                : data.map(
-                                      ({
-                                          id,
-                                          avatar,
-                                          firstName,
-                                          lastName,
-                                          phone,
-                                          //   email,
-                                          //   gender,
-                                          //   createdAt,
-                                      }) => ({
-                                          id,
-                                          avatar: avatar || '',
-                                          name: `${firstName}  ${lastName && lastName}`,
-                                          phone,
-                                          //   email: email || 'Пошта не вказана',
-                                          //   gender: gender || 'other',
-                                          //   register: createdAt
-                                          //       ? new Date(createdAt).toLocaleDateString()
-                                          //       : '',
-                                      })
-                                  )
+                                : data.map(({ id, avatar, firstName, lastName, phone }) => ({
+                                      id,
+                                      avatar: avatar || '',
+                                      name: `${firstName}  ${lastName && lastName}`,
+                                      phone,
+                                  }))
                         }
                         onItemClick={handleClientChoose}
                         addButtonTitle="Додати клієнта"
                         onAddClick={() => setModalOpen(true)}
                         keyForSearch="phone"
                         notSortedKeys={['phone']}
+                        nameColumnTitle="Ім'я"
                     />
                 )}
-            </Container>
+            </div>
             {modalOpen && (
                 <Modal id="newClient" $isOpen={modalOpen} closeModal={() => setModalOpen(false)}>
                     <ClientForm

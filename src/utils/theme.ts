@@ -82,7 +82,18 @@ const theme = {
         m: 1.25,
     },
 
-    space: ['2px', '4px', '6px', '10px', '16px', '26px', '42px', '110px', '152px', '262px'],
+    space: [
+        '2px',
+        '4px',
+        '6px',
+        '10px',
+        '16px',
+        '26px',
+        '42px',
+        '110px',
+        '152px',
+        '262px',
+    ] as const,
 
     mediaBreakpoints: {
         mobile: {

@@ -40,6 +40,24 @@ export const serviceApi = createApi({
                     : [{ type: 'services', id: 'LIST' }],
         }),
 
+        getEmployeeServices: builder.query<
+            ServiceBasicInfo[],
+            { companyId: number; employeeId: number }
+        >({
+            query: ({ companyId, employeeId }) => ({
+                url: `/service/employee`,
+                method: 'GET',
+                params: { companyId, employeeId },
+            }),
+            providesTags: resp =>
+                resp
+                    ? [
+                          ...resp.map(({ id }) => ({ type: 'services' as const, id })),
+                          { type: 'services', id: 'LIST' },
+                      ]
+                    : [{ type: 'services', id: 'LIST' }],
+        }),
+
         uploadServiceAvatar: builder.mutation<
             { url: string },
             { companyId: number; serviceId: number; data: FormData }
@@ -106,4 +124,5 @@ export const {
     useLazyGetServicesQuery,
     useGetServiceDataQuery,
     useDeleteServiceMutation,
+    useGetEmployeeServicesQuery,
 } = serviceApi;

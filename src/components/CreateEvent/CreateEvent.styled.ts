@@ -2,8 +2,9 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const Container = styled.div`
-    width: 500px;
-    height: 500px;
+    width: 610px;
+    height: 100%;
+    min-height: 500px;
     display: flex;
     flex-direction: column;
     gap: ${theme.space[4]};

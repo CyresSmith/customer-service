@@ -4,16 +4,16 @@ import RecordLogBar from 'components/RecordLog/RecordLogBar';
 import { SelectItem } from 'components/Ui/Form/types';
 import Modal from 'components/Ui/Modal/Modal';
 import PageContentLayout from 'components/Ui/PageContentLayout';
+import { getDate, getMonth, getYear } from 'date-fns';
 import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
-import { useGetAllCompanySchedulesQuery } from 'services/schedules.api';
-import { IMonthSchedule } from 'services/types/schedule.types';
-import { BasicEmployeeInfo } from 'services/types/employee.types';
-import { EmployeeStatusEnum } from 'services/types/employee.types';
-import { getDate, getMonth, getYear } from 'date-fns';
 import { useGetCompanyEventsQuery } from 'services/events.api';
+import { useGetAllCompanySchedulesQuery } from 'services/schedules.api';
+import { BasicEmployeeInfo, EmployeeStatusEnum } from 'services/types/employee.types';
 import { EventType } from 'services/types/event.types';
+import { IMonthSchedule } from 'services/types/schedule.types';
+import theme from 'utils/theme';
 
 const getModalTitles = (step: string) => {
     return step === 'employees'
@@ -24,7 +24,7 @@ const getModalTitles = (step: string) => {
         ? 'Оберіть дату та час'
         : step === 'confirm'
         ? 'Перевірте деталі запису'
-        : 'Створення запису';
+        : 'Оберіть клієнта';
 };
 
 const initialSelection = [{ id: 'all', value: `Всі працівники` }];
@@ -72,43 +72,6 @@ const RecordLogPage = () => {
             setAllEvents(eventsData);
         }
     }, [employeesData, eventsData, schedulesData]);
-
-    // useEffect(() => {
-    //     const getData = async () => {
-    //         if (id) {
-    //             await getEmployees(id)
-    //                 .then(response => {
-    //                     if (Array.isArray(response.data)) {
-    //                         setAllEmployees(response.data);
-    //                     }
-    //                 })
-    //                 .then(async () => {
-    //                     await getSchedules({
-    //                         companyId: id,
-    //                         month: chosenMonth,
-    //                         year: chosenYear,
-    //                     }).then(response => {
-    //                         if (Array.isArray(response.data)) {
-    //                             setAllSchedules(response.data);
-    //                         }
-    //                     });
-    //                 })
-    //                 .then(async () => {
-    //                     await getEvents({
-    //                         companyId: id,
-    //                         year: chosenYear,
-    //                         month: chosenMonth,
-    //                     }).then(response => {
-    //                         if (Array.isArray(response.data)) {
-    //                             setAllEvents(response.data);
-    //                         }
-    //                     });
-    //                 });
-    //         }
-    //     };
-
-    //     getData();
-    // }, [chosenMonth, chosenYear, getEmployees, getEvents, getSchedules, id]);
 
     const workingProviders =
         allEmployees &&
@@ -202,7 +165,7 @@ const RecordLogPage = () => {
                 {eventStep !== null && (
                     <Modal
                         id="createEvent"
-                        titleMargin="10px"
+                        titleMargin={theme.space[5]}
                         closeModal={closeEventModal}
                         $isOpen={eventStep !== null}
                         title={getModalTitles(eventStep)}

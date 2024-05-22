@@ -3,7 +3,7 @@ import theme from 'utils/theme';
 
 export const ModalHeaderBox = styled.div`
     width: 100%;
-    margin-bottom: ${theme.space[4]};
+    /* margin-bottom: ${theme.space[4]}; */
     display: flex;
     gap: ${theme.space[4]};
     align-items: center;
@@ -44,6 +44,7 @@ export const TitleBox = styled.div`
     justify-content: center;
     gap: ${theme.space[1]};
     min-height: 40px;
+    text-align: left;
 `;
 
 export const Title = styled.h5`

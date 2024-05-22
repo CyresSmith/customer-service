@@ -35,6 +35,13 @@ export const ModalContainer = styled.div<Style>`
     box-shadow: ${theme.shadow.m};
 `;
 
+export const ModalHeaderBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.space[4]};
+    margin-bottom: ${theme.space[4]};
+`;
+
 export const Title = styled.h2<{ $titleMargin: string | undefined }>`
     font-size: ${theme.fontSizes.xxl};
     font-weight: ${theme.fontWeights.light};

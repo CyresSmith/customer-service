@@ -4,7 +4,7 @@ import theme from 'utils/theme';
 export const ListBox = styled.div`
     display: flex;
     flex-direction: column;
-    gap: ${theme.space[4]};
+    /* gap: ${theme.space[4]}; */
     height: 100%;
 `;
 
@@ -14,7 +14,7 @@ export const ListBar = styled.div`
     justify-content: space-between;
     gap: ${theme.space[5]};
     width: 100%;
-    /* margin-bottom: ${theme.space[4]}; */
+    margin-bottom: ${theme.space[4]};
 `;
 
 export const FilterBox = styled.div`
@@ -29,9 +29,15 @@ export const SearchBox = styled.div`
     position: relative;
 `;
 
-export const AvatarBox = styled.div`
-    width: 50px;
-    height: 50px;
+export enum AvatarSize {
+    S = '40px',
+    M = '50px',
+    L = '80px',
+}
+
+export const AvatarBox = styled.div<{ size?: AvatarSize }>`
+    width: ${({ size }) => size};
+    height: ${({ size }) => size};
     border-radius: ${theme.radii.round};
     overflow: hidden;
     background-color: ${theme.colors.secondary.light};
@@ -52,7 +58,8 @@ export const AvatarBox = styled.div`
     }
 
     > span {
-        font-size: 30px;
+        font-size: ${({ size }) =>
+            size === AvatarSize.S ? '20px' : size === AvatarSize.M ? '30px' : '60px'};
         font-weight: ${theme.fontWeights.light};
         text-transform: uppercase;
         color: ${theme.colors.bg.main};
@@ -82,20 +89,20 @@ type ListGridProps = {
     $isDeleteButton: boolean;
     $selected?: boolean;
     $isActive?: boolean;
+    $avatarSize?: AvatarSize;
 };
 
 export const ListHeader = styled.ul<ListGridProps>`
     display: grid;
-    grid-template-columns: 50px ${({ $columnsCount, $isDeleteButton }) =>
-            `repeat(${$columnsCount}, calc(((${$isDeleteButton ? '100% - 50px' : '100%'}) - (${
-                theme.space[4]
-            } * ${
-                $isDeleteButton ? $columnsCount + 4 : $columnsCount + 3
-            })) / ${$columnsCount}) ) ${$isDeleteButton ? '50px' : ''}`};
+    grid-template-columns: ${({ $columnsCount, $isDeleteButton, $avatarSize }) =>
+        `${$avatarSize} repeat(${$columnsCount}, calc(((${
+            $isDeleteButton ? '100% - 50px' : '100%'
+        }) - (${theme.space[4]} * ${
+            $isDeleteButton ? $columnsCount + 4 : $columnsCount + 3
+        })) / ${$columnsCount}) ) ${$isDeleteButton ? '50px' : ''}`};
     padding: 0 ${theme.space[4]};
     justify-items: center;
     gap: ${theme.space[4]};
-    margin-bottom: ${theme.space[2]};
 `;
 
 export const ListHeaderItem = styled.li`
@@ -123,12 +130,12 @@ export const List = styled.ul`
 export const ItemBox = styled.li<ListGridProps>`
     position: relative;
     display: grid;
-    grid-template-columns: ${({ $columnsCount, $isDeleteButton }) =>
-        `50px repeat(${$columnsCount},   calc((100% - ((${$isDeleteButton ? '100px' : '50px'}) + ${
-            theme.space[4]
-        } * ${$isDeleteButton ? $columnsCount + 1 : $columnsCount})) / ${$columnsCount})) ${
-            $isDeleteButton ? '50px' : ''
-        }`};
+    grid-template-columns: ${({ $columnsCount, $isDeleteButton, $avatarSize }) =>
+        `${$avatarSize} repeat(${$columnsCount},   calc((100% - ((${
+            $isDeleteButton ? '100px' : '50px'
+        }) + ${theme.space[4]} * ${
+            $isDeleteButton ? $columnsCount + 1 : $columnsCount
+        })) / ${$columnsCount})) ${$isDeleteButton ? '50px' : ''}`};
     cursor: pointer;
     padding: ${theme.space[3]} ${theme.space[4]};
     transition: ${theme.transition.primary};
