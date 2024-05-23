@@ -95,13 +95,13 @@ const theme = {
         '262px',
     ] as const,
 
-    mediaBreakpoints: {
+    breakpoints: {
         mobile: {
             media: 'screen and (320px <= width <= 767px)',
             width: '320px',
         },
         tablet: {
-            media: 'screen and (768px <= width <= 1149px)',
+            media: 'screen and (768px <= width <= 1279px)',
             width: '768px',
         },
         desktop: { media: 'screen and (1280px <= width)', width: '1280px' },

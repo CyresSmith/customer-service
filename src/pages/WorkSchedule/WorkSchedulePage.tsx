@@ -1,4 +1,3 @@
-import Loader from 'components/Ui/Loader';
 import PageContentLayout from 'components/Ui/PageContentLayout';
 import WorkSchedule from 'components/WorkSchedule';
 import WorkScheduleBar from 'components/WorkSchedule/WorkScheduleBar';
@@ -23,7 +22,7 @@ const WorkSchedulePage = () => {
         ({ provider, status }) => provider && status === EmployeeStatusEnum.WORKING
     );
 
-    const providersForRender = providers?.filter(({ id }) => selectedProviders.includes(id));
+    const providersForRender = providers?.filter(({ id }) => selectedProviders.includes(id)) || [];
 
     useEffect(() => {
         if (!employees) return;
@@ -41,16 +40,7 @@ const WorkSchedulePage = () => {
                     setSelectedMonth={setSelectedMonth}
                 />
             }
-            content={
-                employees &&
-                employees.length > 0 &&
-                providersForRender &&
-                providersForRender.length > 0 ? (
-                    <WorkSchedule selectedMonth={selectedMonth} providers={providersForRender} />
-                ) : (
-                    <Loader />
-                )
-            }
+            content={<WorkSchedule selectedMonth={selectedMonth} providers={providersForRender} />}
         />
     );
 };

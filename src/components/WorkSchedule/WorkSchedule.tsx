@@ -17,13 +17,16 @@ import {
     startOfToday,
 } from 'date-fns';
 
+import { NoDataWrapper, NoSchedule } from 'components/RecordLog/RecordLog.styled';
 import ScheduleTimeSelection from 'components/ScheduleTimeSelection';
 import { Message } from 'components/ScheduleTimeSelection/ScheduleTimeSelection.styled';
+import Button from 'components/Ui/Buttons/Button';
 import generateTimeArray from 'helpers/generateTimeArray';
 import { useAdminRights, useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useScrollIntoView } from 'hooks/useScrollIntoView';
 import { UIEventHandler, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
     useGetAllCompanySchedulesQuery,
@@ -59,7 +62,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
     const { id, workingHours, employees } = useCompany();
     const { user, accessToken } = useAuth();
     const isAdmin = useAdminRights();
-
+    const navigate = useNavigate();
     const [scheduleState, setScheduleState] = useState<IMonthSchedule[]>([]);
     const [selectedDays, setSelectedDays] = useState<{ employeeId: number; dates: Date[] }[]>([]);
     const [scrollLeft, setScrollLeft] = useState<number>(0);
@@ -288,7 +291,7 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
         if (date < startOfToday() || isNotWorkingDay(date) || !isEditingAllowed) return;
 
         const allProvidersSelect =
-            selectedDays.length === providers.length
+            selectedDays.length === providers?.length
                 ? selectedDays.every(item =>
                       item.dates.some(selectedDate => isSameDay(selectedDate, date))
                   )
@@ -768,11 +771,22 @@ const WorkSchedule = ({ providers, selectedMonth }: Props) => {
         }
     }, [selectedDays]);
 
-    return (
+    return !providers.length ? (
+        <NoDataWrapper>
+            <NoSchedule>Перелік співробітників порожній!</NoSchedule>
+            <Button
+                onClick={() => navigate('employees')}
+                $colors="light"
+                children="Перейти до налаштування співробітників"
+            />
+        </NoDataWrapper>
+    ) : (
         <div
             style={{
                 display: 'grid',
-                gridTemplateColumns: `${isEditingAllowed ? '1fr 300px' : '1fr'}`,
+                gridTemplateColumns: `${
+                    providers.length && isEditingAllowed ? '1fr 300px' : '1fr'
+                }`,
                 gap: '16px',
                 height: '100%',
             }}

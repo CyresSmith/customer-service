@@ -78,11 +78,11 @@ const ConfirmEvent = ({
                 <EventInfoList>
                     <div>
                         <EventInfoBox>
-                            <ListItemTitle mb={false}>Дата:</ListItemTitle>
+                            <ListItemTitle $mb={false}>Дата:</ListItemTitle>
                             <ListItemText>{format(eventDate, 'PPPP')}</ListItemText>
                         </EventInfoBox>
                         <EventInfoBox>
-                            <ListItemTitle mb={false}>Час:</ListItemTitle>
+                            <ListItemTitle $mb={false}>Час:</ListItemTitle>
                             <ListItemText>{eventTime}</ListItemText>
                         </EventInfoBox>
                     </div>

@@ -22,9 +22,9 @@ export const EventInfoBox = styled.li`
     }
 `;
 
-export const ListItemTitle = styled.p<{ mb?: boolean }>`
+export const ListItemTitle = styled.p<{ $mb?: boolean }>`
     font-size: ${theme.fontSizes.l};
-    margin-bottom: ${({ mb = true }) => (mb ? theme.space[1] : 0)};
+    margin-bottom: ${({ $mb = true }) => ($mb ? theme.space[1] : 0)};
     color: ${theme.colors.accent.light};
 `;
 

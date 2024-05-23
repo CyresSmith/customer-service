@@ -26,6 +26,7 @@ export const ModalContainer = styled.div<Style>`
     width: ${props => (props.$w ? props.$w : 'auto')};
     height: ${props => (props.$h ? props.$h : 'auto')};
     min-width: 360px;
+    max-height: 100vh;
     padding: ${theme.space[5]};
     background-color: ${theme.colors.bg.main};
     border-radius: ${theme.radii.s};
@@ -33,6 +34,7 @@ export const ModalContainer = styled.div<Style>`
     transform: ${props => (props.$isOpen ? 'translate(0, 0)' : 'translate(0, 100%)')};
     transition: ${theme.transition.modal};
     box-shadow: ${theme.shadow.m};
+    overflow-y: scroll;
 `;
 
 export const ModalHeaderBox = styled.div`
