@@ -3,30 +3,33 @@ import RegisterForm from 'components/TopBar/RegisterForm';
 import Modal from 'components/Ui/Modal/Modal';
 import { useAuth } from 'hooks/useAuth';
 import { useCompany } from 'hooks/useCompany';
+import useMediaQuery from 'hooks/useMediaQuery';
 import { useState } from 'react';
 import { useMatch } from 'react-router-dom';
 import AuthNav from './AuthNav';
 import { Logo, TopBarWrapper } from './TopBar.styled';
 import UsersNav from './UsersNav';
+import theme from 'utils/theme';
 
 export type IsOpenType = 'register' | 'login' | null;
 
 const TopBar = () => {
     const { isLoggedIn, accessToken } = useAuth();
-    const [isOpen, setIsOpen] = useState<IsOpenType>(null);
     const { avatar, name, id } = useCompany();
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
+    const [isOpen, setIsOpen] = useState<IsOpenType>(null);
     const match = useMatch('/:companyId/*');
 
     const closeModal = () => setIsOpen(null);
 
-    const isAuthenticate = !isLoggedIn && !accessToken ? false : true;
+    const isAuthenticate = isLoggedIn && Boolean(accessToken);
 
     return (
         <>
             <TopBarWrapper>
                 {!match || isNaN(Number(match?.params?.companyId)) ? (
                     <Logo to="/">
-                        <span>Тут буде лого</span>
+                        <span>{isMobile ? 'Лого' : 'Тут буде лого'}</span>
                     </Logo>
                 ) : (
                     <Logo to={`/${id}`}>

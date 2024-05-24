@@ -6,10 +6,8 @@ import { Container, OutletWrapper } from './MainLayout.styled';
 const MainLayout = () => {
     return (
         <Container>
-            <div>
-                <TopBar />
-                {/* <Breadcrumbs /> */}
-            </div>
+            <TopBar />
+
             <OutletWrapper>
                 <Suspense fallback={null}>
                     <Outlet />

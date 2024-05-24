@@ -7,6 +7,7 @@ const initialState: UserState = {
     isLoggedIn: false,
     accessToken: null,
     refreshToken: null,
+    isMenuOpen: false,
 };
 
 const userSlice = createSlice({
@@ -51,6 +52,12 @@ const userSlice = createSlice({
         },
         updatePassword(_, { payload }) {
             return payload;
+        },
+        menuToggle(state, { payload }: PayloadAction<boolean | undefined>) {
+            state.isMenuOpen = payload || !state.isMenuOpen;
+        },
+        closeMenu(state) {
+            state.isMenuOpen = false;
         },
     },
 });

@@ -6,6 +6,7 @@ export const ListBox = styled.div`
     gap: ${theme.space[3]};
     flex-grow: 1;
 `;
+type IsSelected = { $isSelected: boolean };
 
 export const List = styled.ul`
     flex-grow: 1;
@@ -16,26 +17,16 @@ export const List = styled.ul`
     display: flex;
     flex-direction: column;
     gap: ${theme.space[4]};
-
-    > li {
-        display: flex;
-        flex-direction: column;
-        gap: ${theme.space[4]};
-        transition: ${theme.transition.primary};
-
-        /* &:not(:last-child) {
-            &:after {
-                content: '';
-                height: 1px;
-                width: 100%;
-                display: block;
-                background-color: aliceblue;
-            }
-        } */
-    }
 `;
 
-export const CompanyItem = styled.button<{ $isSelected: boolean }>`
+export const ListItem = styled.li<IsSelected>`
+    display: flex;
+    flex-direction: column;
+    gap: ${({ $isSelected }) => ($isSelected ? theme.space[4] : 0)};
+    transition: ${theme.transition.primary};
+`;
+
+export const CompanyItem = styled.button<IsSelected>`
     width: 100%;
     display: flex;
     align-items: center;
@@ -47,6 +38,12 @@ export const CompanyItem = styled.button<{ $isSelected: boolean }>`
         color: ${({ $isSelected }) =>
             $isSelected ? theme.colors.accent.light : theme.colors.white};
         transition: ${theme.transition.primary};
+        word-break: break-all;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        flex: 1;
+        text-align: left;
     }
 
     &:hover {
@@ -55,4 +52,40 @@ export const CompanyItem = styled.button<{ $isSelected: boolean }>`
                 $isSelected ? theme.colors.accent.main : theme.colors.secondary.main};
         }
     }
+`;
+
+const PADDING = theme.space[4];
+
+export const ContactsList = styled.ul<IsSelected & { $contactsCount: number }>`
+    display: flex;
+    flex-direction: column;
+    padding: ${({ $isSelected }) => ($isSelected ? `${PADDING} 0` : 0)};
+    border-bottom: ${({ $isSelected }) => ($isSelected ? `1px solid ${theme.colors.white}` : 0)};
+    border-top: ${({ $isSelected }) => ($isSelected ? `1px solid ${theme.colors.white}` : 0)};
+    height: ${({ $isSelected, $contactsCount }) =>
+        $isSelected && $contactsCount ? `calc(${$contactsCount} * 70px + (${PADDING} * 2))` : 0};
+    transition: ${theme.transition.primary};
+    overflow: hidden;
+`;
+
+export const ContactItem = styled.button<{ $active: boolean }>`
+    width: 100%;
+    padding: ${theme.space[3]};
+    border-radius: ${theme.radii.m};
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: ${theme.space[3]};
+    align-items: center;
+    color: ${({ $active }) => ($active ? theme.colors.bg.dark : theme.colors.white)};
+    background-color: ${({ $active }) => ($active ? theme.colors.primary.main : 'transparent')};
+    transition: ${theme.transition.primary};
+`;
+
+export const ContactName = styled.p`
+    font-size: ${theme.fontSizes.xl};
+    word-break: break-all;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: left;
 `;

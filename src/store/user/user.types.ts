@@ -32,6 +32,7 @@ export type UserState = {
     isLoggedIn: boolean;
     accessToken: string | null;
     refreshToken: string | null;
+    isMenuOpen: boolean;
 };
 
 export type RegisterResponse = {

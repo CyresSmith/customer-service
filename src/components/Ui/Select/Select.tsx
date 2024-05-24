@@ -27,7 +27,7 @@ const Select = ({
 
     const [severalSelected, setSeveralSelected] = useState<string[]>([]);
 
-    const selectRef = useClickOutside(() => setIsOpen(false));
+    const selectRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
     const handleSelect = (item: string, id: string) => {
         if (disabled) return;
@@ -77,8 +77,8 @@ const Select = ({
                     {!several
                         ? selected
                         : severalSelected.length > 0
-                          ? severalSelected.join(', ')
-                          : 'Нічого не вибрано'}
+                        ? severalSelected.join(', ')
+                        : 'Нічого не вибрано'}
                 </span>
 
                 <HiChevronDown />

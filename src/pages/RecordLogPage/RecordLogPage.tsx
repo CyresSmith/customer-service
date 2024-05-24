@@ -1,9 +1,9 @@
 import CreateEvent from 'components/CreateEvent';
+import PageContentLayout from 'components/Layout/PageContentLayout';
 import RecordLog from 'components/RecordLog';
 import RecordLogBar from 'components/RecordLog/RecordLogBar';
 import { SelectItem } from 'components/Ui/Form/types';
 import Modal from 'components/Ui/Modal/Modal';
-import PageContentLayout from 'components/Ui/PageContentLayout';
 import { getDate, getMonth, getYear } from 'date-fns';
 import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';

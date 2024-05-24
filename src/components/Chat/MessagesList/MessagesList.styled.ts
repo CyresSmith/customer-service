@@ -2,18 +2,27 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const MessagesBox = styled.div`
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content 1fr max-content;
     background-color: ${theme.colors.bg.dark};
     padding: ${theme.space[4]};
     border-radius: ${theme.radii.s};
     gap: ${theme.space[4]};
 `;
 
-export const MessagesHeader = styled.p`
+export const MessagesHeader = styled.div`
     display: flex;
     align-items: center;
     gap: ${theme.space[4]};
+    overflow: hidden;
+`;
+
+export const ContactName = styled.p`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
 `;
 
 export const OnlineBadge = styled.span`

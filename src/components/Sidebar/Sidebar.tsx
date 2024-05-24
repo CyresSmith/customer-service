@@ -1,9 +1,12 @@
-import Menu from 'components/Ui/Menu';
+import { useActions, useClickOutside, useEscapeKey } from 'hooks';
+import { useMenu } from 'hooks/useMenu';
+import { useState } from 'react';
 import { AiOutlineSchedule } from 'react-icons/ai';
 import { HiAdjustments } from 'react-icons/hi';
 import { PiUsersThree } from 'react-icons/pi';
 import { VscBook } from 'react-icons/vsc';
-import { Container } from './Sidebar.styled';
+import { MenuList } from './Sidebar.styled';
+import SidebarItem from './SidebarItem';
 
 const items = [
     { id: 1, to: 'record-log', label: 'Журнал записів', Icon: VscBook },
@@ -15,13 +18,13 @@ const items = [
     },
     {
         id: 3,
-        to: '',
+        to: 'clients-list',
         label: 'Клієнти',
         Icon: PiUsersThree,
-        children: [
-            { id: 1, to: 'clients-list', label: 'Список клієнтів' },
-            // { id: 2, to: 'clients-statistic', label: 'Статистика' },
-        ],
+        // children: [
+        //     { id: 1, to: 'clients-list', label: 'Список клієнтів' },
+        //     { id: 2, to: 'clients-statistic', label: 'Статистика' },
+        // ],
     },
     {
         id: 4,
@@ -37,10 +40,25 @@ const items = [
 ];
 
 const Sidebar = () => {
+    const isOpen = useMenu();
+    const { closeMenu } = useActions();
+    useEscapeKey(() => closeMenu());
+
+    const [openItem, setOpenItem] = useState<string | null>(null);
+    const ref = useClickOutside<HTMLUListElement>(() => closeMenu());
+
+    const props = {
+        openItem,
+        setOpenItem,
+        onItemClick: () => {},
+    };
+
     return (
-        <Container>
-            <Menu items={items} size="l" />
-        </Container>
+        <MenuList $isOpen={isOpen} ref={ref}>
+            {items.map(item => (
+                <SidebarItem key={item.id} {...item} {...props} />
+            ))}
+        </MenuList>
     );
 };
 

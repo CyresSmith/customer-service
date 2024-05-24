@@ -1,11 +1,10 @@
 import CustomForm from 'components/Ui/Form/CustomForm';
+import { InputProps } from 'components/Ui/Form/types';
 import { useEffect } from 'react';
 import { HiOutlineUserAdd } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { useRegisterMutation } from 'services/auth.api';
-import { FormBox } from '../TopBar.styled';
 import { UserRegister } from 'store/user/user.types';
-import { InputProps } from 'components/Ui/Form/types';
 
 type Props = {
     closeModal: () => void;
@@ -58,17 +57,15 @@ const RegisterForm = ({ closeModal }: Props) => {
     }, [closeModal, error, isError, isLoading, isSuccess]);
 
     return (
-        <FormBox>
-            <CustomForm<UserRegister>
-                SubmitButtonIcon={HiOutlineUserAdd}
-                isLoading={isLoading}
-                buttonLabel="Реєстрація"
-                onSubmit={handleSubmit}
-                initialState={initialRegState}
-                inputs={registerInputs}
-                // title='Реєстрація'
-            />
-        </FormBox>
+        <CustomForm<UserRegister>
+            SubmitButtonIcon={HiOutlineUserAdd}
+            isLoading={isLoading}
+            buttonLabel="Реєстрація"
+            onSubmit={handleSubmit}
+            initialState={initialRegState}
+            inputs={registerInputs}
+            // title='Реєстрація'
+        />
     );
 };
 

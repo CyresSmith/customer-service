@@ -21,7 +21,7 @@ const WorkSchedule = lazy(() => import('pages/WorkSchedule'));
 const RecordLog = lazy(() => import('pages/RecordLogPage'));
 const VerifyPage = lazy(() => import('pages/Verify'));
 const ErrorPage = lazy(() => import('pages/ErrorPage'));
-const Workspace = lazy(() => import('components/Layout/UsersLayout'));
+const UsersLayout = lazy(() => import('components/Layout/UsersLayout'));
 const EmployeesPage = lazy(() => import('pages/EmployeesPage'));
 
 function App() {
@@ -66,7 +66,7 @@ function App() {
                         />
                         <Route
                             path="/:companyId"
-                            element={<PrivateRoute children={<Workspace />} />}
+                            element={<PrivateRoute children={<UsersLayout />} />}
                         >
                             <Route
                                 path="record-log"

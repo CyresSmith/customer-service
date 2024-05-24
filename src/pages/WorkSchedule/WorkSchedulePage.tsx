@@ -1,4 +1,4 @@
-import PageContentLayout from 'components/Ui/PageContentLayout';
+import PageContentLayout from 'components/Layout/PageContentLayout';
 import WorkSchedule from 'components/WorkSchedule';
 import WorkScheduleBar from 'components/WorkSchedule/WorkScheduleBar';
 import { useAuth } from 'hooks';

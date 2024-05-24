@@ -2,16 +2,22 @@ import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import theme from 'utils/theme';
 
+export const HEADER_HIGHT = '72px';
+
 export const TopBarWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    min-height: 72px;
+    height: ${HEADER_HIGHT};
     background-color: ${theme.colors.bg.dark};
     border-radius: ${theme.radii.m};
-    padding: ${theme.space[4]} ${theme.space[5]};
+    padding: ${theme.space[3]};
     box-shadow: ${theme.shadow.m};
+
+    @media ${theme.breakpoints.desktop.media} {
+        padding: ${theme.space[4]} ${theme.space[5]};
+    }
 `;
 
 export const Logo = styled(NavLink)`
@@ -27,8 +33,4 @@ export const Logo = styled(NavLink)`
         object-fit: cover;
         border-radius: ${theme.radii.round};
     }
-`;
-
-export const FormBox = styled.div`
-    width: 25vw;
 `;

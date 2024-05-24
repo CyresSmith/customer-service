@@ -1,27 +1,25 @@
 import styled from 'styled-components';
 import theme from 'utils/theme';
-
-export const Container = styled.main`
-    width: 100%;
-    min-height: 100vh;
-    padding: ${theme.space[4]};
-    display: grid;
-    grid-template-rows: max-content 1fr;
-    gap: ${theme.space[3]};
-`;
+import { LAYOUT_GAP, LAYOUT_PADDING } from '../MainLayout/MainLayout.styled';
 
 export const MainSection = styled.section`
+    position: relative;
     width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: ${theme.space[3]};
+
+    @media ${theme.breakpoints.desktop.media} {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: ${LAYOUT_GAP};
+    }
 `;
 
 export const OutletWrapper = styled.div`
     background-color: ${theme.colors.bg.dark};
-    padding: ${theme.space[4]};
+    padding: ${LAYOUT_PADDING};
     border-radius: ${theme.radii.m};
     box-shadow: ${theme.shadow.m};
     overflow: hidden;
+    width: 100%;
+    height: 100%;
 `;

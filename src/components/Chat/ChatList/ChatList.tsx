@@ -1,9 +1,17 @@
-import ItemsList from 'components/Ui/ItemsList';
+import Badge from 'components/Ui/Badge';
 import ItemAvatar from 'components/Ui/ItemsList/ItemAvatar';
 import { useActions, useAuth, useChat } from 'hooks';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
-import { CompanyItem, List, ListBox } from './ChatList.styled';
+import {
+    CompanyItem,
+    ContactItem,
+    ContactName,
+    ContactsList,
+    List,
+    ListBox,
+    ListItem,
+} from './ChatList.styled';
 
 type Props = {
     selectedCompany: number | null;
@@ -39,6 +47,16 @@ const ChatList = ({
         );
     };
 
+    const contacts =
+        data
+            ?.filter(({ userId }) => userId !== user?.id)
+            ?.sort((a, b) => {
+                if (a.isOnline === b.isOnline) return 0;
+                if (a.isOnline && !b.isOnline) return -1;
+                if (!a.isOnline && b.isOnline) return 1;
+                return 0;
+            }) || [];
+
     const handleChannelSelect = (channelId?: number, userId?: number) => {
         if (channelId) {
             setSelectedChannel(channelId);
@@ -50,8 +68,8 @@ const ChatList = ({
 
                 if (channel) {
                     setSelectedUser(userId);
-                    resetUnread(channel.id);
                     setSelectedChannel(channel.id);
+                    resetUnread(channel.id);
                     return;
                 }
             }
@@ -60,16 +78,6 @@ const ChatList = ({
             setSelectedChannel(null);
         }
     };
-
-    const contacts =
-        data
-            ?.filter(({ userId }) => userId !== user?.id)
-            ?.sort((a, b) => {
-                if (a.isOnline === b.isOnline) return 0;
-                if (a.isOnline && !b.isOnline) return -1;
-                if (!a.isOnline && b.isOnline) return 1;
-                return 0;
-            }) || [];
 
     useEffect(() => {
         if (!companies || companies.length > 0) return;
@@ -80,41 +88,60 @@ const ChatList = ({
     return (
         <ListBox>
             <List>
-                {companies.map(({ id, name, avatar }) => (
-                    <li key={id}>
-                        <CompanyItem
-                            onClick={() => handleCompanySelect(id)}
-                            $isSelected={selectedCompany === id}
-                        >
-                            <ItemAvatar name={name} avatar={avatar} />
+                {companies.map(({ id, name, avatar }) => {
+                    const isSelected = selectedCompany === id && contacts.length > 0;
 
-                            <p>{name}</p>
-                        </CompanyItem>
+                    return (
+                        <ListItem key={id} $isSelected={isSelected}>
+                            <CompanyItem
+                                onClick={() => handleCompanySelect(id)}
+                                $isSelected={isSelected}
+                            >
+                                <ItemAvatar name={name} avatar={avatar} />
 
-                        {!isLoading && selectedCompany === id && user && (
-                            <ItemsList
-                                items={contacts.map(({ avatar, firstName, lastName, userId }) => {
-                                    const channel = usersPrivateChannel(userId, user.id);
+                                <p>{name}</p>
+                            </CompanyItem>
 
-                                    return {
-                                        id: userId,
-                                        avatar,
-                                        name: `${firstName} ${lastName}`,
-                                        isOnline:
-                                            channel && channel.unreadCount > 0
-                                                ? channel.unreadCount
-                                                : onlineUsers.includes(userId),
-                                    };
-                                })}
-                                onItemClick={id => handleChannelSelect(undefined, id)}
-                                nameColumnTitle="Ім'я"
-                                activeItem={selectedUser || undefined}
-                                listSortPanel={false}
-                                listHeader={contacts && contacts.length > 0}
-                            />
-                        )}
-                    </li>
-                ))}
+                            <ContactsList
+                                $isSelected={isSelected}
+                                $contactsCount={isSelected ? contacts.length : 0}
+                            >
+                                {isSelected &&
+                                    contacts.map(({ avatar, firstName, lastName, userId }) => {
+                                        const channel =
+                                            user && usersPrivateChannel(userId, user.id);
+
+                                        return (
+                                            <li key={userId}>
+                                                <ContactItem
+                                                    $active={selectedUser === userId}
+                                                    onClick={e => {
+                                                        e.stopPropagation();
+                                                        handleChannelSelect(undefined, userId);
+                                                    }}
+                                                >
+                                                    <Badge
+                                                        show={onlineUsers.includes(userId)}
+                                                        count={channel?.unreadCount || undefined}
+                                                        style="success"
+                                                    >
+                                                        <ItemAvatar
+                                                            avatar={avatar}
+                                                            name={firstName + ' ' + lastName}
+                                                        />
+                                                    </Badge>
+
+                                                    <ContactName>
+                                                        {firstName + ' ' + lastName}
+                                                    </ContactName>
+                                                </ContactItem>
+                                            </li>
+                                        );
+                                    })}
+                            </ContactsList>
+                        </ListItem>
+                    );
+                })}
             </List>
         </ListBox>
     );

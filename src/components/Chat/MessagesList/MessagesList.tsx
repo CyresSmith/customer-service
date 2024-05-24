@@ -7,12 +7,16 @@ import { useScrollIntoView } from 'hooks/useScrollIntoView';
 import debounce from 'lodash.debounce';
 import throttle from 'lodash.throttle';
 import { KeyboardEvent, LegacyRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { HiChevronLeft } from 'react-icons/hi';
 import { HiMiniPaperAirplane } from 'react-icons/hi2';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 import { socket } from 'services/socket';
 import { take } from 'services/types/socket.types';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 import MessageItem from './MessageItem';
 import {
+    ContactName,
     DateBadge,
     MessageForm,
     MessagesBox,
@@ -25,14 +29,16 @@ type Props = {
     selectedCompany: number;
     userId: number | null;
     isChatOpen: boolean;
+    returnChatList: () => void;
 };
 
 const initialState = { message: '' };
 
-const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
+const MessagesList = ({ selectedCompany, userId, isChatOpen, returnChatList }: Props) => {
     const { addChannel, addMessage, addChannelMessages, setSelectedChannel } = useActions();
     const { selectedChannelId, onlineUsers, typingUsers, channels } = useChat();
     const [lastMessageRef, isMessageIntersecting, messageObserver] = useObserver<HTMLLIElement>({});
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
 
     const channel = channels.find(({ id }) => id === selectedChannelId);
     const messages = channel?.messages || [];
@@ -151,12 +157,15 @@ const MessagesList = ({ selectedCompany, userId, isChatOpen }: Props) => {
     return (
         <MessagesBox>
             <MessagesHeader>
-                <span>
+                {isMobile && (
+                    <Button onClick={returnChatList} Icon={HiChevronLeft} $colors="light" />
+                )}
+
+                <ContactName>
                     {selectedUser?.firstName} {selectedUser?.lastName || ''}
-                </span>
+                </ContactName>
 
                 {userId && typingUsers.includes(userId) && <TypingDots />}
-
                 {userId && onlineUsers.includes(userId) && <OnlineBadge />}
             </MessagesHeader>
 

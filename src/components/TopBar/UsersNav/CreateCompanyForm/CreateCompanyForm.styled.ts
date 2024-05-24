@@ -2,10 +2,7 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const FormContainer = styled.div`
-    max-height: 90vh;
     min-height: 300px;
-    width: 20vw;
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;

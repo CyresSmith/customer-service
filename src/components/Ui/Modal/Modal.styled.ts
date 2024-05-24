@@ -1,3 +1,4 @@
+import { LAYOUT_PADDING } from 'components/Layout/MainLayout/MainLayout.styled';
 import styled from 'styled-components';
 import theme from 'utils/theme';
 import { Modal } from './Modal';
@@ -23,9 +24,10 @@ export const Backdrop = styled.div<Style>`
 export const ModalContainer = styled.div<Style>`
     z-index: 100;
     position: relative;
-    width: ${props => (props.$w ? props.$w : 'auto')};
     height: ${props => (props.$h ? props.$h : 'auto')};
-    min-width: 360px;
+    width: calc(100% - ${LAYOUT_PADDING});
+    /* width: ${props => (props.$w ? props.$w : 'auto')}; */
+    max-width: 400px;
     max-height: 100vh;
     padding: ${theme.space[5]};
     background-color: ${theme.colors.bg.main};
@@ -35,6 +37,16 @@ export const ModalContainer = styled.div<Style>`
     transition: ${theme.transition.modal};
     box-shadow: ${theme.shadow.m};
     overflow-y: scroll;
+
+    @media ${theme.breakpoints.tablet.media} {
+        width: ${props => (props.$w ? props.$w : '500px')};
+        max-width: 50vw;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        width: ${props => (props.$w ? props.$w : '500px')};
+        max-width: 50vw;
+    }
 `;
 
 export const ModalHeaderBox = styled.div`

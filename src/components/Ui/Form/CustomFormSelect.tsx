@@ -50,7 +50,7 @@ const CustomFormSelect = ({
     };
 
     useEscapeKey(handleClose);
-    const selectRef = useClickOutside(handleClose);
+    const selectRef = useClickOutside<HTMLDivElement>(handleClose);
 
     const isSelected = (item: SelectItem) => {
         if (Array.isArray(selectedItem)) {
