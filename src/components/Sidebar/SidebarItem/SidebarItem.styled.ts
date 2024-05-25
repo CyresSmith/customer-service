@@ -29,10 +29,15 @@ export const ItemBox = styled.li<Item>`
 
     a.active {
         color: ${theme.colors.bg.main};
-        background-color: ${theme.colors.primary.light};
+        background-color: ${theme.colors.accent.light};
+        font-weight: ${theme.fontWeights.bold};
 
         > svg {
             fill: ${theme.colors.bg.main};
+        }
+
+        &:hover {
+            background-color: ${theme.colors.accent.main};
         }
     }
 
@@ -72,7 +77,7 @@ export const ItemLink = styled(NavLink)`
     color: ${theme.colors.secondary.light};
     align-items: center;
     transition: ${theme.transition.primary};
-    border-radius: ${theme.radii.xs};
+    border-radius: ${theme.radii.s};
 `;
 
 export const Label = styled.span<IsIcon>`

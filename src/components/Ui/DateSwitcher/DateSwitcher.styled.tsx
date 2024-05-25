@@ -9,7 +9,7 @@ type SwitcherType = {
 
 export const Container = styled.div<SwitcherType>`
     position: relative;
-    width: ${props =>
+    min-width: ${props =>
         props.$type === 'month' ? '150px' : props.$type === 'year' ? '150px' : '200px'};
     display: flex;
     align-items: center;
@@ -21,21 +21,20 @@ export const Container = styled.div<SwitcherType>`
         props.$border === 'light'
             ? `${theme.colors.secondary.dark}`
             : props.$border === 'dark'
-              ? `${theme.colors.bg.main}`
-              : null};
+            ? `${theme.colors.bg.main}`
+            : null};
 `;
 
 export const DateWrapper = styled.div<Pick<SwitcherType, '$border' | '$type'>>`
     text-align: center;
-    padding: ${theme.space[2]} ${theme.space[3]};
     border-left: ${({ $border }) =>
         $border
             ? `${theme.borders.normal} ${
                   $border === 'light'
                       ? `${theme.colors.secondary.dark}`
                       : $border === 'dark'
-                        ? `${theme.colors.bg.main}`
-                        : ''
+                      ? `${theme.colors.bg.main}`
+                      : ''
               }`
             : 'none'};
 
@@ -45,8 +44,8 @@ export const DateWrapper = styled.div<Pick<SwitcherType, '$border' | '$type'>>`
                   $border === 'light'
                       ? `${theme.colors.secondary.dark}`
                       : $border === 'dark'
-                        ? `${theme.colors.bg.main}`
-                        : ''
+                      ? `${theme.colors.bg.main}`
+                      : ''
               }`
             : 'none'};
 
@@ -55,8 +54,8 @@ export const DateWrapper = styled.div<Pick<SwitcherType, '$border' | '$type'>>`
     white-space: nowrap;
 `;
 
-export const DateValue = styled.p<{ $fontSize: string }>`
-    font-size: ${props => props.$fontSize};
+export const DateValue = styled.p<{ $fontSize?: string }>`
+    font-size: ${({ $fontSize }) => $fontSize || theme.fontSizes.l};
     overflow: hidden;
     text-overflow: ellipsis;
 
@@ -66,6 +65,5 @@ export const DateValue = styled.p<{ $fontSize: string }>`
 `;
 
 export const ReturnBtnWrapper = styled.div`
-    position: absolute;
-    right: -30%;
+    margin-left: ${theme.space[4]};
 `;

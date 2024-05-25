@@ -10,7 +10,7 @@ export const WorkScheduleBox = styled.section`
     overflow-x: scroll;
     position: relative;
     background-color: ${theme.colors.bg.main};
-    border-radius: ${theme.radii.m};
+    border-radius: ${theme.radii.l};
     height: 100%;
     width: 100%;
     padding: ${theme.space[3]};

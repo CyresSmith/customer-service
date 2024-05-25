@@ -6,10 +6,10 @@ import { useCompany } from 'hooks/useCompany';
 import useMediaQuery from 'hooks/useMediaQuery';
 import { useState } from 'react';
 import { useMatch } from 'react-router-dom';
+import theme from 'utils/theme';
 import AuthNav from './AuthNav';
 import { Logo, TopBarWrapper } from './TopBar.styled';
 import UsersNav from './UsersNav';
-import theme from 'utils/theme';
 
 export type IsOpenType = 'register' | 'login' | null;
 
@@ -34,7 +34,7 @@ const TopBar = () => {
                 ) : (
                     <Logo to={`/${id}`}>
                         {avatar && <img src={avatar} alt={`company ${name} logo`} />}
-                        {name && <span>{name}</span>}
+                        {!isMobile && name && <span>{name}</span>}
                     </Logo>
                 )}
                 {isAuthenticate ? <UsersNav /> : <AuthNav setIsOpen={setIsOpen} />}

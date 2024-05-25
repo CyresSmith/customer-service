@@ -6,6 +6,6 @@ export const SectionsButtonList = styled.ul`
     gap: ${theme.space[1]};
     padding: ${theme.space[3]};
     background-color: ${theme.colors.bg.dark};
-    border-radius: ${theme.radii.m};
+    border-radius: ${theme.radii.l};
     box-shadow: ${theme.shadow.s};
 `;

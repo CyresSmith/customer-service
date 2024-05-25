@@ -16,7 +16,7 @@ export const Category = styled.li<Selected>`
     color: ${theme.colors.bg.dark};
     background-color: ${({ selected }) =>
         selected ? theme.colors.accent.light : theme.colors.secondary.light};
-    border-radius: ${theme.radii.s};
+    border-radius: ${theme.radii.m};
     cursor: pointer;
     transition: ${theme.transition.primary};
 

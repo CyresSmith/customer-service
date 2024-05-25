@@ -112,7 +112,7 @@ const CustomFormSelect = ({
                 <SelectIcon as={HiChevronDown} $open={isOpen} />
             </Select>
 
-            <SelectList $open={isOpen}>
+            <SelectList $open={isOpen} $itemsCount={selectItems.length}>
                 {selectItems.map((item, i) => (
                     <SelectListItem
                         id={String(item?.id || i)}

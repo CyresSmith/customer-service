@@ -12,7 +12,7 @@ export const ChatBox = styled.div<{ $isOpen: boolean }>`
     grid-template-rows: 100%;
     gap: ${theme.space[4]};
     background-color: ${theme.colors.bg.main};
-    border-radius: ${theme.radii.s};
+    border-radius: ${theme.radii.l};
     height: calc(100vh - (${HEADER_HIGHT} + (${LAYOUT_PADDING} * 2) + ${LAYOUT_GAP}));
     padding: ${theme.space[4]};
     position: fixed;

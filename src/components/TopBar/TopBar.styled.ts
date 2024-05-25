@@ -11,7 +11,7 @@ export const TopBarWrapper = styled.div`
     width: 100%;
     height: ${HEADER_HIGHT};
     background-color: ${theme.colors.bg.dark};
-    border-radius: ${theme.radii.m};
+    border-radius: ${theme.radii.l};
     padding: ${theme.space[3]};
     box-shadow: ${theme.shadow.m};
 

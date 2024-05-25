@@ -1,11 +1,11 @@
 import CustomFormSelect from 'components/Ui/Form/CustomFormSelect';
 import { SelectItem } from 'components/Ui/Form/types';
+import { getDate } from 'date-fns';
 import generateTimeArray, { getSchedule } from 'helpers/generateTimeArray';
 import { getScheduleWithoutEvents } from 'helpers/isTimeEnableForEvent';
-import { IDaySchedule } from 'services/types/schedule.types';
-import { NoEnableHours, SelectWrapper } from './ChooseTime.styled';
 import { EventType } from 'services/types/event.types';
-import { getDate } from 'date-fns';
+import { IDaySchedule } from 'services/types/schedule.types';
+import { NoEnableHours } from './ChooseTime.styled';
 
 type Props = {
     events: EventType[] | null;
@@ -48,10 +48,9 @@ const ChooseTime = ({
     };
 
     return (
-        <SelectWrapper>
+        <>
             {forSelect.length > 0 ? (
                 <CustomFormSelect
-                    width="50%"
                     handleSelect={handleTimeSelect}
                     selectItems={forSelect}
                     selectedItem={{ value: eventTime ? eventTime : '' }}
@@ -59,7 +58,7 @@ const ChooseTime = ({
             ) : (
                 <NoEnableHours>Час для запису у обраний день недоступний :(</NoEnableHours>
             )}
-        </SelectWrapper>
+        </>
     );
 };
 

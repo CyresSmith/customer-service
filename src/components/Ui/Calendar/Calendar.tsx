@@ -1,18 +1,18 @@
 import {
+    addDays,
     eachDayOfInterval,
     isMonday,
+    isSameDay,
+    isSameMonth,
     lastDayOfMonth,
     startOfMonth,
-    isSameMonth,
     subDays,
-    addDays,
-    isSameDay,
 } from 'date-fns';
-import { CalendarBox, CalendarGrid, SwitcherWrapper, WeekDay } from './Calendar.styled';
 import { shortWeekDays } from 'helpers/constants';
-import { CalendarDay } from './CalendarDay';
-import DateSwitcher from '../DateSwitcher';
 import { useState } from 'react';
+import DateSwitcher from '../DateSwitcher';
+import { CalendarBox, CalendarGrid, SwitcherWrapper, WeekDay } from './Calendar.styled';
+import { CalendarDay } from './CalendarDay';
 
 type Props = {
     date: Date;
@@ -29,9 +29,9 @@ const Calendar = ({
     date,
     setDate,
     cellSize = 30,
-    monthSize = '18px',
+    monthSize,
     enableDays,
-    padding = '10px',
+    padding,
 }: Props) => {
     const [monthDate, setMonthDate] = useState(date);
     const today = new Date(Date.now());
@@ -88,6 +88,8 @@ const Calendar = ({
                         dateType="month"
                         setDate={setMonthDate}
                         date={monthDate}
+                        roundBtns
+                        buttonsColor="light"
                     />
                 </SwitcherWrapper>
             )}

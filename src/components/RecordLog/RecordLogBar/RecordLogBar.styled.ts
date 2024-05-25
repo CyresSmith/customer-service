@@ -4,13 +4,13 @@ import theme from 'utils/theme';
 export const Container = styled.div`
     width: 100%;
     display: flex;
-    align-items: center;
+    align-items: end;
     justify-content: space-between;
-    padding: ${theme.space[0]};
 `;
 
 export const LeftWrapper = styled.div`
     display: flex;
-    align-items: center;
-    gap: ${theme.space[6]};
+    align-items: flex-end;
+    gap: ${theme.space[4]};
+    margin-right: auto;
 `;

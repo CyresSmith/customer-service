@@ -12,7 +12,8 @@ export const MessageBox = styled.div<MessageStyled>`
         $isMy
             ? `${theme.radii.l} ${theme.radii.l} 0 ${theme.radii.l}`
             : `${theme.radii.l} ${theme.radii.l} ${theme.radii.l} 0`};
-    background-color: ${({ $isMy }) => ($isMy ? theme.colors.bg.main : theme.colors.bg.light)};
+    background-color: ${({ $isMy }) =>
+        $isMy ? theme.colors.bg.main : theme.colors.secondary.main};
     align-self: ${({ $isMy }) => ($isMy ? 'end' : 'start')};
     font-size: ${theme.fontSizes.l};
     display: grid;

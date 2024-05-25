@@ -12,7 +12,7 @@ export const List = styled.ul`
     flex-grow: 1;
     overflow-y: scroll;
     background-color: ${theme.colors.bg.dark};
-    border-radius: ${theme.radii.s};
+    border-radius: ${theme.radii.m};
     padding: ${theme.space[4]};
     display: flex;
     flex-direction: column;
@@ -71,7 +71,7 @@ export const ContactsList = styled.ul<IsSelected & { $contactsCount: number }>`
 export const ContactItem = styled.button<{ $active: boolean }>`
     width: 100%;
     padding: ${theme.space[3]};
-    border-radius: ${theme.radii.m};
+    border-radius: ${theme.radii.xl};
     display: grid;
     grid-template-columns: max-content 1fr;
     gap: ${theme.space[3]};

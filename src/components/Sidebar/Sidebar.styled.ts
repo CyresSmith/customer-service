@@ -7,7 +7,7 @@ export const MenuList = styled.ul<{ $isOpen: boolean }>`
     font-size: ${theme.fontSizes.xl};
     background-color: ${theme.colors.bg.dark};
     padding: ${LAYOUT_PADDING};
-    border-radius: ${theme.radii.m};
+    border-radius: ${theme.radii.l};
     box-shadow: ${theme.shadow.m};
     min-width: 150px;
     max-width: 250px;
@@ -28,5 +28,6 @@ export const MenuList = styled.ul<{ $isOpen: boolean }>`
     @media ${theme.breakpoints.desktop.media} {
         position: static;
         height: 100%;
+        z-index: unset;
     }
 `;

@@ -4,7 +4,7 @@ import theme from 'utils/theme';
 export const baseInputStyles = `
   color: ${theme.colors.bg.dark};
   padding: ${theme.space[2]} ${theme.space[3]};
-  border-radius: ${theme.radii.s};
+  border-radius: ${theme.radii.m};
   background-color: ${theme.colors.secondary.light};
   border: ${theme.borders.normal} ${theme.colors.bg.dark};
   transition: ${theme.transition.primary};
@@ -164,10 +164,12 @@ export const Selected = styled.p`
     }
 `;
 
-const LIST_ITEM_HIGHT = '37px';
 const LIST_ITEMS_COUNT = 5;
+const LIST_ITEM_HIGHT = '37px';
+const LIST_PADDING = theme.space[2];
+const LIST_GAP = theme.space[1];
 
-export const SelectList = styled.ul<{ $open: boolean }>`
+export const SelectList = styled.ul<{ $open: boolean; $itemsCount: number }>`
     position: absolute;
     top: calc(100% + ${theme.space[2]});
     right: 0;
@@ -175,36 +177,49 @@ export const SelectList = styled.ul<{ $open: boolean }>`
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: ${theme.space[0]};
+    gap: ${LIST_GAP};
     box-shadow: ${theme.shadow.m};
     background-color: ${theme.colors.secondary.light};
-    border-radius: ${theme.radii.s};
+    border-radius: ${theme.radii.m};
     width: 100%;
-    max-height: ${props =>
-        props.$open
-            ? `calc((${LIST_ITEM_HIGHT} * ${LIST_ITEMS_COUNT}) + (${theme.space[0]} * (${LIST_ITEMS_COUNT} - 1)))`
+    height: ${({ $itemsCount, $open }) =>
+        $open
+            ? `calc((${LIST_ITEM_HIGHT} * ${$itemsCount}) + (${LIST_GAP} * (${$itemsCount} - 1) + (${LIST_PADDING} * 2)))`
             : '0'};
+    max-height: calc(
+        (
+            (${LIST_ITEM_HIGHT} * ${LIST_ITEMS_COUNT}) +
+                (${LIST_GAP} * (${LIST_ITEMS_COUNT} - 1) + (${LIST_PADDING} * 2))
+        )
+    );
     transition: ${theme.transition.primary};
-    overflow: auto;
+    overflow-x: auto;
+    padding: ${({ $open }) => ($open ? LIST_PADDING : 0)};
 `;
 
 export const SelectListItem = styled.li<{ $selected: boolean }>`
     width: 100%;
-    text-align: center;
-    padding: ${theme.space[3]};
-    color: ${theme.colors.bg.dark};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: ${({ $selected }) => ($selected ? theme.colors.primary.light : theme.colors.bg.dark)};
     transition: ${theme.transition.primary};
-    background-color: ${props => (props.$selected ? `${theme.colors.secondary.main};` : 'none')};
+    background-color: ${({ $selected }) => ($selected ? theme.colors.bg.main : 'transparent')};
+    border-radius: ${theme.radii.s};
     outline: none;
     cursor: pointer;
-    height: ${LIST_ITEM_HIGHT};
+    min-height: ${LIST_ITEM_HIGHT};
+    max-height: ${LIST_ITEM_HIGHT};
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     &::first-letter {
         text-transform: uppercase;
     }
 
     &:hover {
-        background-color: ${theme.colors.secondary.main};
+        background-color: ${({ $selected }) =>
+            $selected ? theme.colors.primary.dark : theme.colors.primary.light};
     }
 
     &:focus-visible {
@@ -215,13 +230,8 @@ export const SelectListItem = styled.li<{ $selected: boolean }>`
 export const SelectIcon = styled.svg<{ $open: boolean }>`
     width: 19px;
     height: 19px;
-    fill: ${theme.colors.secondary.dark};
+    fill: ${theme.colors.bg.dark};
     transition: inherit;
 
-    ${props =>
-        props.$open &&
-        `
-    fill: ${theme.colors.accent.main};
-    transform: rotate(180deg);
-  `};
+    ${({ $open }) => $open && `transform: rotate(90deg);`};
 `;

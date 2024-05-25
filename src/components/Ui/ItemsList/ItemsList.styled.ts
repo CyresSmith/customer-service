@@ -4,7 +4,6 @@ import theme from 'utils/theme';
 export const ListBox = styled.div`
     display: flex;
     flex-direction: column;
-    /* gap: ${theme.space[4]}; */
     height: 100%;
 `;
 
@@ -15,6 +14,8 @@ export const ListBar = styled.div`
     gap: ${theme.space[5]};
     width: 100%;
     margin-bottom: ${theme.space[4]};
+    border-bottom: ${theme.borders.normal} ${theme.colors.bg.main};
+    padding-bottom: ${theme.space[4]};
 `;
 
 export const FilterBox = styled.div`
@@ -59,7 +60,7 @@ export const AvatarBox = styled.div<{ size?: AvatarSize }>`
 
     > span {
         font-size: ${({ size }) =>
-            size === AvatarSize.S ? '20px' : size === AvatarSize.M ? '30px' : '60px'};
+            size === AvatarSize.S ? '17px' : size === AvatarSize.M ? '25px' : '55px'};
         font-weight: ${theme.fontWeights.light};
         text-transform: uppercase;
         color: ${theme.colors.bg.main};
@@ -137,10 +138,10 @@ export const ItemBox = styled.li<ListGridProps>`
             $isDeleteButton ? $columnsCount + 1 : $columnsCount
         })) / ${$columnsCount})) ${$isDeleteButton ? '50px' : ''}`};
     cursor: pointer;
-    padding: ${theme.space[3]} ${theme.space[4]};
+    padding: ${theme.space[3]};
     transition: ${theme.transition.primary};
     background-color: ${theme.colors.bg.main};
-    border-radius: ${theme.radii.s};
+    border-radius: ${theme.radii.xl};
     align-items: center;
     gap: ${theme.space[4]};
     animation: ${theme.animation.appear};

@@ -26,7 +26,7 @@ const DateSwitcher = ({
     roundBtns = true,
     border,
     borderRadius = 's',
-    fontSize = '16px',
+    fontSize,
 }: Props) => {
     const chosenDate = new Date(date).toLocaleDateString('uk-UK', {
         weekday: dateType === 'day' ? 'short' : undefined,
@@ -43,16 +43,16 @@ const DateSwitcher = ({
                 return dateType === 'day'
                     ? addDays(date, 1)
                     : dateType === 'month'
-                      ? addMonths(date, 1)
-                      : addYears(date, 1);
+                    ? addMonths(date, 1)
+                    : addYears(date, 1);
             });
         } else {
             setDate(() => {
                 return dateType === 'day'
                     ? addDays(date, -1)
                     : dateType === 'month'
-                      ? addMonths(date, -1)
-                      : addYears(date, -1);
+                    ? addMonths(date, -1)
+                    : addYears(date, -1);
             });
         }
     };
@@ -80,7 +80,8 @@ const DateSwitcher = ({
                         onClick={() => setDate(new Date(Date.now()))}
                         Icon={RiArrowGoBackFill}
                         $colors="light"
-                        size="s"
+                        // size="l"
+                        $round
                     />
                 </ReturnBtnWrapper>
             )}

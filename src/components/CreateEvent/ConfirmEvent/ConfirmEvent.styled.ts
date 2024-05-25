@@ -35,9 +35,9 @@ export const ListItemText = styled.p`
 `;
 
 export const SubjectDetails = styled.button`
-    padding: ${theme.space[3]} ${theme.space[4]};
+    padding: ${theme.space[3]};
     background-color: ${theme.colors.bg.light};
-    border-radius: ${theme.radii.s};
+    border-radius: ${theme.radii.xl};
     width: 100%;
     color: inherit;
     transition: ${theme.transition.primary};

@@ -17,7 +17,7 @@ export const MainSection = styled.section`
 export const OutletWrapper = styled.div`
     background-color: ${theme.colors.bg.dark};
     padding: ${LAYOUT_PADDING};
-    border-radius: ${theme.radii.m};
+    border-radius: ${theme.radii.l};
     box-shadow: ${theme.shadow.m};
     overflow: hidden;
     width: 100%;

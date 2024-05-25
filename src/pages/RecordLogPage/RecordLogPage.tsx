@@ -27,7 +27,7 @@ const getModalTitles = (step: string) => {
         : 'Оберіть клієнта';
 };
 
-const initialSelection = [{ id: 'all', value: `Всі працівники` }];
+const initialSelection = [{ id: 'all', value: `Всі` }];
 
 const RecordLogPage = () => {
     const { workingHours, id } = useCompany();

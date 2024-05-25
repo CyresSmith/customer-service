@@ -14,7 +14,7 @@ export const LeftWrapper = styled.div`
     width: 100%;
     padding-top: ${theme.space[3]};
     background-color: ${theme.colors.bg.main};
-    border-radius: ${theme.radii.m};
+    border-radius: ${theme.radii.l};
 `;
 
 export const RightWrapper = styled.div`

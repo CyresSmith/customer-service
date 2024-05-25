@@ -194,6 +194,7 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
                             eventDate={eventDate}
                             eventTime={eventTime}
                             eventDuration={calculateEventDuration(chosenServices)}
+                            setStep={setStep}
                         />
                     )}
             </ContentBox>

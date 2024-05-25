@@ -117,6 +117,7 @@ const theme = {
         s: '10px',
         m: '16px',
         l: '26px',
+        xl: '42px',
         round: '50%',
     },
 

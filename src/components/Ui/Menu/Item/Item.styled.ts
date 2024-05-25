@@ -89,7 +89,7 @@ export const ItemLink = styled(NavLink)`
     color: ${theme.colors.secondary.light};
     align-items: center;
     transition: ${theme.transition.primary};
-    border-radius: ${theme.radii.xs};
+    border-radius: ${theme.radii.m};
 `;
 
 export const Label = styled.span<IsIcon>`

@@ -1,9 +1,9 @@
-import { IMonthSchedule } from 'services/types/schedule.types';
-import { CalendarBox, Container, SelectBox } from './ChooseDate.styled';
-import { getDate, getMonth, getYear, isPast } from 'date-fns';
-import ChooseTime from '../ChooseTime';
 import Calendar from 'components/Ui/Calendar/Calendar';
+import { format, getDate, getMonth, getYear, isPast } from 'date-fns';
 import { EventType } from 'services/types/event.types';
+import { IMonthSchedule } from 'services/types/schedule.types';
+import ChooseTime from '../ChooseTime';
+import { CalendarBox, Container, SelectBox, Selected } from './ChooseDate.styled';
 
 type Props = {
     eventDate: Date;
@@ -48,26 +48,34 @@ const ChooseDate = ({
     };
 
     return (
-        <Container>
-            <CalendarBox>
-                <Calendar
-                    cellSize={30}
-                    date={eventDate}
-                    setDate={setEventDate}
-                    enableDays={enableDays}
-                />
-            </CalendarBox>
-            <SelectBox>
-                <ChooseTime
-                    events={events}
-                    eventDate={eventDate}
-                    eventTime={eventTime}
-                    setEventTime={setEventTime}
-                    daySchedule={getDaySchedule()}
-                    eventDuration={eventDuration}
-                />
-            </SelectBox>
-        </Container>
+        <>
+            <Selected>
+                {eventDate && eventTime
+                    ? `Обрано: ${format(eventDate, 'PPPP')}, ${eventTime}`
+                    : 'Час не обрано'}
+            </Selected>
+            <Container>
+                <CalendarBox>
+                    <Calendar
+                        cellSize={30}
+                        date={eventDate}
+                        setDate={setEventDate}
+                        enableDays={enableDays}
+                    />
+                </CalendarBox>
+
+                <SelectBox>
+                    <ChooseTime
+                        events={events}
+                        eventDate={eventDate}
+                        eventTime={eventTime}
+                        setEventTime={setEventTime}
+                        daySchedule={getDaySchedule()}
+                        eventDuration={eventDuration}
+                    />
+                </SelectBox>
+            </Container>
+        </>
     );
 };
 

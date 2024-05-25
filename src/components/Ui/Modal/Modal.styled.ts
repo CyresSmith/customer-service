@@ -24,14 +24,13 @@ export const Backdrop = styled.div<Style>`
 export const ModalContainer = styled.div<Style>`
     z-index: 100;
     position: relative;
-    height: ${props => (props.$h ? props.$h : 'auto')};
+    height: ${({ $h }) => $h || 'auto'};
     width: calc(100% - ${LAYOUT_PADDING});
-    /* width: ${props => (props.$w ? props.$w : 'auto')}; */
     max-width: 400px;
     max-height: 100vh;
     padding: ${theme.space[5]};
     background-color: ${theme.colors.bg.main};
-    border-radius: ${theme.radii.s};
+    border-radius: ${theme.radii.l};
     opacity: ${props => (props.$isOpen ? 1 : 0)};
     transform: ${props => (props.$isOpen ? 'translate(0, 0)' : 'translate(0, 100%)')};
     transition: ${theme.transition.modal};
@@ -39,13 +38,15 @@ export const ModalContainer = styled.div<Style>`
     overflow-y: scroll;
 
     @media ${theme.breakpoints.tablet.media} {
-        width: ${props => (props.$w ? props.$w : '500px')};
-        max-width: 50vw;
+        width: ${props => (props.$w ? props.$w : 'auto')};
+        min-width: 400px;
+        max-width: 90vw;
     }
 
     @media ${theme.breakpoints.desktop.media} {
-        width: ${props => (props.$w ? props.$w : '500px')};
-        max-width: 50vw;
+        width: ${props => (props.$w ? props.$w : 'auto')};
+        min-width: 400px;
+        max-width: 90vw;
     }
 `;
 

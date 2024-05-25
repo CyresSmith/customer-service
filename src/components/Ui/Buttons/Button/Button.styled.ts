@@ -60,7 +60,7 @@ export const Btn = styled.button<IButtonStyle>`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: ${({ $round }) => ($round ? theme.radii.round : theme.radii.s)};
+    border-radius: ${({ $round }) => ($round ? theme.radii.round : theme.radii.m)};
     font-weight: ${theme.fontWeights.bold};
     transition: ${theme.transition.primary};
 
