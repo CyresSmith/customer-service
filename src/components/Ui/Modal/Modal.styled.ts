@@ -24,7 +24,7 @@ export const Backdrop = styled.div<Style>`
 export const ModalContainer = styled.div<Style>`
     z-index: 100;
     position: relative;
-    height: ${({ $h }) => $h || 'auto'};
+    height: ${({ $h }) => $h || 'unset'};
     width: calc(100% - ${LAYOUT_PADDING});
     max-width: 400px;
     max-height: 100vh;
@@ -35,7 +35,9 @@ export const ModalContainer = styled.div<Style>`
     transform: ${props => (props.$isOpen ? 'translate(0, 0)' : 'translate(0, 100%)')};
     transition: ${theme.transition.modal};
     box-shadow: ${theme.shadow.m};
-    overflow-y: scroll;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: max-content 1fr;
 
     @media ${theme.breakpoints.tablet.media} {
         width: ${props => (props.$w ? props.$w : 'auto')};

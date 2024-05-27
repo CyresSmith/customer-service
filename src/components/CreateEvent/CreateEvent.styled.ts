@@ -2,19 +2,26 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const Container = styled.div`
-    width: 610px;
-    height: 100%;
-    min-height: 500px;
     display: flex;
     flex-direction: column;
     gap: ${theme.space[4]};
     justify-content: space-between;
+    overflow: hidden;
+
+    @media ${theme.breakpoints.tablet.media} {
+        min-width: 380px;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        min-height: 500px;
+        width: 500px;
+    }
 `;
 
 export const ContentBox = styled.div`
-    width: 100%;
+    max-width: 100%;
     height: 100%;
-    /* overflow: hidden; */
+    overflow: hidden;
 `;
 
 export const BtnsBox = styled.div<{ $step: string | null }>`

@@ -3,7 +3,10 @@ import theme from 'utils/theme';
 
 export const Container = styled.div`
     padding: ${theme.space[4]} 0;
-    min-width: 500px;
+
+    @media ${theme.breakpoints.desktop.media} {
+        min-width: 500px;
+    }
 `;
 
 export const EventInfoList = styled.ul`

@@ -35,11 +35,12 @@ export const FormInputsList = styled.ul`
 `;
 
 export const FormInputsListItem = styled.div<{ $type?: string }>`
-    position: relative;
     display: flex;
+    position: relative;
     flex-direction: column;
     gap: ${theme.space[1]};
-    grid-column: ${props => (props.$type === 'textarea' ? 'span 3' : 'auto')};
+    width: 100%;
+    /* grid-column: ${props => (props.$type === 'textarea' ? 'span 3' : 'auto')}; */
 `;
 
 export const FormInputLabel = styled.label`
@@ -193,15 +194,13 @@ export const SelectList = styled.ul<{ $open: boolean; $itemsCount: number }>`
         )
     );
     transition: ${theme.transition.primary};
-    overflow-x: auto;
-    padding: ${({ $open }) => ($open ? LIST_PADDING : 0)};
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: ${({ $open }) => ($open ? LIST_PADDING : 0)};    t
 `;
 
 export const SelectListItem = styled.li<{ $selected: boolean }>`
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     color: ${({ $selected }) => ($selected ? theme.colors.primary.light : theme.colors.bg.dark)};
     transition: ${theme.transition.primary};
     background-color: ${({ $selected }) => ($selected ? theme.colors.bg.main : 'transparent')};
@@ -210,8 +209,12 @@ export const SelectListItem = styled.li<{ $selected: boolean }>`
     cursor: pointer;
     min-height: ${LIST_ITEM_HIGHT};
     max-height: ${LIST_ITEM_HIGHT};
+    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    padding: ${theme.space[2]};
+    text-align: center;
+    align-content: center;
 
     &::first-letter {
         text-transform: uppercase;

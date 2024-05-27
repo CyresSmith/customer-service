@@ -300,7 +300,7 @@ const ItemsList = <T extends StringRecord>({
         <ListBox>
             {listHeader && (
                 <ListBar>
-                    <FilterBox>
+                    <FilterBox $rowsCount={listHeader && keyForSelect ? 2 : 1}>
                         <FormInputsListItem as="div">
                             <FormInputLabel>Пошук</FormInputLabel>
 
@@ -339,7 +339,6 @@ const ItemsList = <T extends StringRecord>({
 
                                 <CustomFormSelect
                                     disabled={items.length === 0}
-                                    width="200px"
                                     selectItems={selectItems}
                                     selectedItem={selectedKeys}
                                     handleSelect={handleSelect}

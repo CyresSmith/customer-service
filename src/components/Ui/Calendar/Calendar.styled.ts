@@ -10,10 +10,10 @@ type CalendarDay = {
 };
 
 export const CalendarBox = styled.div<{ $padding?: string }>`
-    width: 100%;
+    /* width: 100%;
     background-color: ${theme.colors.bg.main};
     border-radius: ${theme.radii.l};
-    padding: ${({ $padding }) => $padding || theme.space[4]};
+    padding: ${({ $padding }) => $padding || theme.space[4]}; */
 `;
 
 export const CalendarGrid = styled.div`

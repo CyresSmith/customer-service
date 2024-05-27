@@ -17,14 +17,14 @@ import theme from 'utils/theme';
 
 const getModalTitles = (step: string) => {
     return step === 'employees'
-        ? 'Оберіть працівника'
+        ? 'Вибір працівника'
         : step === 'services'
-        ? 'Оберіть послугу'
+        ? 'Вибір послуги'
         : step === 'date'
-        ? 'Оберіть дату та час'
+        ? 'Вибір дати та часу'
         : step === 'confirm'
-        ? 'Перевірте деталі запису'
-        : 'Оберіть клієнта';
+        ? 'Перевірка деталей запису'
+        : 'Вибір клієнта';
 };
 
 const initialSelection = [{ id: 'all', value: `Всі` }];
@@ -37,6 +37,11 @@ const RecordLogPage = () => {
     const [allSchedules, setAllSchedules] = useState<IMonthSchedule[] | null>(null);
     const [allEmployees, setAllEmployees] = useState<BasicEmployeeInfo[] | null>(null);
     const [allEvents, setAllEvents] = useState<EventType[] | []>([]);
+    const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
+
+    const calendarToggle = () => setIsCalendarOpen(p => !p);
+    const closeCalendar = () => setIsCalendarOpen(false);
+
     const chosenYear = getYear(date);
     const chosenMonth = getMonth(date);
     const { data: employeesData, isFetching: fetchingEmployees } = useGetCompanyEmployeesQuery(id, {
@@ -148,6 +153,8 @@ const RecordLogPage = () => {
                             setDate={setDate}
                             handleSelect={handleSelect}
                             openEventModal={handleEventStep}
+                            calendarToggle={calendarToggle}
+                            closeCalendar={closeCalendar}
                         />
                     }
                     content={
@@ -159,6 +166,8 @@ const RecordLogPage = () => {
                             workingHours={workingHours}
                             employees={filteredProvidersList}
                             companyId={id}
+                            isCalendarOpen={isCalendarOpen}
+                            closeCalendar={closeCalendar}
                         />
                     }
                 />

@@ -6,6 +6,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCreateClientMutation, useGetAllClientsQuery } from 'services/clients.api';
 import { Client } from 'services/types/clients.types';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 
 type Props = {
     companyId: number;
@@ -28,8 +30,8 @@ const addInitialState: Client = {
 };
 
 const ChooseClient = ({ companyId, setClient, setStep }: Props) => {
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
-
     const [createClientMutation] = useCreateClientMutation();
     const { data, isLoading } = useGetAllClientsQuery(companyId, {
         skip: !companyId,
@@ -63,7 +65,7 @@ const ChooseClient = ({ companyId, setClient, setStep }: Props) => {
 
     return (
         <>
-            <div>
+            <>
                 {isLoading ? (
                     <Loader />
                 ) : (
@@ -71,6 +73,13 @@ const ChooseClient = ({ companyId, setClient, setStep }: Props) => {
                         items={
                             !data
                                 ? []
+                                : isMobile
+                                ? data.map(({ id, avatar, firstName, lastName, phone }) => ({
+                                      id,
+                                      avatar: avatar || '',
+                                      name: `${firstName}  ${lastName && lastName}`,
+                                      phone,
+                                  }))
                                 : data.map(({ id, avatar, firstName, lastName, phone }) => ({
                                       id,
                                       avatar: avatar || '',
@@ -86,7 +95,7 @@ const ChooseClient = ({ companyId, setClient, setStep }: Props) => {
                         nameColumnTitle="Ім'я"
                     />
                 )}
-            </div>
+            </>
             {modalOpen && (
                 <Modal id="newClient" $isOpen={modalOpen} closeModal={() => setModalOpen(false)}>
                     <ClientForm

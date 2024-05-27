@@ -13,6 +13,8 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { Client } from 'services/types/clients.types';
 import { IEmployee } from 'services/types/employee.types';
 import { ServiceBasicInfo } from 'services/types/service.type';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 import {
     Container,
     EventInfoBox,
@@ -59,6 +61,8 @@ const ConfirmEvent = ({
     } = chosenEmployee;
 
     const { id: companyId } = useCompany();
+    const isDesktop = useMediaQuery(theme.breakpoints.desktop.media);
+    const isTablet = useMediaQuery(theme.breakpoints.tablet.media);
     const [modalOpen, setModalOpen] = useState<openModal | ServiceOpenModal | null>(null);
     const [serviceId, setServiceId] = useState<number | null>(null);
 
@@ -71,6 +75,18 @@ const ConfirmEvent = ({
     const totalPrice = (): number => {
         return chosenServices?.reduce((acc, cs) => (cs.price ? acc + +cs.price : acc), 0) || 0;
     };
+
+    const services = chosenServices.map(({ name, duration, price, id }) => {
+        let service = {
+            id,
+            name,
+        };
+
+        if (isTablet) service = Object.assign(service, { price });
+        if (isDesktop) service = Object.assign(service, { price, duration });
+
+        return service;
+    });
 
     return (
         <>
@@ -117,12 +133,7 @@ const ConfirmEvent = ({
                         </ListItemTitle>
 
                         <ItemsList
-                            items={chosenServices.map(({ name, duration, price, id }) => ({
-                                id,
-                                name,
-                                duration,
-                                price,
-                            }))}
+                            items={services}
                             listHeader={false}
                             listSortPanel={false}
                             notSortedKeys={['name', 'duration', 'price']}

@@ -4,30 +4,46 @@ import theme from 'utils/theme';
 export const ListBox = styled.div`
     display: flex;
     flex-direction: column;
-    height: 100%;
+    max-height: 100%;
 `;
 
 export const ListBar = styled.div`
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: ${theme.space[5]};
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.space[5]};
     margin-bottom: ${theme.space[4]};
-    border-bottom: ${theme.borders.normal} ${theme.colors.bg.main};
+    border-bottom: ${theme.borders.normal} ${theme.colors.secondary.main};
     padding-bottom: ${theme.space[4]};
+
+    @media ${theme.breakpoints.desktop.media} {
+        flex-direction: row;
+        align-items: end;
+        justify-content: space-between;
+    }
 `;
 
-export const FilterBox = styled.div`
-    display: flex;
+export const FilterBox = styled.div<{ $rowsCount: number }>`
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
     align-items: center;
     gap: ${theme.space[4]};
+
+    @media ${theme.breakpoints.desktop.media} {
+        grid-template-columns: ${({ $rowsCount }) => `repeat(${$rowsCount}, 242px)`};
+        grid-template-rows: 1fr;
+    }
 `;
 
 export const SearchBox = styled.div`
-    display: flex;
-    align-items: center;
     position: relative;
+
+    @media ${theme.breakpoints.desktop.media} {
+        display: flex;
+        align-items: center;
+        gap: ${theme.space[4]};
+    }
 `;
 
 export enum AvatarSize {
@@ -108,9 +124,20 @@ export const ListHeader = styled.ul<ListGridProps>`
 
 export const ListHeaderItem = styled.li`
     justify-self: center;
+    overflow: hidden;
+    max-width: 100%;
 
     > button {
         padding: ${theme.space[2]} 0;
+        overflow: hidden;
+        max-width: 100%;
+
+        > span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+        }
     }
 
     &:first-of-type {
@@ -123,9 +150,11 @@ export const ListHeaderItem = styled.li`
 `;
 
 export const List = styled.ul`
-    height: calc(100% - 101px);
-    flex-grow: 1;
-    overflow-y: auto;
+    /* height: calc(100% - 101px);
+    flex-grow: 1; */
+    max-height: 100%;
+    flex: 1;
+    overflow-y: scroll;
 `;
 
 export const ItemBox = styled.li<ListGridProps>`
@@ -187,12 +216,12 @@ export const ItemParam = styled.p`
         text-transform: uppercase;
     }
 
-    &:first-of-type {
-        text-align: left;
-    }
-
     &:last-of-type {
         text-align: right;
+    }
+
+    &:first-of-type {
+        text-align: left;
     }
 `;
 

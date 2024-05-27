@@ -3,13 +3,13 @@ import RegisterForm from 'components/TopBar/RegisterForm';
 import Modal from 'components/Ui/Modal/Modal';
 import { useAuth } from 'hooks/useAuth';
 import { useCompany } from 'hooks/useCompany';
-import useMediaQuery from 'hooks/useMediaQuery';
 import { useState } from 'react';
 import { useMatch } from 'react-router-dom';
 import theme from 'utils/theme';
 import AuthNav from './AuthNav';
 import { Logo, TopBarWrapper } from './TopBar.styled';
 import UsersNav from './UsersNav';
+import { useMediaQuery } from 'usehooks-ts';
 
 export type IsOpenType = 'register' | 'login' | null;
 

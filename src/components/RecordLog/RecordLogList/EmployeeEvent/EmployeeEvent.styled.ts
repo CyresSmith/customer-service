@@ -33,6 +33,9 @@ export const EventTitle = styled.h6`
     display: flex;
     justify-content: space-between;
     position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     :first-child {
         overflow: hidden;
@@ -59,6 +62,9 @@ export const EventInfo = styled.p<{ size?: 'm' | 'l' }>`
     display: flex;
     flex-direction: column;
     gap: ${theme.space[3]};
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 `;
 
 export const Info = styled.span`

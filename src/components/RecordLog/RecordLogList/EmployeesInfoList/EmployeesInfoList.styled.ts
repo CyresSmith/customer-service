@@ -13,35 +13,9 @@ export const ListItem = styled.li<{ $last: boolean }>`
     display: flex;
     gap: ${theme.space[3]};
     padding: ${theme.space[3]};
-    border-right: ${props =>
-        props.$last ? 'none' : `${theme.borders.normal} ${theme.colors.bg.light}`};
+    border-right: ${({ $last }) =>
+        $last ? 'none' : `${theme.borders.normal} ${theme.colors.bg.light}`};
     overflow: hidden;
-`;
-
-export const AvatarWrapper = styled.div`
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 40px;
-    height: 40px;
-    border-radius: ${theme.radii.round};
-    overflow: hidden;
-    background-color: ${theme.colors.bg.dark};
-`;
-
-export const Avatar = styled.img`
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    object-fit: cover;
-`;
-
-export const NoAvatar = styled.p`
-    font-size: ${theme.fontSizes.heading.xs};
-    text-transform: uppercase;
 `;
 
 export const InfoBox = styled.div`
@@ -49,15 +23,27 @@ export const InfoBox = styled.div`
     flex-direction: column;
     justify-content: center;
     gap: ${theme.space[2]};
-    max-width: calc(100% - 70px);
     white-space: nowrap;
+    overflow: hidden;
+    flex: 1;
 `;
 
 export const EmployeeName = styled.p`
-    max-width: 100%;
     font-size: ${theme.fontSizes.l};
     overflow: hidden;
     text-overflow: ellipsis;
+
+    @media ${theme.breakpoints.mobile.media} {
+        width: 100%;
+    }
+
+    @media ${theme.breakpoints.tablet.media} {
+        max-width: 100%;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        max-width: 100%;
+    }
 `;
 
 export const EmployeeDaySchedule = styled.p`

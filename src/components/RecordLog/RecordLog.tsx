@@ -1,11 +1,16 @@
 import Button from 'components/Ui/Buttons/Button';
 import Calendar from 'components/Ui/Calendar/Calendar';
-import { SCHEDULES_PER_PAGE } from 'helpers/constants';
 import generateTimeArray, { getSchedule } from 'helpers/generateTimeArray';
-import { useLayoutEffect, useState } from 'react';
+import { useLoading } from 'hooks';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { HiArrowCircleLeft, HiArrowCircleRight } from 'react-icons/hi';
+import { useNavigate } from 'react-router-dom';
 import { BasicEmployeeInfo } from 'services/types/employee.types';
+import { EventType } from 'services/types/event.types';
+import { IMonthSchedule } from 'services/types/schedule.types';
 import { IWorkingHours } from 'store/company/company.types';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 import {
     BtnWrapper,
     Container,
@@ -21,10 +26,6 @@ import {
 import EmployeesInfoList from './RecordLogList/EmployeesInfoList/EmployeesInfoList';
 import RecordLogList from './RecordLogList/RecordLogList';
 import TimeList from './RecordLogList/TimeList';
-import { IMonthSchedule } from 'services/types/schedule.types';
-import { useNavigate } from 'react-router-dom';
-import { useLoading } from 'hooks';
-import { EventType } from 'services/types/event.types';
 
 type Props = {
     date: Date;
@@ -34,6 +35,8 @@ type Props = {
     allSchedules: IMonthSchedule[] | null;
     companyId: number;
     allEvents: EventType[] | [];
+    isCalendarOpen: boolean;
+    closeCalendar: () => void;
 };
 
 const RecordLog = ({
@@ -44,12 +47,16 @@ const RecordLog = ({
     employees,
     setDate,
     allEvents,
+    isCalendarOpen,
 }: Props) => {
     const chosenDay = new Date(date).getDay();
     const [startIndex, setStartIndex] = useState<number>(0);
     const [isScroll, setIsScroll] = useState<boolean>(false);
     const navigate = useNavigate();
     const { isGlobalLoading } = useLoading();
+    const [perPage, setPerPage] = useState<number>(1);
+    const isDesktop = useMediaQuery(theme.breakpoints.desktop.media);
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
 
     useLayoutEffect(() => {
         const schedulesListElementHeight = document.getElementById('schedulesList')?.offsetHeight;
@@ -87,9 +94,7 @@ const RecordLog = ({
     const chosenDayCompanySchedule = getCompanyDaySchedule();
 
     const providersToRender =
-        employees.length > SCHEDULES_PER_PAGE
-            ? employees.slice(startIndex, startIndex + SCHEDULES_PER_PAGE)
-            : employees;
+        employees.length > perPage ? employees.slice(startIndex, startIndex + perPage) : employees;
 
     const handleRedirectClick = (where: string): void => {
         switch (where) {
@@ -101,6 +106,10 @@ const RecordLog = ({
                 break;
         }
     };
+
+    useEffect(() => {
+        setPerPage(isDesktop ? 3 : 1);
+    }, [isDesktop]);
 
     return (
         <Container>
@@ -116,7 +125,7 @@ const RecordLog = ({
             ) : allSchedules && providersToRender.length > 0 && chosenDayCompanySchedule ? (
                 <LeftWrapper>
                     <EmployeesListWrapper>
-                        {startIndex !== 0 && employees.length > SCHEDULES_PER_PAGE && (
+                        {startIndex !== 0 && employees.length > perPage && (
                             <BtnWrapper $left="10px">
                                 <Button
                                     onClick={() => setStartIndex(s => s - 1)}
@@ -134,7 +143,7 @@ const RecordLog = ({
                             employees={providersToRender}
                             schedules={allSchedules}
                         />
-                        {employees.length > SCHEDULES_PER_PAGE &&
+                        {employees.length > perPage &&
                             employees[employees.length - 1] !==
                                 providersToRender[providersToRender.length - 1] && (
                                 <BtnWrapper $right="10px">
@@ -171,7 +180,9 @@ const RecordLog = ({
                                     />
                                 ))}
                             </ListsWrapper>
-                            <TimeList side="right" workHours={chosenDayCompanySchedule} />
+                            {!isMobile && (
+                                <TimeList side="right" workHours={chosenDayCompanySchedule} />
+                            )}
                         </SchedulesContainer>
                     </ScrollWrapper>
                 </LeftWrapper>
@@ -191,7 +202,7 @@ const RecordLog = ({
                     </NoDataWrapper>
                 ))
             )}
-            <RightWrapper>
+            <RightWrapper $isOpen={isCalendarOpen}>
                 <Calendar cellSize={30} date={date} setDate={setDate} />
             </RightWrapper>
         </Container>
