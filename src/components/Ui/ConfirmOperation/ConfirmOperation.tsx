@@ -35,7 +35,10 @@ const ConfirmOperation = ({
                         <Button
                             Icon={HiCheck}
                             $colors="success"
-                            onClick={callback}
+                            onClick={() => {
+                                callback();
+                                closeConfirm();
+                            }}
                             isLoading={isLoading}
                         >
                             Так

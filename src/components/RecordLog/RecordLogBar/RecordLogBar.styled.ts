@@ -6,7 +6,7 @@ export const Container = styled.div`
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto;
-    gap: ${theme.space[5]};
+    gap: ${theme.space[4]};
 
     @media ${theme.breakpoints.tablet.media} {
         display: flex;
@@ -24,11 +24,15 @@ export const Container = styled.div`
 `;
 
 export const LeftWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: ${theme.space[5]};
-    max-width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    align-items: end;
+    gap: ${theme.space[4]};
+
+    @media ${theme.breakpoints.mobile.media} {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
 `;
 
 export const RightWrapper = styled.div`
@@ -36,8 +40,12 @@ export const RightWrapper = styled.div`
     justify-content: space-between;
 
     @media ${theme.breakpoints.tablet.media} {
-        flex-direction: column;
         align-items: end;
-        gap: ${theme.space[5]};
+        gap: ${theme.space[4]};
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        align-items: end;
+        gap: ${theme.space[4]};
     }
 `;

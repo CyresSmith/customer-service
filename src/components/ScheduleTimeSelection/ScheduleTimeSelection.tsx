@@ -8,6 +8,7 @@ import { IoIosSave } from 'react-icons/io';
 import {
     ButtonsBox,
     ScheduleSection,
+    ScheduleSectionBox,
     SelectBox,
     SelectDaysBox,
     SelectionBox,
@@ -34,6 +35,8 @@ type Props = {
     isUpdateLoading: boolean;
     isUpdateDisabled: boolean;
     selectedHours?: { from: string; to: string };
+    isDeleteButton?: boolean;
+    isTitle?: boolean;
 };
 
 const ScheduleTimeSelection = ({
@@ -54,6 +57,8 @@ const ScheduleTimeSelection = ({
     isUpdateLoading,
     isUpdateDisabled,
     selectedHours,
+    isDeleteButton = true,
+    isTitle = true,
 }: Props) => {
     const isTimeForBreak = from !== '' && to !== '' && to >= timeArray[timeArray.indexOf(from) + 3];
 
@@ -79,65 +84,22 @@ const ScheduleTimeSelection = ({
 
     return (
         <SelectionBox>
-            <ScheduleSection>
-                <Title>Робочій час</Title>
+            <ScheduleSectionBox>
+                <ScheduleSection>
+                    {isTitle && <Title>Робочій час</Title>}
 
-                <SelectDaysBox>
-                    <SelectBox>
-                        <p>з</p>
-
-                        <CustomFormSelect
-                            fieldName="from"
-                            selectItems={getSchedule(
-                                timeArray,
-                                selectedHours?.from || from,
-                                selectedHours?.to || to
-                            ).map(value => ({ value }))}
-                            selectedItem={{ value: from }}
-                            handleSelect={handleSelect}
-                            disabled={!isEditingAllowed}
-                        />
-                    </SelectBox>
-
-                    <SelectBox>
-                        <p>до</p>
-
-                        <CustomFormSelect
-                            fieldName="to"
-                            selectItems={getSchedule(
-                                timeArray,
-                                timeArray[timeArray.indexOf(from) + 1],
-                                selectedHours?.to || to
-                            ).map(value => ({ value }))}
-                            selectedItem={{ value: to }}
-                            handleSelect={handleSelect}
-                            disabled={!isEditingAllowed || from === ''}
-                        />
-                    </SelectBox>
-                </SelectDaysBox>
-            </ScheduleSection>
-
-            <ScheduleSection>
-                <Checkbox
-                    isChecked={isBreak}
-                    handleCheck={breakToggle}
-                    name="break"
-                    isReadonly={!isTimeForBreak}
-                />
-                {isBreak && (
                     <SelectDaysBox>
                         <SelectBox>
                             <p>з</p>
 
                             <CustomFormSelect
-                                fieldName="breakFrom"
+                                fieldName="from"
                                 selectItems={getSchedule(
                                     timeArray,
-                                    timeArray[timeArray.indexOf(from) + 1],
-                                    timeArray[timeArray.indexOf(breakTo) - 1] ||
-                                        timeArray[timeArray.indexOf(to) - 1]
+                                    selectedHours?.from || from,
+                                    selectedHours?.to || to
                                 ).map(value => ({ value }))}
-                                selectedItem={{ value: breakFrom }}
+                                selectedItem={{ value: from }}
                                 handleSelect={handleSelect}
                                 disabled={!isEditingAllowed}
                             />
@@ -147,33 +109,80 @@ const ScheduleTimeSelection = ({
                             <p>до</p>
 
                             <CustomFormSelect
-                                fieldName="breakTo"
+                                fieldName="to"
                                 selectItems={getSchedule(
                                     timeArray,
-                                    timeArray[timeArray.indexOf(breakFrom) + 1] || '',
-                                    to ? timeArray[timeArray.indexOf(to) - 1] : ''
+                                    timeArray[timeArray.indexOf(from) + 1],
+                                    selectedHours?.to || to
                                 ).map(value => ({ value }))}
-                                selectedItem={{ value: breakTo }}
+                                selectedItem={{ value: to }}
                                 handleSelect={handleSelect}
-                                disabled={!isEditingAllowed || breakFrom === ''}
+                                disabled={!isEditingAllowed || from === ''}
                             />
                         </SelectBox>
                     </SelectDaysBox>
-                )}
-            </ScheduleSection>
+                </ScheduleSection>
+
+                <ScheduleSection>
+                    <Checkbox
+                        isChecked={isBreak}
+                        handleCheck={breakToggle}
+                        name="break"
+                        isReadonly={!isTimeForBreak}
+                    />
+                    {isBreak && (
+                        <SelectDaysBox>
+                            <SelectBox>
+                                <p>з</p>
+
+                                <CustomFormSelect
+                                    fieldName="breakFrom"
+                                    selectItems={getSchedule(
+                                        timeArray,
+                                        timeArray[timeArray.indexOf(from) + 1],
+                                        timeArray[timeArray.indexOf(breakTo) - 1] ||
+                                            timeArray[timeArray.indexOf(to) - 1]
+                                    ).map(value => ({ value }))}
+                                    selectedItem={{ value: breakFrom }}
+                                    handleSelect={handleSelect}
+                                    disabled={!isEditingAllowed}
+                                />
+                            </SelectBox>
+
+                            <SelectBox>
+                                <p>до</p>
+
+                                <CustomFormSelect
+                                    fieldName="breakTo"
+                                    selectItems={getSchedule(
+                                        timeArray,
+                                        timeArray[timeArray.indexOf(breakFrom) + 1] || '',
+                                        to ? timeArray[timeArray.indexOf(to) - 1] : ''
+                                    ).map(value => ({ value }))}
+                                    selectedItem={{ value: breakTo }}
+                                    handleSelect={handleSelect}
+                                    disabled={!isEditingAllowed || breakFrom === ''}
+                                />
+                            </SelectBox>
+                        </SelectDaysBox>
+                    )}
+                </ScheduleSection>
+            </ScheduleSectionBox>
 
             {isEditingAllowed && (
                 <ButtonsBox>
-                    <Button
-                        onClick={handleReset}
-                        Icon={HiTrash}
-                        disabled={isResetLoading || isUpdateLoading || false}
-                        $colors="light"
-                        $variant="text"
-                        isLoading={isResetLoading}
-                    >
-                        Скинути
-                    </Button>
+                    {isDeleteButton && (
+                        <Button
+                            onClick={handleReset}
+                            Icon={HiTrash}
+                            disabled={isResetLoading || isUpdateLoading || false}
+                            $colors="light"
+                            $variant="text"
+                            isLoading={isResetLoading}
+                        >
+                            Скинути
+                        </Button>
+                    )}
 
                     <Button
                         isLoading={isUpdateLoading}

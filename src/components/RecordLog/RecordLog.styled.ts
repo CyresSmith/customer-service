@@ -19,7 +19,7 @@ export const LeftWrapper = styled.div`
     height: 100%;
     padding-top: ${theme.space[3]};
     background-color: ${theme.colors.bg.main};
-    border-radius: ${theme.radii.l};
+    border-radius: ${theme.radii.m};
     overflow: hidden;
 
     @media ${theme.breakpoints.desktop.media} {

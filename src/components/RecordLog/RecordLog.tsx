@@ -3,7 +3,7 @@ import Calendar from 'components/Ui/Calendar/Calendar';
 import generateTimeArray, { getSchedule } from 'helpers/generateTimeArray';
 import { useLoading } from 'hooks';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { HiArrowCircleLeft, HiArrowCircleRight } from 'react-icons/hi';
+import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 import { BasicEmployeeInfo } from 'services/types/employee.types';
 import { EventType } from 'services/types/event.types';
@@ -129,10 +129,9 @@ const RecordLog = ({
                             <BtnWrapper $left="10px">
                                 <Button
                                     onClick={() => setStartIndex(s => s - 1)}
-                                    size="l"
-                                    $round={true}
-                                    $colors="transparent"
-                                    Icon={HiArrowCircleLeft}
+                                    Icon={HiArrowLeft}
+                                    $colors="accent"
+                                    $round
                                 />
                             </BtnWrapper>
                         )}
@@ -149,10 +148,9 @@ const RecordLog = ({
                                 <BtnWrapper $right="10px">
                                     <Button
                                         onClick={() => setStartIndex(s => s + 1)}
-                                        size="l"
-                                        $round={true}
-                                        $colors="transparent"
-                                        Icon={HiArrowCircleRight}
+                                        Icon={HiArrowRight}
+                                        $colors="accent"
+                                        $round
                                     />
                                 </BtnWrapper>
                             )}

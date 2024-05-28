@@ -138,7 +138,7 @@ const buttonStyle = ({
                 return $round ? theme.space[0] : `${theme.space[1]} ${theme.space[3]}`;
 
             case 'm':
-                return $round ? theme.space[1] : `${theme.space[2]} ${theme.space[3]}`;
+                return $round ? theme.space[2] : `${theme.space[2]} ${theme.space[3]}`;
 
             case 'l':
                 return $round ? theme.space[2] : `${theme.space[2]} ${theme.space[4]}`;

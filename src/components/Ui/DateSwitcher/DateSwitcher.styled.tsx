@@ -16,7 +16,7 @@ export const Container = styled.div<SwitcherType>`
     justify-content: space-between;
     border-radius: ${props =>
         props.$borderRadius ? `${theme.radii[props.$borderRadius]}` : 'none'};
-    border-width: ${props => (props.$border ? `${theme.borders.normal}` : 'none')};
+    border-width: ${props => (props.$border ? `${theme.borders.normal}` : 'unset')};
     border-color: ${props =>
         props.$border === 'light'
             ? `${theme.colors.secondary.dark}`

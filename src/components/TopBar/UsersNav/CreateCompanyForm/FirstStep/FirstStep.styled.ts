@@ -7,6 +7,7 @@ export const CategoriesList = styled.ul`
     flex-wrap: wrap;
     align-items: flex-start;
     gap: ${theme.space[3]};
+    max-width: 300px;
 `;
 
 export const Category = styled.li<Selected>`

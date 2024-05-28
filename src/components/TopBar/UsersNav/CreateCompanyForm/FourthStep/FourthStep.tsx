@@ -14,6 +14,7 @@ import { useCreateCompanyMutation } from 'services/company.api';
 import BackButton from '../Buttons/BackButton';
 import { ButtonBox, Title } from '../CreateCompanyForm.styled';
 import { stepProps } from '../CreateCompanyForm.types';
+import { ScrollBox } from './FourthStep.styled';
 
 interface Props extends stepProps {
     closeModal: () => void;
@@ -85,7 +86,7 @@ const FourthStep = ({ companyData, setCompanyData, prevPage, closeModal }: Props
     }, [closeModal, error, isError, isSuccess, reset]);
 
     return (
-        <>
+        <ScrollBox>
             <Title>Основна інформація</Title>
 
             <Form onSubmit={handleSubmit}>
@@ -115,11 +116,11 @@ const FourthStep = ({ companyData, setCompanyData, prevPage, closeModal }: Props
                         disabled={isLoading || !areAllFieldsFilled(companyData)}
                         isLoading={isLoading}
                     >
-                        Створити компанію
+                        Створити
                     </Button>
                 </ButtonBox>
             </Form>
-        </>
+        </ScrollBox>
     );
 };
 

@@ -6,7 +6,7 @@ export const baseInputStyles = `
   padding: ${theme.space[2]} ${theme.space[3]};
   border-radius: ${theme.radii.m};
   background-color: ${theme.colors.secondary.light};
-  border: ${theme.borders.normal} ${theme.colors.bg.dark};
+//   border: ${theme.borders.normal} ${theme.colors.bg.dark};
   transition: ${theme.transition.primary};
   font-size: ${theme.fontSizes.l};
   width: 100%;

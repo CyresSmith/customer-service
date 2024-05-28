@@ -35,7 +35,7 @@ export const ModalContainer = styled.div<Style>`
     transform: ${props => (props.$isOpen ? 'translate(0, 0)' : 'translate(0, 100%)')};
     transition: ${theme.transition.modal};
     box-shadow: ${theme.shadow.m};
-    overflow: hidden;
+    overflow: auto;
     display: grid;
     grid-template-rows: max-content 1fr;
 

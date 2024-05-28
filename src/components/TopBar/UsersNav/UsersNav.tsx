@@ -114,7 +114,7 @@ const UsersNav = () => {
                         onClick={() => setModalOpen(true)}
                         Icon={IoMdAddCircle}
                         $colors="light"
-                        children={isMobile ? undefined : 'Нова компанія'}
+                        children={isMobile ? undefined : 'Створити компанію'}
                     />
                 )}
 
@@ -142,7 +142,7 @@ const UsersNav = () => {
                         size={AvatarSize.S}
                     />
 
-                    <UsersEmail>{user?.firstName || user?.email}</UsersEmail>
+                    {!isMobile && <UsersEmail>{user?.firstName || user?.email}</UsersEmail>}
                 </UserWrapper>
 
                 {!match && (

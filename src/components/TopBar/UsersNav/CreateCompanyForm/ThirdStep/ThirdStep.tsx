@@ -15,9 +15,9 @@ const branches = [
 ];
 
 const employees = [
-    { id: '2-5', label: 'Від 2 до 5' },
-    { id: '6-9', label: 'Від 6 до 9' },
-    { id: '10+', label: 'Від 10' },
+    { id: '2-5', label: '2 - 5' },
+    { id: '6-9', label: '6 - 9' },
+    { id: '10+', label: '10+' },
 ];
 
 const ThirdStep = ({ companyData, setCompanyData, nextPage, prevPage }: stepProps) => {

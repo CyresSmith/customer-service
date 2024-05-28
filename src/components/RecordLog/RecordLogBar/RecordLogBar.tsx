@@ -33,6 +33,7 @@ const RecordLogBar = ({
     closeCalendar,
 }: Props) => {
     const isDesktop = useMediaQuery(theme.breakpoints.desktop.media);
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
     const ref = useClickOutside<HTMLDivElement>(closeCalendar);
 
     return (
@@ -42,7 +43,7 @@ const RecordLogBar = ({
                     <FormInputLabel>Співробітники</FormInputLabel>
 
                     <CustomFormSelect
-                        width="200px"
+                        width={isMobile ? '100%' : '200px'}
                         selectItems={selectItems}
                         handleSelect={handleSelect}
                         selectedItem={selected}
@@ -67,7 +68,12 @@ const RecordLogBar = ({
                     $colors="accent"
                 />
                 {!isDesktop && (
-                    <Button onClick={calendarToggle} Icon={HiCalendarDays} $colors="accent" />
+                    <Button
+                        onClick={calendarToggle}
+                        Icon={HiCalendarDays}
+                        $colors="accent"
+                        $round
+                    />
                 )}
             </RightWrapper>
         </Container>
