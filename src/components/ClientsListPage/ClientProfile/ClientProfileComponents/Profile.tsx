@@ -11,6 +11,8 @@ import {
     useUploadAvatarMutation,
 } from 'services/clients.api';
 import { Client } from 'services/types/clients.types';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 import { BtnWrapper, LeftSideWrapper, SidesWrapper } from '../ClientProfile.styled';
 
 type Props = {
@@ -20,6 +22,8 @@ type Props = {
 };
 
 export const Profile = ({ companyId, closeModal, client }: Props) => {
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
+
     const [uploadAvatar, { isLoading: uploadLoading }] = useUploadAvatarMutation();
 
     const [updateClientMutation, { isLoading: updateLoading }] = useUpdateClientMutation();
@@ -86,7 +90,7 @@ export const Profile = ({ companyId, closeModal, client }: Props) => {
             <SidesWrapper>
                 <LeftSideWrapper>
                     <Avatar
-                        size={200}
+                        size={isMobile ? undefined : 200}
                         handleUpload={handleUpload}
                         alt="Client photo"
                         currentImageUrl={client.avatar || ''}
@@ -94,16 +98,18 @@ export const Profile = ({ companyId, closeModal, client }: Props) => {
                         isLoading={uploadLoading}
                     />
 
-                    <BtnWrapper>
-                        <Button
-                            Icon={HiUserRemove}
-                            onClick={confirmToggle}
-                            isLoading={deleteLoading}
-                            type="button"
-                            children="Видалити"
-                            $colors="light"
-                        />
-                    </BtnWrapper>
+                    {!isMobile && (
+                        <BtnWrapper>
+                            <Button
+                                Icon={HiUserRemove}
+                                onClick={confirmToggle}
+                                isLoading={deleteLoading}
+                                type="button"
+                                children="Видалити"
+                                $colors="light"
+                            />
+                        </BtnWrapper>
+                    )}
                 </LeftSideWrapper>
 
                 <ClientForm
@@ -111,6 +117,8 @@ export const Profile = ({ companyId, closeModal, client }: Props) => {
                     onSubmit={handleUpdate}
                     isLoading={updateLoading}
                     initialState={client}
+                    confirmToggle={confirmToggle}
+                    deleteLoading={deleteLoading}
                 />
             </SidesWrapper>
 

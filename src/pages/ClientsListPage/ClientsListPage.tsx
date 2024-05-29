@@ -7,6 +7,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCreateClientMutation, useGetAllClientsQuery } from 'services/clients.api';
 import { Client } from 'services/types/clients.types';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 
 const addInitialState: Client = {
     id: 0,
@@ -28,6 +30,10 @@ enum OpenModal {
 }
 
 const ClientsListPage = () => {
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
+    const isTablet = useMediaQuery(theme.breakpoints.tablet.media);
+    const isDesktop = useMediaQuery(theme.breakpoints.desktop.media);
+
     const { id: companyId } = useCompany();
     const [modalOpen, setModalOpen] = useState<OpenModal | null>(null);
     const [chosenClientId, setChosenClientId] = useState<number | null>(null);
@@ -77,23 +83,37 @@ const ClientsListPage = () => {
                                   email,
                                   gender,
                                   createdAt,
-                              }) => ({
-                                  id,
-                                  avatar: avatar || '',
-                                  name: `${firstName}  ${lastName && lastName}`,
-                                  phone,
-                                  email: email || 'Пошта не вказана',
-                                  gender: gender || 'other',
-                                  register: createdAt
-                                      ? new Date(createdAt).toLocaleDateString()
-                                      : '',
-                              })
+                              }) => {
+                                  let userData = {
+                                      id,
+                                      avatar: avatar || '',
+                                      name: `${firstName}  ${lastName && lastName}`,
+                                      phone,
+                                  };
+
+                                  if (isTablet || isDesktop) {
+                                      userData = Object.assign(userData, {
+                                          gender: gender || 'other',
+                                          email: email || 'Пошта не вказана',
+                                      });
+                                  }
+
+                                  if (isDesktop) {
+                                      userData = Object.assign(userData, {
+                                          register: createdAt
+                                              ? new Date(createdAt).toLocaleDateString()
+                                              : '',
+                                      });
+                                  }
+
+                                  return userData;
+                              }
                           )
                 }
                 onItemClick={handleItemClick}
-                addButtonTitle="Додати клієнта"
+                addButtonTitle={'Додати клієнта'}
                 onAddClick={() => setModalOpen(OpenModal.ADD)}
-                keyForSelect="gender"
+                keyForSelect={isMobile ? undefined : 'gender'}
                 keyForSearch="phone"
                 notSortedKeys={['phone', 'email']}
                 nameColumnTitle="Ім'я"

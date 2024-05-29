@@ -6,15 +6,11 @@ import { millisecondsToTime } from 'helpers/millisecondsToTime';
 import { translateLabels } from 'helpers/translateLabels';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { FaGenderless, FaMars, FaVenus } from 'react-icons/fa6';
-import {
-    HiCheckCircle,
-    HiPlusCircle,
-    HiSortAscending,
-    HiSortDescending,
-    HiX,
-} from 'react-icons/hi';
+import { HiCheckCircle, HiPlus, HiSortAscending, HiSortDescending, HiX } from 'react-icons/hi';
 import { HiTrash } from 'react-icons/hi2';
 import { TbArrowsSort } from 'react-icons/tb';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 import Button from '../Buttons/Button';
 import { FormInput, FormInputLabel, FormInputsListItem } from '../Form/CustomForm.styled';
 import CustomFormSelect from '../Form/CustomFormSelect';
@@ -84,6 +80,8 @@ const ItemsList = <T extends StringRecord>({
     listSortPanel = true,
     avatarSize = AvatarSize.M,
 }: Props<T>) => {
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
+
     const [itemsState, setItemsState] = useState<ItemType<T>[]>([]);
     const [initialSortState, setInitialSortState] = useState<Record<string, SortTypeEnum>>({});
     const [sortState, setSortState] = useState(initialSortState);
@@ -350,9 +348,10 @@ const ItemsList = <T extends StringRecord>({
                     {addButtonTitle && onAddClick && (
                         <Button
                             onClick={onAddClick}
-                            Icon={HiPlusCircle}
+                            Icon={HiPlus}
                             $colors="accent"
                             shake={items.length === 0}
+                            $round={isMobile ? true : false}
                         >
                             {addButtonTitle}
                         </Button>

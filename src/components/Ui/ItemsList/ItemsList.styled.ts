@@ -3,14 +3,17 @@ import theme from 'utils/theme';
 
 export const ListBox = styled.div`
     display: flex;
-    flex-direction: column;
     max-height: 100%;
+    flex-direction: column;
 `;
 
 export const ListBar = styled.div`
     width: 100%;
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
+    flex-direction: row;
+    align-items: end;
+    justify-content: space-between;
     gap: ${theme.space[5]};
     margin-bottom: ${theme.space[4]};
     border-bottom: ${theme.borders.normal} ${theme.colors.secondary.main};
@@ -29,6 +32,11 @@ export const FilterBox = styled.div<{ $rowsCount: number }>`
     grid-template-rows: auto;
     align-items: center;
     gap: ${theme.space[4]};
+
+    @media ${theme.breakpoints.tablet.media} {
+        grid-template-columns: ${({ $rowsCount }) => `repeat(${$rowsCount}, 242px)`};
+        grid-template-rows: 1fr;
+    }
 
     @media ${theme.breakpoints.desktop.media} {
         grid-template-columns: ${({ $rowsCount }) => `repeat(${$rowsCount}, 242px)`};

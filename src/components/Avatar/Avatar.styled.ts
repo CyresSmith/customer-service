@@ -10,8 +10,8 @@ interface IImageBox {
 
 export const AvatarBox = styled.div<{ size: number }>`
     position: relative;
-    width: ${({ size }) => (size ? `${size}px` : '250px')};
-    height: ${({ size }) => (size ? `${size}px` : '250px')};
+    max-width: ${({ size }) => (size ? `${size}px` : '250px')};
+    max-height: ${({ size }) => (size ? `${size}px` : '250px')};
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -19,8 +19,8 @@ export const AvatarBox = styled.div<{ size: number }>`
 
 export const ImageBox = styled.div<IImageBox>`
     position: relative;
-    width: ${({ size }) => (size ? `${size}px` : '250px')};
-    height: ${({ size }) => (size ? `${size}px` : '250px')};
+    max-width: ${({ size }) => (size ? `${size}px` : '250px')};
+    max-height: ${({ size }) => (size ? `${size}px` : '250px')};
     object-fit: cover;
     overflow: hidden;
     border-radius: ${({ $round }) => ($round ? theme.radii.round : theme.radii.xs)};

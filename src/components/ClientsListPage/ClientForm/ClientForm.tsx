@@ -2,18 +2,20 @@ import Button from 'components/Ui/Buttons/Button';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { InputProps, InputValueType, SelectItem } from 'components/Ui/Form/types';
 import { useForm } from 'hooks/useForm';
+import { HiUserRemove } from 'react-icons/hi';
 import { IoMdSave } from 'react-icons/io';
 import { Client } from 'services/types/clients.types';
 import {
     ButtonsBox,
     Form,
     FormInputsList,
-    FormSidesWrapper,
     FormTitle,
     SubmitBtnWrapper,
     SubmitError,
     SubmitErrorsBox,
 } from './ClientForm.styled';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 
 const inputs: Partial<InputProps>[] = [
     { name: 'firstName', type: 'text', isRequired: true },
@@ -39,9 +41,20 @@ type Props = {
     onSubmit: (state: Client) => void;
     isLoading: boolean;
     type: string;
+    confirmToggle: () => void;
+    deleteLoading: boolean;
 };
 
-const ClientForm = ({ initialState, onSubmit, isLoading, type }: Props) => {
+const ClientForm = ({
+    initialState,
+    onSubmit,
+    isLoading,
+    type,
+    confirmToggle,
+    deleteLoading,
+}: Props) => {
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
+
     const { state, handleChange, handleSubmit, invalidFields, setState } = useForm<Client>(
         initialState,
         onSubmit
@@ -75,30 +88,39 @@ const ClientForm = ({ initialState, onSubmit, isLoading, type }: Props) => {
     return (
         <Form onSubmit={handleSubmit}>
             {type === 'add' && <FormTitle>Новий клієнт</FormTitle>}
-            <FormSidesWrapper>
-                <FormInputsList>
-                    {inputs.map(({ name, type, isRequired, placeholder }, i) => (
-                        <CustomFormInput
-                            key={i}
-                            name={name!}
-                            type={type!}
-                            isRequired={isRequired}
-                            value={
-                                type === 'select'
-                                    ? { value: state[name as keyof InputValueType] }
-                                    : state[name as keyof InputValueType]
-                            }
-                            handleChange={handleChange}
-                            handlePickDate={handlePickDate}
-                            disabledIcon={true}
-                            selectItems={genderOptions}
-                            handleSelect={handleSelect}
-                            placeholder={placeholder}
-                        />
-                    ))}
-                </FormInputsList>
-            </FormSidesWrapper>
+            <FormInputsList>
+                {inputs.map(({ name, type, isRequired, placeholder }, i) => (
+                    <CustomFormInput
+                        key={i}
+                        name={name!}
+                        type={type!}
+                        isRequired={isRequired}
+                        value={
+                            type === 'select'
+                                ? { value: state[name as keyof InputValueType] }
+                                : state[name as keyof InputValueType]
+                        }
+                        handleChange={handleChange}
+                        handlePickDate={handlePickDate}
+                        disabledIcon={true}
+                        selectItems={genderOptions}
+                        handleSelect={handleSelect}
+                        placeholder={placeholder}
+                    />
+                ))}
+            </FormInputsList>
             <ButtonsBox>
+                {isMobile && (
+                    <Button
+                        Icon={HiUserRemove}
+                        onClick={confirmToggle}
+                        isLoading={deleteLoading}
+                        type="button"
+                        children="Видалити"
+                        $colors="light"
+                    />
+                )}
+
                 <SubmitBtnWrapper>
                     <Button
                         disabled={disabledSubmit}
