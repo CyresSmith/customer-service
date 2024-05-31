@@ -38,6 +38,7 @@ export const LeftSideWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 
     @media ${theme.breakpoints.tablet.media} {
         justify-content: space-between;
