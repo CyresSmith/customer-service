@@ -19,7 +19,7 @@ export const ModalBox = styled.div`
 export const StepBox = styled.div`
     display: flex;
     gap: ${theme.space[2]};
-    margin-bottom: ${theme.space[3]};
+    margin-bottom: ${theme.space[5]};
     transition: ${theme.transition.primary};
     overflow: hidden;
     max-width: 250px;
@@ -73,6 +73,10 @@ export const FirstStepBox = styled.div`
     display: flex;
     gap: ${theme.space[5]};
     flex-grow: 1;
+
+    @media ${theme.breakpoints.mobile.media} {
+        flex-direction: column;
+    }
 `;
 
 export const SecondStepBox = styled.div``;
@@ -84,7 +88,6 @@ export const StepFormBox = styled.form`
     flex-grow: 1;
     min-height: 363px;
     max-width: 100%;
-    margin-top: ${theme.space[4]};
 `;
 
 export const FormSide = styled.div`

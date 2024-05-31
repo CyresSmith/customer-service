@@ -197,7 +197,6 @@ const FirstStep = ({
                         currentImageUrl={serviceData.avatar || ''}
                         isLoading={isAvatarLoading}
                         allowChanges={isAdmin}
-                        size={150}
                         alt="service image"
                         handleUpload={handleAvatarUpload}
                     />

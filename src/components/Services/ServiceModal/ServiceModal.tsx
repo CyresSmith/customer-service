@@ -1,4 +1,3 @@
-import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
 import { ModalHeaderBox } from 'components/Ui/Modal/Modal.styled';
 import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
@@ -55,7 +54,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
     const [step, setStep] = useState(1);
     const [serviceData, setServiceData] = useState(initialState);
     const [stateToCheck, setStateToCheck] = useState<ServiceDataType | null>(null);
-    const { data: employees, isLoading: isEmployeesLoading } = useGetCompanyEmployeesQuery(id, {
+    const { data: employees } = useGetCompanyEmployeesQuery(id, {
         skip: !id,
     });
 
@@ -82,7 +81,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
 
     const skip = Boolean(!accessToken || !user || !id || !serviceId);
 
-    const { data, isLoading: IsServiceDataLoading } = useGetServiceDataQuery(
+    const { data } = useGetServiceDataQuery(
         {
             companyId: +id,
             serviceId: Number(serviceId),
@@ -179,9 +178,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
         }
     }, [data, openModal]);
 
-    return IsServiceDataLoading || isEmployeesLoading ? (
-        <Loader />
-    ) : (
+    return (
         <Modal
             $w="650px"
             id="addService"

@@ -10,6 +10,7 @@ interface IImageBox {
 
 export const AvatarBox = styled.div<{ size?: number }>`
     position: relative;
+    width: 100%;
     max-width: ${({ size }) => (size ? `${size}px` : '250px')};
     max-height: ${({ size }) => (size ? `${size}px` : '250px')};
     aspect-ratio: 1 / 1;
@@ -20,6 +21,8 @@ export const AvatarBox = styled.div<{ size?: number }>`
 
 export const ImageBox = styled.div<IImageBox>`
     position: relative;
+    min-width: 100%;
+    min-height: 100%;
     max-width: ${({ size }) => (size ? `${size}px` : '250px')};
     max-height: ${({ size }) => (size ? `${size}px` : '250px')};
     aspect-ratio: 1 / 1;

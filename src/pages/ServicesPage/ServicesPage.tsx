@@ -1,7 +1,6 @@
 import ServiceModal from 'components/Services/ServiceModal';
 import ConfirmOperation from 'components/Ui/ConfirmOperation';
 import ItemsList from 'components/Ui/ItemsList';
-import Loader from 'components/Ui/Loader';
 import { ServiceOpenModal } from 'helpers/enums';
 import { useAdminRights } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
@@ -21,10 +20,7 @@ const ServicesPage = () => {
     const [serviceId, setServiceId] = useState<number | undefined>(undefined);
     const isAdmin = useAdminRights();
 
-    const { data: services, isLoading: servicesLoading } = useGetServicesQuery(
-        { companyId },
-        { skip: !companyId }
-    );
+    const { data: services } = useGetServicesQuery({ companyId }, { skip: !companyId });
 
     const [deleteService, { isLoading: isServiceDeleteLoading }] = useDeleteServiceMutation();
 
@@ -77,9 +73,7 @@ const ServicesPage = () => {
 
     const keyForSelect = !isMobile ? 'category' : undefined;
 
-    return servicesLoading ? (
-        <Loader />
-    ) : services ? (
+    return services ? (
         <>
             <ItemsList
                 items={items}
