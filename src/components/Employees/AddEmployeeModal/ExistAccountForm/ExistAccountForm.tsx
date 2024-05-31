@@ -93,7 +93,7 @@ const ExistAccountForm = ({ userId, handleBackClick, closeModal }: Props) => {
                         disabled={Object.values(state).includes('') || isLoading}
                         $colors="accent"
                     >
-                        Додать
+                        Додати
                     </Button>
                 </ButtonBox>
             </Form>

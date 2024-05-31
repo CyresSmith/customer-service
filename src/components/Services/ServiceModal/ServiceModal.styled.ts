@@ -2,19 +2,37 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const ModalBox = styled.div`
-    min-width: 570px;
-    min-height: 500px;
     position: relative;
     display: flex;
     flex-direction: column;
-    /* justify-content: space-between; */
+    min-width: 245px;
+
+    @media ${theme.breakpoints.tablet.media} {
+        min-height: 500px;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        min-height: 500px;
+    }
 `;
 
 export const StepBox = styled.div`
     display: flex;
-    gap: ${theme.space[5]};
-    margin-bottom: ${theme.space[5]};
+    gap: ${theme.space[2]};
+    margin-bottom: ${theme.space[3]};
     transition: ${theme.transition.primary};
+    overflow: hidden;
+    max-width: 250px;
+
+    @media ${theme.breakpoints.tablet.media} {
+        gap: ${theme.space[5]};
+        max-width: 100%;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        gap: ${theme.space[5]};
+        max-width: 100%;
+    }
 `;
 
 export const Step = styled.div<{ $current: boolean; $color: boolean }>`
@@ -22,11 +40,16 @@ export const Step = styled.div<{ $current: boolean; $color: boolean }>`
     align-items: center;
     gap: ${theme.space[3]};
     transition: ${theme.transition.primary};
-    font-size: ${theme.fontSizes.s};
+    font-size: ${theme.fontSizes.l};
     font-weight: ${theme.fontWeights.light};
     color: ${theme.colors.accent.light};
-    width: ${({ $current }) => ($current ? '150px' : '50px')};
+    max-width: ${({ $current }) => ($current ? '150px' : '50px')};
+    margin-right: ${({ $current }) => ($current ? 'auto' : 0)};
     overflow: hidden;
+
+    @media ${theme.breakpoints.mobile.media} {
+        font-size: ${theme.fontSizes.s};
+    }
 `;
 
 export const StepNumber = styled.span<{ $current: boolean }>`
@@ -48,14 +71,11 @@ export const StepNumber = styled.span<{ $current: boolean }>`
 
 export const FirstStepBox = styled.div`
     display: flex;
-    /* align-items: start; */
     gap: ${theme.space[5]};
     flex-grow: 1;
 `;
 
-export const SecondStepBox = styled.div`
-    /* height: 320px; */
-`;
+export const SecondStepBox = styled.div``;
 
 export const StepFormBox = styled.form`
     display: flex;
@@ -63,6 +83,8 @@ export const StepFormBox = styled.form`
     justify-content: space-between;
     flex-grow: 1;
     min-height: 363px;
+    max-width: 100%;
+    margin-top: ${theme.space[4]};
 `;
 
 export const FormSide = styled.div`
@@ -93,8 +115,8 @@ export const ButtonBox = styled.div`
 export const DurationBox = styled.div`
     display: flex;
     align-items: center;
-    gap: ${theme.space[4]};
-    width: 100%;
+    gap: ${theme.space[3]};
+    max-width: 100%;
 `;
 
 export const TimeBox = styled.div`

@@ -90,7 +90,6 @@ export const Profile = ({ companyId, closeModal, client }: Props) => {
             <SidesWrapper>
                 <LeftSideWrapper>
                     <Avatar
-                        size={isMobile ? undefined : 200}
                         handleUpload={handleUpload}
                         alt="Client photo"
                         currentImageUrl={client.avatar || ''}

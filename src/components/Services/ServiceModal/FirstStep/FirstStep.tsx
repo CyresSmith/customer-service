@@ -224,6 +224,7 @@ const FirstStep = ({
                                 isValid={getErrorMessage(item.name, invalidFields)}
                                 disabledIcon={item.name === 'category' ? true : false}
                                 isReadonly={!isAdmin}
+                                visibleItemsCount={5}
                             />
                         ))}
                     </FormSide>

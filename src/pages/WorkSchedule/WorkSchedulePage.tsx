@@ -851,6 +851,7 @@ const WorkSchedulePage = () => {
 
             {modalOpen && (
                 <Modal
+                    $w="650px"
                     closeModal={() => setModalOpen(false)}
                     $isOpen={modalOpen}
                     title="Налаштування робочого часу"

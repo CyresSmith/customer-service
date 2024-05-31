@@ -8,13 +8,8 @@ export const Container = styled.div`
     justify-content: space-between;
     overflow: hidden;
 
-    @media ${theme.breakpoints.tablet.media} {
-        min-width: 380px;
-    }
-
     @media ${theme.breakpoints.desktop.media} {
         min-height: 500px;
-        width: 500px;
     }
 `;
 

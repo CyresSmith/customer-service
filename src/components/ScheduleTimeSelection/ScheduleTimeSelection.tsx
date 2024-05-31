@@ -3,7 +3,6 @@ import Checkbox from 'components/Ui/Form/Checkbox';
 import CustomFormSelect from 'components/Ui/Form/CustomFormSelect';
 import { SelectHandler } from 'components/Ui/Form/types';
 import generateTimeArray, { getSchedule } from 'helpers/generateTimeArray';
-import { HiTrash } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
 import {
     ButtonsBox,
@@ -29,13 +28,10 @@ type Props = {
     breakTo: string;
     setBreakTo: (breakTo: string) => void;
     isEditingAllowed: boolean;
-    handleReset: () => void;
-    isResetLoading?: boolean;
     handleUpdate: () => void;
     isUpdateLoading: boolean;
     isUpdateDisabled: boolean;
     selectedHours?: { from: string; to: string };
-    isDeleteButton?: boolean;
     isTitle?: boolean;
 };
 
@@ -51,13 +47,10 @@ const ScheduleTimeSelection = ({
     breakTo,
     setBreakTo,
     isEditingAllowed,
-    handleReset,
-    isResetLoading,
     handleUpdate,
     isUpdateLoading,
     isUpdateDisabled,
     selectedHours,
-    isDeleteButton = true,
     isTitle = true,
 }: Props) => {
     const isTimeForBreak = from !== '' && to !== '' && to >= timeArray[timeArray.indexOf(from) + 3];
@@ -102,6 +95,7 @@ const ScheduleTimeSelection = ({
                                 selectedItem={{ value: from }}
                                 handleSelect={handleSelect}
                                 disabled={!isEditingAllowed}
+                                visibleItemsCount={3}
                             />
                         </SelectBox>
 
@@ -118,6 +112,7 @@ const ScheduleTimeSelection = ({
                                 selectedItem={{ value: to }}
                                 handleSelect={handleSelect}
                                 disabled={!isEditingAllowed || from === ''}
+                                visibleItemsCount={3}
                             />
                         </SelectBox>
                     </SelectDaysBox>
@@ -146,6 +141,7 @@ const ScheduleTimeSelection = ({
                                     selectedItem={{ value: breakFrom }}
                                     handleSelect={handleSelect}
                                     disabled={!isEditingAllowed}
+                                    visibleItemsCount={3}
                                 />
                             </SelectBox>
 
@@ -162,6 +158,7 @@ const ScheduleTimeSelection = ({
                                     selectedItem={{ value: breakTo }}
                                     handleSelect={handleSelect}
                                     disabled={!isEditingAllowed || breakFrom === ''}
+                                    visibleItemsCount={3}
                                 />
                             </SelectBox>
                         </SelectDaysBox>
@@ -171,24 +168,11 @@ const ScheduleTimeSelection = ({
 
             {isEditingAllowed && (
                 <ButtonsBox>
-                    {isDeleteButton && (
-                        <Button
-                            onClick={handleReset}
-                            Icon={HiTrash}
-                            disabled={isResetLoading || isUpdateLoading || false}
-                            $colors="light"
-                            $variant="text"
-                            isLoading={isResetLoading}
-                        >
-                            Скинути
-                        </Button>
-                    )}
-
                     <Button
                         isLoading={isUpdateLoading}
                         onClick={handleUpdate}
                         Icon={IoIosSave}
-                        disabled={isResetLoading || isUpdateLoading || isUpdateDisabled}
+                        disabled={isUpdateLoading || isUpdateDisabled}
                         $colors="accent"
                     >
                         Зберегти

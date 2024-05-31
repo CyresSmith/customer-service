@@ -25,8 +25,7 @@ export const ModalContainer = styled.div<Style>`
     z-index: 100;
     position: relative;
     height: ${({ $h }) => $h || 'unset'};
-    width: calc(100% - ${LAYOUT_PADDING});
-    max-width: 400px;
+    width: calc(100vw - ${LAYOUT_PADDING});
     max-height: 100vh;
     padding: ${theme.space[5]};
     background-color: ${theme.colors.bg.main};
@@ -37,16 +36,17 @@ export const ModalContainer = styled.div<Style>`
     box-shadow: ${theme.shadow.m};
     overflow: auto;
     display: grid;
+    grid-template-columns: 1fr;
     grid-template-rows: max-content 1fr;
 
     @media ${theme.breakpoints.tablet.media} {
-        width: ${props => (props.$w ? props.$w : 'auto')};
+        width: ${props => (props.$w ? props.$w : '650px')};
         min-width: 400px;
         max-width: 90vw;
     }
 
     @media ${theme.breakpoints.desktop.media} {
-        width: ${props => (props.$w ? props.$w : 'auto')};
+        width: ${props => (props.$w ? props.$w : '850px')};
         min-width: 400px;
         max-width: 90vw;
     }

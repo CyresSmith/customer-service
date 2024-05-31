@@ -15,7 +15,7 @@ import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 import { useGetServiceDataQuery, useUpdateServiceDataMutation } from 'services/service.api';
 import { EmployeeStatusEnum } from 'services/types/employee.types';
 import { IServiceUpdate, ServiceDataType } from 'services/types/service.type';
-import FirstStep from './FirstStep/FirstStep';
+import FirstStep from './FirstStep';
 import SecondStep from './SecondStep';
 import { ModalBox, Step, StepBox, StepNumber } from './ServiceModal.styled';
 import ThirdStep from './ThirdStep';
@@ -183,6 +183,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
         <Loader />
     ) : (
         <Modal
+            $w="650px"
             id="addService"
             title={openModal === ServiceOpenModal.ADD ? 'Створення послуги' : undefined}
             $isOpen={openModal !== null}
@@ -195,7 +196,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
                             {Array.from({ length: 3 }).map((_, i) => (
                                 <Step $current={i + 1 === step} $color={i + 1 <= step} key={i}>
                                     <StepNumber $current={i + 1 <= step}>{i + 1}</StepNumber>
-                                    <p>{title()}</p>
+                                    {<p>{title()}</p>}
                                 </Step>
                             ))}
                         </StepBox>

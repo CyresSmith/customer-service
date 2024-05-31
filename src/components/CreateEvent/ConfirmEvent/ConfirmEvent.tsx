@@ -149,12 +149,8 @@ const ConfirmEvent = ({
 
                 <Total>
                     <span>Загалом:</span>
-                    <TotalInfo>
-                        <span>{millisecondsToTime(eventDuration)}</span>
-                    </TotalInfo>
-                    <TotalInfo>
-                        <span>{totalPrice()} грн</span>
-                    </TotalInfo>
+                    <TotalInfo>{millisecondsToTime(eventDuration)}</TotalInfo>
+                    <TotalInfo>{totalPrice()} грн</TotalInfo>
                 </Total>
             </Container>
 

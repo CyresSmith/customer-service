@@ -3,19 +3,13 @@ import theme from 'utils/theme';
 
 export const Container = styled.div`
     max-height: 100%;
-    min-height: 300px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
-    @media ${theme.breakpoints.desktop.media} {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: 1fr;
-        gap: ${theme.space[5]};
-        height: 100%;
-        min-width: 380px;
-    }
+    align-items: center;
+    max-width: 260px;
+    margin: ${theme.space[4]} auto 0;
+    gap: ${theme.space[4]};
 `;
 
 export const SelectBox = styled.div`

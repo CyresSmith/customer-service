@@ -33,6 +33,10 @@ export const FilterBox = styled.div<{ $rowsCount: number }>`
     align-items: center;
     gap: ${theme.space[4]};
 
+    @media ${theme.breakpoints.mobile.media} {
+        width: 100%;
+    }
+
     @media ${theme.breakpoints.tablet.media} {
         grid-template-columns: ${({ $rowsCount }) => `repeat(${$rowsCount}, 242px)`};
         grid-template-rows: 1fr;

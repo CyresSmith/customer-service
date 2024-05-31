@@ -1,4 +1,5 @@
 import Loader from 'components/Ui/Loader';
+import { ModalHeaderBox } from 'components/Ui/Modal/Modal.styled';
 import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
 import ModalSectionsList from 'components/Ui/Modal/ModalSectionsList';
 import { useState } from 'react';
@@ -6,7 +7,6 @@ import { HiIdentification } from 'react-icons/hi2';
 import { useGetByIdQuery } from 'services/clients.api';
 import { Container, Skeleton } from './ClientProfile.styled';
 import { Profile } from './ClientProfileComponents/Profile';
-import { ModalHeaderBox } from 'components/Ui/Modal/Modal.styled';
 
 type Props = {
     companyId: number;
@@ -39,6 +39,7 @@ const ClientProfile = ({ companyId, clientId, closeModal }: Props) => {
                     title={
                         data.lastName ? data.firstName + ' ' + data.lastName : data.firstName || ''
                     }
+                    subtitle={data.phone}
                 />
 
                 <ModalSectionsList

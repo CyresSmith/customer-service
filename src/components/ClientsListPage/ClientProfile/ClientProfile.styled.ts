@@ -24,12 +24,12 @@ export const SidesWrapper = styled.div`
     gap: ${theme.space[5]};
 
     @media ${theme.breakpoints.tablet.media} {
-        grid-template-columns: max-content 1fr;
+        grid-template-columns: 150px 1fr;
         grid-template-rows: 1fr;
     }
 
     @media ${theme.breakpoints.desktop.media} {
-        grid-template-columns: max-content 1fr;
+        grid-template-columns: 200px 1fr;
         grid-template-rows: 1fr;
     }
 `;

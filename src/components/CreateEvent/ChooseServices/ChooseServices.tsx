@@ -6,6 +6,8 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { useGetEmployeeServicesQuery } from 'services/service.api';
 import { IEmployee } from 'services/types/employee.types';
 import { ServiceBasicInfo } from 'services/types/service.type';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 import { Container } from './ChooseServices.styled';
 
 type Props = {
@@ -15,6 +17,8 @@ type Props = {
 };
 
 const ChooseServices = ({ chosenEmployee, setServices, chosenServices }: Props) => {
+    const isDesktop = useMediaQuery(theme.breakpoints.desktop.media);
+
     const { id: companyId } = useCompany();
     const [openModal, setOpenModal] = useState<ServiceOpenModal | null>(null);
 
@@ -49,7 +53,7 @@ const ChooseServices = ({ chosenEmployee, setServices, chosenServices }: Props) 
                         onItemClick={handleServiceSelect}
                         selection={chosenServices?.map(({ id }) => id) || []}
                         keyForSelect="category"
-                        addButtonTitle="Додати послугу"
+                        addButtonTitle={isDesktop ? 'Додати послугу' : undefined}
                         onAddClick={() => {
                             setOpenModal(ServiceOpenModal.ADD);
                         }}

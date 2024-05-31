@@ -6,10 +6,10 @@ import { getErrorMessage } from 'helpers/inputsValidation';
 import { useAdminRights, useAuth, useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { IoIosSave } from 'react-icons/io';
+import { toast } from 'react-toastify';
 import { useUpdateEmployeeProfileMutation } from 'services/employee.api';
 import { EmployeeRoleEnum, IEmployee, UpdateEmployeeProfile } from 'services/types/employee.types';
 import { ButtonBox, FormInputsList, ProfileInfoBox } from './ProfileInfo.styled';
-import { toast } from 'react-toastify';
 
 type Props = { employee: IEmployee };
 

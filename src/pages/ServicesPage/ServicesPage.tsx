@@ -8,9 +8,15 @@ import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useDeleteServiceMutation, useGetServicesQuery } from 'services/service.api';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 
 const ServicesPage = () => {
     const { id: companyId } = useCompany();
+
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
+    const isTablet = useMediaQuery(theme.breakpoints.tablet.media);
+    const isDesktop = useMediaQuery(theme.breakpoints.desktop.media);
     const [openModal, setOpenModal] = useState<ServiceOpenModal | null>(null);
     const [serviceId, setServiceId] = useState<number | undefined>(undefined);
     const isAdmin = useAdminRights();
@@ -43,21 +49,39 @@ const ServicesPage = () => {
         }
     };
 
+    const items =
+        services?.map(({ id, avatar, name, category, type, duration, price }) => {
+            let service = {
+                id,
+                avatar,
+                name,
+            };
+
+            if (isDesktop) {
+                service = Object.assign(service, {
+                    category: category.name,
+                    type: type === 'individual' ? 'Індівідуальна' : 'Групова',
+                    duration,
+                });
+            }
+
+            if (isTablet || isDesktop) {
+                service = Object.assign(service, {
+                    category: category.name,
+                    price,
+                });
+            }
+
+            return service;
+        }) || [];
+
     return servicesLoading ? (
         <Loader />
     ) : services ? (
         <>
             <ItemsList
-                items={services.map(({ id, avatar, name, category, type, duration, price }) => ({
-                    id,
-                    avatar,
-                    name,
-                    category: category.name,
-                    type: type === 'individual' ? 'Індівідуальна' : 'Групова',
-                    duration,
-                    price,
-                }))}
-                keyForSelect="category"
+                items={items}
+                keyForSelect={!isMobile ? 'category' : undefined}
                 onItemClick={id => handleModalOpen(ServiceOpenModal.EDIT_SERVICE, +id)}
                 addButtonTitle="Додати послугу"
                 onAddClick={isAdmin ? () => handleModalOpen(ServiceOpenModal.ADD) : undefined}

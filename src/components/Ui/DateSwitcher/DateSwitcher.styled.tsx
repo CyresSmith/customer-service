@@ -10,7 +10,7 @@ type SwitcherType = {
 export const Container = styled.div<SwitcherType>`
     position: relative;
     min-width: ${props =>
-        props.$type === 'month' ? '150px' : props.$type === 'year' ? '150px' : '200px'};
+        props.$type === 'month' ? '200px' : props.$type === 'year' ? '150px' : '200px'};
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -50,7 +50,7 @@ export const DateWrapper = styled.div<Pick<SwitcherType, '$border' | '$type'>>`
             : 'none'};
 
     width: ${props =>
-        props.$type === 'month' ? '100px' : props.$type === 'year' ? '70px' : '150px'};
+        props.$type === 'month' ? '150px' : props.$type === 'year' ? '70px' : '150px'};
     white-space: nowrap;
 `;
 
@@ -65,5 +65,13 @@ export const DateValue = styled.p<{ $fontSize?: string }>`
 `;
 
 export const ReturnBtnWrapper = styled.div`
-    margin-left: ${theme.space[4]};
+    margin-left: ${theme.space[1]};
+
+    @media ${theme.breakpoints.tablet.media} {
+        margin-left: ${theme.space[4]};
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        margin-left: ${theme.space[4]};
+    }
 `;

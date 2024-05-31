@@ -8,10 +8,12 @@ interface IImageBox {
     $allowChanges: boolean;
 }
 
-export const AvatarBox = styled.div<{ size: number }>`
+export const AvatarBox = styled.div<{ size?: number }>`
     position: relative;
+    min-width: ${({ size }) => (size ? `${size}px` : '100%')};
     max-width: ${({ size }) => (size ? `${size}px` : '250px')};
     max-height: ${({ size }) => (size ? `${size}px` : '250px')};
+    aspect-ratio: 1 / 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -21,9 +23,10 @@ export const ImageBox = styled.div<IImageBox>`
     position: relative;
     max-width: ${({ size }) => (size ? `${size}px` : '250px')};
     max-height: ${({ size }) => (size ? `${size}px` : '250px')};
+    aspect-ratio: 1 / 1;
     object-fit: cover;
     overflow: hidden;
-    border-radius: ${({ $round }) => ($round ? theme.radii.round : theme.radii.xs)};
+    border-radius: ${({ $round }) => ($round ? theme.radii.round : theme.radii.l)};
     background-color: ${({ $light }) =>
         $light ? `rgba(255, 255, 255, 0.5 )` : `rgba(0, 0, 0, 0.5 )`};
     cursor: ${({ $allowChanges }) => (!$allowChanges ? 'default' : 'pointer')};

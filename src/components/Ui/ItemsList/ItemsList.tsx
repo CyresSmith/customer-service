@@ -230,9 +230,11 @@ const ItemsList = <T extends StringRecord>({
     const filteredItems =
         filter && itemsState.length > 0
             ? itemsState.filter(item => {
-                  return keyForSearch
-                      ? String(item[keyForSearch]).toLowerCase().includes(filter)
-                      : item.name.toLowerCase().includes(filter);
+                  const searchValue = keyForSearch
+                      ? String(item[keyForSearch]).toLowerCase()
+                      : item.name.toLowerCase();
+
+                  return searchValue.includes(filter.toLowerCase());
               })
             : itemsState;
 
@@ -345,13 +347,13 @@ const ItemsList = <T extends StringRecord>({
                         )}
                     </FilterBox>
 
-                    {addButtonTitle && onAddClick && (
+                    {onAddClick && (
                         <Button
                             onClick={onAddClick}
                             Icon={HiPlus}
                             $colors="accent"
                             shake={items.length === 0}
-                            $round={isMobile ? true : false}
+                            $round={isMobile || !addButtonTitle ? true : false}
                         >
                             {addButtonTitle}
                         </Button>

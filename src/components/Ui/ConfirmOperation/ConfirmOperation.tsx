@@ -23,6 +23,7 @@ const ConfirmOperation = ({
 }: Props) => {
     return (
         <Modal
+            $w="400px"
             $isOpen={isOpen}
             id={`confirmModal_${id}`}
             closeIconBtn={false}

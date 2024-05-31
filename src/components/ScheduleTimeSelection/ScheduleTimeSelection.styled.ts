@@ -6,10 +6,14 @@ export const SelectionBox = styled.div`
     flex-direction: column;
     gap: ${theme.space[5]};
     justify-content: space-between;
-    min-height: 262px;
+    min-height: 360px;
+
+    @media ${theme.breakpoints.tablet.media} {
+        min-height: 270px;
+    }
 
     @media ${theme.breakpoints.desktop.media} {
-        min-height: 209px;
+        min-height: 270px;
     }
 `;
 
@@ -41,6 +45,11 @@ export const SelectDaysBox = styled.ul`
         > button {
             width: 100%;
         }
+    }
+
+    @media ${theme.breakpoints.tablet.media} {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: 1fr;
     }
 
     @media ${theme.breakpoints.desktop.media} {

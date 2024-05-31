@@ -1,18 +1,15 @@
 import { Container, LeftWrapper } from 'components/RecordLog/RecordLogBar/RecordLogBar.styled';
-import Button from 'components/Ui/Buttons/Button';
 import ConfirmOperation from 'components/Ui/ConfirmOperation';
 import DateSwitcher from 'components/Ui/DateSwitcher';
 import { FormInputLabel, FormInputsListItem } from 'components/Ui/Form/CustomForm.styled';
 import CustomFormSelect from 'components/Ui/Form/CustomFormSelect';
 import { SelectItem } from 'components/Ui/Form/types';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { HiRefresh, HiX } from 'react-icons/hi';
-import { HiTrash } from 'react-icons/hi2';
 import { BasicEmployeeInfo } from 'services/types/employee.types';
 import { useMediaQuery } from 'usehooks-ts';
 import theme from 'utils/theme';
 import { SelectedDays } from '../types';
-import { ButtonsList } from './WorkScheduleBar.styled';
+import EditScheduleButtons from './EditScheduleButtons';
 
 type Props = {
     providers: BasicEmployeeInfo[];
@@ -46,7 +43,6 @@ const WorkScheduleBar = ({
 }: Props) => {
     const initialSelection = [selectAll];
 
-    const isDesktop = useMediaQuery(theme.breakpoints.desktop.media);
     const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
 
     const [selectedKeys, setSelectedKeys] = useState<SelectItem[]>(initialSelection);
@@ -121,36 +117,12 @@ const WorkScheduleBar = ({
                 </LeftWrapper>
 
                 {isEditingAllowed && selectedDays.length > 0 && (
-                    <ButtonsList>
-                        <li>
-                            <Button
-                                onClick={onChangeClick}
-                                Icon={HiRefresh}
-                                children={isDesktop ? 'Змінити' : undefined}
-                                $colors="accent"
-                                $round={isDesktop ? false : true}
-                            />
-                        </li>
-                        <li>
-                            <Button
-                                onClick={() => setConfirmOpen(true)}
-                                Icon={HiTrash}
-                                children={isDesktop ? 'Видалити' : undefined}
-                                $colors="accent"
-                                isLoading={isResetLoading}
-                                $round={isDesktop ? false : true}
-                            />
-                        </li>
-                        <li>
-                            <Button
-                                onClick={resetSelection}
-                                Icon={HiX}
-                                children={isDesktop ? 'Зняти виделення' : undefined}
-                                $colors="accent"
-                                $round={isDesktop ? false : true}
-                            />
-                        </li>
-                    </ButtonsList>
+                    <EditScheduleButtons
+                        onChangeClick={onChangeClick}
+                        onResetClick={() => setConfirmOpen(true)}
+                        isResetLoading={isResetLoading}
+                        resetSelection={resetSelection}
+                    />
                 )}
             </Container>
 

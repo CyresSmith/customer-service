@@ -20,18 +20,13 @@ import {
     ServiceDataType,
     ServiceStepProps,
 } from 'services/types/service.type';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 import EmployeeData from '../EmployeeData';
 import { ButtonBox } from '../SecondStep/SecondStep.styled';
 import { DurationBox, ButtonBox as SaveButtonBox, StepFormBox } from '../ServiceModal.styled';
 import SettingsBlock from './SettingsBlock';
-import {
-    CheckboxBox,
-    Employee,
-    GeneralSettings,
-    List,
-    Parameter,
-    SettingsBlockBox,
-} from './ThirdStep.styled';
+import { CheckboxBox, Employee, GeneralSettings, List } from './ThirdStep.styled';
 
 const hoursArray = generateSelectTimeArray({
     min: 0,
@@ -71,6 +66,7 @@ const ThirdStep = ({
 }: Props) => {
     const { id: companyId } = useCompany();
     const isAdmin = useAdminRights();
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
 
     const [addNewService, { isLoading }] = useAddNewServiceMutation();
 
@@ -279,9 +275,6 @@ const ThirdStep = ({
 
     const isNextDisabled =
         serviceData.price === 0 ||
-        // (serviceData.durationHours === null
-        //   ? serviceData.durationMinutes === null
-        //   : serviceData.durationHours === null) ||
         (serviceData?.durationHours?.id === 0 || serviceData?.durationHours === null
             ? serviceData?.durationMinutes?.id === 0 || serviceData?.durationMinutes === null
             : serviceData?.durationHours?.id === 0 || serviceData?.durationHours === null) ||
@@ -396,12 +389,6 @@ const ThirdStep = ({
     return (
         <StepFormBox onSubmit={handleSubmit}>
             <div>
-                <SettingsBlockBox as="ul">
-                    <Parameter>Призначення</Parameter>
-                    <Parameter>Ціна, грн</Parameter>
-                    <Parameter>Час</Parameter>
-                </SettingsBlockBox>
-
                 <List>
                     <SettingsBlock
                         handleChange={stateChange}
@@ -488,6 +475,7 @@ const ThirdStep = ({
                                     }
                                     disabledIcon
                                     isReadonly={!isAdmin}
+                                    visibleItemsCount={3}
                                 />
                             </DurationBox>
                         )}

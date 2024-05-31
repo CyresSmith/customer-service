@@ -4,7 +4,7 @@ import theme from 'utils/theme';
 export const ScheduleModalBox = styled.div`
     display: flex;
     flex-direction: column;
-    gap: ${theme.space[3]};
+    gap: ${theme.space[6]};
 `;
 
 export const ButtonBox = styled.div`

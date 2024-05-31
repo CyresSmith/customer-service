@@ -22,6 +22,7 @@ export type InputProps = {
     onInput?: () => void;
     onKeyDown?: () => void;
     onKeyUp?: () => void;
+    visibleItemsCount?: number;
 };
 
 export type FormProps<T> = {
@@ -69,4 +70,6 @@ export type SelectProps = {
     fieldName?: string;
     disabled?: boolean;
     isReadonly?: boolean;
+    visibleItemsCount?: number;
+    colors?: 'dark' | 'light';
 };

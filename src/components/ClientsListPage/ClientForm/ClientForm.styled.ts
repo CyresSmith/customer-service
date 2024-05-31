@@ -29,7 +29,7 @@ export const FormInputsList = styled.ul`
     gap: ${theme.space[4]};
 
     @media ${theme.breakpoints.tablet.media} {
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(3, 1fr);
         grid-template-rows: auto;
         :last-child {
             grid-column: 1 / 4;
@@ -37,7 +37,7 @@ export const FormInputsList = styled.ul`
     }
 
     @media ${theme.breakpoints.desktop.media} {
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(3, 1fr);
         grid-template-rows: auto;
 
         :last-child {

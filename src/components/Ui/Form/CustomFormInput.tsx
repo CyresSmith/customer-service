@@ -37,6 +37,7 @@ const CustomFormInput = ({
     disabled = false,
     onKeyDown,
     onKeyUp,
+    visibleItemsCount = 5,
 }: InputProps) => {
     const [hidden, setHidden] = useState(true);
     const valueRef = useRef(value).current;
@@ -67,6 +68,7 @@ const CustomFormInput = ({
                         selectItems={selectItems}
                         fieldName={name}
                         isReadonly={isReadonly}
+                        visibleItemsCount={visibleItemsCount}
                         selectedItem={
                             Array.isArray(value) ? (value as SelectItem[]) : (value as SelectItem)
                         }

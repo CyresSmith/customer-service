@@ -6,29 +6,34 @@ export const ProfileInfoBox = styled.div`
     height: 100%;
 
     > form {
+        width: 100%;
         height: 100%;
-        justify-content: space-between;
-
-        > ul {
-            gap: ${theme.space[5]};
-        }
     }
 `;
 
 export const FormInputsList = styled.ul`
+    width: 100%;
+    height: 100%;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr;
     grid-template-rows: auto;
     gap: ${theme.space[4]};
-    justify-content: center;
-    align-items: center;
 
-    div[id='info'] {
-        grid-column-start: span 2;
-        > div {
-            > textarea {
-                height: 80px;
-            }
+    @media ${theme.breakpoints.tablet.media} {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto;
+
+        :nth-last-child(2) {
+            grid-column: 1 / 4;
+        }
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto;
+
+        :nth-last-child(2) {
+            grid-column: 1 / 4;
         }
     }
 `;
@@ -36,4 +41,5 @@ export const FormInputsList = styled.ul`
 export const ButtonBox = styled.div`
     display: flex;
     justify-content: flex-end;
+    margin-top: auto;
 `;

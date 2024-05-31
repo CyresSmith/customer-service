@@ -1,22 +1,24 @@
 import styled from 'styled-components';
 import theme from 'utils/theme';
 
-export const EmployeeScheduleBox = styled.div`
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: ${theme.space[5]};
-    min-height: 534px;
-`;
-
 export const Message = styled.p`
     font-size: ${theme.fontSizes.xl};
     font-weight: ${theme.fontWeights.light};
     text-align: center;
 `;
 
+export const EditScheduleButtonsBox = styled.div`
+    display: flex;
+    justify-content: flex-end;
+`;
+
 export const CalendarSide = styled.div`
-    width: 650px;
+    width: 100%;
     position: relative;
+
+    @media ${theme.breakpoints.desktop.media} {
+        min-width: 710px;
+    }
 `;
 
 export const SelectionSide = styled.div`
@@ -84,9 +86,19 @@ export const SelectBox = styled.div`
 
 export const CalendarHeader = styled.div`
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: ${theme.space[4]};
     margin-bottom: ${theme.space[4]};
+
+    @media ${theme.breakpoints.tablet.media} {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        flex-direction: row;
+        justify-content: space-between;
+    }
 `;
 
 export const MonthBox = styled.div`

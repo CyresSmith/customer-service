@@ -21,7 +21,7 @@ type Props = {
 const Avatar = ({
     allowChanges = true,
     light = false,
-    size = 250,
+    size,
     $round = false,
     currentImageUrl,
     alt = 'some image',

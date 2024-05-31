@@ -32,9 +32,11 @@ export const ListItemTitle = styled.p<{ $mb?: boolean }>`
 `;
 
 export const ListItemText = styled.p`
-    display: block;
     padding-left: 16px;
     font-size: ${theme.fontSizes.l};
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 `;
 
 export const SubjectDetails = styled.button`
@@ -58,10 +60,13 @@ export const Total = styled.p`
     align-items: flex-start;
     justify-content: space-between;
     font-size: ${theme.fontSizes.xxl};
+    overflow: hidden;
+    max-width: 100%;
 `;
 
 export const TotalInfo = styled.span`
-    display: flex;
-    gap: ${theme.space[2]};
-    align-items: baseline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
 `;

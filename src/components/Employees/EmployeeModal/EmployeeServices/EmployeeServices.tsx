@@ -12,6 +12,8 @@ import { useGetServicesCategoriesQuery } from 'services/categories.api';
 import { useRemoveEmployeeServiceMutation } from 'services/employee.api';
 import { EmployeeStatusEnum, IEmployee } from 'services/types/employee.types';
 import { EmployeesServiceSettings } from 'services/types/service.type';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 import AddServiceModal from './AddServiceModal/AddServiceModal';
 import EditEmployeeServiceModal from './EditEmployeeServiceModal/EditEmployeeServiceModal';
 import { EmployeeServicesBox } from './EmployeeServices.styled';
@@ -27,6 +29,8 @@ type ServiceState = {
 };
 
 const EmployeeServices = ({ employee }: Props) => {
+    const isTablet = useMediaQuery(theme.breakpoints.tablet.media);
+    const isDesktop = useMediaQuery(theme.breakpoints.desktop.media);
     const isAdmin = useAdminRights();
     const { user } = useAuth();
     const { id: companyId } = useCompany();
@@ -122,42 +126,56 @@ const EmployeeServices = ({ employee }: Props) => {
 
     const handleOpenCreateServiceModal = () => setOpenModal(ServiceOpenModal.ADD);
 
+    const items = employee.services.map(
+        ({
+            id = 0,
+            avatar = '',
+            name = '',
+            category,
+            type = '',
+            duration = 0,
+            price = 0,
+            employeesSettings,
+        }) => {
+            let service = {
+                id,
+                avatar,
+                name,
+            };
+
+            if (isDesktop) {
+                service = Object.assign(service, {
+                    category: category?.name || '',
+                    type: type === 'individual' ? 'Індівідуальна' : 'Групова',
+                });
+            }
+
+            if (isTablet || isDesktop) {
+                service = Object.assign(service, {
+                    duration:
+                        (employeesSettings &&
+                            employeesSettings.length > 0 &&
+                            employeesSettings.find(setting => setting.employeeId === +employee.id)
+                                ?.duration) ||
+                        duration,
+                    price:
+                        (employeesSettings &&
+                            employeesSettings.length > 0 &&
+                            employeesSettings.find(setting => setting.employeeId === +employee.id)
+                                ?.price) ||
+                        price,
+                });
+            }
+
+            return service;
+        }
+    );
+
     return (
         <EmployeeServicesBox>
             <ItemsList
-                items={employee.services.map(
-                    ({
-                        id = 0,
-                        avatar = '',
-                        name = '',
-                        category,
-                        type = '',
-                        duration = 0,
-                        price = 0,
-                        employeesSettings,
-                    }) => ({
-                        id,
-                        avatar,
-                        name,
-                        category: category?.name || '',
-                        type: type === 'individual' ? 'Індівідуальна' : 'Групова',
-                        duration:
-                            (employeesSettings &&
-                                employeesSettings.length > 0 &&
-                                employeesSettings.find(
-                                    setting => setting.employeeId === +employee.id
-                                )?.duration) ||
-                            duration,
-                        price:
-                            (employeesSettings &&
-                                employeesSettings.length > 0 &&
-                                employeesSettings.find(
-                                    setting => setting.employeeId === +employee.id
-                                )?.price) ||
-                            price,
-                    })
-                )}
-                keyForSelect="category"
+                items={items}
+                keyForSelect={isDesktop ? 'category' : undefined}
                 onItemClick={
                     editingAllowed
                         ? id => handleModalOpen(ServiceOpenModal.EDIT_SERVICE, +id)
@@ -167,7 +185,7 @@ const EmployeeServices = ({ employee }: Props) => {
                     editingAllowed &&
                     employee.provider &&
                     employee.status !== EmployeeStatusEnum.FIRED
-                        ? 'Обрати послуги'
+                        ? 'Додати послуги'
                         : undefined
                 }
                 onAddClick={
