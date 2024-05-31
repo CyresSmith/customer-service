@@ -191,7 +191,7 @@ const FirstStep = ({
         <Loader />
     ) : (
         <>
-            <FirstStepBox>
+            <FirstStepBox $isEdit={openModal === ServiceOpenModal.EDIT_SERVICE}>
                 {openModal === ServiceOpenModal.EDIT_SERVICE && (
                     <Avatar
                         currentImageUrl={serviceData.avatar || ''}

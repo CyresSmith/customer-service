@@ -69,13 +69,22 @@ export const StepNumber = styled.span<{ $current: boolean }>`
     color: ${({ $current }) => ($current ? theme.colors.accent.light : theme.colors.bg.light)};
 `;
 
-export const FirstStepBox = styled.div`
-    display: flex;
+export const FirstStepBox = styled.div<{ $isEdit: boolean }>`
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content 1fr;
     gap: ${theme.space[5]};
     flex-grow: 1;
+    justify-items: center;
 
-    @media ${theme.breakpoints.mobile.media} {
-        flex-direction: column;
+    @media ${theme.breakpoints.tablet.media} {
+        grid-template-columns: ${({ $isEdit }) => ($isEdit ? '150px 1fr' : '1fr')};
+        grid-template-rows: 1fr;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        grid-template-columns: ${({ $isEdit }) => ($isEdit ? '200px 1fr' : '1fr')};
+        grid-template-rows: 1fr;
     }
 `;
 
@@ -87,7 +96,7 @@ export const StepFormBox = styled.form`
     justify-content: space-between;
     flex-grow: 1;
     min-height: 363px;
-    max-width: 100%;
+    width: 100%;
 `;
 
 export const FormSide = styled.div`
