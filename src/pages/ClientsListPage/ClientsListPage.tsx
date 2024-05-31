@@ -67,55 +67,44 @@ const ClientsListPage = () => {
         }
     };
 
+    const items =
+        data?.map(({ id, avatar, firstName, lastName, phone, email, gender, createdAt }) => {
+            let userData = {
+                id,
+                avatar: avatar || '',
+                name: `${firstName}  ${lastName && lastName}`,
+                phone,
+            };
+
+            if (isTablet || isDesktop) {
+                userData = Object.assign(userData, {
+                    gender: gender || 'other',
+                    email: email || 'Пошта не вказана',
+                });
+            }
+
+            if (isDesktop) {
+                userData = Object.assign(userData, {
+                    register: createdAt ? new Date(createdAt).toLocaleDateString() : '',
+                });
+            }
+
+            return userData;
+        }) || [];
+
+    const keyForSelect =
+        items.length > 0 && Object.keys(items[0]).includes('gender') ? 'gender' : undefined;
+
     return (
         <>
             <ItemsList
-                items={
-                    !data
-                        ? []
-                        : data.map(
-                              ({
-                                  id,
-                                  avatar,
-                                  firstName,
-                                  lastName,
-                                  phone,
-                                  email,
-                                  gender,
-                                  createdAt,
-                              }) => {
-                                  let userData = {
-                                      id,
-                                      avatar: avatar || '',
-                                      name: `${firstName}  ${lastName && lastName}`,
-                                      phone,
-                                  };
-
-                                  if (isTablet || isDesktop) {
-                                      userData = Object.assign(userData, {
-                                          gender: gender || 'other',
-                                          email: email || 'Пошта не вказана',
-                                      });
-                                  }
-
-                                  if (isDesktop) {
-                                      userData = Object.assign(userData, {
-                                          register: createdAt
-                                              ? new Date(createdAt).toLocaleDateString()
-                                              : '',
-                                      });
-                                  }
-
-                                  return userData;
-                              }
-                          )
-                }
+                items={items}
                 onItemClick={handleItemClick}
                 addButtonTitle={'Додати клієнта'}
                 onAddClick={() => setModalOpen(OpenModal.ADD)}
-                keyForSelect={isMobile ? undefined : 'gender'}
+                keyForSelect={keyForSelect as 'phone' | 'name' | undefined}
                 keyForSearch="phone"
-                notSortedKeys={['phone', 'email']}
+                notSortedKeys={['phone', 'email'] as ('phone' | 'name')[] | undefined}
                 nameColumnTitle="Ім'я"
             />
 

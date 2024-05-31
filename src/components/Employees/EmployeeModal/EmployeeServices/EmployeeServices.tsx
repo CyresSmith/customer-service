@@ -171,11 +171,13 @@ const EmployeeServices = ({ employee }: Props) => {
         }
     );
 
+    const keyForSelect = isDesktop ? 'category' : undefined;
+
     return (
         <EmployeeServicesBox>
             <ItemsList
                 items={items}
-                keyForSelect={isDesktop ? 'category' : undefined}
+                keyForSelect={keyForSelect as 'name' | undefined}
                 onItemClick={
                     editingAllowed
                         ? id => handleModalOpen(ServiceOpenModal.EDIT_SERVICE, +id)

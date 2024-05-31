@@ -58,54 +58,35 @@ const EmployeesPage = () => {
 
     const selectedEmployee = data && data.find(({ id }) => id === employeeId);
 
+    const items =
+        data?.map(({ firstName, lastName, id, avatar, jobTitle, servicesCount, status }) => {
+            let employee = {
+                id,
+                avatar,
+                name: `${firstName} ${lastName}`,
+            };
+
+            if (isTablet || isDesktop) {
+                employee = Object.assign(employee, {
+                    jobTitle: jobTitle || 'Власник',
+                    servicesCount: servicesCount || 0,
+                });
+            }
+
+            if (isDesktop) {
+                employee = Object.assign(employee, {
+                    status,
+                });
+            }
+
+            return employee;
+        }) || [];
+
     return (
         <>
             {data && data.length > 0 && (
                 <ItemsList
-                    items={
-                        isTablet
-                            ? data.map(
-                                  ({
-                                      firstName,
-                                      lastName,
-                                      servicesCount,
-                                      id,
-                                      avatar,
-                                      jobTitle,
-                                  }) => ({
-                                      id,
-                                      avatar,
-                                      name: `${firstName} ${lastName}`,
-                                      jobTitle: jobTitle || 'Власник',
-                                      servicesCount: servicesCount || 0,
-                                  })
-                              )
-                            : isDesktop
-                            ? data.map(
-                                  ({
-                                      firstName,
-                                      lastName,
-                                      servicesCount,
-                                      id,
-                                      avatar,
-                                      jobTitle,
-                                      status,
-                                  }) => ({
-                                      id,
-                                      avatar,
-                                      name: `${firstName} ${lastName}`,
-                                      jobTitle: jobTitle || 'Власник',
-                                      servicesCount: servicesCount || 0,
-                                      status,
-                                  })
-                              )
-                            : data.map(({ firstName, lastName, id, avatar }) => ({
-                                  id,
-                                  avatar,
-                                  name: `${firstName} ${lastName}`,
-                              }))
-                    }
-                    // keyForSelect={isTablet || isDesktop ? 'jobTitle' : undefined}
+                    items={items}
                     onItemClick={handleItemClick}
                     addButtonTitle="Додати співробітника"
                     onAddClick={isAdmin ? () => setOpenModal(OpenModal.ADD) : undefined}

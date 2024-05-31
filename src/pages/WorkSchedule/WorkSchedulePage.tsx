@@ -838,7 +838,6 @@ const WorkSchedulePage = () => {
                         selectedMonth={selectedMonth}
                         setSelectedMonth={setSelectedMonth}
                         selectedDays={selectedDays}
-                        setSelectedDays={setSelectedDays}
                         onResetClick={handleResetClick}
                         isResetLoading={isUpdateLoading}
                         resetSelection={resetSelection}
@@ -868,13 +867,10 @@ const WorkSchedulePage = () => {
                         isBreak={isBreak}
                         breakToggle={handleAddBreakHoursClick}
                         isEditingAllowed={true}
-                        handleReset={handleResetClick}
                         handleUpdate={handleUpdateClick}
                         isUpdateDisabled={false}
                         isUpdateLoading={isUpdateLoading}
-                        isResetLoading={isUpdateLoading}
                         selectedHours={selectedDayCompanySchedule?.hours}
-                        isDeleteButton={false}
                         isTitle={false}
                     />
                 </Modal>

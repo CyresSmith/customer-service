@@ -63,6 +63,14 @@ const ChooseClient = ({ companyId, setClient, setStep }: Props) => {
         setStep('chooseWay');
     };
 
+    const items =
+        data?.map(({ id, avatar, firstName, lastName, phone }) => ({
+            id,
+            avatar: avatar || '',
+            name: `${firstName}  ${lastName && lastName}`,
+            phone,
+        })) || [];
+
     return (
         <>
             <>
@@ -70,23 +78,7 @@ const ChooseClient = ({ companyId, setClient, setStep }: Props) => {
                     <Loader />
                 ) : (
                     <ItemsList
-                        items={
-                            !data
-                                ? []
-                                : isMobile
-                                ? data.map(({ id, avatar, firstName, lastName, phone }) => ({
-                                      id,
-                                      avatar: avatar || '',
-                                      name: `${firstName}  ${lastName && lastName}`,
-                                      phone,
-                                  }))
-                                : data.map(({ id, avatar, firstName, lastName, phone }) => ({
-                                      id,
-                                      avatar: avatar || '',
-                                      name: `${firstName}  ${lastName && lastName}`,
-                                      phone,
-                                  }))
-                        }
+                        items={items}
                         onItemClick={handleClientChoose}
                         addButtonTitle="Додати клієнта"
                         onAddClick={() => setModalOpen(true)}

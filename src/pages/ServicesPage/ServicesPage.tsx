@@ -75,13 +75,15 @@ const ServicesPage = () => {
             return service;
         }) || [];
 
+    const keyForSelect = !isMobile ? 'category' : undefined;
+
     return servicesLoading ? (
         <Loader />
     ) : services ? (
         <>
             <ItemsList
                 items={items}
-                keyForSelect={!isMobile ? 'category' : undefined}
+                keyForSelect={keyForSelect as 'name' | undefined}
                 onItemClick={id => handleModalOpen(ServiceOpenModal.EDIT_SERVICE, +id)}
                 addButtonTitle="Додати послугу"
                 onAddClick={isAdmin ? () => handleModalOpen(ServiceOpenModal.ADD) : undefined}

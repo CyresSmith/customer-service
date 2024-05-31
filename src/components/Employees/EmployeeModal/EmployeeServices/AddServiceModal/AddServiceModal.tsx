@@ -83,6 +83,8 @@ const AddServiceModal = ({
             return service;
         }) || [];
 
+    const keyForSelect = isTablet || isDesktop ? 'category' : undefined;
+
     return (
         <>
             <Modal
@@ -99,7 +101,7 @@ const AddServiceModal = ({
                             <AddServiceModalBox>
                                 <ItemsList
                                     items={items}
-                                    keyForSelect={isTablet || isDesktop ? 'category' : undefined}
+                                    keyForSelect={keyForSelect as 'name' | undefined}
                                     onItemClick={handleServiceAdd}
                                     addButtonTitle={isDesktop ? 'Створити послугу' : undefined}
                                     onAddClick={editingAllowed ? openCreateServiceModal : undefined}
