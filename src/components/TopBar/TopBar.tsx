@@ -5,11 +5,11 @@ import { useAuth } from 'hooks/useAuth';
 import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
 import { useMatch } from 'react-router-dom';
+import { useMediaQuery } from 'usehooks-ts';
 import theme from 'utils/theme';
 import AuthNav from './AuthNav';
 import { Logo, TopBarWrapper } from './TopBar.styled';
 import UsersNav from './UsersNav';
-import { useMediaQuery } from 'usehooks-ts';
 
 export type IsOpenType = 'register' | 'login' | null;
 
@@ -42,6 +42,7 @@ const TopBar = () => {
 
             {isOpen && (
                 <Modal
+                    $w="400px"
                     title={isOpen === 'register' ? 'Реєстрація' : 'Авторизація'}
                     children={
                         isOpen === 'register' ? (
