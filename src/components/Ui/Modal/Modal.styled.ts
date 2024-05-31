@@ -25,8 +25,8 @@ export const ModalContainer = styled.div<Style>`
     z-index: 100;
     position: relative;
     height: ${({ $h }) => $h || 'unset'};
-    width: calc(100vw - ${LAYOUT_PADDING});
-    max-height: 100vh;
+    width: calc(100% - ${LAYOUT_PADDING});
+    max-height: 100%;
     padding: ${theme.space[5]};
     background-color: ${theme.colors.bg.main};
     border-radius: ${theme.radii.l};
