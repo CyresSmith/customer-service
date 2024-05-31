@@ -1,4 +1,5 @@
 import Button from 'components/Ui/Buttons/Button/Button';
+import useLockBodyScroll from 'hooks/useLockBodyScroll';
 import { MouseEventHandler, ReactNode, useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { IoMdClose } from 'react-icons/io';
@@ -29,6 +30,7 @@ const Modal = ({
     id = '',
     titleMargin,
 }: Modal) => {
+    useLockBodyScroll();
     const [isOpen, setIsOpen] = useState(false);
 
     const close = useCallback(() => {
