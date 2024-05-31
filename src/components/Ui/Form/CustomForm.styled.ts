@@ -179,7 +179,6 @@ export const Selected = styled.p`
     }
 `;
 
-const LIST_ITEMS_COUNT = 5;
 const LIST_ITEM_HIGHT = '37px';
 const LIST_PADDING = theme.space[2];
 const LIST_GAP = theme.space[1];
@@ -216,7 +215,7 @@ export const SelectList = styled.ul<{
     transition: ${theme.transition.primary};
     overflow-y: scroll;
     overflow-x: hidden;
-    padding: ${({ $open }) => ($open ? LIST_PADDING : 0)};    t
+    padding: ${({ $open }) => ($open ? LIST_PADDING : 0)};
 `;
 
 export const SelectListItem = styled.li<{ $selected: boolean; $colors: Colors }>`

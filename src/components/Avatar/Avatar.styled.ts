@@ -3,7 +3,7 @@ import theme from 'utils/theme';
 
 interface IImageBox {
     $light: boolean;
-    size: number;
+    size?: number;
     $round: boolean;
     $allowChanges: boolean;
 }
@@ -83,7 +83,7 @@ export const ImageBox = styled.div<IImageBox>`
     }
 `;
 
-export const ButtonsBox = styled.div<{ width: number }>`
+export const ButtonsBox = styled.div<{ width?: number }>`
     position: absolute;
     padding: ${theme.space[1]};
     bottom: ${theme.space[3]};

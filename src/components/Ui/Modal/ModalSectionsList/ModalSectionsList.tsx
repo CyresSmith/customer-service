@@ -19,7 +19,7 @@ const ModalSectionsList = ({ sectionButtons, currentSection, handleSectionSelect
 
     const selectedItem = sectionButtons.find(({ id }) => id === currentSection);
 
-    const handleSelect = ({ id }: SelectItem) => handleSectionSelect(+id);
+    const handleSelect = ({ id }: SelectItem) => id && handleSectionSelect(+id);
 
     return isMobile && sectionButtons.length > 1 ? (
         <CustomFormSelect

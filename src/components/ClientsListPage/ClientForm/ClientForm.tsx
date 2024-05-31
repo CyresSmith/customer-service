@@ -5,6 +5,8 @@ import { useForm } from 'hooks/useForm';
 import { HiUserRemove } from 'react-icons/hi';
 import { IoMdSave } from 'react-icons/io';
 import { Client } from 'services/types/clients.types';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 import {
     ButtonsBox,
     Form,
@@ -14,8 +16,6 @@ import {
     SubmitError,
     SubmitErrorsBox,
 } from './ClientForm.styled';
-import { useMediaQuery } from 'usehooks-ts';
-import theme from 'utils/theme';
 
 const inputs: Partial<InputProps>[] = [
     { name: 'firstName', type: 'text', isRequired: true },
@@ -41,8 +41,8 @@ type Props = {
     onSubmit: (state: Client) => void;
     isLoading: boolean;
     type: string;
-    confirmToggle: () => void;
-    deleteLoading: boolean;
+    confirmToggle?: () => void;
+    deleteLoading?: boolean;
 };
 
 const ClientForm = ({

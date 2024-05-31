@@ -20,8 +20,6 @@ import {
     ServiceDataType,
     ServiceStepProps,
 } from 'services/types/service.type';
-import { useMediaQuery } from 'usehooks-ts';
-import theme from 'utils/theme';
 import EmployeeData from '../EmployeeData';
 import { ButtonBox } from '../SecondStep/SecondStep.styled';
 import { DurationBox, ButtonBox as SaveButtonBox, StepFormBox } from '../ServiceModal.styled';
@@ -66,7 +64,6 @@ const ThirdStep = ({
 }: Props) => {
     const { id: companyId } = useCompany();
     const isAdmin = useAdminRights();
-    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
 
     const [addNewService, { isLoading }] = useAddNewServiceMutation();
 

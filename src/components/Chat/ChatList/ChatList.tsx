@@ -30,7 +30,7 @@ const ChatList = ({
     const { channels, onlineUsers } = useChat();
     const { setSelectedChannel, resetUnread } = useActions();
 
-    const { data, isLoading } = useGetCompanyEmployeesQuery(selectedCompany, {
+    const { data } = useGetCompanyEmployeesQuery(selectedCompany, {
         skip: !selectedCompany,
     });
 

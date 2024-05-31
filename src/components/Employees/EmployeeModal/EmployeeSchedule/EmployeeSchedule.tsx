@@ -65,7 +65,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
         useState<IWorkingHours | null>(null);
 
     const [updateSchedule, { isLoading }] = useUpdateEmployeeScheduleMutation();
-    const [deleteSchedule, { isLoading: isDeleteLoading }] = useDeleteEmployeeScheduleMutation();
+    const [deleteSchedule] = useDeleteEmployeeScheduleMutation();
 
     const selectedMonthPassed =
         getMonth(today) !== getMonth(selectedMonth) && isPast(selectedMonth);

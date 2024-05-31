@@ -30,7 +30,6 @@ enum OpenModal {
 }
 
 const ClientsListPage = () => {
-    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
     const isTablet = useMediaQuery(theme.breakpoints.tablet.media);
     const isDesktop = useMediaQuery(theme.breakpoints.desktop.media);
 
