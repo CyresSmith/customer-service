@@ -31,7 +31,6 @@ export const RightWrapper = styled.div<{ $isOpen: boolean }>`
     max-height: 100%;
     background-color: ${theme.colors.bg.dark};
     border-radius: ${theme.radii.l};
-    padding: ${theme.space[4]};
 
     @media ${theme.breakpoints.mobile.media} {
         max-width: calc(100% - (${LAYOUT_PADDING} * 2));
