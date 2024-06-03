@@ -23,6 +23,7 @@ const VerifyPage = lazy(() => import('pages/Verify'));
 const ErrorPage = lazy(() => import('pages/ErrorPage'));
 const UsersLayout = lazy(() => import('components/Layout/UsersLayout'));
 const EmployeesPage = lazy(() => import('pages/EmployeesPage'));
+const FinancePage = lazy(() => import('pages/FinancePage'));
 
 function App() {
     const { user, accessToken } = useAuth();
@@ -96,6 +97,10 @@ function App() {
                             <Route
                                 path="services"
                                 element={<PrivateRoute children={<ServicesPage />} />}
+                            />
+                            <Route
+                                path="finance"
+                                element={<PrivateRoute children={<FinancePage />} />}
                             />
                         </Route>
                     </Route>
