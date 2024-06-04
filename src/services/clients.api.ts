@@ -5,7 +5,7 @@ import { axiosBaseQuery } from './instance';
 export const clientsApi = createApi({
     reducerPath: 'clientsApi',
 
-    baseQuery: axiosBaseQuery() as BaseQueryFn,
+    baseQuery: axiosBaseQuery('clients') as BaseQueryFn,
 
     tagTypes: ['clients'],
 
@@ -13,7 +13,7 @@ export const clientsApi = createApi({
         return {
             createClient: builder.mutation<Client, AddClient>({
                 query: ({ data, companyId }) => ({
-                    url: `clients/create`,
+                    url: `/create`,
                     method: 'POST',
                     data,
                     params: { companyId },
@@ -23,7 +23,7 @@ export const clientsApi = createApi({
 
             getAllClients: builder.query<Client[], unknown>({
                 query: (companyId: number) => ({
-                    url: `clients/get-all`,
+                    url: `/get-all`,
                     method: 'GET',
                     params: { companyId },
                 }),
@@ -38,7 +38,7 @@ export const clientsApi = createApi({
 
             getById: builder.query<Client, { companyId: number; id: number }>({
                 query: ({ companyId, id }) => ({
-                    url: `clients/${id}/one-by-id`,
+                    url: `/${id}/one-by-id`,
                     method: 'GET',
                     params: { companyId },
                 }),
@@ -47,7 +47,7 @@ export const clientsApi = createApi({
 
             getByPhone: builder.query<Client, { companyId: number; phone: string; id: number }>({
                 query: ({ companyId, phone }) => ({
-                    url: `clients/${phone}/one-by-phone`,
+                    url: `/${phone}/one-by-phone`,
                     method: 'GET',
                     params: { companyId },
                 }),
@@ -56,7 +56,7 @@ export const clientsApi = createApi({
 
             updateClient: builder.mutation<Client, UpdateClient>({
                 query: ({ companyId, id, data }) => ({
-                    url: `clients/${id}/update`,
+                    url: `/${id}/update`,
                     method: 'PATCH',
                     data,
                     params: { companyId },
@@ -69,7 +69,7 @@ export const clientsApi = createApi({
 
             uploadAvatar: builder.mutation<{ url: string }, UploadAvatar>({
                 query: ({ companyId, id, data }) => ({
-                    url: `clients/${id}/update/avatar`,
+                    url: `/${id}/update/avatar`,
                     method: 'POST',
                     data,
                     params: { companyId },
@@ -82,7 +82,7 @@ export const clientsApi = createApi({
 
             delete: builder.mutation<{ message: string }, { companyId: number; id: number }>({
                 query: ({ companyId, id }) => ({
-                    url: `clients/${id}/delete`,
+                    url: `/${id}/delete`,
                     method: 'DELETE',
                     params: { companyId },
                 }),

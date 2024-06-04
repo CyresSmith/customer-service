@@ -11,14 +11,14 @@ import {
 export const companyApi = createApi({
     reducerPath: 'companyApi',
 
-    baseQuery: axiosBaseQuery() as BaseQueryFn,
+    baseQuery: axiosBaseQuery('company') as BaseQueryFn,
 
     tagTypes: ['companies'],
 
     endpoints: builder => ({
         createCompany: builder.mutation<Company, CreateCompany>({
             query: data => ({
-                url: '/company/register',
+                url: '/register',
                 method: 'POST',
                 data,
             }),
@@ -34,7 +34,7 @@ export const companyApi = createApi({
         getCompanyById: builder.query<Company, { companyId: string | undefined }>({
             query: ({ companyId }) =>
                 companyId && {
-                    url: `/company/${companyId}`,
+                    url: `/${companyId}`,
                     method: 'GET',
                 },
             providesTags: (_resp, _err, { companyId: id }) => [{ type: 'companies', id }],
@@ -42,7 +42,7 @@ export const companyApi = createApi({
 
         getCompanyProfile: builder.query<Company, number>({
             query: id => ({
-                url: `/company/${id}/profile`,
+                url: `/${id}/profile`,
                 method: 'GET',
             }),
             providesTags: (_resp, _err, id) => [{ type: 'companies', id }],
@@ -50,7 +50,7 @@ export const companyApi = createApi({
 
         updateCompanyProfile: builder.mutation<{ message: string }, IUpdateCompanyProfile>({
             query: ({ id, data }) => ({
-                url: `/company/${id}/profile`,
+                url: `/${id}/profile`,
                 method: 'PATCH',
                 data,
             }),
@@ -62,7 +62,7 @@ export const companyApi = createApi({
 
         getCompanyActivities: builder.query<Activity[], number>({
             query: id => ({
-                url: `/company/${id}/activities`,
+                url: `/${id}/activities`,
                 method: 'GET',
             }),
             providesTags: (_resp, _err, id) => [{ type: 'companies', id }],
@@ -70,7 +70,7 @@ export const companyApi = createApi({
 
         uploadCompanyAvatar: builder.mutation<{ url: string }, UpdateAvatar>({
             query: ({ id, data }) => ({
-                url: `/company/${id}/profile/avatar`,
+                url: `/${id}/profile/avatar`,
                 method: 'POST',
                 data,
             }),

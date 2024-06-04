@@ -10,23 +10,18 @@ import {
     addExistUserEmployeeData,
     addNewUserEmployeeData,
 } from './types/employee.types';
-// import {
-//     IGetEmployeeSchedule,
-//     IMonthSchedule,
-//     IUpdateEmployeeSchedule,
-// } from './types/schedule.types';
 
 export const employeeApi = createApi({
     reducerPath: 'employeeApi',
 
-    baseQuery: axiosBaseQuery() as BaseQueryFn,
+    baseQuery: axiosBaseQuery('employees') as BaseQueryFn,
 
     tagTypes: ['employees'],
 
     endpoints: builder => ({
         findUserData: builder.mutation<UserData, { companyId: number; email: string }>({
             query: ({ companyId, email }) => ({
-                url: `employees/find-employee-data`,
+                url: `/find-employee-data`,
                 method: 'POST',
                 data: { email },
                 params: { companyId },
@@ -36,7 +31,7 @@ export const employeeApi = createApi({
 
         addExistUserEmployee: builder.mutation<IEmployee, addExistUserEmployeeData>({
             query: ({ companyId, data }) => ({
-                url: `employees/add-exist-user-employee`,
+                url: `/add-exist-user-employee`,
                 method: 'POST',
                 data,
                 params: { companyId },
@@ -49,7 +44,7 @@ export const employeeApi = createApi({
 
         addNewUserEmployee: builder.mutation<IEmployee, addNewUserEmployeeData>({
             query: ({ companyId, data }) => ({
-                url: `employees/add-new-user-employee`,
+                url: `/add-new-user-employee`,
                 method: 'POST',
                 data,
                 params: { companyId },
@@ -62,7 +57,7 @@ export const employeeApi = createApi({
 
         getOneEmployee: builder.query<IEmployee, { companyId: number; id: number }>({
             query: ({ companyId, id }) => ({
-                url: `employees/${id}/get-one`,
+                url: `/${id}/get-one`,
                 method: 'GET',
                 params: { companyId },
             }),
@@ -74,7 +69,7 @@ export const employeeApi = createApi({
                 if (!companyId) return;
 
                 return {
-                    url: `employees/get-all-company-employees`,
+                    url: `/get-all-company-employees`,
                     method: 'GET',
                     params: { companyId },
                 };
@@ -84,7 +79,7 @@ export const employeeApi = createApi({
 
         uploadEmployeeAvatar: builder.mutation<{ url: string }, UpdateEmployeeAvatar>({
             query: ({ companyId, employeeId, data }) => ({
-                url: `employees/${employeeId}/update/avatar`,
+                url: `/${employeeId}/update/avatar`,
                 method: 'PATCH',
                 data,
                 params: { companyId },
@@ -100,7 +95,7 @@ export const employeeApi = createApi({
             { companyId: number; employeeId: number; data: UpdateEmployeeProfile }
         >({
             query: ({ companyId, employeeId, data }) => ({
-                url: `employees/${employeeId}/update`,
+                url: `/${employeeId}/update`,
                 method: 'PATCH',
                 data,
                 params: { companyId },
@@ -111,40 +106,12 @@ export const employeeApi = createApi({
             ],
         }),
 
-        // updateEmployeeSchedule: builder.mutation<MessageResponse, IUpdateEmployeeSchedule>({
-        //     query: ({ companyId, employeeId, data }) => ({
-        //         url: `company/${companyId}/employee/${employeeId}/schedule`,
-        //         method: 'PATCH',
-        //         data,
-        //     }),
-        //     invalidatesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.employeeId }],
-        // }),
-
-        // getEmployeeSchedule: builder.query<IMonthSchedule, IGetEmployeeSchedule>({
-        //     query: ({ companyId, employeeId, year, month }) => ({
-        //         url: `company/${companyId}/employee/${employeeId}/schedule?year=${year}&month=${month}`,
-        //         method: 'GET',
-        //     }),
-        //     providesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.employeeId }],
-        // }),
-
-        // deleteEmployeeSchedule: builder.mutation<
-        //     { message: string },
-        //     { companyId: number; employeeId: number; scheduleId: number }
-        // >({
-        //     query: ({ companyId, employeeId, scheduleId }) => ({
-        //         url: `company/${companyId}/employee/${employeeId}/schedule/${scheduleId}`,
-        //         method: 'DELETE',
-        //     }),
-        //     invalidatesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.employeeId }],
-        // }),
-
         removeEmployeeService: builder.mutation<
             { message: string },
             { companyId: number; employeeId: number; serviceId: number }
         >({
             query: ({ companyId, employeeId, serviceId }) => ({
-                url: `employees/${employeeId}/service/${serviceId}`,
+                url: `/${employeeId}/service/${serviceId}`,
                 params: { companyId },
                 method: 'DELETE',
             }),
@@ -159,7 +126,7 @@ export const employeeApi = createApi({
             { companyId: number; employeeId: number; data: { services: number[] } }
         >({
             query: ({ companyId, employeeId, data }) => ({
-                url: `employees/${employeeId}/service`,
+                url: `/${employeeId}/service`,
                 params: { companyId },
                 method: 'PATCH',
                 data,
@@ -175,7 +142,7 @@ export const employeeApi = createApi({
             { companyId: number; employeeId: number }
         >({
             query: ({ companyId, employeeId }) => ({
-                url: `employees/${employeeId}`,
+                url: `/${employeeId}`,
                 params: { companyId },
                 method: 'DELETE',
             }),

@@ -6,14 +6,14 @@ import { Category, CompanyCategory, ServiceCategory } from './types/category.typ
 export const categoriesApi = createApi({
     reducerPath: 'categoriesApi',
 
-    baseQuery: axiosBaseQuery() as BaseQueryFn,
+    baseQuery: axiosBaseQuery('category') as BaseQueryFn,
 
     tagTypes: ['servicesCategories', 'companyCategories'],
 
     endpoints: builder => ({
         getServicesCategories: builder.query<ServiceCategory[], { companyId: number }>({
             query: ({ companyId }) => ({
-                url: `category/services`,
+                url: `/services`,
                 method: 'GET',
                 params: { companyId },
             }),
@@ -31,7 +31,7 @@ export const categoriesApi = createApi({
             { companyId: number; data: { name: string; type: ServiceTypeEnum } }
         >({
             query: ({ companyId, data }) => ({
-                url: `category/services`,
+                url: `/services`,
                 method: 'POST',
                 params: { companyId },
                 data,
@@ -41,7 +41,7 @@ export const categoriesApi = createApi({
 
         getCompanyCategories: builder.query<CompanyCategory[], null>({
             query: () => ({
-                url: `/category/company`,
+                url: `/company`,
                 method: 'GET',
             }),
             providesTags: resp =>

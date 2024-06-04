@@ -5,7 +5,7 @@ import { CreateEventType, EventType, GetMonthEvents } from './types/event.types'
 export const eventsApi = createApi({
     reducerPath: 'eventsApi',
 
-    baseQuery: axiosBaseQuery() as BaseQueryFn,
+    baseQuery: axiosBaseQuery('events') as BaseQueryFn,
 
     tagTypes: ['events'],
 
@@ -13,7 +13,7 @@ export const eventsApi = createApi({
         return {
             createEvent: builder.mutation<EventType, CreateEventType>({
                 query: ({ data, companyId }) => ({
-                    url: 'events/create',
+                    url: '/create',
                     method: 'POST',
                     data,
                     params: { companyId },
@@ -26,7 +26,7 @@ export const eventsApi = createApi({
 
             getCompanyEvents: builder.query<EventType[], GetMonthEvents>({
                 query: ({ companyId, year, month }) => ({
-                    url: 'events/get-all',
+                    url: '/get-all',
                     method: 'GET',
                     params: { companyId, year, month },
                 }),

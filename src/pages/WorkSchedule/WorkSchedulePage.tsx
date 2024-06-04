@@ -828,6 +828,25 @@ const WorkSchedulePage = () => {
         handleDaySelect,
     };
 
+    const scheduleTimeSelectionProps = {
+        from,
+        setFrom: (time: string) => handleTimeSelect(time, 'from'),
+        to,
+        setTo: (time: string) => handleTimeSelect(time, 'to'),
+        breakFrom,
+        setBreakFrom: (time: string) => handleTimeSelect(time, 'breakFrom'),
+        breakTo,
+        setBreakTo: (time: string) => handleTimeSelect(time, 'breakTo'),
+        isBreak,
+        breakToggle: handleAddBreakHoursClick,
+        isEditingAllowed: true,
+        handleUpdate: handleUpdateClick,
+        isUpdateDisabled: false,
+        isUpdateLoading: isUpdateLoading,
+        selectedHours: selectedDayCompanySchedule?.hours,
+        isTitle: false,
+    };
+
     return (
         <>
             <PageContentLayout
@@ -855,24 +874,7 @@ const WorkSchedulePage = () => {
                     $isOpen={modalOpen}
                     title="Налаштування робочого часу"
                 >
-                    <ScheduleTimeSelection
-                        from={from}
-                        setFrom={time => handleTimeSelect(time, 'from')}
-                        to={to}
-                        setTo={time => handleTimeSelect(time, 'to')}
-                        breakFrom={breakFrom}
-                        setBreakFrom={time => handleTimeSelect(time, 'breakFrom')}
-                        breakTo={breakTo}
-                        setBreakTo={time => handleTimeSelect(time, 'breakTo')}
-                        isBreak={isBreak}
-                        breakToggle={handleAddBreakHoursClick}
-                        isEditingAllowed={true}
-                        handleUpdate={handleUpdateClick}
-                        isUpdateDisabled={false}
-                        isUpdateLoading={isUpdateLoading}
-                        selectedHours={selectedDayCompanySchedule?.hours}
-                        isTitle={false}
-                    />
+                    <ScheduleTimeSelection {...scheduleTimeSelectionProps} />
                 </Modal>
             )}
         </>

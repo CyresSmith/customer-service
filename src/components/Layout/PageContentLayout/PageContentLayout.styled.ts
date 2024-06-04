@@ -10,6 +10,10 @@ export const PageBar = styled.div`
     gap: ${theme.space[4]};
     padding-bottom: ${theme.space[4]};
     flex-wrap: wrap;
+
+    @media ${theme.breakpoints.desktop.media} {
+        min-height: 69px;
+    }
 `;
 
 export const PageLayoutBox = styled.div`

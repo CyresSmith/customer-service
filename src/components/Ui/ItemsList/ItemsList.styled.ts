@@ -10,7 +10,6 @@ export const ListBox = styled.div`
 export const ListBar = styled.div`
     width: 100%;
     display: flex;
-    /* flex-direction: column; */
     flex-direction: row;
     align-items: end;
     justify-content: space-between;
@@ -20,6 +19,7 @@ export const ListBar = styled.div`
     padding-bottom: ${theme.space[4]};
 
     @media ${theme.breakpoints.desktop.media} {
+        min-height: 69px;
         flex-direction: row;
         align-items: end;
         justify-content: space-between;

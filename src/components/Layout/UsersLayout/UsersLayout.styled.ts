@@ -9,7 +9,7 @@ export const MainSection = styled.section`
 
     @media ${theme.breakpoints.desktop.media} {
         display: grid;
-        grid-template-columns: max-content 1fr;
+        grid-template-columns: 250px 1fr;
         gap: ${LAYOUT_GAP};
     }
 `;

@@ -23,7 +23,8 @@ const VerifyPage = lazy(() => import('pages/Verify'));
 const ErrorPage = lazy(() => import('pages/ErrorPage'));
 const UsersLayout = lazy(() => import('components/Layout/UsersLayout'));
 const EmployeesPage = lazy(() => import('pages/EmployeesPage'));
-const FinancePage = lazy(() => import('pages/FinancePage'));
+const CashflowPage = lazy(() => import('pages/CashflowPage'));
+const CashboxesPage = lazy(() => import('pages/CashboxesPage'));
 
 function App() {
     const { user, accessToken } = useAuth();
@@ -99,8 +100,12 @@ function App() {
                                 element={<PrivateRoute children={<ServicesPage />} />}
                             />
                             <Route
-                                path="finance"
-                                element={<PrivateRoute children={<FinancePage />} />}
+                                path="cashflow"
+                                element={<PrivateRoute onlyAdmin children={<CashflowPage />} />}
+                            />
+                            <Route
+                                path="cashboxes"
+                                element={<PrivateRoute onlyAdmin children={<CashboxesPage />} />}
                             />
                         </Route>
                     </Route>

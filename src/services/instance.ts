@@ -12,13 +12,13 @@ const instance = axios.create({
 });
 
 export const axiosBaseQuery =
-    () =>
+    (baseUrl?: string) =>
     async ({ url = '', method, data, params }: AxiosRequestConfig) => {
         try {
             store.dispatch(rootActions.setLoading(true));
 
             const response = await instance({
-                url,
+                url: baseUrl ? baseUrl + url : url,
                 method,
                 data,
                 params,

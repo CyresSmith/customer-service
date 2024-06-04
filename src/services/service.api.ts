@@ -10,34 +10,34 @@ import {
 export const serviceApi = createApi({
     reducerPath: 'serviceApi',
 
-    baseQuery: axiosBaseQuery() as BaseQueryFn,
+    baseQuery: axiosBaseQuery('service') as BaseQueryFn,
 
-    tagTypes: ['services'],
+    tagTypes: ['service'],
 
     endpoints: builder => ({
         addNewService: builder.mutation<ServiceBasicInfo, IAddNewServiceDto>({
             query: ({ companyId, data }) => ({
-                url: `/service`,
+                url: ``,
                 method: 'POST',
                 data,
                 params: { companyId },
             }),
-            invalidatesTags: [{ type: 'services', id: 'LIST' }],
+            invalidatesTags: [{ type: 'service', id: 'LIST' }],
         }),
 
         getServices: builder.query<ServiceBasicInfo[], { companyId: number }>({
             query: ({ companyId }) => ({
-                url: `/service/get-all`,
+                url: `/get-all`,
                 method: 'GET',
                 params: { companyId },
             }),
             providesTags: resp =>
                 resp
                     ? [
-                          ...resp.map(({ id }) => ({ type: 'services' as const, id })),
-                          { type: 'services', id: 'LIST' },
+                          ...resp.map(({ id }) => ({ type: 'service' as const, id })),
+                          { type: 'service', id: 'LIST' },
                       ]
-                    : [{ type: 'services', id: 'LIST' }],
+                    : [{ type: 'service', id: 'LIST' }],
         }),
 
         getEmployeeServices: builder.query<
@@ -45,17 +45,17 @@ export const serviceApi = createApi({
             { companyId: number; employeeId: number }
         >({
             query: ({ companyId, employeeId }) => ({
-                url: `/service/employee`,
+                url: `/employee`,
                 method: 'GET',
                 params: { companyId, employeeId },
             }),
             providesTags: resp =>
                 resp
                     ? [
-                          ...resp.map(({ id }) => ({ type: 'services' as const, id })),
-                          { type: 'services', id: 'LIST' },
+                          ...resp.map(({ id }) => ({ type: 'service' as const, id })),
+                          { type: 'service', id: 'LIST' },
                       ]
-                    : [{ type: 'services', id: 'LIST' }],
+                    : [{ type: 'service', id: 'LIST' }],
         }),
 
         uploadServiceAvatar: builder.mutation<
@@ -63,24 +63,24 @@ export const serviceApi = createApi({
             { companyId: number; serviceId: number; data: FormData }
         >({
             query: ({ companyId, serviceId, data }) => ({
-                url: `service/${serviceId}/avatar`,
+                url: `/${serviceId}/avatar`,
                 method: 'PATCH',
                 data,
                 params: { companyId },
             }),
             invalidatesTags: (_resp, _err, { serviceId: id }) => [
-                { type: 'services', id },
-                { type: 'services', id: 'LIST' },
+                { type: 'service', id },
+                { type: 'service', id: 'LIST' },
             ],
         }),
 
         getServiceData: builder.query<IService, { companyId: number; serviceId: number }>({
             query: ({ companyId, serviceId }) => ({
-                url: `service/${serviceId}`,
+                url: `/${serviceId}`,
                 params: { companyId },
                 method: 'GET',
             }),
-            providesTags: (_resp, _err, { serviceId: id }) => [{ type: 'services', id }],
+            providesTags: (_resp, _err, { serviceId: id }) => [{ type: 'service', id }],
         }),
 
         updateServiceData: builder.mutation<
@@ -88,14 +88,14 @@ export const serviceApi = createApi({
             { companyId: number; serviceId: number; data: Partial<IServiceUpdate> }
         >({
             query: ({ companyId, serviceId, data }) => ({
-                url: `service/${serviceId}`,
+                url: `/${serviceId}`,
                 method: 'PATCH',
                 params: { companyId },
                 data,
             }),
             invalidatesTags: (_resp, _err, { serviceId: id }) => [
-                { type: 'services', id },
-                { type: 'services', id: 'LIST' },
+                { type: 'service', id },
+                { type: 'service', id: 'LIST' },
             ],
         }),
 
@@ -104,13 +104,13 @@ export const serviceApi = createApi({
             { companyId: number; serviceId: number }
         >({
             query: ({ companyId, serviceId }) => ({
-                url: `service/${serviceId}`,
+                url: `/${serviceId}`,
                 method: 'DELETE',
                 params: { companyId },
             }),
             invalidatesTags: (_resp, _err, { serviceId: id }) => [
-                { type: 'services', id },
-                { type: 'services', id: 'LIST' },
+                { type: 'service', id },
+                { type: 'service', id: 'LIST' },
             ],
         }),
     }),

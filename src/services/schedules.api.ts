@@ -11,7 +11,7 @@ import {
 export const schedulesApi = createApi({
     reducerPath: 'schedulesApi',
 
-    baseQuery: axiosBaseQuery() as BaseQueryFn,
+    baseQuery: axiosBaseQuery('schedules') as BaseQueryFn,
 
     tagTypes: ['schedules'],
 
@@ -21,7 +21,7 @@ export const schedulesApi = createApi({
             { companyId: number; year: number; month: number }
         >({
             query: ({ companyId, year, month }) => ({
-                url: `schedules/get-all`,
+                url: `/get-all`,
                 method: 'GET',
                 params: { companyId, year, month },
             }),
@@ -42,7 +42,7 @@ export const schedulesApi = createApi({
             IUpdateEmployeeSchedule
         >({
             query: ({ companyId, employeeId, data }) => ({
-                url: `schedules/${employeeId}/update`,
+                url: `/${employeeId}/update`,
                 method: 'PATCH',
                 data,
                 params: { companyId },
@@ -58,7 +58,7 @@ export const schedulesApi = createApi({
 
         getEmployeeSchedule: builder.query<IMonthSchedule, IGetEmployeeSchedule>({
             query: ({ companyId, employeeId, year, month }) => ({
-                url: `schedules/${employeeId}/get-one`,
+                url: `/${employeeId}/get-one`,
                 method: 'GET',
                 params: { companyId, year, month },
             }),
@@ -67,7 +67,7 @@ export const schedulesApi = createApi({
 
         deleteEmployeeSchedule: builder.mutation<{ message: string }, DeletingSchedule>({
             query: ({ companyId, employeeId, scheduleId }) => ({
-                url: `schedules/${scheduleId}/employee/${employeeId}/delete`,
+                url: `/${scheduleId}/employee/${employeeId}/delete`,
                 method: 'DELETE',
                 params: { companyId },
             }),
@@ -79,7 +79,7 @@ export const schedulesApi = createApi({
             Pick<IGetEmployeeSchedule, 'companyId' | 'employeeId'>
         >({
             query: ({ companyId, employeeId }) => ({
-                url: `schedules/${employeeId}/get-all`,
+                url: `/${employeeId}/get-all`,
                 method: 'GET',
                 params: { companyId },
             }),

@@ -10,18 +10,20 @@ import {
     persistStore,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { cashboxApi } from 'services/cashbox.api';
 import { categoriesApi } from 'services/categories.api';
 import { clientsApi } from 'services/clients.api';
 import { companyApi } from 'services/company.api';
 import { employeeApi } from 'services/employee.api';
+import { eventsApi } from 'services/events.api';
 import { schedulesApi } from 'services/schedules.api';
 import { serviceApi } from 'services/service.api';
+import { transactionApi } from 'services/transaction.api';
 import { authApi } from '../services/auth.api';
 import chatSlice from './chat/chat.slice';
 import companySlice from './company/company.slice';
 import loadingSlice from './loading/loading.slice';
 import userSlice from './user/user.slice';
-import { eventsApi } from 'services/events.api';
 
 const persistUserConfig = {
     key: 'service',
@@ -44,6 +46,8 @@ const rootReducer = combineReducers({
     [categoriesApi.reducerPath]: categoriesApi.reducer,
     [schedulesApi.reducerPath]: schedulesApi.reducer,
     [eventsApi.reducerPath]: eventsApi.reducer,
+    [cashboxApi.reducerPath]: cashboxApi.reducer,
+    [transactionApi.reducerPath]: transactionApi.reducer,
 });
 
 export const store = configureStore({
@@ -61,7 +65,9 @@ export const store = configureStore({
             .concat(serviceApi.middleware)
             .concat(categoriesApi.middleware)
             .concat(schedulesApi.middleware)
-            .concat(eventsApi.middleware),
+            .concat(eventsApi.middleware)
+            .concat(cashboxApi.middleware)
+            .concat(transactionApi.middleware),
 });
 
 export type TypeRootState = ReturnType<typeof rootReducer>;
