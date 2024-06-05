@@ -17,6 +17,7 @@ const validators: IndexType = {
     firstName: new RegExp(/^[A-zА-Яа-яЁёЇїІіЄєҐґ']{3,30}$/),
     index: new RegExp(/^\d{5}$/),
     desc: new RegExp(/^[\s\S]{30,1000}$/),
+    comment: new RegExp(/^[\s\S]{10,50}$/),
     price: new RegExp(/^[1-9]\d{0,5}$/),
 };
 
@@ -52,6 +53,10 @@ const validateInputs = (name: string, value: Value): Result<Value> => {
 
             case 'desc':
                 message = 'Мінімум 30, максимум 1000 символів';
+                break;
+
+            case 'comment':
+                message = 'Мінімум 10, максимум 50 символів';
                 break;
 
             case 'price':

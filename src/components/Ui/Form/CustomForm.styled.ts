@@ -16,9 +16,10 @@ export const baseInputStyles = `
 export const Form = styled.form`
     display: flex;
     width: 100%;
+    max-height: 100%;
     flex-direction: column;
     gap: ${theme.space[5]};
-    justify-content: center;
+    justify-content: space-between;
 `;
 
 export const FormTitle = styled.p`

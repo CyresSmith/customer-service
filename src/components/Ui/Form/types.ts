@@ -38,6 +38,7 @@ export type FormProps<T> = {
     isLoading?: boolean;
     buttonsDirection?: string;
     selectItems?: SelectItem[];
+    visibleSelectItems?: number;
 };
 
 export type ButtonsProps = {

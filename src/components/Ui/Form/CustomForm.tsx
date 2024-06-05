@@ -19,6 +19,7 @@ const CustomForm = <T extends { [k: string]: InputValueType }>({
     buttonsDirection,
     title,
     selectItems,
+    visibleSelectItems,
 }: FormProps<T>) => {
     const { handleChange, handleSelect, handleSubmit, state, invalidFields, reset } = useForm<T>(
         initialState,
@@ -62,6 +63,7 @@ const CustomForm = <T extends { [k: string]: InputValueType }>({
                                 disabledIcon={disabledReset}
                                 isRequired={isRequired}
                                 isReadonly={isReadonly}
+                                visibleItemsCount={visibleSelectItems}
                             />
                         }
                     </FormInputsListItem>

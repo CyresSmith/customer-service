@@ -9,6 +9,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Bounce, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useLazyCurrentQuery } from 'services/auth.api';
+import { EmployeeRoleEnum } from 'services/types/employee.types';
 
 setDefaultOptions({ locale: uk });
 
@@ -101,11 +102,24 @@ function App() {
                             />
                             <Route
                                 path="cashflow"
-                                element={<PrivateRoute onlyAdmin children={<CashflowPage />} />}
+                                element={
+                                    <PrivateRoute
+                                        limitedAccess={[
+                                            EmployeeRoleEnum.OWNER,
+                                            EmployeeRoleEnum.ADMIN,
+                                        ]}
+                                        children={<CashflowPage />}
+                                    />
+                                }
                             />
                             <Route
                                 path="cashboxes"
-                                element={<PrivateRoute onlyAdmin children={<CashboxesPage />} />}
+                                element={
+                                    <PrivateRoute
+                                        limitedAccess={[EmployeeRoleEnum.OWNER]}
+                                        children={<CashboxesPage />}
+                                    />
+                                }
                             />
                         </Route>
                     </Route>

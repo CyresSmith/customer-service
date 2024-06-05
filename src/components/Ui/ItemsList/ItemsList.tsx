@@ -462,6 +462,19 @@ const ItemsList = <T extends StringRecord>({
                                                 );
                                             }
 
+                                            if (key === 'isActive') {
+                                                return (
+                                                    <ItemParam key={key}>
+                                                        <StatusBadge
+                                                            $active={Boolean(value)}
+                                                            $size="s"
+                                                        >
+                                                            {value ? 'Активна' : 'Неактивна'}
+                                                        </StatusBadge>
+                                                    </ItemParam>
+                                                );
+                                            }
+
                                             if (key === 'gender') {
                                                 return (
                                                     <ItemParam key={key}>

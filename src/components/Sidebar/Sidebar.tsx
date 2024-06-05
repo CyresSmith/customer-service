@@ -1,11 +1,13 @@
 import { useActions, useAdminRights, useClickOutside, useEscapeKey } from 'hooks';
 import { useMenu } from 'hooks/useMenu';
+import { useUserRole } from 'hooks/useUserRole';
 import { useState } from 'react';
 import { AiOutlineSchedule } from 'react-icons/ai';
 import { HiAdjustments } from 'react-icons/hi';
 import { LiaCashRegisterSolid } from 'react-icons/lia';
 import { PiUsersThree } from 'react-icons/pi';
 import { VscBook } from 'react-icons/vsc';
+import { EmployeeRoleEnum } from 'services/types/employee.types';
 import { MenuList } from './Sidebar.styled';
 import SidebarItem from './SidebarItem';
 
@@ -48,6 +50,7 @@ const items = [
 
 const Sidebar = () => {
     const isAdmin = useAdminRights();
+    const userRole = useUserRole();
     const isOpen = useMenu();
     const { closeMenu } = useActions();
     useEscapeKey(() => closeMenu());
@@ -63,9 +66,19 @@ const Sidebar = () => {
 
     return (
         <MenuList $isOpen={isOpen} ref={ref}>
-            {(isAdmin ? items : items.filter(({ to }) => to !== 'finance')).map(item => (
-                <SidebarItem key={item.id} {...item} {...props} />
-            ))}
+            {(isAdmin ? items : items.filter(({ to }) => to !== 'finance')).map(item => {
+                const itemProps = { ...item };
+
+                if (
+                    userRole === EmployeeRoleEnum.ADMIN &&
+                    itemProps.children &&
+                    itemProps.children.length > 0
+                ) {
+                    itemProps.children = itemProps.children.filter(({ to }) => to !== 'cashboxes');
+                }
+
+                return <SidebarItem key={item.id} {...itemProps} {...props} />;
+            })}
         </MenuList>
     );
 };

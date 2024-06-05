@@ -11,7 +11,7 @@ export const ProfileInfoBox = styled.div`
     }
 `;
 
-export const FormInputsList = styled.ul`
+export const FormInputsList = styled.ul<{ $owner: boolean }>`
     width: 100%;
     height: 100%;
     display: grid;
@@ -19,11 +19,12 @@ export const FormInputsList = styled.ul`
     grid-template-rows: auto;
     gap: ${theme.space[4]};
 
-    @media ${theme.breakpoints.tablet.media} {
+    ${({ $owner }) => `
+        @media ${theme.breakpoints.tablet.media} {
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: auto;
 
-        :nth-last-child(2) {
+        :nth-last-child(${$owner ? 2 : 3}) {
             grid-column: 1 / 4;
         }
     }
@@ -32,10 +33,11 @@ export const FormInputsList = styled.ul`
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: auto;
 
-        :nth-last-child(2) {
+        :nth-last-child(${$owner ? 2 : 3}) {
             grid-column: 1 / 4;
         }
     }
+    `}
 `;
 
 export const ButtonBox = styled.div`

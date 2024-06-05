@@ -1,10 +1,11 @@
 import Button from 'components/Ui/Buttons/Button';
 import { Form } from 'components/Ui/Form/CustomForm.styled';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
-import { InputProps } from 'components/Ui/Form/types';
+import { InputProps, InputValueType } from 'components/Ui/Form/types';
 import { getErrorMessage } from 'helpers/inputsValidation';
 import { useAdminRights, useAuth, useForm } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
+import { useUserRole } from 'hooks/useUserRole';
 import { IoIosSave } from 'react-icons/io';
 import { toast } from 'react-toastify';
 import { useUpdateEmployeeProfileMutation } from 'services/employee.api';
@@ -22,6 +23,7 @@ const inputs: Partial<InputProps>[] = [
     { name: 'jobTitle', type: 'text' },
     { name: 'info', type: 'textarea' },
     { name: 'provider', type: 'checkbox' },
+    { name: 'isAdmin', type: 'checkbox' },
 ];
 
 const ProfileInfo = ({ employee }: Props) => {
@@ -40,12 +42,24 @@ const ProfileInfo = ({ employee }: Props) => {
     } = employee;
 
     const isAdmin = useAdminRights();
+    const userRole = useUserRole();
     const { user: currentUser } = useAuth();
     const { id: companyId } = useCompany();
 
+    const isOwner = role === EmployeeRoleEnum.OWNER;
     const isEditingAllowed = isAdmin || currentUser?.id === employee?.user?.id;
 
-    const initialState = {
+    const initialState: {
+        firstName: string;
+        lastName: string;
+        phone: string;
+        email: string;
+        jobTitle: string;
+        provider: boolean;
+        info: string;
+        birthday: Date;
+        isAdmin?: boolean;
+    } = {
         firstName: firstName || user.firstName || '',
         lastName: lastName || user.lastName || '',
         phone: phone || user.phone || '',
@@ -54,7 +68,12 @@ const ProfileInfo = ({ employee }: Props) => {
         provider: provider || false,
         info: info || '',
         birthday: birthday || '',
+        isAdmin: role === EmployeeRoleEnum.ADMIN,
     };
+
+    if (isOwner) {
+        delete initialState.isAdmin;
+    }
 
     const [updateProfile, { isLoading }] = useUpdateEmployeeProfileMutation();
 
@@ -63,6 +82,12 @@ const ProfileInfo = ({ employee }: Props) => {
 
         Object.entries(state).map(([key, value]) => {
             if (value === '') return;
+
+            if (key === 'isAdmin') {
+                Object.assign(data, {
+                    role: value ? EmployeeRoleEnum.ADMIN : EmployeeRoleEnum.EMPLOYEE,
+                });
+            }
 
             Object.assign(data, { [key]: value });
         });
@@ -89,18 +114,30 @@ const ProfileInfo = ({ employee }: Props) => {
     return (
         <ProfileInfoBox>
             <Form onSubmit={handleSubmit}>
-                <FormInputsList>
-                    {(inputs as InputProps[]).map((item, i) => (
-                        <CustomFormInput
-                            key={i}
-                            {...item}
-                            value={state[item.name as keyof typeof initialState]}
-                            handleChange={handleChange}
-                            handlePickDate={handlePickDate}
-                            isValid={getErrorMessage(item.name, invalidFields)}
-                            isReadonly={!isEditingAllowed}
-                        />
-                    ))}
+                <FormInputsList $owner={isOwner}>
+                    {(inputs as InputProps[]).map((item, i) => {
+                        const isAdminField = item.name === 'isAdmin';
+
+                        if (isOwner && isAdminField) return;
+
+                        return (
+                            <CustomFormInput
+                                key={i}
+                                {...item}
+                                value={
+                                    state[item.name as keyof typeof initialState] as InputValueType
+                                }
+                                handleChange={handleChange}
+                                handlePickDate={handlePickDate}
+                                isValid={getErrorMessage(item.name, invalidFields)}
+                                isReadonly={
+                                    !isEditingAllowed ||
+                                    (isAdminField && userRole !== EmployeeRoleEnum.OWNER)
+                                }
+                                disabledIcon={true}
+                            />
+                        );
+                    })}
                 </FormInputsList>
 
                 {isEditingAllowed && (

@@ -74,6 +74,16 @@ export const translateLabels = (name: string): string | undefined => {
             return 'Кількість послуг';
         case 'register':
             return 'Реєстрація';
+        case 'balance':
+            return 'Баланс';
+        case 'responsible':
+            return 'Відповідальний';
+        case 'isActive':
+            return 'Активність';
+        case 'updatedAt':
+            return 'Останнє оновлення';
+        case 'createdAt':
+            return 'Сторено';
 
         default:
             break;
