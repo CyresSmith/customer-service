@@ -7,13 +7,23 @@ import {
     CreateCashboxDto,
     UpdateCashboxDto,
 } from './types/cashbox.types';
+import {
+    GetTransactionsParams,
+    TransactionBasicInfo,
+    addChangeBalanceDto,
+    addMovingTransactionDto,
+    addPurchaseTransactionDto,
+    addSalaryTransactionDto,
+    addSellTransactionDto,
+    addServiceTransactionDto,
+} from './types/transaction.types';
 
 export const cashboxApi = createApi({
     reducerPath: 'cashboxApi',
 
-    baseQuery: axiosBaseQuery('cashbox') as BaseQueryFn,
+    baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-    tagTypes: ['cashbox'],
+    tagTypes: ['cashbox', 'transaction'],
 
     endpoints: builder => ({
         addCashbox: builder.mutation<
@@ -21,7 +31,7 @@ export const cashboxApi = createApi({
             { data: CreateCashboxDto; companyId: number }
         >({
             query: ({ companyId, data }) => ({
-                url: '',
+                url: '/cashbox',
                 method: 'POST',
                 data,
                 params: { companyId },
@@ -31,7 +41,7 @@ export const cashboxApi = createApi({
 
         getCashboxes: builder.query<CashboxBasicInfo[], { companyId: number }>({
             query: ({ companyId }) => ({
-                url: '',
+                url: '/cashbox',
                 method: 'GET',
                 params: { companyId },
             }),
@@ -46,7 +56,7 @@ export const cashboxApi = createApi({
 
         getCashboxById: builder.query<Cashbox, { companyId: number; id: number }>({
             query: ({ companyId, id }) => ({
-                url: `/${id}`,
+                url: `/cashbox/${id}`,
                 method: 'GET',
                 params: { companyId },
             }),
@@ -64,7 +74,7 @@ export const cashboxApi = createApi({
             { companyId: number; id: number; data: UpdateCashboxDto }
         >({
             query: ({ companyId, id, data }) => ({
-                url: `/${id}`,
+                url: `/cashbox/${id}`,
                 data,
                 method: 'PATCH',
                 params: { companyId },
@@ -76,6 +86,119 @@ export const cashboxApi = createApi({
                           { type: 'cashbox', id: 'LIST' },
                       ]
                     : [{ type: 'cashbox', id: 'LIST' }],
+        }),
+
+        addServiceTransaction: builder.mutation<
+            TransactionBasicInfo,
+            { data: addServiceTransactionDto; companyId: number }
+        >({
+            query: ({ companyId, data }) => ({
+                url: `/transaction/service`,
+                method: 'POST',
+                data,
+                params: { companyId },
+            }),
+
+            invalidatesTags: (_res, _err, { data }) => [
+                { type: 'cashbox', id: data.cashbox },
+                { type: 'transaction', id: 'LIST' },
+            ],
+        }),
+
+        addSellTransaction: builder.mutation<
+            TransactionBasicInfo,
+            { data: addSellTransactionDto; companyId: number }
+        >({
+            query: ({ companyId, data }) => ({
+                url: `/transaction/sell`,
+                method: 'POST',
+                data,
+                params: { companyId },
+            }),
+            invalidatesTags: (_res, _err, { data }) => [
+                { type: 'cashbox', id: data.cashbox },
+                { type: 'transaction', id: 'LIST' },
+            ],
+        }),
+
+        addMovingTransaction: builder.mutation<
+            TransactionBasicInfo,
+            { data: addMovingTransactionDto; companyId: number }
+        >({
+            query: ({ companyId, data }) => ({
+                url: `/transaction/moving`,
+                method: 'POST',
+                data,
+                params: { companyId },
+            }),
+            invalidatesTags: (_res, _err, { data }) => [
+                { type: 'cashbox', id: data.cashbox },
+                { type: 'cashbox', id: data.fromCashboxId },
+                { type: 'transaction', id: 'LIST' },
+            ],
+        }),
+
+        addPurchaseTransaction: builder.mutation<
+            TransactionBasicInfo,
+            { data: addPurchaseTransactionDto; companyId: number }
+        >({
+            query: ({ companyId, data }) => ({
+                url: `/transaction/purchase`,
+                method: 'POST',
+                data,
+                params: { companyId },
+            }),
+            invalidatesTags: (_res, _err, { data }) => [
+                { type: 'cashbox', id: data.cashbox },
+                { type: 'transaction', id: 'LIST' },
+            ],
+        }),
+
+        addSalaryTransaction: builder.mutation<
+            TransactionBasicInfo,
+            { data: addSalaryTransactionDto; companyId: number }
+        >({
+            query: ({ companyId, data }) => ({
+                url: `/transaction/salary`,
+                method: 'POST',
+                data,
+                params: { companyId },
+            }),
+            invalidatesTags: (_res, _err, { data }) => [
+                { type: 'cashbox', id: data.cashbox },
+                { type: 'transaction', id: 'LIST' },
+            ],
+        }),
+
+        addChangeBalanceTransaction: builder.mutation<
+            TransactionBasicInfo,
+            { data: addChangeBalanceDto; companyId: number }
+        >({
+            query: ({ companyId, data }) => ({
+                url: `/transaction/change-balance`,
+                method: 'POST',
+                data,
+                params: { companyId },
+            }),
+            invalidatesTags: (_res, _err, { data }) => [
+                { type: 'cashbox', id: data.cashbox },
+                { type: 'transaction', id: 'LIST' },
+            ],
+        }),
+
+        getTransactionsByParams: builder.query<TransactionBasicInfo[], GetTransactionsParams>({
+            query: params => ({
+                url: `/transaction`,
+                method: 'GET',
+                params,
+            }),
+            providesTags: resp =>
+                resp
+                    ? [
+                          ...resp.map(({ id }) => ({ type: 'transaction' as const, id })),
+                          { type: 'transaction', id: 'LIST' },
+                      ]
+                    : [{ type: 'transaction', id: 'LIST' }],
         }),
 
         removeCashbox: builder.mutation<MessageResponse, { companyId: number; id: number }>({
@@ -95,4 +218,11 @@ export const {
     useRemoveCashboxMutation,
     useGetCashboxByIdQuery,
     useUpdateCashboxMutation,
+    useAddServiceTransactionMutation,
+    useAddSellTransactionMutation,
+    useAddMovingTransactionMutation,
+    useAddPurchaseTransactionMutation,
+    useAddSalaryTransactionMutation,
+    useAddChangeBalanceTransactionMutation,
+    useGetTransactionsByParamsQuery,
 } = cashboxApi;

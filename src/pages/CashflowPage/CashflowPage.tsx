@@ -4,7 +4,7 @@ import PageContentLayout from 'components/Layout/PageContentLayout';
 import { getDate, getMonth, getYear } from 'date-fns';
 import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
-import { useGetTransactionsByParamsQuery } from 'services/transaction.api';
+import { useGetTransactionsByParamsQuery } from 'services/cashbox.api';
 import { GetTransactionsParams, TransactionTimeParams } from 'services/types/transaction.types';
 
 const today = new Date(Date.now());

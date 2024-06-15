@@ -18,7 +18,6 @@ import { employeeApi } from 'services/employee.api';
 import { eventsApi } from 'services/events.api';
 import { schedulesApi } from 'services/schedules.api';
 import { serviceApi } from 'services/service.api';
-import { transactionApi } from 'services/transaction.api';
 import { transactionCategoryApi } from 'services/transactionCategory.api';
 import { authApi } from '../services/auth.api';
 import chatSlice from './chat/chat.slice';
@@ -48,7 +47,6 @@ const rootReducer = combineReducers({
     [schedulesApi.reducerPath]: schedulesApi.reducer,
     [eventsApi.reducerPath]: eventsApi.reducer,
     [cashboxApi.reducerPath]: cashboxApi.reducer,
-    [transactionApi.reducerPath]: transactionApi.reducer,
     [transactionCategoryApi.reducerPath]: transactionCategoryApi.reducer,
 });
 
@@ -69,7 +67,6 @@ export const store = configureStore({
             .concat(schedulesApi.middleware)
             .concat(eventsApi.middleware)
             .concat(cashboxApi.middleware)
-            .concat(transactionApi.middleware)
             .concat(transactionCategoryApi.middleware),
 });
 

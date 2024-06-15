@@ -31,14 +31,14 @@ import {
 } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
 import { toast } from 'react-toastify';
+import {
+    useAddSellTransactionMutation,
+    useAddServiceTransactionMutation,
+} from 'services/cashbox.api';
 import { useCreateClientMutation, useGetAllClientsQuery } from 'services/clients.api';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 import { useGetCompanyEventsQuery } from 'services/events.api';
 import { useGetServicesQuery } from 'services/service.api';
-import {
-    useAddSellTransactionMutation,
-    useAddServiceTransactionMutation,
-} from 'services/transaction.api';
 import { CashboxBasicInfo } from 'services/types/cashbox.types';
 import { Client } from 'services/types/clients.types';
 import { EventType } from 'services/types/event.types';
@@ -270,6 +270,8 @@ const IncomeModal = ({ isModalOpen, handleModalClose, cashboxes }: Props) => {
 
     const handleEventsAdd = () => {
         setOpenModal(null);
+
+        console.log('selectedEvents: ', selectedEvents);
 
         const data = selectedEvents?.reduce(
             (acc: { amount: number; employees: number[] }, { amount, employee }) => {
