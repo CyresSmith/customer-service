@@ -43,17 +43,17 @@ export type IEmployee = {
     isOnline: boolean;
 };
 
-export type BasicEmployeeInfo = Pick<
+export type EmployeeBasicInfo = Pick<
     IEmployee,
     'id' | 'avatar' | 'firstName' | 'lastName' | 'status' | 'jobTitle' | 'provider' | 'isOnline'
 > & {
-    servicesCount?: number;
+    services: number[];
     userId: number;
 };
 
 export type EmployeesState = {
     chosenEmployee: IEmployee | null;
-    allEmployees: BasicEmployeeInfo[];
+    allEmployees: EmployeeBasicInfo[];
 };
 
 export type createEmployeeData = Pick<IEmployee, 'jobTitle' | 'provider' | 'role'>;

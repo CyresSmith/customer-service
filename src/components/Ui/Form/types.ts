@@ -20,6 +20,7 @@ export type InputProps = {
     selected?: SelectItem;
     disabled?: boolean;
     onInput?: () => void;
+    onClick?: () => void;
     onKeyDown?: () => void;
     onKeyUp?: () => void;
     visibleItemsCount?: number;
@@ -65,7 +66,7 @@ export type SelectHandler = (item: SelectItem, fieldName?: string) => void;
 export type SelectProps = {
     width?: string;
     selectItems: SelectItem[];
-    selectedItem: SelectItem | SelectItem[];
+    selectedItem: SelectItem | SelectItem[] | null;
     handleSelect: SelectHandler;
     closeOnSelect?: boolean;
     fieldName?: string;

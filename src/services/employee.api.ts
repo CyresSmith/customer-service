@@ -3,7 +3,7 @@ import { axiosBaseQuery } from 'services/instance';
 import { UserData } from 'store/user/user.types';
 // import { MessageResponse } from './types';
 import {
-    BasicEmployeeInfo,
+    EmployeeBasicInfo,
     IEmployee,
     UpdateEmployeeAvatar,
     UpdateEmployeeProfile,
@@ -64,7 +64,7 @@ export const employeeApi = createApi({
             providesTags: (_result, _err, { id }) => [{ type: 'employees', id }],
         }),
 
-        getCompanyEmployees: builder.query<BasicEmployeeInfo[], number | null>({
+        getCompanyEmployees: builder.query<EmployeeBasicInfo[], number | null>({
             query: companyId => {
                 if (!companyId) return;
 

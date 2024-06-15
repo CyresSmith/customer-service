@@ -3,7 +3,7 @@ import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { InputProps, InputValueType, SelectItem } from 'components/Ui/Form/types';
 import { useForm } from 'hooks/useForm';
 import { HiUserRemove } from 'react-icons/hi';
-import { IoMdSave } from 'react-icons/io';
+import { IoIosSave } from 'react-icons/io';
 import { Client } from 'services/types/clients.types';
 import { useMediaQuery } from 'usehooks-ts';
 import theme from 'utils/theme';
@@ -128,7 +128,7 @@ const ClientForm = ({
                         type="submit"
                         $colors="accent"
                         isLoading={isLoading}
-                        Icon={IoMdSave}
+                        Icon={IoIosSave}
                     />
                     {invalidFields.length > 0 && (
                         <SubmitErrorsBox>

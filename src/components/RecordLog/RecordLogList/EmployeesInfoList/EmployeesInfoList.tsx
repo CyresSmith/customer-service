@@ -1,10 +1,10 @@
-import { BasicEmployeeInfo } from 'services/types/employee.types';
+import { EmployeeBasicInfo } from 'services/types/employee.types';
+import { IMonthSchedule } from 'services/types/schedule.types';
 import { List } from './EmployeesInfoList.styled';
 import { EmployeesInfoListItem } from './EmployeesInfoListItem';
-import { IMonthSchedule } from 'services/types/schedule.types';
 
 type Props = {
-    employees: BasicEmployeeInfo[];
+    employees: EmployeeBasicInfo[];
     date: Date;
     columns: number;
     isScroll: boolean;

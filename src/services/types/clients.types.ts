@@ -16,6 +16,8 @@ export type Client = {
     // socialLinks?: string[];
 };
 
+export type ClientBasicInfo = Pick<Client, 'id' | 'firstName' | 'lastName' | 'phone' | 'avatar'>;
+
 export type Company = {
     id: number;
     name: string;

@@ -1,9 +1,11 @@
 import Button from 'components/Ui/Buttons/Button';
+import ChoseWay from 'components/Ui/ChoseWay';
 import { getDate, getMonth, getYear } from 'date-fns';
 import { calculateEventDuration } from 'helpers/calculateEventDuration';
 import { getEventEndTime } from 'helpers/isTimeEnableForEvent';
 import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
+import { GrDocumentUser, GrServicePlay } from 'react-icons/gr';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
 import { RiSave2Fill } from 'react-icons/ri';
 import { toast } from 'react-toastify';
@@ -18,9 +20,8 @@ import { ServiceBasicInfo } from 'services/types/service.type';
 import ChooseClient from './ChooseClient';
 import ChooseDate from './ChooseDate/ChooseDate';
 import ChooseServices from './ChooseServices';
-import ChooseWay from './ChooseWay/ChooseWay';
 import ConfirmEvent from './ConfirmEvent';
-import { BtnsBox, Container, ContentBox } from './CreateEvent.styled';
+import { BtnsBox, ChoseWayBox, Container, ContentBox } from './CreateEvent.styled';
 import EmployeesList from './EmployeesList';
 
 type Props = {
@@ -31,6 +32,21 @@ type Props = {
     events: EventType[] | null;
 };
 
+const ways = [
+    {
+        id: 1,
+        icon: GrDocumentUser,
+        title: 'Обрати працівника',
+        desc: 'Якщо клієнт хоче записатись до конкретного працівника',
+    },
+    {
+        id: 2,
+        icon: GrServicePlay,
+        title: 'Обрати послугу',
+        desc: 'Якщо клієнту важливий конкретний день та час послуги',
+    },
+];
+
 const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
     const { id } = useCompany();
     const [chosenClient, setChosenClient] = useState<Client | null>(null);
@@ -39,6 +55,7 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
     const [chosenEmployeeSchedule, setChosenEmployeeSchedule] = useState<IMonthSchedule[] | null>(
         null
     );
+    const [way, setWay] = useState<number | null>(null);
     const [eventDate, setEventDate] = useState<Date>(new Date());
     const [eventTime, setEventTime] = useState<string | null>(null);
 
@@ -147,13 +164,22 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
             ? false
             : true;
 
+    useEffect(() => {
+        if (!way) return;
+        setStep(way === 1 ? 'employees' : 'services');
+    }, [way]);
+
     return providersWithServices ? (
         <Container>
             <ContentBox>
                 {step === 'create' && (
                     <ChooseClient setStep={setStep} setClient={setChosenClient} companyId={id} />
                 )}
-                {step === 'chooseWay' && <ChooseWay setStep={setStep} />}
+                {step === 'choseWay' && (
+                    <ChoseWayBox>
+                        <ChoseWay ways={ways} setWay={id => setWay(id)} />
+                    </ChoseWayBox>
+                )}
                 {step === 'employees' && (
                     <EmployeesList
                         companyId={id}

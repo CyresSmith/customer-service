@@ -5,7 +5,7 @@ export interface IButton {
     isLoading?: boolean;
     disabled?: boolean;
     children?: ReactNode | undefined;
-    onClick?: (e: unknown | undefined) => void;
+    onClick?: (e: MouseEvent) => void;
     Icon?: React.ElementType | undefined;
     $iconPosition?: 'l' | 'r' | undefined;
     type?: 'submit' | 'button';

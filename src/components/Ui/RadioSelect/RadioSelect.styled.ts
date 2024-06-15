@@ -15,7 +15,7 @@ export const RadioSelectItem = styled.li<SelectedItem>`
     > button {
         display: block;
         width: 100%;
-        font-size: ${theme.fontSizes.xl};
+        font-size: ${theme.fontSizes.l};
         font-weight: ${theme.fontWeights.bold};
         padding: ${theme.space[2]} ${theme.space[3]};
         color: ${theme.colors.bg.dark};
@@ -24,6 +24,9 @@ export const RadioSelectItem = styled.li<SelectedItem>`
         cursor: pointer;
         transition: ${theme.transition.primary};
         text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
 
         &:hover {
             background-color: ${({ selected }) =>
@@ -32,10 +35,10 @@ export const RadioSelectItem = styled.li<SelectedItem>`
     }
 
     &:first-of-type {
-        border-radius: ${theme.radii.s} 0 0 ${theme.radii.s};
+        border-radius: ${theme.radii.m} 0 0 ${theme.radii.m};
     }
 
     &:last-of-type {
-        border-radius: 0 ${theme.radii.s} ${theme.radii.s} 0;
+        border-radius: 0 ${theme.radii.m} ${theme.radii.m} 0;
     }
 `;

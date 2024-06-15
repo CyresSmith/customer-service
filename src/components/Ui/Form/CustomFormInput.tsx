@@ -38,6 +38,7 @@ const CustomFormInput = ({
     onKeyDown,
     onKeyUp,
     visibleItemsCount = 5,
+    onClick,
 }: InputProps) => {
     const [hidden, setHidden] = useState(true);
     const valueRef = useRef(value).current;
@@ -50,7 +51,7 @@ const CustomFormInput = ({
                     {isRequired && <Required>{' (!)'}</Required>}
                 </FormInputLabel>
             )}
-            <FormInputBox>
+            <FormInputBox disabled={disabled}>
                 {type === 'checkbox' && typeof value === 'boolean' && handleChange ? (
                     <Checkbox
                         disabled={disabled}
@@ -73,9 +74,9 @@ const CustomFormInput = ({
                             Array.isArray(value) ? (value as SelectItem[]) : (value as SelectItem)
                         }
                     />
-                ) : name === 'birthday' && handlePickDate ? (
+                ) : (name === 'birthday' || name === 'date') && handlePickDate ? (
                     <DatePicker
-                        prewDate={value as Date}
+                        prevDate={value as Date}
                         calendarCellSize={25}
                         bgColor="dark"
                         handleDateConfirm={handlePickDate}
@@ -92,6 +93,7 @@ const CustomFormInput = ({
                         onChange={handleChange}
                         readOnly={isReadonly}
                         placeholder={placeholder}
+                        onClick={onClick}
 
                         // autoComplete='off'
                     />

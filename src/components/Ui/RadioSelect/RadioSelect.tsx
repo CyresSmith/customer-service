@@ -1,13 +1,13 @@
 import { RadioSelectItem, RadioSelectList } from './RadioSelect.styled';
 
 export type RadioSelectItemType = {
-    id: string;
+    id: number | string;
     label: string;
 };
 
 type Props = {
     width?: number;
-    selectedItemId: string;
+    selectedItemId: string | number;
     items: RadioSelectItemType[];
     onSelect: (item: RadioSelectItemType) => void;
 };

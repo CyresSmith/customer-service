@@ -1,26 +1,25 @@
 import { format } from 'date-fns';
 import { useClickOutside, useEscapeKey } from 'hooks';
 import useMountTransition from 'hooks/useMountTransition';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdCalendarMonth } from 'react-icons/md';
-import Button from '../Buttons/Button';
 import Calendar from '../Calendar/Calendar';
 import DateSwitcher from '../DateSwitcher';
-import { BtnsWrapper, DateBox, Picker, PickerIcon, Wrapper } from './DatePicker.styled';
+import { DateBox, Picker, PickerIcon, Wrapper } from './DatePicker.styled';
 
 type Props = {
-    prewDate?: Date;
+    prevDate?: Date;
     bgColor: 'dark' | 'light';
     handleDateConfirm: (date: Date) => void;
     calendarCellSize?: number;
 };
 
-const DatePicker = ({ bgColor, calendarCellSize = 30, handleDateConfirm, prewDate }: Props) => {
+const DatePicker = ({ bgColor, calendarCellSize = 30, handleDateConfirm, prevDate }: Props) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const mounted = useMountTransition({ isMounted: isOpen, mountDelay: 1, unmountDelay: 100 });
 
     const initialState = new Date(1990, 0, 1);
-    const [date, setDate] = useState<Date>(prewDate ? prewDate : initialState);
+    const [date, setDate] = useState<Date>(prevDate ? prevDate : initialState);
 
     const toggleOpen = () => {
         setIsOpen(o => !o);
@@ -28,7 +27,7 @@ const DatePicker = ({ bgColor, calendarCellSize = 30, handleDateConfirm, prewDat
 
     const handleClose = () => {
         setIsOpen(false);
-        setDate(prewDate ? prewDate : initialState);
+        setDate(prevDate ? prevDate : initialState);
     };
 
     const handleConfirm = () => {
@@ -40,6 +39,13 @@ const DatePicker = ({ bgColor, calendarCellSize = 30, handleDateConfirm, prewDat
     const selectRef = useClickOutside<HTMLDivElement>(handleClose);
 
     const output = format(date, 'dd.MM.y');
+
+    useEffect(() => {
+        if (!date) return;
+
+        handleDateConfirm(date);
+        setIsOpen(false);
+    }, [date]);
 
     return (
         <Wrapper ref={selectRef}>
@@ -72,19 +78,10 @@ const DatePicker = ({ bgColor, calendarCellSize = 30, handleDateConfirm, prewDat
                     <Calendar
                         padding="0"
                         cellSize={calendarCellSize}
-                        noSwitcher={true}
+                        noSwitcher
                         date={date}
                         setDate={setDate}
                     />
-                    <BtnsWrapper>
-                        <Button
-                            size="s"
-                            onClick={handleConfirm}
-                            children="Підвердити"
-                            $colors="accent"
-                        />
-                        <Button size="s" onClick={handleClose} children="Закрити" $colors="light" />
-                    </BtnsWrapper>
                 </DateBox>
             )}
             <PickerIcon $isOpen={isOpen} as={MdCalendarMonth} />

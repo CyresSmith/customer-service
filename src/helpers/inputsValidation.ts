@@ -17,7 +17,7 @@ const validators: IndexType = {
     firstName: new RegExp(/^[A-zА-Яа-яЁёЇїІіЄєҐґ']{3,30}$/),
     index: new RegExp(/^\d{5}$/),
     desc: new RegExp(/^[\s\S]{30,1000}$/),
-    comment: new RegExp(/^[\s\S]{10,50}$/),
+    comment: new RegExp(/^[\s\S]{10,150}$/),
     price: new RegExp(/^[1-9]\d{0,5}$/),
 };
 

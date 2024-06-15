@@ -31,7 +31,7 @@ export const companyApi = createApi({
                     : [{ type: 'companies', id: 'LIST' }],
         }),
 
-        getCompanyById: builder.query<Company, { companyId: string | undefined }>({
+        getCompanyById: builder.query<Company, { companyId: number | undefined }>({
             query: ({ companyId }) =>
                 companyId && {
                     url: `/${companyId}`,

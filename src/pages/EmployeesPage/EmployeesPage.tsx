@@ -59,7 +59,7 @@ const EmployeesPage = () => {
     const selectedEmployee = data && data.find(({ id }) => id === employeeId);
 
     const items =
-        data?.map(({ firstName, lastName, id, avatar, jobTitle, servicesCount, status }) => {
+        data?.map(({ firstName, lastName, id, avatar, jobTitle, services, status }) => {
             let employee = {
                 id,
                 avatar,
@@ -69,7 +69,7 @@ const EmployeesPage = () => {
             if (isTablet || isDesktop) {
                 employee = Object.assign(employee, {
                     jobTitle: jobTitle || 'Власник',
-                    servicesCount: servicesCount || 0,
+                    servicesCount: services.length,
                 });
             }
 

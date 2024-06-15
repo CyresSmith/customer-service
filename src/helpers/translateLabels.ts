@@ -36,6 +36,8 @@ export const translateLabels = (name: string): string | undefined => {
             return 'Джерело';
         case 'comment':
             return 'Коментар';
+        case 'comments':
+            return 'Коментар';
         case 'jobTitle':
             return 'Посада';
         case 'provider':
@@ -84,6 +86,20 @@ export const translateLabels = (name: string): string | undefined => {
             return 'Останнє оновлення';
         case 'createdAt':
             return 'Сторено';
+        case 'income':
+            return 'Доход';
+        case 'expense':
+            return 'Витрата';
+        case 'change':
+            return 'Зміна залишку';
+        case 'moving':
+            return 'Переміщення';
+        case 'isEvent':
+            return 'Додати запис';
+        case 'amount':
+            return 'Сума, грн';
+        case 'time':
+            return 'Час';
 
         default:
             break;

@@ -49,10 +49,11 @@ export const DateBox = styled.div<DatePickerProps>`
     z-index: 100;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     top: calc(100% + ${theme.space[2]});
-    right: 50%;
-    transform: translate(50%, 0);
+    left: 0;
+    /* right: 50%;
+    transform: translate(50%, 0); */
     padding: ${theme.space[3]};
     border-radius: ${theme.radii.m};
     background-color: ${props =>
@@ -66,6 +67,7 @@ export const DateBox = styled.div<DatePickerProps>`
 export const BtnsWrapper = styled.div`
     display: flex;
     gap: ${theme.space[4]};
-    margin: 0 auto;
     margin-top: ${theme.space[4]};
+    justify-content: space-between;
+    width: 100%;
 `;

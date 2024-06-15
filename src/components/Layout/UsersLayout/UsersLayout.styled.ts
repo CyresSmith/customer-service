@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 import { LAYOUT_GAP, LAYOUT_PADDING } from '../MainLayout/MainLayout.styled';
 
-export const MainSection = styled.section`
+export const MainSection = styled.div`
     position: relative;
     width: 100%;
     height: 100%;

@@ -2,6 +2,7 @@ import ClientForm from 'components/ClientsListPage/ClientForm';
 import ClientProfile from 'components/ClientsListPage/ClientProfile';
 import ItemsList from 'components/Ui/ItemsList';
 import Modal from 'components/Ui/Modal/Modal';
+import { addClientInitialState } from 'helpers/constants';
 import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -9,20 +10,6 @@ import { useCreateClientMutation, useGetAllClientsQuery } from 'services/clients
 import { Client } from 'services/types/clients.types';
 import { useMediaQuery } from 'usehooks-ts';
 import theme from 'utils/theme';
-
-const addInitialState: Client = {
-    id: 0,
-    firstName: '',
-    lastName: '',
-    birthday: null,
-    phone: '',
-    email: '',
-    discount: 0,
-    card: '',
-    source: '',
-    comment: '',
-    gender: '',
-};
 
 enum OpenModal {
     ADD = 1,
@@ -115,7 +102,7 @@ const ClientsListPage = () => {
                 >
                     <ClientForm
                         type="add"
-                        initialState={addInitialState}
+                        initialState={addClientInitialState}
                         onSubmit={handleAddClient}
                         isLoading={isLoading}
                     />

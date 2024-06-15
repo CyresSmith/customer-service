@@ -1,9 +1,9 @@
 import ItemsList from 'components/Ui/ItemsList';
 import { useLazyGetOneEmployeeQuery } from 'services/employee.api';
-import { BasicEmployeeInfo, IEmployee } from 'services/types/employee.types';
+import { EmployeeBasicInfo, IEmployee } from 'services/types/employee.types';
 
 type Props = {
-    employees: BasicEmployeeInfo[];
+    employees: EmployeeBasicInfo[];
     chooseEmployee: React.Dispatch<React.SetStateAction<IEmployee | null>>;
     setStep: (step: string) => void;
     companyId: number;

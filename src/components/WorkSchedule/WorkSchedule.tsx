@@ -17,7 +17,7 @@ import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
-import { BasicEmployeeInfo } from 'services/types/employee.types';
+import { EmployeeBasicInfo } from 'services/types/employee.types';
 import { IMonthSchedule } from 'services/types/schedule.types';
 import { useMediaQuery } from 'usehooks-ts';
 import theme from 'utils/theme';
@@ -46,7 +46,7 @@ import {
 import { SelectedDays } from './types';
 
 type Props = {
-    providers: BasicEmployeeInfo[];
+    providers: EmployeeBasicInfo[];
     selectedMonth: Date;
     selectedDays: SelectedDays[];
     scheduleState: IMonthSchedule[];

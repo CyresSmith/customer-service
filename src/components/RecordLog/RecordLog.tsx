@@ -5,7 +5,7 @@ import { useLoading } from 'hooks';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
-import { BasicEmployeeInfo } from 'services/types/employee.types';
+import { EmployeeBasicInfo } from 'services/types/employee.types';
 import { EventType } from 'services/types/event.types';
 import { IMonthSchedule } from 'services/types/schedule.types';
 import { IWorkingHours } from 'store/company/company.types';
@@ -30,7 +30,7 @@ import TimeList from './RecordLogList/TimeList';
 type Props = {
     date: Date;
     workingHours: IWorkingHours[] | null;
-    employees: BasicEmployeeInfo[];
+    employees: EmployeeBasicInfo[];
     setDate: React.Dispatch<React.SetStateAction<Date>>;
     allSchedules: IMonthSchedule[] | null;
     companyId: number;

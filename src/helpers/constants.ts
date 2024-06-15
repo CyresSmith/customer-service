@@ -1,3 +1,5 @@
+import { Client } from 'services/types/clients.types';
+
 export const weekDays = [
     { name: 'Понеділок', id: 1 },
     { name: 'Вівторок', id: 2 },
@@ -19,3 +21,17 @@ export const shortWeekDays = [
 ];
 
 export const SCHEDULES_PER_PAGE = 3;
+
+export const addClientInitialState: Client = {
+    id: 0,
+    firstName: '',
+    lastName: '',
+    birthday: null,
+    phone: '',
+    email: '',
+    discount: 0,
+    card: '',
+    source: '',
+    comment: '',
+    gender: '',
+};

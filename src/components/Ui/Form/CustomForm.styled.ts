@@ -10,7 +10,7 @@ export const baseInputStyles = `
   font-size: ${theme.fontSizes.l};
   width: 100%;
   resize: none;
-  outline: none;
+  outline: none;  
 `;
 
 export const Form = styled.form`
@@ -19,7 +19,6 @@ export const Form = styled.form`
     max-height: 100%;
     flex-direction: column;
     gap: ${theme.space[5]};
-    justify-content: space-between;
 `;
 
 export const FormTitle = styled.p`
@@ -58,8 +57,10 @@ export const Required = styled.span`
     color: ${theme.colors.danger.light};
 `;
 
-export const FormInputBox = styled.div`
+export const FormInputBox = styled.div<{ disabled: boolean }>`
     position: relative;
+    opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+    transition: ${theme.transition.primary};
 `;
 
 export const HideButton = styled.button`
@@ -78,14 +79,24 @@ export const HideIcon = styled.svg<{ hidden: boolean }>`
     fill: ${({ hidden }) => (hidden ? theme.colors.secondary.main : theme.colors.secondary.dark)};
 `;
 
-export const FormInput = styled.input`
+export const FormInput = styled.input<{ type: string }>`
     ${baseInputStyles};
+
+    max-height: ${({ type }) => (type !== 'textarea' ? '31px' : 'unset')};
+
+    ::first-letter {
+        text-transform: capitalize;
+    }
 
     &:focus {
         border-color: ${theme.colors.accent.main};
         box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
         -webkit-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
         -moz-box-shadow: 0px 0px 5px 1px rgba(255, 176, 0, 1);
+    }
+
+    &:disabled {
+        opacity: 0.5;
     }
 `;
 
@@ -214,7 +225,7 @@ export const SelectList = styled.ul<{
         )
     )`};
     transition: ${theme.transition.primary};
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     padding: ${({ $open }) => ($open ? LIST_PADDING : 0)};
 `;

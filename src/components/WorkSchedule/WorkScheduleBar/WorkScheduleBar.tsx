@@ -5,14 +5,14 @@ import { FormInputLabel, FormInputsListItem } from 'components/Ui/Form/CustomFor
 import CustomFormSelect from 'components/Ui/Form/CustomFormSelect';
 import { SelectItem } from 'components/Ui/Form/types';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { BasicEmployeeInfo } from 'services/types/employee.types';
+import { EmployeeBasicInfo } from 'services/types/employee.types';
 import { useMediaQuery } from 'usehooks-ts';
 import theme from 'utils/theme';
 import { SelectedDays } from '../types';
 import EditScheduleButtons from './EditScheduleButtons';
 
 type Props = {
-    providers: BasicEmployeeInfo[];
+    providers: EmployeeBasicInfo[];
     setSelectedProviders: Dispatch<SetStateAction<number[]>>;
     selectedMonth: Date;
     setSelectedMonth: Dispatch<SetStateAction<Date>>;

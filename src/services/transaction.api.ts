@@ -1,26 +1,31 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from 'services/instance';
 import {
-    AddTransactionCategoryDto,
-    AddTransactionDto,
+    addChangeBalanceDto,
+    addMovingTransactionDto,
+    addPurchaseTransactionDto,
+    addSalaryTransactionDto,
+    addSellTransactionDto,
+    addServiceTransactionDto,
+    GetTransactionsParams,
+    GetTransactionsPeriodParams,
     TransactionBasicInfo,
-    TransactionCategoryBasicInfo,
 } from './types/transaction.types';
 
 export const transactionApi = createApi({
     reducerPath: 'transactionApi',
 
-    baseQuery: axiosBaseQuery() as BaseQueryFn,
+    baseQuery: axiosBaseQuery('transaction') as BaseQueryFn,
 
-    tagTypes: ['transaction', 'transactionCategory'],
+    tagTypes: ['transaction', 'cashbox'],
 
     endpoints: builder => ({
-        addTransaction: builder.mutation<
+        addServiceTransaction: builder.mutation<
             TransactionBasicInfo,
-            { data: AddTransactionDto; companyId: number }
+            { data: addServiceTransactionDto; companyId: number }
         >({
             query: ({ companyId, data }) => ({
-                url: `transaction`,
+                url: `/service`,
                 method: 'POST',
                 data,
                 params: { companyId },
@@ -28,12 +33,12 @@ export const transactionApi = createApi({
             invalidatesTags: [{ type: 'transaction', id: 'LIST' }],
         }),
 
-        addTransactionCategory: builder.mutation<
-            TransactionCategoryBasicInfo,
-            { data: AddTransactionCategoryDto; companyId: number }
+        addSellTransaction: builder.mutation<
+            TransactionBasicInfo,
+            { data: addSellTransactionDto; companyId: number }
         >({
             query: ({ companyId, data }) => ({
-                url: `transaction-category`,
+                url: `/sell`,
                 method: 'POST',
                 data,
                 params: { companyId },
@@ -41,11 +46,63 @@ export const transactionApi = createApi({
             invalidatesTags: [{ type: 'transaction', id: 'LIST' }],
         }),
 
-        getTransactions: builder.query<TransactionBasicInfo[], { companyId: number }>({
-            query: ({ companyId }) => ({
-                url: `transaction/get-all`,
+        addMovingTransaction: builder.mutation<
+            TransactionBasicInfo,
+            { data: addMovingTransactionDto; companyId: number }
+        >({
+            query: ({ companyId, data }) => ({
+                url: `/moving`,
+                method: 'POST',
+                data,
+                params: { companyId },
+            }),
+            invalidatesTags: [{ type: 'transaction', id: 'LIST' }],
+        }),
+
+        addPurchaseTransaction: builder.mutation<
+            TransactionBasicInfo,
+            { data: addPurchaseTransactionDto; companyId: number }
+        >({
+            query: ({ companyId, data }) => ({
+                url: `/purchase`,
+                method: 'POST',
+                data,
+                params: { companyId },
+            }),
+            invalidatesTags: [{ type: 'transaction', id: 'LIST' }],
+        }),
+
+        addSalaryTransaction: builder.mutation<
+            TransactionBasicInfo,
+            { data: addSalaryTransactionDto; companyId: number }
+        >({
+            query: ({ companyId, data }) => ({
+                url: `/salary`,
+                method: 'POST',
+                data,
+                params: { companyId },
+            }),
+            invalidatesTags: [{ type: 'transaction', id: 'LIST' }],
+        }),
+
+        addChangeBalanceTransaction: builder.mutation<
+            TransactionBasicInfo,
+            { data: addChangeBalanceDto; companyId: number }
+        >({
+            query: ({ companyId, data }) => ({
+                url: `/change-balance`,
+                method: 'POST',
+                data,
+                params: { companyId },
+            }),
+            invalidatesTags: [{ type: 'transaction', id: 'LIST' }],
+        }),
+
+        getTransactionsByParams: builder.query<TransactionBasicInfo[], GetTransactionsParams>({
+            query: params => ({
+                url: ``,
                 method: 'GET',
-                params: { companyId },
+                params,
             }),
             providesTags: resp =>
                 resp
@@ -55,7 +112,35 @@ export const transactionApi = createApi({
                       ]
                     : [{ type: 'transaction', id: 'LIST' }],
         }),
+
+        getTransactionsByPeriod: builder.query<TransactionBasicInfo[], GetTransactionsPeriodParams>(
+            {
+                query: params => ({
+                    url: `/get-all`,
+                    method: 'GET',
+                    params,
+                }),
+                providesTags: resp =>
+                    resp
+                        ? [
+                              ...resp.map(({ id }) => ({ type: 'transaction' as const, id })),
+                              { type: 'transaction', id: 'LIST' },
+                          ]
+                        : [{ type: 'transaction', id: 'LIST' }],
+            }
+        ),
     }),
 });
 
-export const { useAddTransactionMutation, useGetTransactionsQuery } = transactionApi;
+export const {
+    useAddServiceTransactionMutation,
+    useAddSellTransactionMutation,
+    useAddMovingTransactionMutation,
+    useAddPurchaseTransactionMutation,
+    useAddSalaryTransactionMutation,
+    useAddChangeBalanceTransactionMutation,
+    useGetTransactionsByParamsQuery,
+    useLazyGetTransactionsByParamsQuery,
+    useGetTransactionsByPeriodQuery,
+    useLazyGetTransactionsByPeriodQuery,
+} = transactionApi;

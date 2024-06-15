@@ -16,9 +16,10 @@ export const PageBar = styled.div`
     }
 `;
 
-export const PageLayoutBox = styled.div`
-    display: flex;
-    flex-direction: column;
+export const PageLayoutBox = styled.section`
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content 1fr;
     gap: ${theme.space[4]};
     height: 100%;
 `;

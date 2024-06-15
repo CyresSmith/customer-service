@@ -67,6 +67,7 @@ const RecordLogBar = ({
                     children="Додати запис"
                     $colors="accent"
                 />
+
                 {!isDesktop && (
                     <Button
                         onClick={calendarToggle}

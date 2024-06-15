@@ -14,6 +14,7 @@ export type EventType = {
     day: number;
     time: EventTime;
     duration: number;
+    amount: number;
     comments?: string | null;
     employee: Pick<IEmployee, 'id' | 'firstName' | 'lastName' | 'jobTitle' | 'avatar'>;
     client: Pick<Client, 'id' | 'firstName' | 'lastName' | 'phone' | 'avatar'>;
@@ -29,8 +30,9 @@ export type CreateEventType = {
     companyId: number;
 };
 
-export type GetMonthEvents = {
+export type GetEvents = {
     companyId: number;
     year: number;
     month: number;
+    day?: number;
 };

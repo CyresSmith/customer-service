@@ -2,6 +2,7 @@ import ClientForm from 'components/ClientsListPage/ClientForm';
 import ItemsList from 'components/Ui/ItemsList';
 import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
+import { addClientInitialState } from 'helpers/constants';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCreateClientMutation, useGetAllClientsQuery } from 'services/clients.api';
@@ -11,20 +12,6 @@ type Props = {
     companyId: number;
     setClient: React.Dispatch<React.SetStateAction<Client | null>>;
     setStep: (step: string) => void;
-};
-
-const addInitialState: Client = {
-    id: 0,
-    firstName: '',
-    lastName: '',
-    birthday: null,
-    phone: '',
-    email: '',
-    discount: 0,
-    card: '',
-    source: '',
-    comment: '',
-    gender: '',
 };
 
 const ChooseClient = ({ companyId, setClient, setStep }: Props) => {
@@ -57,7 +44,7 @@ const ChooseClient = ({ companyId, setClient, setStep }: Props) => {
             setClient(data.filter(c => c.id === id)[0]);
         }
 
-        setStep('chooseWay');
+        setStep('choseWay');
     };
 
     const items =
@@ -89,7 +76,7 @@ const ChooseClient = ({ companyId, setClient, setStep }: Props) => {
                 <Modal id="newClient" $isOpen={modalOpen} closeModal={() => setModalOpen(false)}>
                     <ClientForm
                         type="add"
-                        initialState={addInitialState}
+                        initialState={addClientInitialState}
                         onSubmit={handleAddClient}
                         isLoading={isLoading}
                     />

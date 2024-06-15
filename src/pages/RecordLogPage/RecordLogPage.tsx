@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 import { useGetCompanyEventsQuery } from 'services/events.api';
 import { useGetAllCompanySchedulesQuery } from 'services/schedules.api';
-import { BasicEmployeeInfo, EmployeeStatusEnum } from 'services/types/employee.types';
+import { EmployeeBasicInfo, EmployeeStatusEnum } from 'services/types/employee.types';
 import { EventType } from 'services/types/event.types';
 import { IMonthSchedule } from 'services/types/schedule.types';
 import theme from 'utils/theme';
@@ -35,7 +35,7 @@ const RecordLogPage = () => {
     const [date, setDate] = useState<Date>(new Date());
     const [selectedItem, setSelectedItem] = useState<SelectItem[]>(initialSelection);
     const [allSchedules, setAllSchedules] = useState<IMonthSchedule[] | null>(null);
-    const [allEmployees, setAllEmployees] = useState<BasicEmployeeInfo[] | null>(null);
+    const [allEmployees, setAllEmployees] = useState<EmployeeBasicInfo[] | null>(null);
     const [allEvents, setAllEvents] = useState<EventType[] | []>([]);
     const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
 

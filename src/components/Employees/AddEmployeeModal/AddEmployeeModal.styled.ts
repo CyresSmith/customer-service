@@ -4,6 +4,7 @@ import theme from 'utils/theme';
 export const FormBox = styled.div`
     @media ${theme.breakpoints.desktop.media} {
         width: 400px;
+        margin: 0 auto;
     }
 `;
 

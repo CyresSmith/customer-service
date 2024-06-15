@@ -1,6 +1,6 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from './instance';
-import { CreateEventType, EventType, GetMonthEvents } from './types/event.types';
+import { CreateEventType, EventType, GetEvents } from './types/event.types';
 
 export const eventsApi = createApi({
     reducerPath: 'eventsApi',
@@ -24,11 +24,11 @@ export const eventsApi = createApi({
                 ],
             }),
 
-            getCompanyEvents: builder.query<EventType[], GetMonthEvents>({
-                query: ({ companyId, year, month }) => ({
-                    url: '/get-all',
+            getCompanyEvents: builder.query<EventType[], GetEvents>({
+                query: params => ({
+                    url: '',
                     method: 'GET',
-                    params: { companyId, year, month },
+                    params,
                 }),
                 providesTags: resp =>
                     resp

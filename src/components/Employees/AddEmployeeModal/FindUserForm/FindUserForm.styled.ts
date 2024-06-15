@@ -7,7 +7,7 @@ export const InputWrapper = styled.div`
     button[id='search'] {
         position: absolute;
         right: 0;
-        bottom: calc(33px / 2);
+        bottom: calc(31px / 2);
         transform: translateY(50%);
     }
 `;

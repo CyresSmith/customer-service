@@ -19,6 +19,14 @@ export const ContentBox = styled.div`
     overflow: hidden;
 `;
 
+export const ChoseWayBox = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
 export const BtnsBox = styled.div<{ $step: string | null }>`
     width: 100%;
     display: flex;

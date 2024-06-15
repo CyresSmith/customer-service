@@ -1,12 +1,12 @@
 import ItemAvatar from 'components/Ui/ItemsList/ItemAvatar';
-import { BasicEmployeeInfo } from 'services/types/employee.types';
+import { EmployeeBasicInfo } from 'services/types/employee.types';
 import { IMonthSchedule } from 'services/types/schedule.types';
 import { useMediaQuery } from 'usehooks-ts';
 import theme from 'utils/theme';
 import { EmployeeDaySchedule, EmployeeName, InfoBox, ListItem } from './EmployeesInfoList.styled';
 
 type Props = {
-    employee: BasicEmployeeInfo;
+    employee: EmployeeBasicInfo;
     last: boolean;
     date: Date;
     schedules: IMonthSchedule[];
