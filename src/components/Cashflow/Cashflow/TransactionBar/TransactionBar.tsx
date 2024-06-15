@@ -2,9 +2,14 @@ import Button from 'components/Ui/Buttons/Button';
 import { useState } from 'react';
 import { HiMinus, HiPencilAlt, HiPlus, HiRefresh } from 'react-icons/hi';
 
+import { useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useGetCashboxesQuery } from 'services/cashbox.api';
+import { useGetCompanyEmployeesQuery } from 'services/employee.api';
+import ChangeModal from './ChangeModal';
+import ExpenseModal from './ExpenseModal';
 import IncomeModal from './IncomeModal/IncomeModal';
+import MovingModal from './MovingModal';
 import { LeftSide, RightSide, TransactionBarBox } from './TransactionBar.styled';
 
 type Props = {};
@@ -17,20 +22,26 @@ enum OpenModal {
 }
 
 const TransactionBar = (props: Props) => {
+    const { user } = useAuth();
     const { id: companyId } = useCompany();
 
-    const {
-        data: cashboxes,
-        isLoading: isCashboxesLoading,
-        refetch,
-    } = useGetCashboxesQuery({ companyId }, { skip: !companyId });
-
-    const isCashboxes = cashboxes && cashboxes.length > 0;
+    const { data: cashboxes = [] } = useGetCashboxesQuery({ companyId }, { skip: !companyId });
+    const { data: employees = [] } = useGetCompanyEmployeesQuery(companyId, { skip: !companyId });
 
     const [modalOpen, setModalOpen] = useState<OpenModal | null>(null);
 
+    const creator = employees?.find(({ userId }) => userId === user?.id)?.id;
+
     const handleModalOpen = (id: OpenModal) => setModalOpen(id);
     const handleModalClose = () => setModalOpen(null);
+
+    if (!creator) return;
+
+    const TransactionModalProps = {
+        handleModalClose,
+        cashboxes,
+        creator,
+    };
 
     return (
         <>
@@ -74,13 +85,35 @@ const TransactionBar = (props: Props) => {
                 </RightSide>
             </TransactionBarBox>
 
-            {modalOpen && isCashboxes && (
+            {modalOpen && (
                 <>
                     {modalOpen === OpenModal.INCOME && (
                         <IncomeModal
-                            isModalOpen={Boolean(modalOpen)}
-                            handleModalClose={handleModalClose}
-                            cashboxes={cashboxes}
+                            isModalOpen={Boolean(modalOpen === OpenModal.INCOME)}
+                            {...TransactionModalProps}
+                            employees={employees}
+                        />
+                    )}
+
+                    {modalOpen === OpenModal.EXPENSE && (
+                        <ExpenseModal
+                            isModalOpen={modalOpen === OpenModal.EXPENSE}
+                            {...TransactionModalProps}
+                            employees={employees}
+                        />
+                    )}
+
+                    {modalOpen === OpenModal.MOVING && (
+                        <MovingModal
+                            isModalOpen={modalOpen === OpenModal.MOVING}
+                            {...TransactionModalProps}
+                        />
+                    )}
+
+                    {modalOpen === OpenModal.CHANGE && (
+                        <ChangeModal
+                            isModalOpen={modalOpen === OpenModal.CHANGE}
+                            {...TransactionModalProps}
                         />
                     )}
                 </>

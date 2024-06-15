@@ -16,7 +16,6 @@ import Modal from 'components/Ui/Modal/Modal';
 import { format, getDate, getMonth, getTime, getYear, isSameDay, startOfDay } from 'date-fns';
 import { addClientInitialState } from 'helpers/constants';
 import { getTimeInMilliseconds } from 'helpers/timeConversion';
-import { useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { ChangeEvent, useEffect, useState } from 'react';
 import {
@@ -36,14 +35,13 @@ import {
     useAddServiceTransactionMutation,
 } from 'services/cashbox.api';
 import { useCreateClientMutation, useGetAllClientsQuery } from 'services/clients.api';
-import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 import { useGetCompanyEventsQuery } from 'services/events.api';
 import { useGetServicesQuery } from 'services/service.api';
-import { CashboxBasicInfo } from 'services/types/cashbox.types';
 import { Client } from 'services/types/clients.types';
+import { EmployeeBasicInfo } from 'services/types/employee.types';
 import { EventType } from 'services/types/event.types';
 import { ServiceBasicInfo } from 'services/types/service.type';
-import { TransactionBasicInfo } from 'services/types/transaction.types';
+import { TransactionBasicInfo, TransactionModalProps } from 'services/types/transaction.types';
 import DateTimePick from '../PickDateTime/DateTimePick';
 import {
     AddButtonBox,
@@ -53,11 +51,7 @@ import {
     SearchIcon,
 } from './IncomeModal.styled';
 
-type Props = {
-    isModalOpen: boolean;
-    handleModalClose: () => void;
-    cashboxes: CashboxBasicInfo[];
-};
+type Props = { employees: EmployeeBasicInfo[] };
 
 const ways = [
     {
@@ -100,10 +94,15 @@ enum OpenModal {
 
 const LIST_MODAL_WIDTH = '552px';
 
-const IncomeModal = ({ isModalOpen, handleModalClose, cashboxes }: Props) => {
+const IncomeModal = ({
+    isModalOpen,
+    handleModalClose,
+    cashboxes,
+    creator,
+    employees,
+}: TransactionModalProps & Props) => {
     const today = new Date(Date.now());
     const { id: companyId } = useCompany();
-    const { user } = useAuth();
 
     const [way, setWay] = useState<number | null>(null);
     const [openModal, setOpenModal] = useState<OpenModal | null>(null);
@@ -118,7 +117,6 @@ const IncomeModal = ({ isModalOpen, handleModalClose, cashboxes }: Props) => {
     const [amount, setAmount] = useState(0);
 
     const { data: clients } = useGetAllClientsQuery(companyId, { skip: !companyId });
-    const { data: employees } = useGetCompanyEmployeesQuery(companyId, { skip: !companyId });
     const { data: events } = useGetCompanyEventsQuery(
         {
             companyId,
@@ -130,8 +128,9 @@ const IncomeModal = ({ isModalOpen, handleModalClose, cashboxes }: Props) => {
     );
     const { data: services } = useGetServicesQuery({ companyId }, { skip: !companyId });
     const [createClientMutation, { isLoading: isClientAddLoading }] = useCreateClientMutation();
-    const [addServiceTransaction] = useAddServiceTransactionMutation();
-    const [addSellTransaction] = useAddSellTransactionMutation();
+    const [addServiceTransaction, { isLoading: isServiceAddLoading }] =
+        useAddServiceTransactionMutation();
+    const [addSellTransaction, { isLoading: isSellAddLoading }] = useAddSellTransactionMutation();
 
     const isServiceWay = way === 1;
 
@@ -271,8 +270,6 @@ const IncomeModal = ({ isModalOpen, handleModalClose, cashboxes }: Props) => {
     const handleEventsAdd = () => {
         setOpenModal(null);
 
-        console.log('selectedEvents: ', selectedEvents);
-
         const data = selectedEvents?.reduce(
             (acc: { amount: number; employees: number[] }, { amount, employee }) => {
                 acc.amount += amount;
@@ -343,7 +340,13 @@ const IncomeModal = ({ isModalOpen, handleModalClose, cashboxes }: Props) => {
         setSelectedEmployeesId(providers.map(({ id }) => id));
     }, [selectedServicesId]);
 
-    const addDisabled = !selectedCashbox || !selectedDate || !time || amount === 0;
+    const addDisabled =
+        !selectedCashbox ||
+        !selectedDate ||
+        !time ||
+        amount === 0 ||
+        isSellAddLoading ||
+        isServiceAddLoading;
 
     const eventsOrServicesNotSelected =
         selectedServicesId.length === 0 ? selectedEventsId.length === 0 : false;
@@ -357,9 +360,7 @@ const IncomeModal = ({ isModalOpen, handleModalClose, cashboxes }: Props) => {
     const addSellIncomeDisabled = addDisabled || comments === '';
 
     const handleIncomeAdd = async () => {
-        const creator = employees?.find(({ userId }) => userId === user?.id)?.id;
-
-        if (!user || !creator || !selectedCashbox || !selectedCashbox.id) return;
+        if (!creator || !selectedCashbox || !selectedCashbox.id) return;
 
         const year = getYear(selectedDate);
         const month = getMonth(selectedDate);
@@ -596,6 +597,7 @@ const IncomeModal = ({ isModalOpen, handleModalClose, cashboxes }: Props) => {
                             />
 
                             <Button
+                                isLoading={isSellAddLoading || isServiceAddLoading}
                                 disabled={
                                     isServiceWay ? addServiceIncomeDisabled : addSellIncomeDisabled
                                 }

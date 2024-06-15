@@ -63,7 +63,7 @@ export type addSellTransactionDto = CreateTransactionDto & {
 };
 
 export type addMovingTransactionDto = CreateTransactionDto & {
-    fromCashboxId: number;
+    toCashboxId: number;
     comments: string;
 };
 
@@ -98,4 +98,11 @@ export type GetTransactionsPeriodParams = { companyId: number } & {
     monthTo: number;
     dayTo: number;
     timeTo?: string;
+};
+
+export type TransactionModalProps = {
+    isModalOpen: boolean;
+    handleModalClose: () => void;
+    cashboxes: CashboxBasicInfo[];
+    creator: number;
 };
