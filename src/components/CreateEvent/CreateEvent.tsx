@@ -101,7 +101,8 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
                         calculateEventDuration(chosenServices)
                     ),
                 },
-                services: chosenServices?.map(s => s.id),
+                services: chosenServices?.map(({ id }) => id),
+                amount: chosenServices?.reduce((acc: number, { price }) => (acc += price), 0),
                 duration: calculateEventDuration(chosenServices),
             };
 
