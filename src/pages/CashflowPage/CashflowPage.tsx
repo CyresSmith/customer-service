@@ -1,49 +1,92 @@
 import Cashflow from 'components/Cashflow/Cashflow';
 import CashflowBar from 'components/Cashflow/CashflowBar';
 import PageContentLayout from 'components/Layout/PageContentLayout';
-import { getDate, getMonth, getYear } from 'date-fns';
+import { RadioSelectItemType } from 'components/Ui/RadioSelect/RadioSelect';
+import {
+    addDays,
+    endOfDay,
+    endOfMonth,
+    endOfWeek,
+    endOfYear,
+    startOfDay,
+    startOfMonth,
+    startOfWeek,
+    startOfYear,
+} from 'date-fns';
 import { useCompany } from 'hooks/useCompany';
-import { useState } from 'react';
-import { useGetTransactionsByParamsQuery } from 'services/cashbox.api';
-import { GetTransactionsParams, TransactionTimeParams } from 'services/types/transaction.types';
+import { useEffect, useState } from 'react';
+import { useGetTransactionsPeriodQuery } from 'services/cashbox.api';
 
-const today = new Date(Date.now());
-
-const todayParams = {
-    year: getYear(today),
-    month: getMonth(today),
-    day: getDate(today),
-};
+type Period = { from: Date; to: Date };
 
 const CashflowPage = () => {
     const { id: companyId } = useCompany();
 
-    const [transactionParams, setTransactionParams] = useState<GetTransactionsParams>({
-        companyId,
-        ...todayParams,
-    });
+    const today = new Date();
 
-    const { data: transactions } = useGetTransactionsByParamsQuery(transactionParams, {
-        refetchOnMountOrArgChange: true,
-        skip: !companyId,
-    });
-
-    const handleSetParams = (params: Partial<TransactionTimeParams>) => {
-        setTransactionParams(p => ({ companyId: p.companyId, ...params }));
+    const todayParams = {
+        from: startOfDay(today),
+        to: endOfDay(today),
     };
 
-    const setTodayParams = () => {
-        setTransactionParams(p => ({ ...p, ...todayParams }));
+    const [selectedTimeId, setSelectedTimeId] = useState(1);
+    const [periodParams, setPeriodParams] = useState<Period>(todayParams);
+
+    const { from, to } = periodParams;
+
+    const { data: transactions, isError } = useGetTransactionsPeriodQuery(
+        { companyId, from: from.toISOString(), to: to.toISOString() },
+        {
+            refetchOnMountOrArgChange: true,
+            skip: !companyId,
+        }
+    );
+
+    const setTodayParams = () => setPeriodParams(todayParams);
+
+    const handleTypeSelectClick = ({ id }: RadioSelectItemType) => {
+        setSelectedTimeId(+id);
+
+        switch (id) {
+            case 1:
+                return setTodayParams();
+
+            case 2:
+                return setPeriodParams({ from: addDays(from, -1), to: addDays(to, -1) });
+
+            case 3:
+                return setPeriodParams({
+                    from: startOfWeek(todayParams.from),
+                    to: endOfWeek(todayParams.to),
+                });
+
+            case 4:
+                return setPeriodParams({
+                    from: startOfMonth(todayParams.from),
+                    to: endOfMonth(todayParams.to),
+                });
+
+            case 5:
+                return setPeriodParams({
+                    from: startOfYear(todayParams.from),
+                    to: endOfYear(todayParams.to),
+                });
+
+            default:
+                break;
+        }
     };
+
+    useEffect(() => {
+        if (isError) setSelectedTimeId(p => p);
+    }, [isError]);
 
     return (
         <PageContentLayout
             bar={
                 <CashflowBar
-                    transactionParams={transactionParams}
-                    setTransactionsParams={handleSetParams}
-                    setTodayParams={setTodayParams}
-                    todayParams={todayParams}
+                    selectedTimeId={selectedTimeId}
+                    handleTypeSelectClick={handleTypeSelectClick}
                 />
             }
             content={<Cashflow transactions={transactions || []} />}

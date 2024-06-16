@@ -201,6 +201,21 @@ export const cashboxApi = createApi({
                     : [{ type: 'transaction', id: 'LIST' }],
         }),
 
+        getTransactionsPeriod: builder.query<any, { companyId: number; from: string; to: string }>({
+            query: params => ({
+                url: `/transaction/period`,
+                method: 'GET',
+                params,
+            }),
+            providesTags: resp =>
+                resp
+                    ? [
+                          ...resp.map(({ id }) => ({ type: 'transaction' as const, id })),
+                          { type: 'transaction', id: 'LIST' },
+                      ]
+                    : [{ type: 'transaction', id: 'LIST' }],
+        }),
+
         removeCashbox: builder.mutation<MessageResponse, { companyId: number; id: number }>({
             query: ({ companyId, id }) => ({
                 url: `/${id}`,
@@ -225,4 +240,5 @@ export const {
     useAddSalaryTransactionMutation,
     useAddChangeBalanceTransactionMutation,
     useGetTransactionsByParamsQuery,
+    useGetTransactionsPeriodQuery,
 } = cashboxApi;
