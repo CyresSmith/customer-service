@@ -3,15 +3,17 @@ import theme from 'utils/theme';
 
 interface IImageBox {
     $light: boolean;
-    size: number;
+    size?: number;
     $round: boolean;
     $allowChanges: boolean;
 }
 
-export const AvatarBox = styled.div<{ size: number }>`
+export const AvatarBox = styled.div<{ size?: number }>`
     position: relative;
-    width: ${({ size }) => (size ? `${size}px` : '250px')};
-    height: ${({ size }) => (size ? `${size}px` : '250px')};
+    width: 100%;
+    max-width: ${({ size }) => (size ? `${size}px` : '250px')};
+    max-height: ${({ size }) => (size ? `${size}px` : '250px')};
+    aspect-ratio: 1 / 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -19,11 +21,14 @@ export const AvatarBox = styled.div<{ size: number }>`
 
 export const ImageBox = styled.div<IImageBox>`
     position: relative;
-    width: ${({ size }) => (size ? `${size}px` : '250px')};
-    height: ${({ size }) => (size ? `${size}px` : '250px')};
+    min-width: 100%;
+    min-height: 100%;
+    max-width: ${({ size }) => (size ? `${size}px` : '250px')};
+    max-height: ${({ size }) => (size ? `${size}px` : '250px')};
+    aspect-ratio: 1 / 1;
     object-fit: cover;
     overflow: hidden;
-    border-radius: ${({ $round }) => ($round ? theme.radii.round : theme.radii.xs)};
+    border-radius: ${({ $round }) => ($round ? theme.radii.round : theme.radii.l)};
     background-color: ${({ $light }) =>
         $light ? `rgba(255, 255, 255, 0.5 )` : `rgba(0, 0, 0, 0.5 )`};
     cursor: ${({ $allowChanges }) => (!$allowChanges ? 'default' : 'pointer')};
@@ -80,7 +85,7 @@ export const ImageBox = styled.div<IImageBox>`
     }
 `;
 
-export const ButtonsBox = styled.div<{ width: number }>`
+export const ButtonsBox = styled.div<{ width?: number }>`
     position: absolute;
     padding: ${theme.space[1]};
     bottom: ${theme.space[3]};

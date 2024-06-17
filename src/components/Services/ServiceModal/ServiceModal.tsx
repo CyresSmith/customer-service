@@ -1,5 +1,5 @@
-import Loader from 'components/Ui/Loader';
 import Modal from 'components/Ui/Modal/Modal';
+import { ModalHeaderBox } from 'components/Ui/Modal/Modal.styled';
 import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
 import ModalSectionsList from 'components/Ui/Modal/ModalSectionsList';
 import { hoursToMilliseconds, millisecondsToHours, millisecondsToMinutes } from 'date-fns';
@@ -14,7 +14,7 @@ import { useGetCompanyEmployeesQuery } from 'services/employee.api';
 import { useGetServiceDataQuery, useUpdateServiceDataMutation } from 'services/service.api';
 import { EmployeeStatusEnum } from 'services/types/employee.types';
 import { IServiceUpdate, ServiceDataType } from 'services/types/service.type';
-import FirstStep from './FirstStep/FirstStep';
+import FirstStep from './FirstStep';
 import SecondStep from './SecondStep';
 import { ModalBox, Step, StepBox, StepNumber } from './ServiceModal.styled';
 import ThirdStep from './ThirdStep';
@@ -54,7 +54,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
     const [step, setStep] = useState(1);
     const [serviceData, setServiceData] = useState(initialState);
     const [stateToCheck, setStateToCheck] = useState<ServiceDataType | null>(null);
-    const { data: employees, isLoading: isEmployeesLoading } = useGetCompanyEmployeesQuery(id, {
+    const { data: employees } = useGetCompanyEmployeesQuery(id, {
         skip: !id,
     });
 
@@ -81,7 +81,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
 
     const skip = Boolean(!accessToken || !user || !id || !serviceId);
 
-    const { data, isLoading: IsServiceDataLoading } = useGetServiceDataQuery(
+    const { data } = useGetServiceDataQuery(
         {
             companyId: +id,
             serviceId: Number(serviceId),
@@ -178,10 +178,9 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
         }
     }, [data, openModal]);
 
-    return IsServiceDataLoading || isEmployeesLoading ? (
-        <Loader />
-    ) : (
+    return (
         <Modal
+            $w="650px"
             id="addService"
             title={openModal === ServiceOpenModal.ADD ? 'Створення послуги' : undefined}
             $isOpen={openModal !== null}
@@ -194,14 +193,14 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
                             {Array.from({ length: 3 }).map((_, i) => (
                                 <Step $current={i + 1 === step} $color={i + 1 <= step} key={i}>
                                     <StepNumber $current={i + 1 <= step}>{i + 1}</StepNumber>
-                                    <p>{title()}</p>
+                                    {<p>{title()}</p>}
                                 </Step>
                             ))}
                         </StepBox>
                     )}
 
                     {openModal === ServiceOpenModal.EDIT_SERVICE && (
-                        <>
+                        <ModalHeaderBox>
                             <ModalHeaderWithAvatar
                                 avatar={serviceData.avatar || data?.avatar || ''}
                                 title={serviceData.name}
@@ -213,7 +212,7 @@ const ServiceModal = ({ openModal, handleModalClose, serviceId }: Props) => {
                                 currentSection={step}
                                 handleSectionSelect={setStep}
                             />
-                        </>
+                        </ModalHeaderBox>
                     )}
                 </div>
 

@@ -1,4 +1,4 @@
-import { FormInputsListItem } from 'components/Ui/Form/CustomForm.styled';
+import { FormInputLabel, FormInputsListItem } from 'components/Ui/Form/CustomForm.styled';
 import CustomFormInput from 'components/Ui/Form/CustomFormInput';
 import { SelectItem } from 'components/Ui/Form/types';
 import { useAdminRights } from 'hooks';
@@ -35,6 +35,8 @@ const SettingsBlock = ({
             {children}
 
             <FormInputsListItem as="div">
+                <FormInputLabel>Вартість</FormInputLabel>
+
                 <DurationBox>
                     <CustomFormInput
                         name="price"
@@ -49,6 +51,8 @@ const SettingsBlock = ({
             </FormInputsListItem>
 
             <FormInputsListItem as="div">
+                <FormInputLabel>Час</FormInputLabel>
+
                 <DurationBox>
                     <CustomFormInput
                         name="durationHours"
@@ -59,6 +63,7 @@ const SettingsBlock = ({
                         handleSelect={handleSelect}
                         disabledIcon
                         isReadonly={!isAdmin}
+                        visibleItemsCount={3}
                     />
 
                     <CustomFormInput
@@ -71,6 +76,7 @@ const SettingsBlock = ({
                         handleSelect={handleSelect}
                         disabledIcon
                         isReadonly={!isAdmin}
+                        visibleItemsCount={3}
                     />
                 </DurationBox>
             </FormInputsListItem>

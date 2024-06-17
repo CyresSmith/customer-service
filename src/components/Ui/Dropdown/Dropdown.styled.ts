@@ -8,8 +8,7 @@ export const DropWrapper = styled.div<Pick<Props, '$isOpen'>>`
     top: calc(100% + ${theme.space[3]});
     right: 0;
     background-color: ${theme.colors.bg.main};
-    /* border: ${theme.borders.normal} ${theme.colors.bg.main}; */
-    border-radius: ${theme.radii.m};
+    border-radius: ${theme.radii.l};
     display: flex;
     max-height: ${props => (props.$isOpen ? '1000px' : '0')};
     transition: ${theme.transition.primary};
@@ -22,5 +21,5 @@ export const DropdownContent = styled.div`
     flex-direction: column;
     gap: ${({ theme }) => theme.space[3]};
     overflow: hidden;
-    padding: ${theme.space[3]};
+    padding: ${theme.space[4]};
 `;

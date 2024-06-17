@@ -1,7 +1,6 @@
-import { BasicEmployeeInfo, IEmployee } from 'services/types/employee.types';
-import { List } from './EmployeesList.styled';
-import { EmployeesListItem } from './EmployeesListItem';
+import ItemsList from 'components/Ui/ItemsList';
 import { useLazyGetOneEmployeeQuery } from 'services/employee.api';
+import { BasicEmployeeInfo, IEmployee } from 'services/types/employee.types';
 
 type Props = {
     employees: BasicEmployeeInfo[];
@@ -24,15 +23,17 @@ const EmployeesList = ({ companyId, employees, chooseEmployee, setStep }: Props)
 
     return (
         employees && (
-            <List>
-                {employees.map((e, i) => (
-                    <EmployeesListItem
-                        key={i}
-                        employee={e}
-                        handleClick={() => handleEmployeeClick(e.id)}
-                    />
-                ))}
-            </List>
+            <ItemsList
+                items={employees.map(({ id, firstName, lastName, avatar, jobTitle }) => ({
+                    id,
+                    name: firstName + ' ' + lastName,
+                    avatar,
+                    jobTitle,
+                }))}
+                onItemClick={id => handleEmployeeClick(id)}
+                nameColumnTitle="Ім'я"
+                keyForSelect="jobTitle"
+            />
         )
     );
 };

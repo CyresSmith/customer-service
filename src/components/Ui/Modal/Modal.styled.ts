@@ -1,3 +1,4 @@
+import { LAYOUT_PADDING } from 'components/Layout/MainLayout/MainLayout.styled';
 import styled from 'styled-components';
 import theme from 'utils/theme';
 import { Modal } from './Modal';
@@ -23,16 +24,39 @@ export const Backdrop = styled.div<Style>`
 export const ModalContainer = styled.div<Style>`
     z-index: 100;
     position: relative;
-    width: ${props => (props.$w ? props.$w : 'auto')};
-    height: ${props => (props.$h ? props.$h : 'auto')};
-    min-width: 360px;
+    height: ${({ $h }) => $h || 'unset'};
+    width: calc(100% - ${LAYOUT_PADDING});
+    max-height: 100%;
     padding: ${theme.space[5]};
     background-color: ${theme.colors.bg.main};
-    border-radius: ${theme.radii.s};
+    border-radius: ${theme.radii.l};
     opacity: ${props => (props.$isOpen ? 1 : 0)};
     transform: ${props => (props.$isOpen ? 'translate(0, 0)' : 'translate(0, 100%)')};
     transition: ${theme.transition.modal};
     box-shadow: ${theme.shadow.m};
+    overflow: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content 1fr;
+
+    @media ${theme.breakpoints.tablet.media} {
+        width: ${props => (props.$w ? props.$w : '650px')};
+        min-width: 400px;
+        max-width: 90vw;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        width: ${props => (props.$w ? props.$w : '850px')};
+        min-width: 400px;
+        max-width: 90vw;
+    }
+`;
+
+export const ModalHeaderBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.space[4]};
+    margin-bottom: ${theme.space[4]};
 `;
 
 export const Title = styled.h2<{ $titleMargin: string | undefined }>`

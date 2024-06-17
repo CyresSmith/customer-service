@@ -9,6 +9,8 @@ import { HiUserAdd } from 'react-icons/hi';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi2';
 import { IoIosSave } from 'react-icons/io';
 import { ServiceStepProps } from 'services/types/service.type';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 import { ButtonBox as SaveButtonBox, SecondStepBox } from '../ServiceModal.styled';
 import { ButtonBox } from './SecondStep.styled';
 
@@ -23,6 +25,7 @@ const SecondStep = ({
     isServiceUpdateLoading,
 }: ServiceStepProps) => {
     const isAdmin = useAdminRights();
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
     const [addEmployeeOpen, setAddEmployeeOpen] = useState(false);
 
     const handleSelect = (_: unknown, selected?: number[] | undefined) => {
@@ -54,6 +57,11 @@ const SecondStep = ({
     const saveDisabled =
         JSON.stringify(stateToCheck?.employees) === JSON.stringify(serviceData?.employees);
 
+    const employeesToRender =
+        (providers && isAdmin
+            ? providers
+            : providers?.filter(({ id }) => serviceData.employees.includes(id))) || [];
+
     return (
         <>
             <SecondStepBox>
@@ -62,7 +70,7 @@ const SecondStep = ({
                         <Message>Немає працівників що надають послуги</Message>
                     ) : (
                         <ItemsList
-                            items={providers.map(
+                            items={employeesToRender.map(
                                 ({ id, avatar, firstName, lastName, jobTitle }) => ({
                                     id,
                                     avatar,
@@ -72,6 +80,7 @@ const SecondStep = ({
                             )}
                             keyForSelect="jobTitle"
                             onItemClick={handleSelect}
+                            nameColumnTitle="Ім'я"
                             selection={
                                 isAdmin
                                     ? serviceData.employees
@@ -111,9 +120,9 @@ const SecondStep = ({
                             $colors="light"
                             Icon={HiUserAdd}
                             onClick={() => setAddEmployeeOpen(true)}
-                        >
-                            Додати нового
-                        </Button>
+                            children={!isMobile ? 'Додати нового' : undefined}
+                            $round={isMobile ? true : false}
+                        />
 
                         <Button
                             $colors="accent"

@@ -2,6 +2,7 @@ import Avatar from 'components/Avatar';
 import { useAdminRights } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { MouseEvent } from 'react';
+import { toast } from 'react-toastify';
 import {
     useUpdateEmployeeProfileMutation,
     useUploadEmployeeAvatarMutation,
@@ -9,7 +10,6 @@ import {
 import { EmployeeRoleEnum, EmployeeStatusEnum, IEmployee } from 'services/types/employee.types';
 import { AvatarBox, ProfileBox, Status, StatusBadge, StatusItem } from './EmployeeProfile.styled';
 import ProfileInfo from './ProfileInfo';
-import { toast } from 'react-toastify';
 
 type Props = { employee: IEmployee };
 
@@ -60,17 +60,16 @@ const EmployeeProfile = ({ employee }: Props) => {
         <ProfileBox>
             <AvatarBox>
                 <Avatar
-                    currentImageUrl={avatar || user.avatar}
+                    currentImageUrl={avatar || user.avatar || ''}
                     isLoading={isLoading}
                     allowChanges={isAdmin}
-                    size={250}
                     alt="employee image"
                     handleUpload={handleUpload}
                 />
 
                 {role !== EmployeeRoleEnum.OWNER &&
                     (!isAdmin ? (
-                        <StatusBadge $active={status === EmployeeStatusEnum.WORKING}>
+                        <StatusBadge $active={status === EmployeeStatusEnum.WORKING} $size="s">
                             {status === EmployeeStatusEnum.WORKING && <span>Працює</span>}
                             {status === EmployeeStatusEnum.FIRED && <span>Звільнено</span>}
                         </StatusBadge>

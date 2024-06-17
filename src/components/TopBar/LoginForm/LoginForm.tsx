@@ -1,13 +1,12 @@
 import CustomForm from 'components/Ui/Form/CustomForm';
+import { InputProps } from 'components/Ui/Form/types';
 import { useActions } from 'hooks';
 import { useEffect } from 'react';
 import { HiLogin } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useLogInMutation } from 'services/auth.api';
-import { FormBox } from '../TopBar.styled';
 import { UserLogin } from 'store/user/user.types';
-import { InputProps } from 'components/Ui/Form/types';
 
 type Props = {
     closeModal: () => void;
@@ -46,17 +45,15 @@ const LoginForm = ({ closeModal }: Props) => {
     }, [closeModal, isSuccess, navigate]);
 
     return (
-        <FormBox>
-            <CustomForm<UserLogin>
-                SubmitButtonIcon={HiLogin}
-                isLoading={isLoading}
-                buttonLabel="Увійти"
-                onSubmit={handleSubmit}
-                initialState={initialLoginState}
-                inputs={loginInputs}
-                // title='Авторизація'
-            />
-        </FormBox>
+        <CustomForm<UserLogin>
+            SubmitButtonIcon={HiLogin}
+            isLoading={isLoading}
+            buttonLabel="Увійти"
+            onSubmit={handleSubmit}
+            initialState={initialLoginState}
+            inputs={loginInputs}
+            // title='Авторизація'
+        />
     );
 };
 

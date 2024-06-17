@@ -1,7 +1,10 @@
 export { useActions } from './useAction';
 export { useAdminRights } from './useAdminRights';
 export { useAuth } from './useAuth';
+export { useChat } from './useChat';
 export { useClickOutside } from './useClickOutside';
+export { useDebounce } from './useDebounce';
 export { useEscapeKey } from './useEscKey';
 export { useForm } from './useForm';
 export { useLoading } from './useLoading';
+export { useObserver } from './useObserver';

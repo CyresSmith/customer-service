@@ -1,12 +1,11 @@
-import { useCreateClientMutation, useGetAllClientsQuery } from 'services/clients.api';
-import { Container } from './ChooseClient.styled';
+import ClientForm from 'components/ClientsListPage/ClientForm';
 import ItemsList from 'components/Ui/ItemsList';
 import Loader from 'components/Ui/Loader';
-import { Client } from 'services/types/clients.types';
 import Modal from 'components/Ui/Modal/Modal';
 import { useState } from 'react';
-import ClientForm from 'components/ClientsListPage/ClientForm';
 import { toast } from 'react-toastify';
+import { useCreateClientMutation, useGetAllClientsQuery } from 'services/clients.api';
+import { Client } from 'services/types/clients.types';
 
 type Props = {
     companyId: number;
@@ -30,7 +29,6 @@ const addInitialState: Client = {
 
 const ChooseClient = ({ companyId, setClient, setStep }: Props) => {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
-
     const [createClientMutation] = useCreateClientMutation();
     const { data, isLoading } = useGetAllClientsQuery(companyId, {
         skip: !companyId,
@@ -62,48 +60,31 @@ const ChooseClient = ({ companyId, setClient, setStep }: Props) => {
         setStep('chooseWay');
     };
 
+    const items =
+        data?.map(({ id, avatar, firstName, lastName, phone }) => ({
+            id,
+            avatar: avatar || '',
+            name: `${firstName}  ${lastName && lastName}`,
+            phone,
+        })) || [];
+
     return (
         <>
-            <Container>
+            <>
                 {isLoading ? (
                     <Loader />
                 ) : (
                     <ItemsList
-                        items={
-                            !data
-                                ? []
-                                : data.map(
-                                      ({
-                                          id,
-                                          avatar,
-                                          firstName,
-                                          lastName,
-                                          phone,
-                                          //   email,
-                                          //   gender,
-                                          //   createdAt,
-                                      }) => ({
-                                          id,
-                                          avatar: avatar || '',
-                                          name: `${firstName}  ${lastName && lastName}`,
-                                          phone,
-                                          //   email: email || 'Пошта не вказана',
-                                          //   gender: gender || 'other',
-                                          //   register: createdAt
-                                          //       ? new Date(createdAt).toLocaleDateString()
-                                          //       : '',
-                                      })
-                                  )
-                        }
+                        items={items}
                         onItemClick={handleClientChoose}
                         addButtonTitle="Додати клієнта"
                         onAddClick={() => setModalOpen(true)}
-                        // keyForSelect="gender"
                         keyForSearch="phone"
                         notSortedKeys={['phone']}
+                        nameColumnTitle="Ім'я"
                     />
                 )}
-            </Container>
+            </>
             {modalOpen && (
                 <Modal id="newClient" $isOpen={modalOpen} closeModal={() => setModalOpen(false)}>
                     <ClientForm

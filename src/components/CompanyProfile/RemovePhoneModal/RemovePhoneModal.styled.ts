@@ -10,6 +10,7 @@ export const RemovePhoneBox = styled.div`
 `;
 
 export const Message = styled.p`
+    max-width: 100%;
     font-size: ${theme.fontSizes.xl};
     font-weight: ${theme.fontWeights.regular};
     text-align: center;

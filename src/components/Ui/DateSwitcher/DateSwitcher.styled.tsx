@@ -9,33 +9,32 @@ type SwitcherType = {
 
 export const Container = styled.div<SwitcherType>`
     position: relative;
-    width: ${props =>
-        props.$type === 'month' ? '150px' : props.$type === 'year' ? '150px' : '200px'};
+    min-width: ${props =>
+        props.$type === 'month' ? '200px' : props.$type === 'year' ? '150px' : '200px'};
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-radius: ${props =>
         props.$borderRadius ? `${theme.radii[props.$borderRadius]}` : 'none'};
-    border-width: ${props => (props.$border ? `${theme.borders.normal}` : 'none')};
+    border-width: ${props => (props.$border ? `${theme.borders.normal}` : 'unset')};
     border-color: ${props =>
         props.$border === 'light'
             ? `${theme.colors.secondary.dark}`
             : props.$border === 'dark'
-              ? `${theme.colors.bg.main}`
-              : null};
+            ? `${theme.colors.bg.main}`
+            : null};
 `;
 
 export const DateWrapper = styled.div<Pick<SwitcherType, '$border' | '$type'>>`
     text-align: center;
-    padding: ${theme.space[2]} ${theme.space[3]};
     border-left: ${({ $border }) =>
         $border
             ? `${theme.borders.normal} ${
                   $border === 'light'
                       ? `${theme.colors.secondary.dark}`
                       : $border === 'dark'
-                        ? `${theme.colors.bg.main}`
-                        : ''
+                      ? `${theme.colors.bg.main}`
+                      : ''
               }`
             : 'none'};
 
@@ -45,18 +44,18 @@ export const DateWrapper = styled.div<Pick<SwitcherType, '$border' | '$type'>>`
                   $border === 'light'
                       ? `${theme.colors.secondary.dark}`
                       : $border === 'dark'
-                        ? `${theme.colors.bg.main}`
-                        : ''
+                      ? `${theme.colors.bg.main}`
+                      : ''
               }`
             : 'none'};
 
     width: ${props =>
-        props.$type === 'month' ? '100px' : props.$type === 'year' ? '70px' : '150px'};
+        props.$type === 'month' ? '150px' : props.$type === 'year' ? '70px' : '150px'};
     white-space: nowrap;
 `;
 
-export const DateValue = styled.p<{ $fontSize: string }>`
-    font-size: ${props => props.$fontSize};
+export const DateValue = styled.p<{ $fontSize?: string }>`
+    font-size: ${({ $fontSize }) => $fontSize || theme.fontSizes.l};
     overflow: hidden;
     text-overflow: ellipsis;
 
@@ -66,6 +65,13 @@ export const DateValue = styled.p<{ $fontSize: string }>`
 `;
 
 export const ReturnBtnWrapper = styled.div`
-    position: absolute;
-    right: -30%;
+    margin-left: ${theme.space[1]};
+
+    @media ${theme.breakpoints.tablet.media} {
+        margin-left: ${theme.space[4]};
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        margin-left: ${theme.space[4]};
+    }
 `;

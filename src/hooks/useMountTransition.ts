@@ -10,7 +10,7 @@ const useMountTransition = ({ isMounted, mountDelay, unmountDelay }: Props) => {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        let timeoutId: number;
+        let timeoutId: NodeJS.Timeout;
 
         if (isMounted && !mounted) {
             if (mountDelay) {

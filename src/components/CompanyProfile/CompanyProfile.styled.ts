@@ -3,15 +3,42 @@ import theme from 'utils/theme';
 
 export const Wrapper = styled.section`
     display: grid;
-    grid-template-columns: max-content 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: 250px 1fr;
     gap: ${theme.space[5]};
     align-items: start;
     overflow-y: auto;
+
+    @media ${theme.breakpoints.tablet.media} {
+        grid-template-columns: 250px 1fr;
+        grid-template-rows: auto;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        grid-template-columns: 250px 1fr;
+        grid-template-rows: auto;
+    }
 `;
 
 export const AvatarBox = styled.div`
-    position: sticky;
-    top: 0;
+    position: static;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media ${theme.breakpoints.tablet.media} {
+        display: block;
+        position: sticky;
+        top: 0;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        display: block;
+        position: sticky;
+        top: 0;
+    }
 `;
 
 export const Info = styled.div`
@@ -74,5 +101,5 @@ export const ButtonBox = styled.div`
 `;
 
 export const ModalBox = styled.div`
-    width: 400px;
+    max-width: 400px;
 `;

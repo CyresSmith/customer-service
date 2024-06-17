@@ -1,16 +1,20 @@
+import { HEADER_HIGHT } from 'components/TopBar/TopBar.styled';
 import styled from 'styled-components';
 import theme from 'utils/theme';
 
+export const LAYOUT_GAP = `${theme.space[3]}`;
+export const LAYOUT_PADDING = `${theme.space[4]}`;
+
 export const Container = styled.main`
-    width: 100%;
-    min-height: 100vh;
-    padding: ${theme.space[4]};
+    width: 100vw;
+    height: 100vh;
+    padding: ${LAYOUT_PADDING};
     display: grid;
-    grid-template-rows: max-content 1fr;
-    gap: ${theme.space[3]};
+    grid-template-rows: max-content calc(100% - (${LAYOUT_GAP} + ${HEADER_HIGHT}));
+    gap: ${LAYOUT_GAP};
 `;
 
 export const OutletWrapper = styled.div`
     width: 100%;
-    height: calc(100vh - (72px + 32px + 10px));
+    position: relative;
 `;

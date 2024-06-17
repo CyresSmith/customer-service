@@ -1,22 +1,26 @@
 import ServiceModal from 'components/Services/ServiceModal';
 import ConfirmOperation from 'components/Ui/ConfirmOperation';
 import ItemsList from 'components/Ui/ItemsList';
-import Loader from 'components/Ui/Loader';
 import { ServiceOpenModal } from 'helpers/enums';
+import { useAdminRights } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useDeleteServiceMutation, useGetServicesQuery } from 'services/service.api';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 
 const ServicesPage = () => {
     const { id: companyId } = useCompany();
+
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
+    const isTablet = useMediaQuery(theme.breakpoints.tablet.media);
+    const isDesktop = useMediaQuery(theme.breakpoints.desktop.media);
     const [openModal, setOpenModal] = useState<ServiceOpenModal | null>(null);
     const [serviceId, setServiceId] = useState<number | undefined>(undefined);
+    const isAdmin = useAdminRights();
 
-    const { data: services, isLoading: servicesLoading } = useGetServicesQuery(
-        { companyId },
-        { skip: !companyId }
-    );
+    const { data: services } = useGetServicesQuery({ companyId }, { skip: !companyId });
 
     const [deleteService, { isLoading: isServiceDeleteLoading }] = useDeleteServiceMutation();
 
@@ -41,25 +45,47 @@ const ServicesPage = () => {
         }
     };
 
-    return servicesLoading ? (
-        <Loader />
-    ) : services ? (
-        <>
-            <ItemsList
-                items={services.map(({ id, avatar, name, category, type, duration, price }) => ({
-                    id,
-                    avatar,
-                    name,
+    const items =
+        services?.map(({ id, avatar, name, category, type, duration, price }) => {
+            let service = {
+                id,
+                avatar,
+                name,
+            };
+
+            if (isDesktop) {
+                service = Object.assign(service, {
                     category: category.name,
                     type: type === 'individual' ? 'Індівідуальна' : 'Групова',
                     duration,
+                });
+            }
+
+            if (isTablet || isDesktop) {
+                service = Object.assign(service, {
+                    category: category.name,
                     price,
-                }))}
-                keyForSelect="category"
+                });
+            }
+
+            return service;
+        }) || [];
+
+    const keyForSelect = !isMobile ? 'category' : undefined;
+
+    return services ? (
+        <>
+            <ItemsList
+                items={items}
+                keyForSelect={keyForSelect as 'name' | undefined}
                 onItemClick={id => handleModalOpen(ServiceOpenModal.EDIT_SERVICE, +id)}
                 addButtonTitle="Додати послугу"
-                onAddClick={() => handleModalOpen(ServiceOpenModal.ADD)}
-                onItemDeleteClick={id => handleModalOpen(ServiceOpenModal.DELETE_SERVICE, +id)}
+                onAddClick={isAdmin ? () => handleModalOpen(ServiceOpenModal.ADD) : undefined}
+                onItemDeleteClick={
+                    isAdmin
+                        ? id => handleModalOpen(ServiceOpenModal.DELETE_SERVICE, +id)
+                        : undefined
+                }
                 isDeleteLoading={isServiceDeleteLoading}
             />
 

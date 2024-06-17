@@ -9,11 +9,11 @@ type CalendarDay = {
     $disabled: boolean;
 };
 
-export const CalendarBox = styled.div<{ $padding: string }>`
-    width: 100%;
+export const CalendarBox = styled.div<{ $padding?: string }>`
+    /* width: 100%;
     background-color: ${theme.colors.bg.main};
-    border-radius: ${theme.radii.m};
-    padding: ${props => props.$padding};
+    border-radius: ${theme.radii.l};
+    padding: ${({ $padding }) => $padding || theme.space[4]}; */
 `;
 
 export const CalendarGrid = styled.div`
@@ -36,7 +36,6 @@ export const WeekDay = styled.p`
 
 export const SwitcherWrapper = styled.div`
     width: fit-content;
-    margin: 0 auto;
 `;
 
 export const Day = styled.div<CalendarDay>`
@@ -47,8 +46,8 @@ export const Day = styled.div<CalendarDay>`
         $selected
             ? theme.colors.secondary.light
             : $today
-              ? theme.colors.accent.main
-              : theme.colors.bg.light};
+            ? theme.colors.accent.main
+            : theme.colors.bg.light};
     color: ${({ $today, $selected }) =>
         $selected ? theme.colors.bg.main : $today ? theme.colors.bg.dark : theme.colors.white};
     border-radius: ${theme.radii.xs};

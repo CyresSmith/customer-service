@@ -8,7 +8,6 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { HiArrowLeft, HiSearch, HiX } from 'react-icons/hi';
 import { useFindUserDataMutation } from 'services/employee.api';
 
-import Loader from 'components/Ui/Loader';
 import handleError from 'helpers/errorHandler';
 import { translateLabels } from 'helpers/translateLabels';
 import { UserData } from 'store/user/user.types';
@@ -133,9 +132,7 @@ const FindUserForm = ({ existUser, setExistUser, handleBackClick }: Props) => {
             </Form>
 
             <UserDataBox>
-                {isLoading ? (
-                    <Loader />
-                ) : existUser ? (
+                {existUser ? (
                     <UserInfoBox>
                         {existUser.avatar !== '' && (
                             <UserImg>

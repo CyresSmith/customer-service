@@ -2,17 +2,22 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const Container = styled.div`
-    width: 100%;
-    height: 100%;
     display: flex;
     gap: ${theme.space[4]};
     align-items: center;
     justify-content: center;
+    height: 100%;
+
+    @media ${theme.breakpoints.mobile.media} {
+        flex-direction: column;
+    }
 `;
 
 export const FirstStepChoose = styled.div`
+    /* margin: 0 auto; */
     padding: ${theme.space[2]};
-    width: calc((100% - ${theme.space[7]}) / 2);
+    width: 100%;
+    max-width: 200px;
     height: 200px;
     display: flex;
     gap: ${theme.space[3]};

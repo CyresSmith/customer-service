@@ -23,6 +23,7 @@ export type UserLogin = Pick<User, 'email'> & Pick<Auth, 'password'>;
 export type Company = {
     id: number;
     name: string;
+    avatar: string;
 };
 
 export type UserState = {
@@ -31,6 +32,7 @@ export type UserState = {
     isLoggedIn: boolean;
     accessToken: string | null;
     refreshToken: string | null;
+    isMenuOpen: boolean;
 };
 
 export type RegisterResponse = {

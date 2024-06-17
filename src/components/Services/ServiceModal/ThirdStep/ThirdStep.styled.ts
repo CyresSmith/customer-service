@@ -10,7 +10,7 @@ export const FormBox = styled.div`
 export const List = styled.ul`
     display: flex;
     flex-direction: column;
-    gap: ${theme.space[3]};
+    gap: ${theme.space[4]};
 `;
 
 export const EmployeesList = styled.ul`
@@ -20,11 +20,25 @@ export const EmployeesList = styled.ul`
 
 export const SettingsBlockBox = styled.li`
     display: grid;
-    grid-template-columns: 200px 80px repeat(2, 120px);
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, max-content);
     gap: ${theme.space[4]};
     align-items: center;
-    padding-bottom: ${theme.space[3]};
+    padding-bottom: ${theme.space[4]};
     border-bottom: ${theme.borders.normal} ${theme.colors.bg.light};
+    max-width: 100%;
+
+    @media ${theme.breakpoints.tablet.media} {
+        align-items: start;
+        grid-template-columns: 200px 80px repeat(2, 120px);
+        grid-template-rows: auto;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        align-items: start;
+        grid-template-columns: 200px 80px repeat(2, 120px);
+        grid-template-rows: auto;
+    }
 `;
 
 export const Employee = styled.div`
@@ -34,7 +48,6 @@ export const Employee = styled.div`
 `;
 
 export const GeneralSettings = styled.p`
-    height: 50px;
     font-size: ${theme.fontSizes.l};
     font-weight: ${theme.fontWeights.regular};
     display: flex;
@@ -51,12 +64,23 @@ export const CheckboxBox = styled.ul`
     flex-direction: column;
     gap: ${theme.space[4]};
     margin-top: ${theme.space[6]};
+    width: 100%;
 
     > li {
         display: grid;
-        grid-template-columns: 200px 120px;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
         min-height: 34px;
         align-items: center;
         gap: ${theme.space[4]};
+        width: 100%;
+
+        @media ${theme.breakpoints.tablet.media} {
+            grid-template-columns: 200px 120px;
+        }
+
+        @media ${theme.breakpoints.desktop.media} {
+            grid-template-columns: 200px 120px;
+        }
     }
 `;

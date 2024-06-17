@@ -14,10 +14,8 @@ export const Wrapper = styled.div`
 export const Picker = styled.input<Pick<DatePickerProps, '$isOpen'>>`
     color: ${theme.colors.bg.dark};
     padding: ${theme.space[2]} ${theme.space[3]};
-    border-radius: ${theme.radii.s};
+    border-radius: ${theme.radii.m};
     background-color: ${theme.colors.secondary.light};
-    border: ${theme.borders.normal}
-        ${props => (props.$isOpen ? theme.colors.accent.main : theme.colors.bg.dark)};
     box-shadow: ${props =>
         props.$isOpen
             ? `0px 0px 5px 1px rgba(255, 176, 0, 1);
@@ -35,7 +33,8 @@ export const Picker = styled.input<Pick<DatePickerProps, '$isOpen'>>`
 export const DateRow = styled.p``;
 
 export const PickerIcon = styled.svg<Pick<DatePickerProps, '$isOpen'>>`
-    fill: ${props => (props.$isOpen ? theme.colors.accent.main : 'inherit')};
+    fill: ${props => (props.$isOpen ? theme.colors.accent.main : theme.colors.bg.main)};
+    background-color: ${theme.colors.secondary.light};
     position: absolute;
     right: ${theme.space[3]};
     top: 50%;

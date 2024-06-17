@@ -24,16 +24,41 @@ export const PhotoWrapper = styled.div`
 
 export const FormInputsList = styled.ul`
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
     grid-template-rows: auto;
     gap: ${theme.space[4]};
+
+    @media ${theme.breakpoints.tablet.media} {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto;
+        :last-child {
+            grid-column: 1 / 4;
+        }
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto;
+
+        :last-child {
+            grid-column: 1 / 4;
+        }
+    }
 `;
 
 export const ButtonsBox = styled.div`
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: end;
+    justify-content: space-between;
+
+    @media ${theme.breakpoints.tablet.media} {
+        justify-content: end;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        justify-content: end;
+    }
 `;
 
 export const SubmitBtnWrapper = styled.div`

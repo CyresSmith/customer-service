@@ -1,26 +1,27 @@
 import Button from 'components/Ui/Buttons/Button';
+import { getDate, getMonth, getYear } from 'date-fns';
+import { calculateEventDuration } from 'helpers/calculateEventDuration';
+import { getEventEndTime } from 'helpers/isTimeEnableForEvent';
 import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
 import { RiSave2Fill } from 'react-icons/ri';
+import { toast } from 'react-toastify';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
+import { useCreateEventMutation } from 'services/events.api';
 import { useLazyGetEmployeeAllSchedulesQuery } from 'services/schedules.api';
+import { Client } from 'services/types/clients.types';
+import { IEmployee } from 'services/types/employee.types';
+import { EventType } from 'services/types/event.types';
+import { IMonthSchedule } from 'services/types/schedule.types';
+import { ServiceBasicInfo } from 'services/types/service.type';
+import ChooseClient from './ChooseClient';
 import ChooseDate from './ChooseDate/ChooseDate';
 import ChooseServices from './ChooseServices';
 import ChooseWay from './ChooseWay/ChooseWay';
-import { BtnsBox, ChosenServices, Container, ContentBox } from './CreateEvent.styled';
-import EmployeesList from './EmployeesList';
-import { IMonthSchedule } from 'services/types/schedule.types';
-import { ServiceBasicInfo } from 'services/types/service.type';
-import { IEmployee } from 'services/types/employee.types';
 import ConfirmEvent from './ConfirmEvent';
-import ChooseClient from './ChooseClient';
-import { Client } from 'services/types/clients.types';
-import { getDate, getMonth, getYear } from 'date-fns';
-import { useCreateEventMutation } from 'services/events.api';
-import { toast } from 'react-toastify';
-import { EventType } from 'services/types/event.types';
-import { getEventEndTime } from 'helpers/isTimeEnableForEvent';
+import { BtnsBox, Container, ContentBox } from './CreateEvent.styled';
+import EmployeesList from './EmployeesList';
 
 type Props = {
     step: string;
@@ -34,7 +35,7 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
     const { id } = useCompany();
     const [chosenClient, setChosenClient] = useState<Client | null>(null);
     const [chosenEmployee, setChosenEmployee] = useState<IEmployee | null>(null);
-    const [chosenServices, setChosenServices] = useState<ServiceBasicInfo[] | undefined>(undefined);
+    const [chosenServices, setChosenServices] = useState<ServiceBasicInfo[]>([]);
     const [chosenEmployeeSchedule, setChosenEmployeeSchedule] = useState<IMonthSchedule[] | null>(
         null
     );
@@ -67,20 +68,6 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
         e => e.provider && e.servicesCount && e.servicesCount > 0
     );
 
-    const calculateEventDuration = (): number => {
-        let duration: number = 0;
-
-        if (chosenServices) {
-            chosenServices.forEach(service => {
-                if (service.duration) {
-                    duration += service.duration;
-                }
-            });
-        }
-
-        return duration;
-    };
-
     const handleEventSave = async () => {
         if (chosenClient && chosenEmployee && chosenServices && eventDate && eventTime) {
             const newEvent = {
@@ -91,10 +78,14 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
                 day: getDate(eventDate),
                 time: {
                     from: eventTime,
-                    to: getEventEndTime(eventDate, eventTime, calculateEventDuration()),
+                    to: getEventEndTime(
+                        eventDate,
+                        eventTime,
+                        calculateEventDuration(chosenServices)
+                    ),
                 },
                 services: chosenServices?.map(s => s.id),
-                duration: calculateEventDuration(),
+                duration: calculateEventDuration(chosenServices),
             };
 
             const result = await createEventMutation({ data: newEvent, companyId: id });
@@ -102,7 +93,7 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
             if (result) {
                 setChosenClient(null);
                 setChosenEmployee(null);
-                setChosenServices(undefined);
+                setChosenServices([]);
                 setChosenEmployeeSchedule(null);
                 closeModal();
                 toast.success('Запис успішно збережено!');
@@ -113,7 +104,7 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
     const handleGoBackClick = () => {
         if (step === 'services' && chosenEmployee) {
             if (chosenServices) {
-                setChosenServices(undefined);
+                setChosenServices([]);
             }
             setChosenEmployee(null);
             setStep('employees');
@@ -125,7 +116,7 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
             setStep('date');
         } else {
             if (chosenServices) {
-                setChosenServices(undefined);
+                setChosenServices([]);
             }
             setStep('create');
         }
@@ -152,21 +143,9 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
             chosenEmployee &&
             eventDate &&
             eventTime &&
-            chosenServices)
+            chosenServices.length)
             ? false
             : true;
-
-    const calculateChosenServices = (): string | undefined => {
-        if (chosenServices) {
-            const count = chosenServices.length;
-            const totalPrice = chosenServices.reduce(
-                (acc, cs) => (cs.price ? acc + +cs.price : acc),
-                0
-            );
-
-            return `Обрано послуг: ${count} на суму ${totalPrice} грн.`;
-        }
-    };
 
     return providersWithServices ? (
         <Container>
@@ -183,15 +162,14 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
                         chooseEmployee={setChosenEmployee}
                     />
                 )}
-                {step === 'services' && (
+                {step === 'services' && chosenEmployee && (
                     <ChooseServices
-                        companyId={id}
                         chosenEmployee={chosenEmployee}
                         setServices={setChosenServices}
                         chosenServices={chosenServices}
                     />
                 )}
-                {step === 'date' && chosenEmployee && chosenEmployeeSchedule && (
+                {step === 'date' && chosenEmployee && chosenEmployeeSchedule && chosenServices && (
                     <ChooseDate
                         events={events}
                         companyId={id}
@@ -200,7 +178,7 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
                         eventTime={eventTime}
                         setEventDate={setEventDate}
                         setEventTime={setEventTime}
-                        eventDuration={calculateEventDuration()}
+                        eventDuration={calculateEventDuration(chosenServices)}
                     />
                 )}
                 {step === 'confirm' &&
@@ -209,12 +187,13 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
                     eventTime &&
                     chosenClient && (
                         <ConfirmEvent
+                            setServices={setChosenServices}
                             chosenClient={chosenClient}
                             chosenEmployee={chosenEmployee}
                             chosenServices={chosenServices}
                             eventDate={eventDate}
                             eventTime={eventTime}
-                            eventDuration={calculateEventDuration()}
+                            eventDuration={calculateEventDuration(chosenServices)}
                         />
                     )}
             </ContentBox>
@@ -226,9 +205,9 @@ const CreateEvent = ({ step, setStep, events, closeModal }: Props) => {
                         children="Назад"
                         $colors="light"
                     />
-                    {chosenServices && chosenServices.length > 0 && (
+                    {/* {chosenServices && chosenServices.length > 0 && (
                         <ChosenServices>{calculateChosenServices()}</ChosenServices>
-                    )}
+                    )} */}
                     {!isNotForwardBtn && (
                         <Button
                             disabled={disabledForwardBtn}

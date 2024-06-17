@@ -1,12 +1,14 @@
 import Button from 'components/Ui/Buttons/Button';
-import Select from 'components/Ui/Select';
-import { weekDays } from 'helpers/constants';
+import CustomFormSelect from 'components/Ui/Form/CustomFormSelect';
+import { shortWeekDays, weekDays } from 'helpers/constants';
 import generateTimeArray from 'helpers/generateTimeArray';
-import translateWorkSchedule from 'helpers/translateWorkSchedule';
 import { useEffect, useState } from 'react';
-import { HiMinusCircle, HiPlusCircle } from 'react-icons/hi';
+import { HiPlus } from 'react-icons/hi';
+import { HiTrash } from 'react-icons/hi2';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 import { ICompanySchedule } from '../SetScheduleModal';
-import { DayList, Time, WeekBox } from './SetWorkSchedule.styled';
+import { DayList, Time, TimeBox, TimeWithButtonBox, WeekBox } from './SetWorkSchedule.styled';
 
 type Props = {
     addSchedule: () => void;
@@ -17,6 +19,8 @@ type Props = {
     schedules: ICompanySchedule[];
 };
 
+const timeArray = generateTimeArray();
+
 const SetWorkSchedule = ({
     addSchedule,
     updateSchedule,
@@ -25,6 +29,8 @@ const SetWorkSchedule = ({
     schedules,
     addDisabled,
 }: Props) => {
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
+
     const [selected, setSelected] = useState<number[]>([]);
     const [from, setFrom] = useState<string>('');
     const [to, setTo] = useState<string>('');
@@ -50,15 +56,18 @@ const SetWorkSchedule = ({
         updateSchedule(newSchedule);
     }, [from, selected, to]);
 
+    const timeArrayTo = timeArray.slice(timeArray.indexOf(from) + 1);
+
     return (
         <WeekBox>
             <DayList>
-                {weekDays.map(({ name, id }) => (
+                {(isMobile ? shortWeekDays : weekDays).map(({ name, id }) => (
                     <li key={id}>
                         <Button
                             disabled={currentSchedule.disabledDays?.includes(id)}
                             $colors={selected?.includes(id) ? 'accent' : 'light'}
                             onClick={() => handleDaySelect(id)}
+                            size={isMobile ? 's' : 'm'}
                         >
                             {name}
                         </Button>
@@ -66,42 +75,46 @@ const SetWorkSchedule = ({
                 ))}
             </DayList>
 
-            <Time>
-                <span>{translateWorkSchedule('from')}</span>
+            <TimeWithButtonBox>
+                <TimeBox>
+                    <Time>
+                        {/* {!isMobile && <span>{translateWorkSchedule('from')}</span>} */}
 
-                <Select
-                    selectedItem={from}
-                    onSelect={item => typeof item === 'string' && setFrom(item)}
-                    $colors="light"
-                    items={generateTimeArray()}
+                        <CustomFormSelect
+                            selectItems={timeArray.map(value => ({ value }))}
+                            selectedItem={{ value: from }}
+                            handleSelect={item => setFrom(item.value)}
+                            visibleItemsCount={3}
+                        />
+                    </Time>
+
+                    <Time>
+                        {/* {!isMobile && <span>{translateWorkSchedule('to')}</span>} */}
+                        {!isMobile && <span> - </span>}
+
+                        <CustomFormSelect
+                            selectItems={timeArrayTo.map(value => ({ value }))}
+                            selectedItem={{ value: to }}
+                            handleSelect={item => setTo(item.value)}
+                            visibleItemsCount={3}
+                        />
+                    </Time>
+                </TimeBox>
+
+                <Button
+                    disabled={
+                        (currentSchedule.id === 1 && schedules.length === 7) ||
+                        (currentSchedule.id === 1 && addDisabled) ||
+                        (currentSchedule.id === 1 && !selected.length && !from && !to)
+                    }
+                    onClick={() => {
+                        currentSchedule.id === 1 ? addSchedule() : removeSchedule(currentSchedule);
+                    }}
+                    Icon={currentSchedule.id > 1 ? HiTrash : HiPlus}
+                    $colors={currentSchedule.id > 1 ? 'light' : 'accent'}
+                    $round
                 />
-            </Time>
-
-            <Time>
-                <span>{translateWorkSchedule('to')}</span>
-
-                <Select
-                    selectedItem={to}
-                    onSelect={item => typeof item === 'string' && setTo(item)}
-                    $colors="light"
-                    items={generateTimeArray()}
-                />
-            </Time>
-
-            <Button
-                disabled={
-                    (currentSchedule.id === 1 && schedules.length === 7) ||
-                    (currentSchedule.id === 1 && addDisabled) ||
-                    (currentSchedule.id === 1 && !selected.length && !from && !to)
-                }
-                onClick={() => {
-                    currentSchedule.id === 1 ? addSchedule() : removeSchedule(currentSchedule);
-                }}
-                Icon={currentSchedule.id > 1 ? HiMinusCircle : HiPlusCircle}
-                $variant="text"
-                $round
-                size="l"
-            />
+            </TimeWithButtonBox>
         </WeekBox>
     );
 };

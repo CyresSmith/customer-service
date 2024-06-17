@@ -82,15 +82,26 @@ const theme = {
         m: 1.25,
     },
 
-    space: ['2px', '4px', '6px', '10px', '16px', '26px', '42px', '110px', '152px', '262px'],
+    space: [
+        '2px',
+        '4px',
+        '6px',
+        '10px',
+        '16px',
+        '26px',
+        '42px',
+        '110px',
+        '152px',
+        '262px',
+    ] as const,
 
-    mediaBreakpoints: {
+    breakpoints: {
         mobile: {
             media: 'screen and (320px <= width <= 767px)',
             width: '320px',
         },
         tablet: {
-            media: 'screen and (768px <= width <= 1149px)',
+            media: 'screen and (768px <= width <= 1279px)',
             width: '768px',
         },
         desktop: { media: 'screen and (1280px <= width)', width: '1280px' },
@@ -106,6 +117,7 @@ const theme = {
         s: '10px',
         m: '16px',
         l: '26px',
+        xl: '42px',
         round: '50%',
     },
 
@@ -113,6 +125,7 @@ const theme = {
         primary: 'all 250ms ease-in-out',
         modal: 'all 350ms ease-in-out',
         drop: 'all 500ms ease-in-out',
+        toast: 'all 500ms ease-in-out',
     },
 
     animation: {

@@ -1,4 +1,4 @@
-import { addDays, addMonths, addYears, isSameDay } from 'date-fns';
+import { addDays, addMonths, addYears, format, isSameDay, startOfMonth } from 'date-fns';
 import { Dispatch, SetStateAction } from 'react';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
 import { RiArrowGoBackFill } from 'react-icons/ri';
@@ -26,16 +26,22 @@ const DateSwitcher = ({
     roundBtns = true,
     border,
     borderRadius = 's',
-    fontSize = '16px',
+    fontSize,
 }: Props) => {
-    const chosenDate = new Date(date).toLocaleDateString('uk-UK', {
-        weekday: dateType === 'day' ? 'short' : undefined,
-        day: dateType === 'day' ? 'numeric' : undefined,
-        month: dateType === 'year' ? undefined : 'long',
-        year: dateType === 'year' ? 'numeric' : undefined,
-    });
+    const chosenDate =
+        dateType === 'month'
+            ? format(date, 'LLLL yyyy')
+            : new Date(date).toLocaleDateString('uk-UK', {
+                  weekday: dateType === 'day' ? 'short' : undefined,
+                  day: dateType === 'day' ? 'numeric' : undefined,
+                  month: dateType === 'year' ? undefined : 'long',
+                  year: dateType === 'year' ? 'numeric' : undefined,
+              });
 
-    const isSameCalendarDay = isSameDay(new Date(Date.now()), date);
+    const isSameCalendarDay =
+        dateType === 'month'
+            ? isSameDay(startOfMonth(new Date(Date.now())), startOfMonth(date))
+            : isSameDay(new Date(Date.now()), date);
 
     const handleDateChange = (event: string) => {
         if (event === '+') {
@@ -43,16 +49,16 @@ const DateSwitcher = ({
                 return dateType === 'day'
                     ? addDays(date, 1)
                     : dateType === 'month'
-                      ? addMonths(date, 1)
-                      : addYears(date, 1);
+                    ? addMonths(date, 1)
+                    : addYears(date, 1);
             });
         } else {
             setDate(() => {
                 return dateType === 'day'
                     ? addDays(date, -1)
                     : dateType === 'month'
-                      ? addMonths(date, -1)
-                      : addYears(date, -1);
+                    ? addMonths(date, -1)
+                    : addYears(date, -1);
             });
         }
     };
@@ -77,10 +83,13 @@ const DateSwitcher = ({
             {!isSameCalendarDay && !noReset && (
                 <ReturnBtnWrapper>
                     <Button
-                        onClick={() => setDate(new Date(Date.now()))}
+                        onClick={() => {
+                            const date = new Date(Date.now());
+                            setDate(dateType === 'month' ? startOfMonth(date) : date);
+                        }}
                         Icon={RiArrowGoBackFill}
                         $colors="light"
-                        size="s"
+                        $round
                     />
                 </ReturnBtnWrapper>
             )}

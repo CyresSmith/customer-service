@@ -37,7 +37,7 @@ const DatePicker = ({ bgColor, calendarCellSize = 30, handleDateConfirm, prewDat
     };
 
     useEscapeKey(handleClose);
-    const selectRef = useClickOutside(handleClose);
+    const selectRef = useClickOutside<HTMLDivElement>(handleClose);
 
     const output = format(date, 'dd.MM.y');
 

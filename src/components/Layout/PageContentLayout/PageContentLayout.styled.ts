@@ -3,7 +3,7 @@ import theme from 'utils/theme';
 
 export const PageBar = styled.div`
     width: 100%;
-    border-bottom: ${theme.borders.normal} ${theme.colors.bg.main};
+    border-bottom: ${theme.borders.normal} ${theme.colors.secondary.main};
     display: flex;
     align-items: flex-end;
     justify-content: flex-start;

@@ -2,8 +2,7 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const EmployeeServicesBox = styled.div`
-    width: 926px;
-    height: 553px;
+    width: 100%;
 `;
 
 export const ServiceDataBox = styled.div`
@@ -22,6 +21,14 @@ export const ServiceName = styled.p`
 `;
 
 export const AddServiceModalBox = styled.div`
-    height: 490px;
-    width: 650px;
+    min-height: 70px;
+    max-height: 510px;
+
+    /* @media ${theme.breakpoints.tablet.media} {
+        width: 630px;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        width: 850px;
+    } */
 `;

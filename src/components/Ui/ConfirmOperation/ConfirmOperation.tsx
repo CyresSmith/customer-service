@@ -23,6 +23,7 @@ const ConfirmOperation = ({
 }: Props) => {
     return (
         <Modal
+            $w="400px"
             $isOpen={isOpen}
             id={`confirmModal_${id}`}
             closeIconBtn={false}
@@ -35,7 +36,10 @@ const ConfirmOperation = ({
                         <Button
                             Icon={HiCheck}
                             $colors="success"
-                            onClick={callback}
+                            onClick={() => {
+                                callback();
+                                closeConfirm();
+                            }}
                             isLoading={isLoading}
                         >
                             Так

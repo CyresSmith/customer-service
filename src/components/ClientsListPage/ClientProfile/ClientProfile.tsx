@@ -1,4 +1,5 @@
 import Loader from 'components/Ui/Loader';
+import { ModalHeaderBox } from 'components/Ui/Modal/Modal.styled';
 import ModalHeaderWithAvatar from 'components/Ui/Modal/ModalHeaderWithAvatar';
 import ModalSectionsList from 'components/Ui/Modal/ModalSectionsList';
 import { useState } from 'react';
@@ -32,16 +33,21 @@ const ClientProfile = ({ companyId, clientId, closeModal }: Props) => {
         </Skeleton>
     ) : (
         <Container>
-            <ModalHeaderWithAvatar
-                avatar={data.avatar || ''}
-                title={data.lastName ? data.firstName + ' ' + data.lastName : data.firstName || ''}
-            />
+            <ModalHeaderBox>
+                <ModalHeaderWithAvatar
+                    avatar={data.avatar || ''}
+                    title={
+                        data.lastName ? data.firstName + ' ' + data.lastName : data.firstName || ''
+                    }
+                    subtitle={data.phone}
+                />
 
-            <ModalSectionsList
-                sectionButtons={sectionButtons}
-                currentSection={section}
-                handleSectionSelect={id => setSection(id)}
-            />
+                <ModalSectionsList
+                    sectionButtons={sectionButtons}
+                    currentSection={section}
+                    handleSectionSelect={id => setSection(id)}
+                />
+            </ModalHeaderBox>
 
             {section === Sections.PROFILE ? (
                 <Profile companyId={companyId} client={data} closeModal={closeModal} />

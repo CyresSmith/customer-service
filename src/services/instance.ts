@@ -2,6 +2,8 @@ import axios, { AxiosRequestConfig } from 'axios';
 import handleError from 'helpers/errorHandler';
 import rootActions from 'store/rootActions';
 import { store } from 'store/store';
+import { TokenState } from 'store/user/user.types';
+import { createSocketConnection, socket } from './socket';
 
 export const URL = import.meta.env.VITE_API_URL;
 
@@ -45,6 +47,14 @@ instance.interceptors.request.use(
     }
 );
 
+const refreshUser = async (data: TokenState) => {
+    socket.disconnect();
+
+    if (data.accessToken) await createSocketConnection(data.accessToken);
+
+    store.dispatch(rootActions.refresh(data));
+};
+
 instance.interceptors.response.use(
     response => response,
     async error => {
@@ -60,17 +70,16 @@ instance.interceptors.response.use(
                 const token = store.getState()?.user?.refreshToken;
 
                 if (token) {
-                    const response = await axios.get(URL + '/auth/refresh', {
+                    const { data } = await axios.get(URL + '/auth/refresh', {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     });
 
-                    if (response && response?.data?.accessToken && response?.data?.refreshToken) {
-                        store.dispatch(rootActions.refresh(response?.data));
+                    if (data && data.accessToken && data.refreshToken) {
+                        await refreshUser(data);
 
-                        instance.defaults.headers.common.Authorization = `Bearer ${response?.data?.accessToken}`;
-
+                        instance.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`;
                         return instance(originalRequest);
                     }
                 } else {

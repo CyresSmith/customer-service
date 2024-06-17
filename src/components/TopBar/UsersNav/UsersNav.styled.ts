@@ -8,11 +8,16 @@ export const NavWrapper = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: ${theme.space[3]};
-    margin-left: ${theme.space[6]};
 `;
 
 export const UsersOptions = styled.div`
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: ${theme.space[3]};
+`;
+
+export const UserWrapper = styled.button`
     display: flex;
     align-items: center;
     gap: ${theme.space[3]};
@@ -24,31 +29,12 @@ export const UsersEmail = styled.p`
     font-weight: ${theme.fontWeights.light};
 `;
 
-export const UsersAvatarWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: ${theme.colors.bg.main};
-    position: relative;
-    height: 35px;
-    width: 35px;
-    overflow: hidden;
-    background-color: ${theme.colors.secondary.light};
-    border-radius: ${theme.radii.round};
-`;
+export const MenuButtonWrapper = styled.div`
+    display: block;
 
-export const UsersAvatar = styled.img`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-`;
-
-export const UsersNoAvatar = styled.span`
-    font-size: ${theme.fontSizes.xxl};
-    text-transform: uppercase;
+    @media ${theme.breakpoints.desktop.media} {
+        display: none;
+    }
 `;
 
 export const NavList = styled.ul`

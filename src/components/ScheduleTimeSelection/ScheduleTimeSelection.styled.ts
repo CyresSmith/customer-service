@@ -5,13 +5,29 @@ export const SelectionBox = styled.div`
     display: flex;
     flex-direction: column;
     gap: ${theme.space[5]};
+    justify-content: space-between;
+    min-height: 360px;
+
+    @media ${theme.breakpoints.tablet.media} {
+        min-height: 270px;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        min-height: 270px;
+    }
+`;
+
+export const ScheduleSectionBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.space[5]};
 `;
 
 export const ScheduleSection = styled.div`
     display: flex;
     flex-direction: column;
     gap: ${theme.space[3]};
-    width: 300px;
+    width: 100%;
 `;
 
 export const Title = styled.p`
@@ -21,13 +37,24 @@ export const Title = styled.p`
 
 export const SelectDaysBox = styled.ul`
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     gap: ${theme.space[3]};
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 1fr);
 
     > li {
         > button {
             width: 100%;
         }
+    }
+
+    @media ${theme.breakpoints.tablet.media} {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: 1fr;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: 1fr;
     }
 `;
 
@@ -36,6 +63,10 @@ export const SelectBox = styled.div`
     grid-template-columns: max-content 1fr;
     align-items: center;
     gap: ${theme.space[2]};
+
+    > p {
+        min-width: 20px;
+    }
 `;
 
 export const Message = styled.p`

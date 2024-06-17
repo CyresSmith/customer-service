@@ -10,6 +10,8 @@ import { IoIosSave } from 'react-icons/io';
 import { toast } from 'react-toastify';
 import { useAddEmployeeServiceMutation } from 'services/employee.api';
 import { useGetServicesQuery } from 'services/service.api';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 import { AddServiceModalBox } from '../EmployeeServices.styled';
 
 type Props = {
@@ -28,6 +30,8 @@ const AddServiceModal = ({
     openCreateServiceModal,
 }: Props) => {
     const isAdmin = useAdminRights();
+    const isTablet = useMediaQuery(theme.breakpoints.tablet.media);
+    const isDesktop = useMediaQuery(theme.breakpoints.desktop.media);
     const { id: companyId } = useCompany();
     const [newServices, setNewServices] = useState<number[]>(employeeServices || []);
 
@@ -61,6 +65,26 @@ const AddServiceModal = ({
         }
     };
 
+    const items =
+        services?.map(({ id = 0, avatar = '', name = '', category, type = '' }) => {
+            let service = {
+                id,
+                avatar,
+                name,
+            };
+
+            if (isTablet || isDesktop) {
+                service = Object.assign(service, {
+                    category: category?.name || '',
+                    type: type === 'individual' ? 'Індівідуальна' : 'Групова',
+                });
+            }
+
+            return service;
+        }) || [];
+
+    const keyForSelect = isTablet || isDesktop ? 'category' : undefined;
+
     return (
         <>
             <Modal
@@ -76,26 +100,11 @@ const AddServiceModal = ({
                         {services && (
                             <AddServiceModalBox>
                                 <ItemsList
-                                    items={services.map(
-                                        ({
-                                            id = 0,
-                                            avatar = '',
-                                            name = '',
-                                            category,
-                                            type = '',
-                                        }) => ({
-                                            id,
-                                            avatar,
-                                            name,
-                                            category: category?.name || '',
-                                            type:
-                                                type === 'individual' ? 'Індівідуальна' : 'Групова',
-                                        })
-                                    )}
-                                    keyForSelect="category"
+                                    items={items}
+                                    keyForSelect={keyForSelect as 'name' | undefined}
                                     onItemClick={handleServiceAdd}
-                                    addButtonTitle={editingAllowed ? 'Створити послугу' : undefined}
-                                    onAddClick={openCreateServiceModal}
+                                    addButtonTitle={isDesktop ? 'Створити послугу' : undefined}
+                                    onAddClick={editingAllowed ? openCreateServiceModal : undefined}
                                     selection={newServices}
                                 />
                             </AddServiceModalBox>

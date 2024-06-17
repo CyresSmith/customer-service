@@ -1,29 +1,19 @@
-import Button from 'components/Ui/Buttons/Button';
 import { useEffect, useState } from 'react';
-import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
-import { MdToday } from 'react-icons/md';
 import { IEmployee } from 'services/types/employee.types';
 import Calendar from './Calendar';
 import {
     CalendarHeader,
     CalendarSide,
-    EmployeeScheduleBox,
+    EditScheduleButtonsBox,
     Message,
-    MonthBox,
-    MonthName,
 } from './EmployeeSchedule.styled';
 
 import ScheduleTimeSelection from 'components/ScheduleTimeSelection';
-import {
-    addMonths,
-    format,
-    getDay,
-    getMonth,
-    getYear,
-    isPast,
-    isThisMonth,
-    startOfMonth,
-} from 'date-fns';
+import ConfirmOperation from 'components/Ui/ConfirmOperation';
+import DateSwitcher from 'components/Ui/DateSwitcher';
+import Modal from 'components/Ui/Modal/Modal';
+import EditScheduleButtons from 'components/WorkSchedule/WorkScheduleBar/EditScheduleButtons';
+import { addMonths, getDay, getMonth, getYear, isPast, startOfMonth } from 'date-fns';
 import generateTimeArray from 'helpers/generateTimeArray';
 import { useAdminRights, useAuth } from 'hooks';
 import { useCompany } from 'hooks/useCompany';
@@ -37,6 +27,11 @@ import { IDaySchedule, IMonthSchedule } from 'services/types/schedule.types';
 import { IWorkingHours } from 'store/company/company.types';
 
 type Props = { employee: IEmployee };
+
+enum OpenModal {
+    EDIT = 1,
+    CONFIRM = 2,
+}
 
 const EmployeeSchedule = ({ employee }: Props) => {
     const today = new Date(Date.now());
@@ -65,11 +60,12 @@ const EmployeeSchedule = ({ employee }: Props) => {
     const [breakFrom, setBreakFrom] = useState('');
     const [breakTo, setBreakTo] = useState('');
     const [isStateChanged, setIsStateChanged] = useState(false);
+    const [openModal, setOpenModal] = useState<OpenModal | null>(null);
     const [selectedDayCompanySchedule, setSelectedDayCompanySchedule] =
         useState<IWorkingHours | null>(null);
 
     const [updateSchedule, { isLoading }] = useUpdateEmployeeScheduleMutation();
-    const [deleteSchedule, { isLoading: isDeleteLoading }] = useDeleteEmployeeScheduleMutation();
+    const [deleteSchedule] = useDeleteEmployeeScheduleMutation();
 
     const selectedMonthPassed =
         getMonth(today) !== getMonth(selectedMonth) && isPast(selectedMonth);
@@ -94,6 +90,7 @@ const EmployeeSchedule = ({ employee }: Props) => {
             resetState();
             setIsStateChanged(false);
             toast.success(message);
+            setOpenModal(null);
         }
     };
 
@@ -126,9 +123,11 @@ const EmployeeSchedule = ({ employee }: Props) => {
         setIsStateChanged(false);
     };
 
-    const toToday = () => {
-        setSelectedMonth(currentMonthStart);
-    };
+    useEffect(() => {
+        resetState();
+        setScheduleState([]);
+        setIsStateChanged(false);
+    }, [selectedMonth]);
 
     const updateScheduleState = (schedule: IDaySchedule) => {
         setScheduleState(p => {
@@ -361,91 +360,125 @@ const EmployeeSchedule = ({ employee }: Props) => {
         }
     }, [isTimeForBreak]);
 
+    const onChangeClick = () => setOpenModal(OpenModal.EDIT);
+
+    const resetSelection = () => {
+        if (!isEditingAllowed) return;
+
+        setScheduleState(p => {
+            let newState = [...p];
+
+            selectedDays.map(date => {
+                const oldSchedule = employeeSchedule?.schedule?.find(({ day }) => day === date);
+
+                const dayScheduleIdx = newState.findIndex(item => item.day === date);
+
+                if (dayScheduleIdx !== undefined || dayScheduleIdx !== -1) {
+                    if (oldSchedule) {
+                        newState[dayScheduleIdx] = oldSchedule;
+                    } else {
+                        newState = newState.filter(({ day }) => day !== date);
+                    }
+                }
+            });
+
+            return newState;
+        });
+
+        resetState();
+    };
+    const handleModalClose = () => setOpenModal(null);
+
+    const timeSelectionProps = {
+        from,
+        setFrom: (time: string) => handleTimeSelect(time, 'from'),
+        to,
+        setTo: (time: string) => handleTimeSelect(time, 'to'),
+        breakFrom,
+        setBreakFrom: (time: string) => handleTimeSelect(time, 'breakFrom'),
+        breakTo,
+        setBreakTo: (time: string) => handleTimeSelect(time, 'breakTo'),
+        isBreak,
+        breakToggle: handleAddBreakHoursClick,
+        isEditingAllowed,
+        handleUpdate: handleScheduleUpdate,
+        isUpdateDisabled: !isStateChanged,
+        isUpdateLoading: isLoading,
+        selectedHours: selectedDayCompanySchedule?.hours,
+    };
+
     return (
-        <EmployeeScheduleBox>
-            {workingHours && workingHours?.length > 0 ? (
-                <>
-                    <CalendarSide>
-                        <>
-                            <CalendarHeader>
-                                <MonthBox>
-                                    <Button
-                                        onClick={handlePrevMonthClick}
-                                        Icon={HiArrowLeft}
-                                        $round
-                                        $colors="light"
+        <>
+            <div>
+                {workingHours && workingHours?.length > 0 ? (
+                    <>
+                        <CalendarSide>
+                            <>
+                                <CalendarHeader>
+                                    <DateSwitcher
+                                        dateType="month"
+                                        date={selectedMonth}
+                                        setDate={setSelectedMonth}
+                                        buttonsColor="light"
+                                        roundBtns
                                     />
-                                    <MonthName>
-                                        {format(selectedMonth, 'LLLL yyyy').toLocaleUpperCase()}
-                                    </MonthName>
-                                    <Button
-                                        onClick={handleNextMonthClick}
-                                        Icon={HiArrowRight}
-                                        $round
-                                        $colors="light"
-                                    />
-                                </MonthBox>
 
-                                {!isThisMonth(selectedMonth) && (
-                                    <Button
-                                        onClick={toToday}
-                                        Icon={MdToday}
-                                        $round
-                                        $colors="light"
-                                    />
-                                )}
-                            </CalendarHeader>
+                                    {isEditingAllowed && selectedDays.length > 0 && (
+                                        <EditScheduleButtonsBox>
+                                            <EditScheduleButtons
+                                                onChangeClick={onChangeClick}
+                                                onResetClick={() => setOpenModal(OpenModal.CONFIRM)}
+                                                isResetLoading={false}
+                                                resetSelection={resetSelection}
+                                            />
+                                        </EditScheduleButtonsBox>
+                                    )}
+                                </CalendarHeader>
 
-                            <Calendar
-                                monthSchedule={scheduleState}
-                                selectedMonth={selectedMonth}
-                                selectedDays={selectedDays}
-                                disabledDays={disabledDays(
-                                    new Date(
-                                        getYear(selectedMonth),
-                                        getMonth(selectedMonth),
-                                        selectedDays[0]
-                                    )
-                                )}
-                                handleDayClick={handleDayClick}
-                                toNextMonth={handleNextMonthClick}
-                                toPrevMonth={handlePrevMonthClick}
-                            />
-                        </>
-                    </CalendarSide>
-
-                    {!selectedMonthPassed && isEditingAllowed && (
-                        <>
-                            {selectedDays.length > 0 ? (
-                                <ScheduleTimeSelection
-                                    from={from}
-                                    setFrom={time => handleTimeSelect(time, 'from')}
-                                    to={to}
-                                    setTo={time => handleTimeSelect(time, 'to')}
-                                    breakFrom={breakFrom}
-                                    setBreakFrom={time => handleTimeSelect(time, 'breakFrom')}
-                                    breakTo={breakTo}
-                                    setBreakTo={time => handleTimeSelect(time, 'breakTo')}
-                                    isBreak={isBreak}
-                                    breakToggle={handleAddBreakHoursClick}
-                                    isEditingAllowed={isEditingAllowed}
-                                    handleReset={handleResetClick}
-                                    handleUpdate={handleScheduleUpdate}
-                                    isUpdateDisabled={!isStateChanged}
-                                    isUpdateLoading={isLoading}
-                                    isResetLoading={isDeleteLoading}
-                                    selectedHours={selectedDayCompanySchedule?.hours}
+                                <Calendar
+                                    monthSchedule={scheduleState}
+                                    selectedMonth={selectedMonth}
+                                    selectedDays={selectedDays}
+                                    disabledDays={disabledDays(
+                                        new Date(
+                                            getYear(selectedMonth),
+                                            getMonth(selectedMonth),
+                                            selectedDays[0]
+                                        )
+                                    )}
+                                    handleDayClick={handleDayClick}
+                                    toNextMonth={handleNextMonthClick}
+                                    toPrevMonth={handlePrevMonthClick}
                                 />
-                            ) : (
-                                <Message>Виберіть дні місяця для налаштування часу роботи.</Message>
-                            )}
-                        </>
-                    )}
-                </>
-            ) : (
-                <Message>Чар роботи компанії не налаштовано!</Message>
-            )}
-        </EmployeeScheduleBox>
+                            </>
+                        </CalendarSide>
+                    </>
+                ) : (
+                    <Message>Чар роботи компанії не налаштовано!</Message>
+                )}
+
+                {openModal === OpenModal.EDIT && (
+                    <Modal
+                        $w="350px"
+                        id="ScheduleTimeSelectionModal"
+                        closeModal={handleModalClose}
+                        $isOpen={openModal === OpenModal.EDIT}
+                    >
+                        <ScheduleTimeSelection {...timeSelectionProps} />
+                    </Modal>
+                )}
+
+                {openModal === OpenModal.CONFIRM && (
+                    <ConfirmOperation
+                        id="confirmReset"
+                        isOpen={openModal === OpenModal.CONFIRM}
+                        children="Скинути графік обраних днів?"
+                        callback={handleResetClick}
+                        closeConfirm={handleModalClose}
+                    />
+                )}
+            </div>
+        </>
     );
 };
 

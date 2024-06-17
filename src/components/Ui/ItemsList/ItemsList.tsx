@@ -1,3 +1,4 @@
+import { MessageCount, OnlineBadge } from 'components/Chat/MessagesList/MessagesList.styled';
 import { Message } from 'components/CompanyProfile/RemovePhoneModal/RemovePhoneModal.styled';
 import { StatusBadge } from 'components/Employees/EmployeeModal/EmployeeProfile/EmployeeProfile.styled';
 import { capitalizeFirstLetter, capitalizeObjectValues } from 'helpers/capitalizeFirstLetter';
@@ -5,33 +6,31 @@ import { millisecondsToTime } from 'helpers/millisecondsToTime';
 import { translateLabels } from 'helpers/translateLabels';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { FaGenderless, FaMars, FaVenus } from 'react-icons/fa6';
-import {
-    HiCheckCircle,
-    HiPlusCircle,
-    HiSortAscending,
-    HiSortDescending,
-    HiX,
-} from 'react-icons/hi';
+import { HiCheckCircle, HiPlus, HiSortAscending, HiSortDescending, HiX } from 'react-icons/hi';
 import { HiTrash } from 'react-icons/hi2';
 import { TbArrowsSort } from 'react-icons/tb';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 import Button from '../Buttons/Button';
 import { FormInput, FormInputLabel, FormInputsListItem } from '../Form/CustomForm.styled';
 import CustomFormSelect from '../Form/CustomFormSelect';
 import { SelectItem } from '../Form/types';
 import ItemAvatar from './ItemAvatar';
 import {
+    AvatarSize,
     ButtonBox,
     FilterBox,
     ItemBox,
     ItemParam,
     List,
     ListBar,
+    ListBox,
     ListHeader,
     ListHeaderItem,
     SearchBox,
 } from './ItemsList.styled';
 
-type StringRecord = Record<string, string | number>;
+type StringRecord = Record<string, string | number | boolean>;
 
 type ItemType<T extends StringRecord> = {
     id: number;
@@ -49,6 +48,11 @@ type Props<T extends StringRecord> = {
     onItemDeleteClick?: (id: number) => void;
     isDeleteLoading?: boolean;
     selection?: number[] | undefined;
+    nameColumnTitle?: string;
+    activeItem?: number;
+    listHeader?: boolean;
+    listSortPanel?: boolean;
+    avatarSize?: AvatarSize;
 };
 
 enum SortTypeEnum {
@@ -63,14 +67,21 @@ const ItemsList = <T extends StringRecord>({
     items,
     onItemClick,
     keyForSelect,
-    keyForSearch,
+    keyForSearch = 'name',
     notSortedKeys = [],
     addButtonTitle,
     onAddClick,
     onItemDeleteClick,
     isDeleteLoading = false,
     selection = undefined,
+    nameColumnTitle,
+    activeItem,
+    listHeader = true,
+    listSortPanel = true,
+    avatarSize = AvatarSize.M,
 }: Props<T>) => {
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
+
     const [itemsState, setItemsState] = useState<ItemType<T>[]>([]);
     const [initialSortState, setInitialSortState] = useState<Record<string, SortTypeEnum>>({});
     const [sortState, setSortState] = useState(initialSortState);
@@ -219,9 +230,11 @@ const ItemsList = <T extends StringRecord>({
     const filteredItems =
         filter && itemsState.length > 0
             ? itemsState.filter(item => {
-                  return keyForSearch
-                      ? String(item[keyForSearch]).toLowerCase().includes(filter)
-                      : item.name.toLowerCase().includes(filter);
+                  const searchValue = keyForSearch
+                      ? String(item[keyForSearch]).toLowerCase()
+                      : item.name.toLowerCase();
+
+                  return searchValue.includes(filter.toLowerCase());
               })
             : itemsState;
 
@@ -280,65 +293,73 @@ const ItemsList = <T extends StringRecord>({
 
     const columnsCount =
         itemsState && itemsState.length > 0
-            ? Object.keys(itemsState[0]).length - NOT_SORT_KEYS.length
+            ? Object.keys(itemsState[0]).filter(key => !NOT_SORT_KEYS.includes(key)).length
             : 0;
 
     return (
-        <>
-            <ListBar>
-                <FilterBox>
-                    <FormInputsListItem as="div">
-                        <FormInputLabel>Пошук</FormInputLabel>
-
-                        <SearchBox>
-                            <FormInput
-                                name="filter"
-                                type="text"
-                                value={filter}
-                                onChange={handleChange}
-                                placeholder={
-                                    translateLabels(String(keyForSearch)) || 'Введіть назву'
-                                }
-                                disabled={items.length === 0}
-                            />
-
-                            <ButtonBox $hideButton={filter === ''}>
-                                <Button
-                                    $variant="text"
-                                    $colors="danger"
-                                    Icon={HiX}
-                                    onClick={() => setFilter('')}
-                                />
-                            </ButtonBox>
-                        </SearchBox>
-                    </FormInputsListItem>
-
-                    {keyForSelect && selectItems && (
+        <ListBox>
+            {listHeader && (
+                <ListBar>
+                    <FilterBox $rowsCount={listHeader && keyForSelect ? 2 : 1}>
                         <FormInputsListItem as="div">
-                            <FormInputLabel>{translateLabels(String(keyForSelect))}</FormInputLabel>
+                            <FormInputLabel>Пошук</FormInputLabel>
 
-                            <CustomFormSelect
-                                disabled={items.length === 0}
-                                width="200px"
-                                selectItems={selectItems}
-                                selectedItem={selectedKeys}
-                                handleSelect={handleSelect}
-                            />
+                            <SearchBox>
+                                <FormInput
+                                    name="filter"
+                                    type="text"
+                                    value={filter}
+                                    onChange={handleChange}
+                                    placeholder={
+                                        keyForSearch === 'name'
+                                            ? nameColumnTitle
+                                                ? `Введіть ${nameColumnTitle}`
+                                                : 'Введіть назву'
+                                            : translateLabels(String(keyForSearch))
+                                    }
+                                    disabled={items.length === 0}
+                                />
+
+                                <ButtonBox $hideButton={filter === ''}>
+                                    <Button
+                                        $variant="text"
+                                        $colors="danger"
+                                        Icon={HiX}
+                                        onClick={() => setFilter('')}
+                                    />
+                                </ButtonBox>
+                            </SearchBox>
                         </FormInputsListItem>
-                    )}
-                </FilterBox>
 
-                {addButtonTitle && onAddClick && (
-                    <Button
-                        onClick={onAddClick}
-                        Icon={HiPlusCircle}
-                        $colors="accent"
-                        shake={items.length === 0}
-                    >
-                        {addButtonTitle}
-                    </Button>
-                )}
-            </ListBar>
+                        {keyForSelect && selectItems && (
+                            <FormInputsListItem as="div">
+                                <FormInputLabel>
+                                    {translateLabels(String(keyForSelect))}
+                                </FormInputLabel>
+
+                                <CustomFormSelect
+                                    disabled={items.length === 0}
+                                    selectItems={selectItems}
+                                    selectedItem={selectedKeys}
+                                    handleSelect={handleSelect}
+                                />
+                            </FormInputsListItem>
+                        )}
+                    </FilterBox>
+
+                    {onAddClick && (
+                        <Button
+                            onClick={onAddClick}
+                            Icon={HiPlus}
+                            $colors="accent"
+                            shake={items.length === 0}
+                            $round={isMobile || !addButtonTitle ? true : false}
+                        >
+                            {addButtonTitle}
+                        </Button>
+                    )}
+                </ListBar>
+            )}
 
             {itemsState && itemsState.length > 0 ? (
                 <>
@@ -346,70 +367,83 @@ const ItemsList = <T extends StringRecord>({
                         <Message>Нічого не знайдено</Message>
                     ) : (
                         <>
-                            <ListHeader
-                                $columnsCount={columnsCount}
-                                $isDeleteButton={Boolean(onItemDeleteClick)}
-                            >
-                                <div></div>
-                                {Object.keys(itemsState[0]).map(key => {
-                                    if (!NOT_SORT_KEYS.includes(key)) {
-                                        return (
-                                            <ListHeaderItem key={key}>
-                                                <Button
-                                                    onClick={() =>
-                                                        handleSort(key as keyof typeof sortState)
-                                                    }
-                                                    $variant="text"
-                                                    size="s"
-                                                    $colors={
-                                                        (notSortedKeys as string[]).includes(key) ||
-                                                        sortState[key as keyof typeof sortState] ===
-                                                            SortTypeEnum.NULL
-                                                            ? 'light'
-                                                            : 'accent'
-                                                    }
-                                                    Icon={
-                                                        (notSortedKeys as Array<string>).includes(
-                                                            key
-                                                        )
-                                                            ? undefined
-                                                            : sortState[
-                                                                  key as keyof typeof sortState
-                                                              ] === SortTypeEnum.ASC
-                                                            ? HiSortAscending
-                                                            : sortState[
-                                                                  key as keyof typeof sortState
-                                                              ] === SortTypeEnum.DESC
-                                                            ? HiSortDescending
-                                                            : TbArrowsSort
-                                                    }
-                                                    $iconPosition="r"
-                                                >
-                                                    {capitalizeFirstLetter(
-                                                        translateLabels(key) || ''
-                                                    )}
-                                                </Button>
-                                            </ListHeaderItem>
-                                        );
-                                    }
-                                })}
-                                {onItemDeleteClick && <div></div>}
-                            </ListHeader>
+                            {listSortPanel && (
+                                <ListHeader
+                                    $columnsCount={columnsCount}
+                                    $isDeleteButton={Boolean(onItemDeleteClick)}
+                                    $avatarSize={avatarSize}
+                                >
+                                    <div></div>
+                                    {Object.keys(itemsState[0]).map(key => {
+                                        if (!NOT_SORT_KEYS.includes(key)) {
+                                            return (
+                                                <ListHeaderItem key={key}>
+                                                    <Button
+                                                        onClick={() =>
+                                                            handleSort(
+                                                                key as keyof typeof sortState
+                                                            )
+                                                        }
+                                                        $variant="text"
+                                                        size="s"
+                                                        $colors={
+                                                            (notSortedKeys as string[]).includes(
+                                                                key
+                                                            ) ||
+                                                            sortState[
+                                                                key as keyof typeof sortState
+                                                            ] === SortTypeEnum.NULL
+                                                                ? 'light'
+                                                                : 'accent'
+                                                        }
+                                                        Icon={
+                                                            (
+                                                                notSortedKeys as Array<string>
+                                                            ).includes(key)
+                                                                ? undefined
+                                                                : sortState[
+                                                                      key as keyof typeof sortState
+                                                                  ] === SortTypeEnum.ASC
+                                                                ? HiSortAscending
+                                                                : sortState[
+                                                                      key as keyof typeof sortState
+                                                                  ] === SortTypeEnum.DESC
+                                                                ? HiSortDescending
+                                                                : TbArrowsSort
+                                                        }
+                                                        $iconPosition="r"
+                                                    >
+                                                        {capitalizeFirstLetter(
+                                                            key === 'name' && nameColumnTitle
+                                                                ? nameColumnTitle
+                                                                : translateLabels(key) || ''
+                                                        )}
+                                                    </Button>
+                                                </ListHeaderItem>
+                                            );
+                                        }
+                                    })}
+                                    {onItemDeleteClick && <div></div>}
+                                </ListHeader>
+                            )}
 
                             <List>
                                 {filteredItems.map(item => (
                                     <ItemBox
                                         key={item.id}
+                                        $isActive={activeItem === item.id}
                                         $selected={selected && selected.includes(+item.id)}
                                         $columnsCount={columnsCount}
                                         $isDeleteButton={Boolean(onItemDeleteClick)}
                                         onClick={() => handleItemClick(+item.id)}
+                                        $avatarSize={avatarSize}
                                     >
                                         <HiCheckCircle id="checkLabel" />
 
                                         <ItemAvatar
-                                            avatar={item.avatar.toString()}
+                                            avatar={item.avatar?.toString()}
                                             name={item.name}
+                                            size={avatarSize}
                                         />
 
                                         {Object.entries(item).map(([key, value]) => {
@@ -458,6 +492,20 @@ const ItemsList = <T extends StringRecord>({
                                                 );
                                             }
 
+                                            if (key === 'isOnline') {
+                                                return (
+                                                    <ItemParam key={key}>
+                                                        {value ? (
+                                                            typeof value === 'boolean' ? (
+                                                                <OnlineBadge />
+                                                            ) : (
+                                                                <MessageCount>{value}</MessageCount>
+                                                            )
+                                                        ) : null}
+                                                    </ItemParam>
+                                                );
+                                            }
+
                                             if (key !== 'id' && key !== 'avatar') {
                                                 return <ItemParam key={key}>{value}</ItemParam>;
                                             }
@@ -481,7 +529,7 @@ const ItemsList = <T extends StringRecord>({
             ) : (
                 <Message>Перелік порожній!</Message>
             )}
-        </>
+        </ListBox>
     );
 };
 

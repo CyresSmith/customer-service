@@ -20,6 +20,8 @@ const CustomFormSelect = ({
     fieldName,
     disabled = false,
     isReadonly = false,
+    visibleItemsCount = 5,
+    colors = 'light',
 }: SelectProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -50,7 +52,7 @@ const CustomFormSelect = ({
     };
 
     useEscapeKey(handleClose);
-    const selectRef = useClickOutside(handleClose);
+    const selectRef = useClickOutside<HTMLDivElement>(handleClose);
 
     const isSelected = (item: SelectItem) => {
         if (Array.isArray(selectedItem)) {
@@ -106,13 +108,19 @@ const CustomFormSelect = ({
                 tabIndex={0}
                 $open={isOpen}
                 onClick={toggleOpen}
+                $colors={colors}
             >
                 <Selected>{setSelectedValue()}</Selected>
 
                 <SelectIcon as={HiChevronDown} $open={isOpen} />
             </Select>
 
-            <SelectList $open={isOpen}>
+            <SelectList
+                $open={isOpen}
+                $itemsCount={selectItems.length}
+                $visibleItemsCount={visibleItemsCount}
+                $colors={colors}
+            >
                 {selectItems.map((item, i) => (
                     <SelectListItem
                         id={String(item?.id || i)}
@@ -121,6 +129,7 @@ const CustomFormSelect = ({
                         onClick={() => onSelect(item)}
                         key={i}
                         $selected={isSelected(item)}
+                        $colors={colors}
                     >
                         {translateSelect(item.value)}
                         {item.count && ` (${item.count})`}

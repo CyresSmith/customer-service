@@ -7,7 +7,7 @@ export const eventsApi = createApi({
 
     baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-    tagTypes: ['events', 'event'],
+    tagTypes: ['events'],
 
     endpoints: builder => {
         return {
@@ -18,7 +18,10 @@ export const eventsApi = createApi({
                     data,
                     params: { companyId },
                 }),
-                invalidatesTags: ['events'],
+                invalidatesTags: resp => [
+                    { type: 'events', id: resp?.id },
+                    { type: 'events', id: 'LIST' },
+                ],
             }),
 
             getCompanyEvents: builder.query<EventType[], GetMonthEvents>({
@@ -28,7 +31,12 @@ export const eventsApi = createApi({
                     params: { companyId, year, month },
                 }),
                 providesTags: resp =>
-                    resp ? resp.map(item => ({ type: 'events', id: item.id })) : ['events'],
+                    resp
+                        ? [
+                              ...resp.map(({ id }) => ({ type: 'events' as const, id })),
+                              { type: 'events', id: 'LIST' },
+                          ]
+                        : [{ type: 'events', id: 'LIST' }],
             }),
         };
     },

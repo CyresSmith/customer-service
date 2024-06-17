@@ -17,10 +17,13 @@ export const categoriesApi = createApi({
                 method: 'GET',
                 params: { companyId },
             }),
-            providesTags: result =>
-                result
-                    ? result.map(item => ({ type: 'servicesCategories', id: item.id }))
-                    : ['servicesCategories'],
+            providesTags: resp =>
+                resp
+                    ? [
+                          ...resp.map(({ id }) => ({ type: 'servicesCategories' as const, id })),
+                          { type: 'servicesCategories', id: 'LIST' },
+                      ]
+                    : [{ type: 'servicesCategories', id: 'LIST' }],
         }),
 
         addServiceCategory: builder.mutation<
@@ -33,7 +36,7 @@ export const categoriesApi = createApi({
                 params: { companyId },
                 data,
             }),
-            invalidatesTags: ['servicesCategories'],
+            invalidatesTags: [{ type: 'servicesCategories', id: 'LIST' }],
         }),
 
         getCompanyCategories: builder.query<CompanyCategory[], null>({
@@ -41,10 +44,13 @@ export const categoriesApi = createApi({
                 url: `/category/company`,
                 method: 'GET',
             }),
-            providesTags: result =>
-                result
-                    ? result.map(item => ({ type: 'companyCategories', id: item.id }))
-                    : ['companyCategories'],
+            providesTags: resp =>
+                resp
+                    ? [
+                          ...resp.map(({ id }) => ({ type: 'companyCategories' as const, id })),
+                          { type: 'companyCategories', id: 'LIST' },
+                      ]
+                    : [{ type: 'companyCategories', id: 'LIST' }],
         }),
     }),
 });

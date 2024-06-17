@@ -1,33 +1,33 @@
 import CreateEvent from 'components/CreateEvent';
+import PageContentLayout from 'components/Layout/PageContentLayout';
 import RecordLog from 'components/RecordLog';
 import RecordLogBar from 'components/RecordLog/RecordLogBar';
 import { SelectItem } from 'components/Ui/Form/types';
 import Modal from 'components/Ui/Modal/Modal';
-import PageContentLayout from 'components/Ui/PageContentLayout';
+import { getDate, getMonth, getYear } from 'date-fns';
 import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
 import { useGetCompanyEmployeesQuery } from 'services/employee.api';
-import { useGetAllCompanySchedulesQuery } from 'services/schedules.api';
-import { IMonthSchedule } from 'services/types/schedule.types';
-import { BasicEmployeeInfo } from 'services/types/employee.types';
-import { EmployeeStatusEnum } from 'services/types/employee.types';
-import { getDate, getMonth, getYear } from 'date-fns';
 import { useGetCompanyEventsQuery } from 'services/events.api';
+import { useGetAllCompanySchedulesQuery } from 'services/schedules.api';
+import { BasicEmployeeInfo, EmployeeStatusEnum } from 'services/types/employee.types';
 import { EventType } from 'services/types/event.types';
+import { IMonthSchedule } from 'services/types/schedule.types';
+import theme from 'utils/theme';
 
 const getModalTitles = (step: string) => {
     return step === 'employees'
-        ? 'Оберіть працівника'
+        ? 'Вибір працівника'
         : step === 'services'
-        ? 'Оберіть послугу'
+        ? 'Вибір послуги'
         : step === 'date'
-        ? 'Оберіть дату та час'
+        ? 'Вибір дати та часу'
         : step === 'confirm'
-        ? 'Перевірте деталі запису'
-        : 'Створення запису';
+        ? 'Перевірка деталей запису'
+        : 'Вибір клієнта';
 };
 
-const initialSelection = [{ id: 'all', value: `Всі працівники` }];
+const initialSelection = [{ id: 'all', value: `Всі` }];
 
 const RecordLogPage = () => {
     const { workingHours, id } = useCompany();
@@ -37,6 +37,11 @@ const RecordLogPage = () => {
     const [allSchedules, setAllSchedules] = useState<IMonthSchedule[] | null>(null);
     const [allEmployees, setAllEmployees] = useState<BasicEmployeeInfo[] | null>(null);
     const [allEvents, setAllEvents] = useState<EventType[] | []>([]);
+    const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
+
+    const calendarToggle = () => setIsCalendarOpen(p => !p);
+    const closeCalendar = () => setIsCalendarOpen(false);
+
     const chosenYear = getYear(date);
     const chosenMonth = getMonth(date);
     const { data: employeesData, isFetching: fetchingEmployees } = useGetCompanyEmployeesQuery(id, {
@@ -72,43 +77,6 @@ const RecordLogPage = () => {
             setAllEvents(eventsData);
         }
     }, [employeesData, eventsData, schedulesData]);
-
-    // useEffect(() => {
-    //     const getData = async () => {
-    //         if (id) {
-    //             await getEmployees(id)
-    //                 .then(response => {
-    //                     if (Array.isArray(response.data)) {
-    //                         setAllEmployees(response.data);
-    //                     }
-    //                 })
-    //                 .then(async () => {
-    //                     await getSchedules({
-    //                         companyId: id,
-    //                         month: chosenMonth,
-    //                         year: chosenYear,
-    //                     }).then(response => {
-    //                         if (Array.isArray(response.data)) {
-    //                             setAllSchedules(response.data);
-    //                         }
-    //                     });
-    //                 })
-    //                 .then(async () => {
-    //                     await getEvents({
-    //                         companyId: id,
-    //                         year: chosenYear,
-    //                         month: chosenMonth,
-    //                     }).then(response => {
-    //                         if (Array.isArray(response.data)) {
-    //                             setAllEvents(response.data);
-    //                         }
-    //                     });
-    //                 });
-    //         }
-    //     };
-
-    //     getData();
-    // }, [chosenMonth, chosenYear, getEmployees, getEvents, getSchedules, id]);
 
     const workingProviders =
         allEmployees &&
@@ -185,6 +153,8 @@ const RecordLogPage = () => {
                             setDate={setDate}
                             handleSelect={handleSelect}
                             openEventModal={handleEventStep}
+                            calendarToggle={calendarToggle}
+                            closeCalendar={closeCalendar}
                         />
                     }
                     content={
@@ -196,13 +166,15 @@ const RecordLogPage = () => {
                             workingHours={workingHours}
                             employees={filteredProvidersList}
                             companyId={id}
+                            isCalendarOpen={isCalendarOpen}
+                            closeCalendar={closeCalendar}
                         />
                     }
                 />
                 {eventStep !== null && (
                     <Modal
                         id="createEvent"
-                        titleMargin="10px"
+                        titleMargin={theme.space[5]}
                         closeModal={closeEventModal}
                         $isOpen={eventStep !== null}
                         title={getModalTitles(eventStep)}

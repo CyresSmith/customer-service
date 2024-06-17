@@ -1,5 +1,6 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from 'services/instance';
+import { store } from 'store/store';
 import {
     AuthState,
     RegisterResponse,
@@ -11,6 +12,7 @@ import {
     UserRegister,
     UserState,
 } from '../store/user/user.types';
+import { createSocketConnection, socket } from './socket';
 import { MessageResponse } from './types';
 
 export const authApi = createApi({
@@ -45,6 +47,11 @@ export const authApi = createApi({
                 data,
             }),
             invalidatesTags: ['auth'],
+            async onCacheEntryAdded(_, { cacheDataLoaded }) {
+                const { data } = await cacheDataLoaded;
+
+                if (data.accessToken) await createSocketConnection(data.accessToken);
+            },
         }),
 
         current: builder.query<AuthState, undefined>({
@@ -53,6 +60,12 @@ export const authApi = createApi({
                 method: 'GET',
             }),
             providesTags: ['user'],
+            async onCacheEntryAdded(_, { cacheDataLoaded }) {
+                const { data } = await cacheDataLoaded;
+                const token = store.getState().user.accessToken;
+
+                if (data.user && token) await createSocketConnection(token);
+            },
         }),
 
         updateUser: builder.mutation<User, UpdateUser>({
@@ -70,6 +83,10 @@ export const authApi = createApi({
                 method: 'POST',
             }),
             invalidatesTags: ['auth'],
+            async onCacheEntryAdded(_, { cacheDataLoaded }) {
+                const { data } = await cacheDataLoaded;
+                if (data) socket.disconnect();
+            },
         }),
 
         uploadAvatar: builder.mutation<{ url: string }, UploadAvatar>({
@@ -96,6 +113,11 @@ export const authApi = createApi({
                 method: 'DELETE',
             }),
             invalidatesTags: ['auth'],
+            async onCacheEntryAdded(_, { cacheDataLoaded }) {
+                const { data } = await cacheDataLoaded;
+
+                if (data.message && socket) socket.disconnect();
+            },
         }),
     }),
 });

@@ -13,7 +13,7 @@ export const companyApi = createApi({
 
     baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-    tagTypes: ['company'],
+    tagTypes: ['companies'],
 
     endpoints: builder => ({
         createCompany: builder.mutation<Company, CreateCompany>({
@@ -22,7 +22,13 @@ export const companyApi = createApi({
                 method: 'POST',
                 data,
             }),
-            invalidatesTags: resp => (resp ? [{ type: 'company', id: resp.id }] : ['company']),
+            invalidatesTags: resp =>
+                resp
+                    ? [
+                          { type: 'companies', id: resp.id },
+                          { type: 'companies', id: 'LIST' },
+                      ]
+                    : [{ type: 'companies', id: 'LIST' }],
         }),
 
         getCompanyById: builder.query<Company, { companyId: string | undefined }>({
@@ -31,7 +37,7 @@ export const companyApi = createApi({
                     url: `/company/${companyId}`,
                     method: 'GET',
                 },
-            providesTags: (_resp, _err, arg) => [{ type: 'company', id: arg.companyId }],
+            providesTags: (_resp, _err, { companyId: id }) => [{ type: 'companies', id }],
         }),
 
         getCompanyProfile: builder.query<Company, number>({
@@ -39,7 +45,7 @@ export const companyApi = createApi({
                 url: `/company/${id}/profile`,
                 method: 'GET',
             }),
-            providesTags: (_resp, _err, id) => [{ type: 'company', id }],
+            providesTags: (_resp, _err, id) => [{ type: 'companies', id }],
         }),
 
         updateCompanyProfile: builder.mutation<{ message: string }, IUpdateCompanyProfile>({
@@ -48,7 +54,10 @@ export const companyApi = createApi({
                 method: 'PATCH',
                 data,
             }),
-            invalidatesTags: (_resp, _err, arg) => [{ type: 'company', id: arg.id }],
+            invalidatesTags: (_resp, _err, { id }) => [
+                { type: 'companies', id },
+                { type: 'companies', id: 'LIST' },
+            ],
         }),
 
         getCompanyActivities: builder.query<Activity[], number>({
@@ -56,7 +65,7 @@ export const companyApi = createApi({
                 url: `/company/${id}/activities`,
                 method: 'GET',
             }),
-            providesTags: (_resp, _err, id) => [{ type: 'company', id }],
+            providesTags: (_resp, _err, id) => [{ type: 'companies', id }],
         }),
 
         uploadCompanyAvatar: builder.mutation<{ url: string }, UpdateAvatar>({
@@ -65,7 +74,10 @@ export const companyApi = createApi({
                 method: 'POST',
                 data,
             }),
-            invalidatesTags: (_resp, _err, arg) => [{ type: 'company', id: arg.id }],
+            invalidatesTags: (_resp, _err, { id }) => [
+                { type: 'companies', id },
+                { type: 'companies', id: 'LIST' },
+            ],
         }),
     }),
 });

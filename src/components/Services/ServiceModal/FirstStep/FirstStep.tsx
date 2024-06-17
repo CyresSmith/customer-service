@@ -191,13 +191,12 @@ const FirstStep = ({
         <Loader />
     ) : (
         <>
-            <FirstStepBox>
+            <FirstStepBox $isEdit={openModal === ServiceOpenModal.EDIT_SERVICE}>
                 {openModal === ServiceOpenModal.EDIT_SERVICE && (
                     <Avatar
                         currentImageUrl={serviceData.avatar || ''}
                         isLoading={isAvatarLoading}
                         allowChanges={isAdmin}
-                        size={150}
                         alt="service image"
                         handleUpload={handleAvatarUpload}
                     />
@@ -224,6 +223,7 @@ const FirstStep = ({
                                 isValid={getErrorMessage(item.name, invalidFields)}
                                 disabledIcon={item.name === 'category' ? true : false}
                                 isReadonly={!isAdmin}
+                                visibleItemsCount={5}
                             />
                         ))}
                     </FormSide>

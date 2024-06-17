@@ -1,81 +1,154 @@
 import styled from 'styled-components';
 import theme from 'utils/theme';
 
-// type ListProps = { $daysCount: number };
-
-// const firstCellWidth = '100px';
 const cellSize = '100px';
+const mobileCellSize = '50px';
+
+export const Container = styled.div<{ $isEditable: boolean }>`
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    flex: 1;
+    overflow: hidden;
+`;
 
 export const WorkScheduleBox = styled.section`
-    overflow-x: scroll;
-    position: relative;
+    display: grid;
+    grid-template-rows: ${cellSize} 1fr;
     background-color: ${theme.colors.bg.main};
     border-radius: ${theme.radii.m};
     height: 100%;
-    width: 100%;
-    padding: ${theme.space[3]};
+    overflow: hidden;
+    position: relative;
+
+    @media ${theme.breakpoints.desktop.media} {
+        grid-template-rows: ${cellSize} 1fr;
+    }
 `;
 
-export const Today = styled.div<{ $left: number }>`
-    height: calc(100% - (${theme.space[3]} * 2));
-    width: ${cellSize};
-    border: ${theme.borders.bold} ${theme.colors.accent.main};
+export const Today = styled.div<{ $left: number; $employeesCount: number; $daysCount: number }>`
+    height: 100%;
+    width: ${({ $daysCount }) => `calc(((100% - 12px) - (${mobileCellSize} * 2)) / ${$daysCount})`};
+    border: 4px solid ${theme.colors.accent.main};
     border-radius: ${theme.radii.m};
     position: absolute;
-    top: ${theme.space[3]};
-    left: ${({ $left }) => `calc((${cellSize} * ${$left}) + ${theme.space[3]})`};
+    top: 0;
+    /* left: ${({ $left, $daysCount }) => `calc(${$left} * (100% / ${$daysCount}))`}; */
+    left: ${({ $left, $daysCount }) => {
+        return `calc(${mobileCellSize} + 6px + (((100% - (${mobileCellSize} * 2) - 12px) / ${$daysCount}) * ${$left}))`;
+    }};
     z-index: 3;
     pointer-events: none;
+
+    @media ${theme.breakpoints.tablet.media} {
+        width: ${({ $daysCount }) =>
+            `calc((100% - (${mobileCellSize} * 2) - 12px) / ${$daysCount})`};
+
+        left: ${({ $left, $daysCount }) =>
+            `calc(${mobileCellSize} + 6px + (((100% - (${mobileCellSize} * 2) - 12px) / ${$daysCount}) * ${$left}))`};
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        width: ${({ $daysCount }) => `calc((100% - (${cellSize} * 2) - 32px) / ${$daysCount})`};
+
+        left: ${({ $left, $daysCount }) =>
+            `calc(${cellSize} + 16px + (((100% - (${cellSize} * 2) - 32px) / ${$daysCount}) * ${$left}))`};
+    }
 `;
 
-export const SchedulesList = styled.div`
+export const HeaderBox = styled.div`
+    display: grid;
+    grid-template-columns: ${mobileCellSize} 1fr ${mobileCellSize};
+    grid-template-rows: ${cellSize};
+    padding: 0 ${theme.space[2]};
+
+    @media ${theme.breakpoints.desktop.media} {
+        grid-template-columns: ${cellSize} 1fr ${cellSize};
+        padding: 0 ${theme.space[4]};
+    }
+`;
+
+export const HeaderButtonBox = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: ${theme.borders.normal} ${theme.colors.bg.light};
+`;
+
+export const SchedulesBox = styled.div`
     height: 100%;
+    width: 100%;
+    overflow-x: scroll;
+    display: grid;
+    grid-template-columns: ${mobileCellSize} 1fr ${mobileCellSize};
+    grid-template-rows: 1fr;
+    padding: 0 ${theme.space[2]} ${theme.space[2]} ${theme.space[2]};
+
+    @media ${theme.breakpoints.desktop.media} {
+        grid-template-columns: ${cellSize} 1fr ${cellSize};
+        padding: 0 ${theme.space[4]} ${theme.space[4]} ${theme.space[4]};
+    }
 `;
 
 export const SchedulesListBox = styled.ul<{ $daysCount: number }>`
-    width: ${({ $daysCount }) => `calc((${cellSize} * ${$daysCount}))`};
-    height: calc(100% - ${cellSize});
-    overflow-y: auto;
-    overflow-x: hidden;
     position: relative;
-    z-index: 2;
-`;
-
-export const EmployeesList = styled.ul<{ $employeesCount: number }>`
-    position: absolute;
-    top: -${cellSize};
-    background-color: ${theme.colors.bg.main};
-    z-index: 999;
-    display: flex;
-    flex-direction: column;
-    padding-top: ${cellSize};
-    height: ${({ $employeesCount }) => `calc(${cellSize} *  ${$employeesCount} + ${cellSize})`};
 `;
 
 export const HeaderRowBox = styled.ul<{ $daysCount: number }>`
     display: grid;
-    grid-template-columns: ${({ $daysCount }) => `repeat(${$daysCount}, ${cellSize})`};
+    grid-template-columns: ${({ $daysCount }) => `repeat(${$daysCount}, 1fr)`};
     grid-template-rows: ${cellSize};
-    z-index: 1;
-    position: relative;
+    border-bottom: ${theme.borders.normal} ${theme.colors.bg.light};
+
+    @media ${theme.breakpoints.desktop.media} {
+        grid-template-rows: ${cellSize};
+    }
 `;
 
-export const RowBox = styled.li<{ $daysCount: number }>`
+export const RowBox = styled.li<{ $daysCount: number; $employeesCount: number }>`
     position: relative;
     display: grid;
-    grid-template-columns: ${({ $daysCount }) => `repeat(${$daysCount}, ${cellSize})`};
+    grid-template-columns: ${({ $daysCount }) => `repeat(${$daysCount}, 1fr)`};
     grid-template-rows: ${cellSize};
+    border-bottom: ${theme.borders.normal} ${theme.colors.bg.light};
+
+    @media ${theme.breakpoints.desktop.media} {
+        grid-template-rows: ${cellSize};
+    }
+`;
+
+export const EmployeesList = styled.ul<{ $employeesCount: number }>`
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 `;
 
 export const Employee = styled.li`
-    width: ${cellSize};
-    height: ${cellSize};
+    width: ${mobileCellSize};
+    height: calc(${cellSize} + 1px);
+    gap: ${theme.space[1]};
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-bottom: ${theme.borders.normal} ${theme.colors.bg.light};
     cursor: pointer;
+    overflow: hidden;
+    border-bottom: ${theme.borders.normal} ${theme.colors.bg.light};
+
+    @media ${theme.breakpoints.desktop.media} {
+        width: ${cellSize};
+        height: calc(${cellSize} + 1px);
+        gap: ${theme.space[2]};
+    }
+`;
+
+export const Name = styled.p`
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+    overflow: hidden;
 `;
 
 type DayProps = {
@@ -87,10 +160,9 @@ export const HeaderDay = styled.li<DayProps>`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    border-bottom: ${theme.borders.normal} ${theme.colors.bg.light};
+    justify-content: space-around;
     font-size: ${theme.fontSizes.m};
-    padding: ${theme.space[4]} 0;
+    padding: ${theme.space[2]} 0;
     font-weight: ${theme.fontWeights.light};
     cursor: ${({ $isNotWorkingDay }) => ($isNotWorkingDay ? 'default' : 'pointer')};
     opacity: ${({ $isNotWorkingDay }) => ($isNotWorkingDay ? 0.5 : 1)};
@@ -104,6 +176,10 @@ export const HeaderDay = styled.li<DayProps>`
                 ? theme.colors.white
                 : theme.colors.primary.light};
     }
+
+    @media ${theme.breakpoints.desktop.media} {
+        padding: ${theme.space[4]} 0;
+    }
 `;
 
 export const DayDateBox = styled.div<DayProps>`
@@ -112,6 +188,7 @@ export const DayDateBox = styled.div<DayProps>`
     align-items: center;
     color: ${({ $isToday }) => ($isToday ? theme.colors.accent.main : 'inherit')};
     transition: ${theme.transition.primary};
+    overflow: hidden;
 `;
 
 export const DayDate = styled.span`
@@ -120,14 +197,21 @@ export const DayDate = styled.span`
 
 export const DayName = styled.span`
     font-size: ${theme.fontSizes.l};
+    overflow: hidden;
+    text-overflow: ellipsis;
 `;
 
 export const WorkHours = styled.div<DayProps>`
     color: ${({ $isToday }) => ($isToday ? theme.colors.accent.main : theme.colors.secondary.main)};
+    display: flex;
+    flex-direction: column;
+
+    @media ${theme.breakpoints.desktop.media} {
+        flex-direction: row;
+    }
 `;
 
 export const Day = styled.div<DayProps>`
-    border-bottom: ${theme.borders.normal} ${theme.colors.bg.light};
     cursor: pointer;
     padding: ${theme.space[2]};
     cursor: ${({ $isNotWorkingDay }) => ($isNotWorkingDay ? 'default' : 'pointer')};
@@ -136,9 +220,9 @@ export const Day = styled.div<DayProps>`
 `;
 
 export const DayBox = styled.div<{ $selected?: boolean } & DayProps>`
-    width: 100%;
+    /* width: 100%; */
     height: 100%;
-    border-radius: ${theme.radii.s};
+    border-radius: ${theme.radii.m};
     color: ${({ $selected }) => ($selected ? theme.colors.bg.dark : theme.colors.white)};
     background-color: ${({ $selected }) =>
         $selected ? theme.colors.secondary.light : 'transparent'};
@@ -147,11 +231,11 @@ export const DayBox = styled.div<{ $selected?: boolean } & DayProps>`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: ${theme.space[2]};
+    gap: ${theme.space[0]};
     font-size: ${theme.fontSizes.l};
 
     &:hover {
-        color: ${({ $selected }) => ($selected ? theme.colors.bg.dark : theme.colors.white)};
+        color: ${({ $isNotWorkingDay }) => ($isNotWorkingDay ? 'inherit' : theme.colors.bg.main)};
         background-color: ${({ $isNotWorkingDay, $selected }) =>
             $isNotWorkingDay
                 ? 'transparent'
@@ -163,8 +247,13 @@ export const DayBox = styled.div<{ $selected?: boolean } & DayProps>`
 
 export const DayBreak = styled.div<{ $selected?: boolean }>`
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: ${theme.space[1]};
     font-size: ${theme.fontSizes.s};
     color: inherit;
+
+    @media ${theme.breakpoints.desktop.media} {
+        flex-direction: row;
+    }
 `;

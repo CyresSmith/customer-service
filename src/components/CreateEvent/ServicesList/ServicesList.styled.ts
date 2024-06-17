@@ -31,6 +31,8 @@ export const ServiceName = styled.p`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: ${theme.fontSizes.l};
+    text-transform: capitalize;
 `;
 
 export const RightWrapper = styled.div`

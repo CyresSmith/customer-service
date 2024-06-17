@@ -6,11 +6,11 @@ export const ConfirmContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: ${theme.space[5]};
-    max-width: 50vw;
 `;
 
 export const ConfirmText = styled.p`
     font-size: ${theme.fontSizes.xxl};
+    text-align: center;
 `;
 
 export const ConfirmBtnsWrapper = styled.div`

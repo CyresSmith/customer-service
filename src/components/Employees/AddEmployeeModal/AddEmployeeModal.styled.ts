@@ -2,7 +2,9 @@ import styled from 'styled-components';
 import theme from 'utils/theme';
 
 export const FormBox = styled.div`
-    width: 400px;
+    @media ${theme.breakpoints.desktop.media} {
+        width: 400px;
+    }
 `;
 
 export const Message = styled.p`

@@ -1,11 +1,8 @@
 import { ButtonBox } from 'components/Services/ServiceModal/ServiceModal.styled';
 import SettingsBlock from 'components/Services/ServiceModal/ThirdStep/SettingsBlock';
-import {
-    Parameter,
-    SettingsBlockBox,
-} from 'components/Services/ServiceModal/ThirdStep/ThirdStep.styled';
 import Button from 'components/Ui/Buttons/Button';
 import { SelectItem } from 'components/Ui/Form/types';
+import ItemAvatar from 'components/Ui/ItemsList/ItemAvatar';
 import Modal from 'components/Ui/Modal/Modal';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import generateSelectTimeArray from 'helpers/generateSelectTimeArray';
@@ -16,7 +13,6 @@ import { toast } from 'react-toastify';
 import { useUpdateServiceDataMutation } from 'services/service.api';
 import { EmployeesServiceSettings } from 'services/types/service.type';
 import { ServiceDataBox, ServiceName } from '../EmployeeServices.styled';
-import ItemAvatar from 'components/Ui/ItemsList/ItemAvatar';
 
 type Props = {
     openModal: boolean;
@@ -100,17 +96,17 @@ const EditEmployeeServiceModal = ({ openModal, handleModalClose, service }: Prop
     );
 
     return (
-        <Modal id="EditEmployeeServiceModal" $isOpen={openModal} closeModal={handleModalClose}>
+        <Modal
+            $w="650px"
+            id="EditEmployeeServiceModal"
+            $isOpen={openModal}
+            closeModal={handleModalClose}
+            title="Редагування послуги"
+        >
             <form
                 onSubmit={handleSubmit}
                 style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
             >
-                <SettingsBlockBox as="ul">
-                    <Parameter>Послуга</Parameter>
-                    <Parameter>Ціна, грн</Parameter>
-                    <Parameter>Час</Parameter>
-                </SettingsBlockBox>
-
                 <SettingsBlock
                     handleChange={handleChange}
                     handleSelect={handleSelect}

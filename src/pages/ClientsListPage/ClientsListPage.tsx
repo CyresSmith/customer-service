@@ -7,6 +7,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCreateClientMutation, useGetAllClientsQuery } from 'services/clients.api';
 import { Client } from 'services/types/clients.types';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 
 const addInitialState: Client = {
     id: 0,
@@ -28,6 +30,9 @@ enum OpenModal {
 }
 
 const ClientsListPage = () => {
+    const isTablet = useMediaQuery(theme.breakpoints.tablet.media);
+    const isDesktop = useMediaQuery(theme.breakpoints.desktop.media);
+
     const { id: companyId } = useCompany();
     const [modalOpen, setModalOpen] = useState<OpenModal | null>(null);
     const [chosenClientId, setChosenClientId] = useState<number | null>(null);
@@ -61,41 +66,45 @@ const ClientsListPage = () => {
         }
     };
 
+    const items =
+        data?.map(({ id, avatar, firstName, lastName, phone, email, gender, createdAt }) => {
+            let userData = {
+                id,
+                avatar: avatar || '',
+                name: `${firstName}  ${lastName && lastName}`,
+                phone,
+            };
+
+            if (isTablet || isDesktop) {
+                userData = Object.assign(userData, {
+                    gender: gender || 'other',
+                    email: email || 'Пошта не вказана',
+                });
+            }
+
+            if (isDesktop) {
+                userData = Object.assign(userData, {
+                    register: createdAt ? new Date(createdAt).toLocaleDateString() : '',
+                });
+            }
+
+            return userData;
+        }) || [];
+
+    const keyForSelect =
+        items.length > 0 && Object.keys(items[0]).includes('gender') ? 'gender' : undefined;
+
     return (
         <>
             <ItemsList
-                items={
-                    !data
-                        ? []
-                        : data.map(
-                              ({
-                                  id,
-                                  avatar,
-                                  firstName,
-                                  lastName,
-                                  phone,
-                                  email,
-                                  gender,
-                                  createdAt,
-                              }) => ({
-                                  id,
-                                  avatar: avatar || '',
-                                  name: `${firstName}  ${lastName && lastName}`,
-                                  phone,
-                                  email: email || 'Пошта не вказана',
-                                  gender: gender || 'other',
-                                  register: createdAt
-                                      ? new Date(createdAt).toLocaleDateString()
-                                      : '',
-                              })
-                          )
-                }
+                items={items}
                 onItemClick={handleItemClick}
-                addButtonTitle="Додати клієнта"
+                addButtonTitle={'Додати клієнта'}
                 onAddClick={() => setModalOpen(OpenModal.ADD)}
-                keyForSelect="gender"
+                keyForSelect={keyForSelect as 'phone' | 'name' | undefined}
                 keyForSearch="phone"
-                notSortedKeys={['phone', 'email']}
+                notSortedKeys={['phone', 'email'] as ('phone' | 'name')[] | undefined}
+                nameColumnTitle="Ім'я"
             />
 
             {modalOpen === OpenModal.ADD && (

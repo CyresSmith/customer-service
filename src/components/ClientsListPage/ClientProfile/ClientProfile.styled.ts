@@ -18,14 +18,37 @@ export const ClientName = styled.p`
 `;
 
 export const SidesWrapper = styled.div`
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content 1fr;
     gap: ${theme.space[5]};
+
+    @media ${theme.breakpoints.tablet.media} {
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        grid-template-columns: 200px 1fr;
+        grid-template-rows: 1fr;
+    }
 `;
 
 export const LeftSideWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+
+    @media ${theme.breakpoints.tablet.media} {
+        justify-content: space-between;
+        align-items: start;
+    }
+
+    @media ${theme.breakpoints.desktop.media} {
+        justify-content: space-between;
+        align-items: start;
+    }
 `;
 
 export const BtnWrapper = styled.div`

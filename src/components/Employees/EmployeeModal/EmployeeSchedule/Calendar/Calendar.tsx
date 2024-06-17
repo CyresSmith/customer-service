@@ -16,9 +16,11 @@ import {
     previousMonday,
     startOfMonth,
 } from 'date-fns';
-import { weekDays } from 'helpers/constants';
+import { shortWeekDays, weekDays } from 'helpers/constants';
 import { useCompany } from 'hooks/useCompany';
 import { IDaySchedule } from 'services/types/schedule.types';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
 
 type Props = {
     monthSchedule: IDaySchedule[];
@@ -40,6 +42,8 @@ const Calendar = ({
     toNextMonth,
     toPrevMonth,
 }: Props) => {
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
+
     const today = new Date(Date.now());
     const { workingHours } = useCompany();
 
@@ -95,7 +99,7 @@ const Calendar = ({
 
     return (
         <CalendarBox>
-            {weekDays.map(({ name, id }) => {
+            {(isMobile ? shortWeekDays : weekDays).map(({ name, id }) => {
                 const hours = workingHours?.find(({ days }) => days.includes(id))?.hours;
 
                 return (
@@ -103,7 +107,13 @@ const Calendar = ({
                         <WeekDay>
                             <span>{name}</span>
 
-                            {hours && <Hours>{`${hours.from} - ${hours.to}`}</Hours>}
+                            {hours && (
+                                <Hours>
+                                    <span>{hours.from}</span>
+                                    {!isMobile && <span> - </span>}
+                                    <span>{hours.to}</span>
+                                </Hours>
+                            )}
                         </WeekDay>
                     </div>
                 );
@@ -136,17 +146,17 @@ const Calendar = ({
                         <DayDate $today={isToday}>{dateFormat(date)}</DayDate>
                         {daySchedule && (
                             <DaySchedule>
-                                <span>
-                                    {daySchedule?.hours?.from} - {daySchedule?.hours?.to}
-                                </span>
+                                <span>{daySchedule?.hours?.from}</span>
 
                                 {daySchedule?.breakHours?.from && daySchedule?.breakHours?.to && (
                                     <Break>
-                                        {daySchedule.breakHours.from}
-                                        {' - '}
-                                        {daySchedule.breakHours.to}
+                                        <span>{daySchedule.breakHours.from}</span>
+                                        {!isMobile && <span> - </span>}
+                                        <span>{daySchedule.breakHours.to}</span>
                                     </Break>
                                 )}
+
+                                <span>{daySchedule?.hours?.to}</span>
                             </DaySchedule>
                         )}
                     </Day>

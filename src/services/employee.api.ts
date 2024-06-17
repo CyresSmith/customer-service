@@ -21,7 +21,7 @@ export const employeeApi = createApi({
 
     baseQuery: axiosBaseQuery() as BaseQueryFn,
 
-    tagTypes: ['employee', 'allEmployees'],
+    tagTypes: ['employees'],
 
     endpoints: builder => ({
         findUserData: builder.mutation<UserData, { companyId: number; email: string }>({
@@ -31,8 +31,7 @@ export const employeeApi = createApi({
                 data: { email },
                 params: { companyId },
             }),
-            invalidatesTags: result =>
-                result ? [{ type: 'employee', id: result?.id }] : ['employee'],
+            invalidatesTags: result => [{ type: 'employees', id: result?.id }],
         }),
 
         addExistUserEmployee: builder.mutation<IEmployee, addExistUserEmployeeData>({
@@ -42,10 +41,10 @@ export const employeeApi = createApi({
                 data,
                 params: { companyId },
             }),
-            invalidatesTags: result =>
-                result
-                    ? [{ type: 'employee', id: result?.id }, 'allEmployees']
-                    : ['employee', 'allEmployees'],
+            invalidatesTags: (_resp, _err, { companyId: id }) => [
+                { type: 'employees', id },
+                { type: 'employees', id: 'LIST' },
+            ],
         }),
 
         addNewUserEmployee: builder.mutation<IEmployee, addNewUserEmployeeData>({
@@ -55,8 +54,10 @@ export const employeeApi = createApi({
                 data,
                 params: { companyId },
             }),
-            invalidatesTags: result =>
-                result ? [{ type: 'employee', id: result?.id }] : ['employee'],
+            invalidatesTags: (_resp, _err, { companyId: id }) => [
+                { type: 'employees', id },
+                { type: 'employees', id: 'LIST' },
+            ],
         }),
 
         getOneEmployee: builder.query<IEmployee, { companyId: number; id: number }>({
@@ -65,19 +66,20 @@ export const employeeApi = createApi({
                 method: 'GET',
                 params: { companyId },
             }),
-            providesTags: (_result, _err, arg) => [{ type: 'employee', id: arg.id }],
+            providesTags: (_result, _err, { id }) => [{ type: 'employees', id }],
         }),
 
-        getCompanyEmployees: builder.query<BasicEmployeeInfo[], number>({
-            query: companyId => ({
-                url: `employees/get-all-from-company`,
-                method: 'GET',
-                params: { companyId },
-            }),
-            providesTags: result =>
-                result
-                    ? result.map(item => ({ type: 'allEmployees', id: item.id }))
-                    : ['allEmployees'],
+        getCompanyEmployees: builder.query<BasicEmployeeInfo[], number | null>({
+            query: companyId => {
+                if (!companyId) return;
+
+                return {
+                    url: `employees/get-all-company-employees`,
+                    method: 'GET',
+                    params: { companyId },
+                };
+            },
+            providesTags: () => [{ type: 'employees', id: 'LIST' }],
         }),
 
         uploadEmployeeAvatar: builder.mutation<{ url: string }, UpdateEmployeeAvatar>({
@@ -87,9 +89,9 @@ export const employeeApi = createApi({
                 data,
                 params: { companyId },
             }),
-            invalidatesTags: (_result, _err, arg) => [
-                { type: 'employee', id: arg.employeeId },
-                { type: 'allEmployees', id: arg.employeeId },
+            invalidatesTags: (_result, _err, { employeeId: id }) => [
+                { type: 'employees', id },
+                { type: 'employees', id: 'LIST' },
             ],
         }),
 
@@ -103,9 +105,9 @@ export const employeeApi = createApi({
                 data,
                 params: { companyId },
             }),
-            invalidatesTags: (_result, _err, arg) => [
-                { type: 'employee', id: arg.employeeId },
-                { type: 'allEmployees', id: arg.employeeId },
+            invalidatesTags: (_result, _err, { employeeId: id }) => [
+                { type: 'employees', id },
+                { type: 'employees', id: 'LIST' },
             ],
         }),
 
@@ -146,9 +148,9 @@ export const employeeApi = createApi({
                 params: { companyId },
                 method: 'DELETE',
             }),
-            invalidatesTags: (_result, _err, arg) => [
-                { type: 'employee', id: arg.employeeId },
-                { type: 'allEmployees', id: arg.employeeId },
+            invalidatesTags: (_result, _err, { employeeId: id }) => [
+                { type: 'employees', id },
+                { type: 'employees', id: 'LIST' },
             ],
         }),
 
@@ -162,9 +164,9 @@ export const employeeApi = createApi({
                 method: 'PATCH',
                 data,
             }),
-            invalidatesTags: (_result, _err, arg) => [
-                { type: 'employee', id: arg.employeeId },
-                { type: 'allEmployees', id: arg.employeeId },
+            invalidatesTags: (_result, _err, { employeeId: id }) => [
+                { type: 'employees', id },
+                { type: 'employees', id: 'LIST' },
             ],
         }),
 
@@ -177,10 +179,7 @@ export const employeeApi = createApi({
                 params: { companyId },
                 method: 'DELETE',
             }),
-            invalidatesTags: (_result, _err, arg) => [
-                { type: 'employee', id: arg.employeeId },
-                { type: 'allEmployees', id: arg.employeeId },
-            ],
+            invalidatesTags: () => [{ type: 'employees', id: 'LIST' }],
         }),
     }),
 });

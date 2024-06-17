@@ -1,14 +1,9 @@
+import ItemAvatar from 'components/Ui/ItemsList/ItemAvatar';
 import { BasicEmployeeInfo } from 'services/types/employee.types';
-import {
-    Avatar,
-    AvatarWrapper,
-    EmployeeDaySchedule,
-    ListItem,
-    EmployeeName,
-    InfoBox,
-    NoAvatar,
-} from './EmployeesInfoList.styled';
 import { IMonthSchedule } from 'services/types/schedule.types';
+import { useMediaQuery } from 'usehooks-ts';
+import theme from 'utils/theme';
+import { EmployeeDaySchedule, EmployeeName, InfoBox, ListItem } from './EmployeesInfoList.styled';
 
 type Props = {
     employee: BasicEmployeeInfo;
@@ -18,6 +13,8 @@ type Props = {
 };
 
 export const EmployeesInfoListItem = ({ employee, last, date, schedules }: Props) => {
+    const isMobile = useMediaQuery(theme.breakpoints.mobile.media);
+
     const { lastName, firstName, avatar } = employee;
 
     const chosenDay = new Date(date).getDate();
@@ -34,12 +31,14 @@ export const EmployeesInfoListItem = ({ employee, last, date, schedules }: Props
 
     return (
         <ListItem $last={last}>
-            <AvatarWrapper>
-                {avatar ? <Avatar src={avatar} alt="Photo" /> : <NoAvatar>{firstName[0]}</NoAvatar>}
-            </AvatarWrapper>
+            {!isMobile && <ItemAvatar name={firstName + ' ' + lastName} avatar={avatar} />}
             <InfoBox>
-                <EmployeeName>{lastName ? firstName + ' ' + lastName : firstName}</EmployeeName>
-                <EmployeeDaySchedule>{`${chosenSchedule?.from && chosenSchedule?.to ? chosenSchedule.from + ' - ' + chosenSchedule.to : 'Не встановлено'}`}</EmployeeDaySchedule>
+                <EmployeeName>{firstName + ' ' + lastName}</EmployeeName>
+                <EmployeeDaySchedule>{`${
+                    chosenSchedule?.from && chosenSchedule?.to
+                        ? chosenSchedule.from + ' - ' + chosenSchedule.to
+                        : 'Не встановлено'
+                }`}</EmployeeDaySchedule>
             </InfoBox>
         </ListItem>
     );
