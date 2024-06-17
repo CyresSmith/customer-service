@@ -1,5 +1,5 @@
 import { EventType } from 'services/types/event.types';
-import { Event, EventWrapper } from './RecordLogList.styled';
+import { EventInfo, EventInfoItem, EventWrapper } from './RecordLogList.styled';
 
 type Props = {
     event: EventType;
@@ -7,14 +7,31 @@ type Props = {
 };
 
 export const EmployeeEvent = ({ event, employeeSchedule }: Props) => {
-    const { time, duration } = event;
+    const {
+        time,
+        duration,
+        client: { phone },
+        services,
+    } = event;
 
     const start = employeeSchedule.indexOf(time.from);
     const height = duration / 1000 / 60;
 
     return (
         <EventWrapper $top={start} $height={height}>
-            <Event />
+            <EventInfo>
+                <EventInfoItem>Час: {`${time.from} - ${time.to}`}</EventInfoItem>
+                {/* <EventInfoItem>
+                    Клієнт: {`${lastName ? firstName + ' ' + lastName : firstName}`}
+                </EventInfoItem> */}
+                <EventInfoItem>Телефон клієнта: {phone}</EventInfoItem>
+                <EventInfoItem>
+                    Послуги:{' '}
+                    {services.map(({ name }) => (
+                        <span>{name} </span>
+                    ))}
+                </EventInfoItem>
+            </EventInfo>
         </EventWrapper>
     );
 };

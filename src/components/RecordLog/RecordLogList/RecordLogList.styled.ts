@@ -63,9 +63,19 @@ export const EventWrapper = styled.div<{ $top: number; $height: number }>`
     padding: ${theme.space[1]};
 `;
 
-export const Event = styled.div`
+export const EventInfo = styled.ul`
     width: 100%;
     height: 100%;
     border-radius: ${theme.radii.s};
     background-color: ${theme.colors.primary.rgba};
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: center;
+    align-items: center;
+    gap: ${theme.space[3]};
+`;
+
+export const EventInfoItem = styled.li`
+    color: ${theme.colors.bg.main};
+    font-weight: ${theme.fontWeights.bold};
 `;
