@@ -4,6 +4,13 @@ import theme from 'utils/theme';
 export const StatisticBox = styled.section`
     padding-bottom: ${theme.space[4]};
     border-bottom: ${theme.borders.normal} ${theme.colors.secondary.main};
+    display: flex;
+    gap: ${theme.space[4]};
+    align-items: flex-start;
+`;
+
+export const ChartBox = styled.div`
+    height: 100%;
 `;
 
 export const CashboxList = styled.ul`

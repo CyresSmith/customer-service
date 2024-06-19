@@ -9,6 +9,7 @@ import {
 } from './types/cashbox.types';
 import {
     GetTransactionsParams,
+    Transaction,
     TransactionBasicInfo,
     addChangeBalanceDto,
     addMovingTransactionDto,
@@ -201,7 +202,10 @@ export const cashboxApi = createApi({
                     : [{ type: 'transaction', id: 'LIST' }],
         }),
 
-        getTransactionsPeriod: builder.query<any, { companyId: number; from: string; to: string }>({
+        getTransactionsPeriod: builder.query<
+            Transaction[],
+            { companyId: number; from: string; to: string }
+        >({
             query: params => ({
                 url: `/transaction/period`,
                 method: 'GET',

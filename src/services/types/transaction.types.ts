@@ -81,7 +81,7 @@ export type addChangeBalanceDto = Omit<CreateTransactionDto, 'amount'> & {
     comments: string;
 };
 
-export type TransactionBasicInfo = Pick<Transaction, 'id' | 'amount' | 'type'>;
+export type TransactionBasicInfo = Pick<Transaction, 'id' | 'amount' | 'type' | 'category'>;
 
 export type TransactionTimeParams = Pick<Transaction, 'year' | 'month' | 'day'> & {
     time?: number;

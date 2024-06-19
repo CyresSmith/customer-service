@@ -11,3 +11,11 @@ export enum ServiceTypeEnum {
     INDIVIDUAL = 'individual',
     GROUP = 'group',
 }
+
+export enum StatisticPeriod {
+    TODAY = 1,
+    YESTERDAY = 2,
+    WEEK = 3,
+    MONTH = 4,
+    YEAR = 5,
+}

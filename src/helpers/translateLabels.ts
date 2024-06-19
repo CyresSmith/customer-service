@@ -87,9 +87,9 @@ export const translateLabels = (name: string): string | undefined => {
         case 'createdAt':
             return 'Сторено';
         case 'income':
-            return 'Доход';
+            return 'Доходи';
         case 'expense':
-            return 'Витрата';
+            return 'Витрати';
         case 'change':
             return 'Зміна залишку';
         case 'moving':

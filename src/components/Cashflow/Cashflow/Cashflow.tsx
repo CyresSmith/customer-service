@@ -1,15 +1,16 @@
 import ItemsList from 'components/Ui/ItemsList';
-import { TransactionBasicInfo } from 'services/types/transaction.types';
+import { Transaction } from 'services/types/transaction.types';
 import { CashflowBox, TransactionListBox } from './Cashflow.styled';
 import CashflowStatistic from './CashflowStatistic';
 import TransactionBar from './TransactionBar';
+import { Period } from 'pages/CashflowPage/CashflowPage';
 
-type Props = { transactions: TransactionBasicInfo[] };
+type Props = { transactions: Transaction[]; period: Period };
 
-const Cashflow = ({ transactions }: Props) => {
+const Cashflow = ({ transactions, period }: Props) => {
     return (
         <CashflowBox>
-            <CashflowStatistic />
+            <CashflowStatistic transactions={transactions} period={period} />
 
             <TransactionBar />
 

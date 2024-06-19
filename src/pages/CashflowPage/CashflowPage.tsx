@@ -13,11 +13,12 @@ import {
     startOfWeek,
     startOfYear,
 } from 'date-fns';
+import { StatisticPeriod } from 'helpers/enums';
 import { useCompany } from 'hooks/useCompany';
 import { useEffect, useState } from 'react';
 import { useGetTransactionsPeriodQuery } from 'services/cashbox.api';
 
-type Period = { from: Date; to: Date };
+export type Period = { from: Date; to: Date };
 
 const CashflowPage = () => {
     const { id: companyId } = useCompany();
@@ -29,7 +30,7 @@ const CashflowPage = () => {
         to: endOfDay(today),
     };
 
-    const [selectedTimeId, setSelectedTimeId] = useState(1);
+    const [selectedTimeId, setSelectedTimeId] = useState(StatisticPeriod.TODAY);
     const [periodParams, setPeriodParams] = useState<Period>(todayParams);
 
     const { from, to } = periodParams;
@@ -52,7 +53,10 @@ const CashflowPage = () => {
                 return setTodayParams();
 
             case 2:
-                return setPeriodParams({ from: addDays(from, -1), to: addDays(to, -1) });
+                return setPeriodParams({
+                    from: addDays(todayParams.from, -1),
+                    to: addDays(todayParams.to, -1),
+                });
 
             case 3:
                 return setPeriodParams({
@@ -89,7 +93,7 @@ const CashflowPage = () => {
                     handleTypeSelectClick={handleTypeSelectClick}
                 />
             }
-            content={<Cashflow transactions={transactions || []} />}
+            content={<Cashflow transactions={transactions || []} period={periodParams} />}
         />
     );
 };

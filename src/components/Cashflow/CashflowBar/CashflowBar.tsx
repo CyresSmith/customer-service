@@ -1,4 +1,5 @@
 import RadioSelect, { RadioSelectItemType } from 'components/Ui/RadioSelect/RadioSelect';
+import { StatisticPeriod } from 'helpers/enums';
 
 type Props = {
     selectedTimeId: number;
@@ -6,11 +7,11 @@ type Props = {
 };
 
 const selectItems = [
-    { id: 1, label: 'Сьогодні' },
-    { id: 2, label: 'Вчора' },
-    { id: 3, label: 'Тиждене' },
-    { id: 4, label: 'Місяць' },
-    { id: 5, label: 'Рік' },
+    { id: StatisticPeriod.TODAY, label: 'Сьогодні' },
+    { id: StatisticPeriod.YESTERDAY, label: 'Вчора' },
+    { id: StatisticPeriod.WEEK, label: 'Тиждене' },
+    { id: StatisticPeriod.MONTH, label: 'Місяць' },
+    { id: StatisticPeriod.YEAR, label: 'Рік' },
 ];
 
 const CashflowBar = ({ selectedTimeId, handleTypeSelectClick }: Props) => {

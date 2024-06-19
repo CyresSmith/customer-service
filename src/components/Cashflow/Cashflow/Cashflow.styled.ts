@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import theme from 'utils/theme';
 
-export const STATISTIC_HIGHT = '217px';
+export const STATISTIC_HIGHT = '400px';
 export const TRANSACTION_BAR_HIGHT = '31px';
 
 export const CashflowBox = styled.div`
